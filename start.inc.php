@@ -1,0 +1,118 @@
+<?php
+/**
+ * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @version 0.2
+ * @package nyro
+ */
+/**
+ * Initialize some constant if they doesn't exists
+ */
+
+include_once('bootstrap.inc.php');
+
+/**
+ * string Installation name
+ */
+if (!defined('NYRONAME'))
+	define('NYRONAME', 'nyro');
+
+/**
+ * string Environnement
+ */
+if (!defined('NYROENV'))
+	define('NYROENV', 'prod');
+
+/**
+ * Enabling the dev mode
+ */
+if (!defined('DEV'))
+	define('DEV', false);
+
+/**
+ * string Directory Separator shortcut
+ */
+if (!defined('REQUIRED'))
+	define('REQUIRED', 'REQUIRED');
+
+/**
+ * string Directory Separator shortcut
+ */
+if (!defined('DS'))
+	define('DS', DIRECTORY_SEPARATOR);
+
+/**
+ * string Php extension
+ */
+if (!defined('EXTPHP'))
+	define('EXTPHP', 'php');
+
+/**
+ * string Absolute path to the installation
+ */
+if (!defined('ROOT'))
+	define('ROOT', dirname(__FILE__).DS);
+
+/**
+ * string Absolute path to the nyro directory
+ */
+if (!defined('NYROROOT'))
+	define('NYROROOT', ROOT.'nyro'.DS);
+
+/**
+ * string Absolute path to the my directory
+ */
+if (!defined('MYROOT'))
+	define('MYROOT', ROOT.'my'.DS);
+
+/**
+ * string Absolute path to the www directory
+ */
+if (!defined('WEBROOT'))
+	define('WEBROOT', ROOT.'www'.DS);
+
+/**
+ * string Absolute path to the files directory
+ */
+if (!defined('FILESROOT'))
+	define('FILESROOT', ROOT.'files'.DS);
+
+/**
+ * string Absolute paths where search all the class, from the most user to the nyro
+ * separate by ,
+ */
+if (!defined('SEARCHROOT'))
+	define('SEARCHROOT', MYROOT.','.NYROROOT);
+
+/**
+ * string Key to be used in the configuration array to indicate that the key should stay unique even with numeric value.
+ */
+if (!defined('KEEPUNIQUE'))
+	define('KEEPUNIQUE', 'keepUnique');
+
+ini_set('include_path', MYROOT.PATH_SEPARATOR.NYROROOT);
+
+/**
+ * string Absolute path to the my directory
+ */
+if (!defined('TMPROOT'))
+	define('TMPROOT', ROOT.'tmp'.DS);
+
+
+/**
+ * Load first classes to increase performance
+ */
+require(NYROROOT.'file.class.'.EXTPHP);
+require(NYROROOT.'factory.class.'.EXTPHP);
+require(NYROROOT.'config.class.'.EXTPHP);
+require(NYROROOT.'autoload.'.EXTPHP);
+//*
+require(NYROROOT.'nyro.class.'.EXTPHP);
+require(NYROROOT.'cache.class.'.EXTPHP);
+require(NYROROOT.'nReflection.class.'.EXTPHP);
+require(NYROROOT.'object.class.'.EXTPHP);
+require(NYROROOT.'cache'.DS.'abstract.class.'.EXTPHP);
+require(NYROROOT.'cache'.DS.'file.class.'.EXTPHP);
+require(NYROROOT.'request.class.'.EXTPHP);
+require(NYROROOT.'debug.class.'.EXTPHP);
+require(NYROROOT.'errorHandler.'.EXTPHP);
+//*/

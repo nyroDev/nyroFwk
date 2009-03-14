@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+	Options FollowSymLinks
+	RewriteEngine on
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^(.*)$ www/$1 [L]
+</IfModule>

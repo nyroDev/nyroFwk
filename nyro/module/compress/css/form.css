@@ -1,0 +1,185 @@
+fieldset {
+	position: relative;
+	float: left;
+	clear: left;
+	width: 100%;
+	margin: 0 0 1.5em 0;
+	padding: 0;
+	border: 1px solid #BFBAB0;
+	background-color: #F2EFE9;
+	background-image: url(../img/form/fieldset_gradient.jpg);
+	background-repeat: repeat-x;
+}
+fieldset legend {
+	padding: 0;
+	color: #545351;
+	font-weight: bold;
+}
+fieldset legend span {
+	position: absolute;
+	left: 0.74em;
+	top: 0;
+	margin-top: 0.5em;
+	font-size: 135%;
+}
+fieldset ol.first {
+	margin-top: 3.5em;
+}
+fieldset ol {
+	padding: 0 1em 0 1em;
+	margin: 0;
+	list-style: none;
+	zoom: 1;
+}
+fieldset li {
+	float: left;
+	clear: left;
+	width: 100%;
+	padding-bottom: 1em;
+}
+fieldset ol ol {
+	margin: 0;
+	padding: 0;
+	float: left;
+}
+fieldset ol ol.mulValue {
+	width: 25em;
+	border: 1px inset #f0f0f0;
+	background: #fff;
+}
+filedset ol.mulValue li em {
+    padding-left: 0.3em;
+    font-weight: bold;
+}
+fieldset ol ol li {
+	padding-bottom: 0.2em;
+}
+fieldset ol label {
+	float: left;
+	width: 8em;
+	margin-right: 1em;
+	margin-top: 0.1em;
+}
+fieldset ol ol label {
+	float: none;
+	width: auto;
+	margin-right: auto;
+}
+fieldset ol ol.inline li {
+	width: auto;
+	float: left;
+	clear: none;
+	margin-right: 10px;
+}
+fieldset ol .text, fieldset ol .date {
+	width: 25em;
+	height: 1.3em;
+	margin: 0;
+	padding: 0.1em;
+	font-family: Verdana;
+	font-size: 1em;
+}
+fieldset ol .date {
+	width: 7em;
+}
+fieldset ol img.ui-datepicker-trigger {
+	padding: 0.1em;
+	vertical-align: bottom;
+	margin-left: 5px;
+	cursor: pointer;
+	background-color: #FDFDFD;
+}
+fieldset ol select {
+	width: 25.3em;
+	font-family: Verdana;
+	font-size: 1em;
+}
+fieldset ol .multiline {
+	width: 40em;
+	height: auto;
+	line-height: 1.3em;
+}
+fieldset ol p {
+    margin: 0;
+    padding-left: 9em;
+}
+fieldset ol .mcePlaceHolder {
+    margin-left: 11em;
+}
+fieldset ol label strong {
+	display: block;
+	color: #CC0000;
+	font-size: 85%;
+	font-weight: normal;
+	text-transform: uppercase;
+}
+fieldset img {
+	padding:1em;
+	border:1px solid #ccc;
+	border-top-color:#eee;
+	border-right-color:#ddd;
+	border-bottom-color:#bbb;
+	background-color:#F2EFE9;
+}
+fieldset p a.deleteFile {
+    background: url(../img/icons/default/delete.png) no-repeat;
+    padding: 0;
+    padding-left: 18px;
+    position: relative;
+    top: -6px;
+}
+fieldset img {
+	padding: 0.4em;
+	border: 1px solid #bbb;
+	border-top-color: #ddd;
+	border-right-color: #ccc;
+	border-bottom-color: #aaa;
+	background-color: #FDFDFD;
+}
+fieldset.submit {
+	float: none;
+	width: auto;
+	border-style: none;
+	padding: 0;
+	padding-left: 12em;
+	background-color: transparent;
+	background-image: none;
+}
+fieldset.submit input {
+	margin-right: 1em;
+}
+
+/* Errors */
+ol.globalErrors, ol.sectionErrors, ol.lineErrors {
+	margin: 1em 0 1em 0;
+    padding: 1em;
+	border: 1px solid #FD9999;
+	color: #000;
+	background: #FEDADA;
+	list-style: none;
+}
+ol.sectionErrors {
+	width: 32em;
+    margin: 1em;
+    margin-top: 0;
+    margin-bottom: 1.5em;
+    /*margin-left: 3em;*/
+}
+ol.sectionErrors li {
+    float: none;
+    padding: 0;
+}
+li.lineError label.label {
+    color: #fd2d2d;
+}
+li.lineError .text, li.lineError .date, li.lineError img, li.lineError ol.mulValue, li.lineError select {
+	border: 1px solid #FD9999;
+	background: #fef2f2;
+}
+ol.lineErrors {
+	width: 23em;
+    clear: both;
+    margin: 0;
+    margin-top: 0.4em;
+    margin-left: 11em;
+}

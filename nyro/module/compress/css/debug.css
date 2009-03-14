@@ -1,0 +1,70 @@
+body {
+    margin-top: 30px;
+}
+div#nyroDebugger {
+    z-index: 100;
+    text-align: left;
+    font-family: Arial;
+    font-size: 11px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+}
+div#nyroDebugger * {
+	color: #000;
+}
+div#nyroDebugger ul li#close {
+    background: none;
+    border: none;
+    margin: 0 0 0 5px;
+}
+div#nyroDebugger ul {
+    margin: 0 3px;
+    padding: 0;
+    height: 27px;
+}
+div#nyroDebugger ul li {
+    display: block;
+    width: auto;
+    float: left;
+    margin: 0 2px;
+    padding: 0 4px 5px 4px;
+    border: 1px solid #808080;
+    background: #D3D3D3;
+    cursor: pointer;
+    position: relative;
+    top: 3px;
+}
+div#nyroDebugger ul li img {
+    position: relative;
+    top: 4px;
+    margin-right: 2px;
+}
+div#nyroDebugger div.debugElt {
+    text-align: left;
+    background: #D3D3D3;
+    border: 1px solid #808080;
+    margin: 5px;
+    padding: 0.5em;
+    overflow: auto;
+    max-height: 350px;
+    position: relative;
+}
+div#nyroDebugger div.debugElt img.close {
+    cursor: pointer;
+    position: absolute;
+    top: 5px;
+    left: 500px;
+}
+div#nyroDebugger div.debugElt h2 {
+    margin: 0;
+}
+div#nyroDebugger div.debugElt h2 img {
+    margin: 1px 2px 0 0;
+    vertical-align: top;
+}
+div#nyroDebugger div.debugElt ol {
+    margin: 0;
+    padding-left: 2em;
+}

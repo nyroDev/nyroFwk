@@ -1,0 +1,4 @@
+Version 1.0.1 (2008-04-15)
+	Added CSS compression support.
+Version 1.0 (2008-01-16)
+	Initial release.
