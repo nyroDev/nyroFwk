@@ -164,7 +164,7 @@ class utils {
 			if (array_key_exists($prm['type'], $cfg['icons'])
 				&& is_array($cfg['icons'][$prm['type']])
 				&& in_array($prm['name'], $cfg['icons'][$prm['type']])) {
-					$ret = request::get('path').$cfg['dir'].'/'.$prm['type'].'/'.$prm['name'].$cfg['ext'];
+					$ret = request::get('path').$cfg['dir'].'/'.$prm['type'].','.$prm['name'].$cfg['ext'];
 			} else if ($prm['type'] != $cfg['default']) {
 				$ret = self::getIcon(array('name'=>$prm['name'], 'imgTag'=>false));
 			}

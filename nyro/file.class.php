@@ -78,6 +78,7 @@ final class file {
 	 *
 	 * @param array $prm Possible values :
 	 *  - name (required) string: FileName (with _ to replace /)
+	 *  - realName boolean: Indicate if the given name is real or should be parsed
 	 *  - type string: class, extend, cfg, tpl, lib or other (default: class)
 	 *  - rtl bool: see description (default: true)
 	 *  - list bool: Search all the matched files and return the order list. (default: false)
@@ -87,6 +88,7 @@ final class file {
 	public static function nyroExists($prm) {
 		if (!config::initTab($prm, array(
 					'name'=>null,
+					'realName'=>false,
 					'type'=>'class',
 					'rtl'=>true,
 					'list'=>false,
@@ -96,7 +98,8 @@ final class file {
 
 		$dir = explode(',', SEARCHROOT);
 
-		$nameTmp = str_replace('_', DS, $prm['name']);
+		$nameTmp = $prm['realName'] ? $prm['name'] : str_replace('_', DS, $prm['name']);
+		
 		$name = array();
 		if ($prm['type'] == 'cfg') {
 			$ext = 'cfg';

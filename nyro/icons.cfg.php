@@ -1,6 +1,6 @@
 <?php
 $cfg = array(
-	'dir'=>'img/icons',
+	'dir'=>'nyroUtils/icon',
 	'ext'=>'.png',
 	'default'=>'default',
 
