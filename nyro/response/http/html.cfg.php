@@ -37,3 +37,8 @@ $cfg = array(
 		'depend'=>array()
 	)
 );
+if (DEV) {
+	$cfg['incFiles'] = array(
+		array('type'=>'js', 'file'=>'jquery')
+	);
+}

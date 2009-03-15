@@ -5,7 +5,10 @@ class db_where extends object implements Countable {
 	protected $clauses;
 
 	protected function afterInit() {
-		$this->clauses = $this->cfg->clauses;
+		if (is_array($this->cfg->clauses))
+			$this->clauses = $this->cfg->clauses;
+		else
+			$this->clauses = array($this->cfg->clauses);
 	}
 
 	/**
@@ -72,10 +75,12 @@ class db_where extends object implements Countable {
 		$where = array();
 
 		foreach($this->clauses as $c) {
-			if (is_object($c)) {
+			if ($c instanceof db_where) {
 				$tmp = $c->toArray();
 				$where[] = $tmp['where'];
 				$bind = array_merge($bind, $tmp['bind']);
+			} else if ($c instanceof db_whereClause) {
+				$where[] = ''.$c;
 			} else if (is_array($c)) {
 				$where[] = $this->getDb()->quoteIdentifier($c['field']).' '.$c['op'].' ?';
 				$bind[] = is_array($c['val']) ? '('.implode(',', $c['val']).')' : $this->getDb()->quoteValue($c['val']);

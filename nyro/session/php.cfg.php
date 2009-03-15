@@ -1,4 +1,5 @@
 <?php
 $cfg = array(
-	'prefix'=>'sess_'
+	'prefix'=>'sess_',
+	'regenerateId'=>false
 );

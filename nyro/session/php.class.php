@@ -17,7 +17,7 @@ class session_php extends session_abstract {
 	protected function afterInit() {
 		if (!session_id()) {
 			session_start();
-			if (request::get('out') == 'html')
+			if ($this->cfg->regenerateId)
 				session_regenerate_id(true);
 		}
 	}

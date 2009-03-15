@@ -80,6 +80,12 @@ final class nyro {
 			echo debug::trace($e);
 		}
 	}
+	
+	public static function getGlobalCfg($name) {
+		if (self::$cfg && self::$cfg->check($name))
+			return self::$cfg->get($name);
+		return array();
+	}
 
 	/**
 	 * Get the config object

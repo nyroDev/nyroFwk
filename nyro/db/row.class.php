@@ -608,6 +608,28 @@ class db_row extends object {
 	}
 
 	/**
+	 * Get the related rows
+	 *
+	 * @param string Related Name
+	 * @return db_rowset
+	 */
+	public function getRelated($name) {
+		$related = $this->table->getRelated($this->table->getRelatedTableName($name));
+		return $related['tableObj']->getLinkedTable('module_nom')->select(array(
+			'where'=>$this->getWhere(array(
+				'clauses'=>factory::get('db_whereClause', array(
+					'name'=>$related['fk2']['link']['table'].'.'.$related['fk2']['link']['ident'],
+					'in'=>$this->getDb()->selectQuery(array(
+						'fields'=>$related['fk2']['name'],
+						'table'=>$related['tableLink'],
+						'where'=>$related['fk1']['name'].'='.$this->getId()
+					))
+				))
+			))
+		));
+	}
+	
+	/**
 	 * Set new linked values
 	 *
 	 * @param array|db_row $related array of db_row or values of array OR db_row or array of values should be provide $name

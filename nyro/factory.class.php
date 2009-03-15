@@ -157,6 +157,7 @@ final class factory {
 						self::mergeCfg(self::$loadedCfg[$className], $cfg, $className);
 					$cfg = null;
 				}
+			self::mergeCfg(self::$loadedCfg[$className], nyro::getGlobalCfg($className));
 			self::removeKeepUnique(self::$loadedCfg[$className]);
 		}
 		return self::$loadedCfg[$className];

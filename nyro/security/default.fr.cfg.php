@@ -1,4 +1,4 @@
 <?php
 $cfg = array(
-	'labelStayConnected'=>'Resté connecter',
+	'labelStayConnected'=>'Rester connecté',
 );

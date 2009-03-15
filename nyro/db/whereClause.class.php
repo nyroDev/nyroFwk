@@ -69,9 +69,12 @@ class db_whereClause extends object {
 			$tmp[] = '('.$this->cfg->raw.')';
 
 		if (!empty($this->cfg->in)) {
-			$in = $this->cfg->in;
-			array_walk($in, create_function('&$v', '$v = \'"\'.$v.\'"\';'));
-			$tmp[] = '('.$this->cfg->name.' IN ('.implode(',', $in).'))';
+			if (is_array($this->cfg->in)) {
+				$in = $this->cfg->in;
+				array_walk($in, create_function('&$v', '$v = \'"\'.$v.\'"\';'));
+				$tmp[] = '('.$this->cfg->name.' IN ('.implode(',', $in).'))';
+			} else
+				$tmp[] = '('.$this->cfg->name.' IN ('.$this->cfg->in.'))';
 		}
 
 		if (!empty($this->cfg->freeClause))
