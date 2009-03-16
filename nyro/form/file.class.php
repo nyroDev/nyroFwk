@@ -10,15 +10,20 @@
 class form_file extends form_abstract {
 
 	protected function beforeInit() {
-		$this->cfg->value = factory::get('form_fileUploaded', array(
+		$prm = array(
 			'name'=>$this->cfg->name,
 			'current'=>$this->cfg->value,
 			'helper'=>$this->cfg->helper,
 			'helperPrm'=>$this->cfg->helperPrm
-		));
-		if (!$this->cfg->value->isSaved() && http_vars::getInstance()->getVar($this->name.'NyroDel')) {
+		);
+
+		if ($this->cfg->subdir)
+			$prm['subdir'] = $this->cfg->subdir;
+
+		$this->cfg->value = factory::get('form_fileUploaded', $prm);
+		
+		if (!$this->cfg->value->isSaved() && http_vars::getInstance()->getVar($this->name.'NyroDel'))
 			$this->cfg->value->delete();
-		}
 	}
 
 	/**
@@ -46,7 +51,7 @@ class form_file extends form_abstract {
 		$delLink = null;
 		if ($this->cfg->value->getCurrent()) {
 			$delLink = '<span><br /><br />
-				<a href="#" class="deleteFile" id="'.$this->id.'NyroDel">delete</a><br />'
+				<a href="#" class="deleteFile" id="'.$this->id.'NyroDel">'.$this->cfg->deleteLabel.'</a><br />'
 					.$this->cfg->value->getView().'</span></p>';
 			response::getInstance()->blockJquery('
 			$("#'.$this->id.'NyroDel").click(function(e) {

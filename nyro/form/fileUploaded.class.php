@@ -43,6 +43,7 @@ class form_fileUploaded extends object {
 			$this->subdir = $this->cfg->subdir.DS;
 			$this->dir.= $this->subdir;
 		}
+		file::createDir($this->dir);
 
 		if (array_key_exists($this->cfg->name, $_FILES)) {
 			$this->file = $_FILES[$this->cfg->name];
@@ -102,6 +103,7 @@ class form_fileUploaded extends object {
 				);
 				if ($this->cfg->deleteCurrent && ($current = $this->getCurrent()) && $current != $this->file['webPath']) {
 					$this->callHelper('delete', $current);
+					file::delete(FILESROOT.$current);
 				}
 				$this->saved = $webPath;
 			}
@@ -144,7 +146,7 @@ class form_fileUploaded extends object {
 		$ret = null;
 		if ($current = $this->getCurrent()) {
 			if (!$ret = $this->callHelper('view', $current, null))
-				$ret = utils::htmlTag('a', array('href'=>request::uri($current)), $current);
+				$ret = utils::htmlTag('a', array('href'=>request::uri('nyroUtils/uploadedFiles/'.str_replace('/', request::getCfg('sepParam'), $current))), $current);
 		}
 		return $ret;
 	}
@@ -165,8 +167,10 @@ class form_fileUploaded extends object {
 	 */
 	public function delete() {
 		$ret = false;
-		if ($current = $this->getCurrent())
+		if ($current = $this->getCurrent()) {
 			$ret = $this->callHelper('delete', $current);
+			file::delete(FILESROOT.$current);
+		}
 		return $ret;
 	}
 
@@ -189,6 +193,7 @@ class form_fileUploaded extends object {
 	 * @return string Filename useable
 	 */
 	protected function safeFileName($name) {
+		$name = str_replace(' ', '_', $name);
 		$ext = file::getExt($name);
 		if ($ext)
 			$ext = '.'.$ext;

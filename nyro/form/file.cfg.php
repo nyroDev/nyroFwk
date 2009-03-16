@@ -5,6 +5,8 @@ $cfg = array(
 
 	'htmlTagName'=>'input',
 	'xulTagName'=>'textbox',
+	
+	'deleteLabel'=>'delete',
 
 	'html'=>array(
 		'type'=>'file',

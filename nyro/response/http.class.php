@@ -121,6 +121,10 @@ class response_http extends response_abstract {
 		}
 		return false;
 	}
+	
+	public function neverExpire() {
+		$this->addHeader('Expires', date('D, j M Y H:i:s', strtotime('+10 years')).' GMT');
+	}
 
 	/**
 	 * Get a header value

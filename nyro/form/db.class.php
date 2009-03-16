@@ -170,12 +170,10 @@ class form_db extends form {
 				break;
 			case 'file':
 				$type = 'file';
-				if (array_key_exists('helper', $field))
-					$prm['helper'] = $field['helper'];
-				elseif (array_key_exists(0, $field['comment']) && !empty($field['comment'][0]))
+				if (count($field['comment']) == 1)
 					$prm['helper'] = $field['comment'][0];
-				if (array_key_exists('helper', $prm) && array_key_exists('helperPrm', $field))
-					$prm['helperPrm'] = $field['helperPrm'];
+				else
+					$prm = array_merge($prm, utils::initTabNumPair($field['comment']));
 				break;
 			default:
 				$type = array_key_exists(0, $field['comment']) && !empty($field['comment'][0])? $field['comment'][0] : 'text';

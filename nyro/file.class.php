@@ -202,7 +202,7 @@ final class file {
 	 * @param string $chmod
 	 * @return bool True if directory exists
 	 */
-	public function createDir($path, $chmod='777') {
+	public static function createDir($path, $chmod='777') {
 		return is_dir($path) || mkdir($path, '0'.$chmod, true);
 	}
 

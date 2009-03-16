@@ -394,9 +394,6 @@ class response_http_html extends response_http {
 			$prm = $this->cfg->get($type);
 
 			foreach($files as $dir=>$file) {
-				$path = $dir == 'web'
-					? request::get('path').$prm['dirWeb']
-					: request::getPathControllerUri().$prm['dirUriNyro'];
 				if ($type == 'css') {
 					$tmp = array();
 					foreach($file as $f) {
@@ -407,7 +404,8 @@ class response_http_html extends response_http {
 							$ret.= '<!--[if '.$ie.']>'.$ln;
 						foreach($t as $media=>$f)
 							$ret.= $this->getIncludeTagFile($type,
-											$path.'/'.implode(request::getCfg('sepParam'), $f).'.'.$prm['ext'],
+											$f,
+											$dir,
 											$media
 											).$ln;
 						if ($ie)
@@ -415,7 +413,8 @@ class response_http_html extends response_http {
 					}
 				} else {
 					$ret.= $this->getIncludeTagFile($type,
-									$path.'/'.implode(request::getCfg('sepParam'), array_keys($file)).'.'.$prm['ext']
+									array_keys($file),
+									$dir
 									).$ln;
 				}
 			}
@@ -431,8 +430,13 @@ class response_http_html extends response_http {
 	 * @param string $media Media info for css
 	 * @return string The tag
 	 */
-	public function getIncludeTagFile($type, $url, $media='screen') {
+	public function getIncludeTagFile($type, $files, $dir='nyro', $media='screen') {
 		$prm = $this->cfg->get($type);
+		$url = $dir == 'web'
+					? request::get('path').$prm['dirWeb']
+					: request::getPathControllerUri().$prm['dirUriNyro'];
+		$url.= '/'.(is_array($files)? implode(request::getCfg('sepParam'), $files) : $files);
+		$url.= '.'.$prm['ext'];
 		return sprintf($prm['include'], $url, $media);
 	}
 

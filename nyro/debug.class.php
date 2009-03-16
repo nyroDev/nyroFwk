@@ -128,8 +128,8 @@ final class debug {
 
 		$resp = response::getInstance();
 		return '<div id="nyroDebugger">'
-			.$resp->getIncludeTagFile('js', request::uri(array('module'=>'js', 'action'=>'debug', 'out'=>'js')))
-			.$resp->getIncludeTagFile('css', request::uri(array('module'=>'css', 'action'=>'debug', 'out'=>'css')))
+			.$resp->getIncludeTagFile('js', 'debug')
+			.$resp->getIncludeTagFile('css', 'debug')
 			.'<ul><li id="close">'.$close.'</li><li>'.implode('</li><li>', $menu).'</li></ul>'
 			.implode("\n", $content)
 			.'</div>';
