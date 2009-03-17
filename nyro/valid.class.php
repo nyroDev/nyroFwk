@@ -77,10 +77,10 @@ class valid extends object {
 		}
 		return $valid;
 	}
-
+	
 	public function isRequired($prm=null) {
 		if (empty($this->cfg->value)) {
-			$this->errors[] = $this->cfg->label.' is required.';
+			$this->errors[] = sprintf($this->getMessage('required'), $this->cfg->label);
 			return false;
 		}
 		return true;
@@ -88,7 +88,7 @@ class valid extends object {
 
 	public function isNumeric($prm=null) {
 		if (!is_numeric($this->cfg->value)) {
-			$this->errors[] = $this->cfg->label.' should be numeric.';
+			$this->errors[] = sprintf($this->getMessage('numeric'), $this->cfg->label);
 			return false;
 		}
 		return true;
@@ -96,7 +96,7 @@ class valid extends object {
 
 	public function isInt($prm=null) {
 		if (!is_numeric($this->cfg->value) || round($this->cfg->value) != $this->cfg->value) {
-			$this->errors[] = $this->cfg->label.' should be an integer.';
+			$this->errors[] = sprintf($this->getMessage('int'), $this->cfg->label);
 			return false;
 		}
 		return true;
@@ -104,7 +104,7 @@ class valid extends object {
 
 	public function isDifferent($prm=null) {
 		if ($this->cfg->value == $prm[0]) {
-			$this->errors[] = $this->cfg->label.' should be different from '.$prm[0].'.';
+			$this->errors[] = sprintf($this->getMessage('different'), $this->cfg->label, $prm[0]);
 			return false;
 		}
 		return true;
@@ -115,7 +115,7 @@ class valid extends object {
 		$val = is_array($this->cfg->value)? $this->cfg->value : array($this->cfg->value);
 		foreach($val as $v) {
 			if (!in_array($v, $prm)) {
-				$this->errors[] = 'The value '.$v.' is not allowed for '.$this->cfg->label.'.';
+				$this->errors[] = sprintf($this->getMessage('in'), $v, $this->cfg->label);
 				$ret = false;
 			}
 		}
@@ -126,16 +126,20 @@ class valid extends object {
 		$ret = true;
 		if ($prm[0] instanceof form_abstract) {
 			if ($this->cfg->value != $prm[0]->getRawValue()) {
-				$this->errors[] = $this->cfg->label.' should be equal to '.$prm[0]->label.'.';
+				$this->errors[] = sprintf($this->getMessage('equalInput'), $this->cfg->label, $prm[0]->label);
 				$ret = false;
 			}
 		} else {
 			if ($this->cfg->value != $prm[0]) {
-				$this->errors[] = 'The value '.$v.' for '.$this->cfg->label.' is not the right one.';
+				$this->errors[] = sprintf($this->getMessage('equal'), $v, $this->cfg->label);
 				$ret = false;
 			}
 		}
 		return $ret;
+	}
+
+	protected function getMessage($name) {
+		return utils::htmlOut($this->cfg->getInarray('messages', $name));
 	}
 
 	/**

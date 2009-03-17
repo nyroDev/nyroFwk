@@ -101,7 +101,7 @@ abstract class security_abstract extends object {
 			$tmp = array_intersect_key($url, $c);
 			$nbM = 0;
 			foreach($tmp as $k=>$v)
-				$nbM += ($v == $c[$k]? 1 : 0);
+				$nbM += (preg_match('/'.$c[$k].'/', $v)? 1 : 0);
 			if ($nbM == count($tmp))
 				return true;
 		}

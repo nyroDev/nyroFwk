@@ -133,6 +133,8 @@ class form_db extends form {
 				if (in_array('richtext', $field['comment'])) {
 					$type = array_shift($field['comment']);
 					$prm['html'] = utils::initTabNumPair($field['comment']);
+					if (array_key_exists('tinyMce', $field))
+						$prm['tinyMce'] = $field['tinyMce'];
 				} else {
 					$type = 'multiline';
 					$prm['maxlength'] = $field['length'];

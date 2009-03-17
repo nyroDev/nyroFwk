@@ -32,8 +32,8 @@ final class nyro {
 				debug::timer('nyro');
 				debug::timer('nyroProcess');
 			}
-			self::$cfg = new config(factory::loadCfg(__CLASS__));
 			request::init();
+			self::$cfg = new config(factory::loadCfg(__CLASS__));
 			session::initFlash();
 		}
 	}

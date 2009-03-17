@@ -104,7 +104,7 @@ fieldset ol p {
     padding-left: 9em;
 }
 fieldset ol .mcePlaceHolder {
-    margin-left: 11em;
+    margin-left: 9em;
 }
 fieldset ol label strong {
 	display: block;
@@ -181,5 +181,5 @@ ol.lineErrors {
     clear: both;
     margin: 0;
     margin-top: 0.4em;
-    margin-left: 11em;
+    margin-left: 9em;
 }

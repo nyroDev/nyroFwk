@@ -402,9 +402,9 @@ final class request {
 		while(count($tmp) > 0 && (empty($tmp[count($tmp) - 1]) || $tmp[count($tmp) - 1] == self::$cfg->empty))
 			array_pop($tmp);
 
-		$out = (array_key_exists('out', $prm) && self::isOut($prm['out']))
-				? $prm['out']
-				: self::getRequested('out');
+		$out = (array_key_exists('out', $prm) ?
+				(self::isOut($prm['out'])? $prm['out'] : null)
+				: self::getRequested('out'));
 		if ($out) {
 			if (false && empty($tmp))
 				$tmp[] = self::$cfg->empty.'.'.$out;
@@ -421,9 +421,10 @@ final class request {
 
 		$prefix = array_key_exists('absolute', $prm) && $prm['absolute']? request::get('domain') : null;
 		$prefix.= self::get('path');
-		if (array_key_exists('controller', $prm))
-			array_unshift($tmp, $prm['controller']);
-		else if (self::get('pathWithController'))
+		if (array_key_exists('controller', $prm)) {
+			if ($prm['controller'])
+				array_unshift($tmp, $prm['controller']);
+		} else if (self::get('pathWithController'))
 			$prefix.= request::get('controller').'/';
 
 		foreach($tmp as &$t)
