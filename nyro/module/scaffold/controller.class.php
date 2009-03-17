@@ -163,13 +163,12 @@ class module_scaffold_controller extends module_abstract {
 		$this->form->action = array('module'=>$this->table->getName(),'action'=>'edit','param'=>$id);
 		$this->form->method = 'get';
 		$this->form->setSubmitText(tr::__('scaffold_edit'));
+		$this->form->setSubmitplus('<a href="'.$this->indexPage.'">'.tr::__('scaffold_back').'</a>');
 
 		$this->hook('formShow');
 
 		$this->setViewVars(array(
-			'form'=>$this->form,
-			'indexPage'=>$this->indexPage,
-			'editPage'=>request::uriDef(array('action'=>'edit'))
+			'form'=>$this->form
 		));
 	}
 

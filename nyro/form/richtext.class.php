@@ -47,7 +47,8 @@ class form_richtext extends form_multiline {
 
 		$resp->addJs(array(
 			'file'=>'tiny_mce/tiny_mce_gzip',
-			'dir'=>'web'
+			'dir'=>'web',
+			'verifExists'=>false
 		));
 		$resp->blockJs('tinyMCE.init('.json_encode($options).');');
 

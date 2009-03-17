@@ -154,7 +154,8 @@ class response_http_html extends response_http {
 			'file'=>null,
 			'dir'=>'nyro',
 			'media'=>'screen',
-			'condIE'=>false
+			'condIE'=>false,
+			'verifExists'=>true
 		))) {
 			foreach($this->getDepend($prm['file'], $prm['type']) as $d) {
 				if (is_array($d))
@@ -176,13 +177,16 @@ class response_http_html extends response_http {
 
 			$fileExt = $prm['file'].'.'.$prm['type'];
 
-			$fileExists = $locDir == 'web'
-				?file::webExists($prmType['dirWeb'].DS.$fileExt)
-				:file::nyroExists(array(
-							'name'=>'module_'.nyro::getCfg()->compressModule.'_'.$prm['type'].'_'.$prm['file'],
-							'type'=>'tpl',
-							'tplExt'=>$prm['type']
-						));
+			if ($prm['verifExists'])
+				$fileExists = $locDir == 'web'
+					?file::webExists($prmType['dirWeb'].DS.$fileExt)
+					:file::nyroExists(array(
+								'name'=>'module_'.nyro::getCfg()->compressModule.'_'.$prm['type'].'_'.$prm['file'],
+								'type'=>'tpl',
+								'tplExt'=>$prm['type']
+							));
+			else
+				$fileExists = true;
 			if ($fileExists) {
 				$this->incFiles[$prm['type']][$locDir][$prm['file']] = $prm;
 				if ($prm['type'] == 'css') {
@@ -232,6 +236,7 @@ class response_http_html extends response_http {
 	 * @param string|array $prm Filename or parameter for the css file. Available keys are:
 	 *  - string file: filename (required)
 	 *  - string dir: Where include the file (possible values: nyro, web, or nyroLast)
+	 *  - bool verifExists: indicate if the file should exist to be included
 	 * @return bool True if added, False if not found or already added
 	 * @see add
 	 */
@@ -250,6 +255,7 @@ class response_http_html extends response_http {
 	 *  - string dir: Where include the file (possible values: nyro, web, or nyroLast)
 	 *  - string media: Media attribute
 	 *  - string condIE: special string to include CSS for IE
+	 *  - bool verifExists: indicate if the file should exist to be included
 	 * @return bool True if added or already added, False if not found
 	 * @see add
 	 */

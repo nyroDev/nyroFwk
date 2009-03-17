@@ -225,9 +225,6 @@ class security_default extends security_abstract {
 	 * @return bool True if authorized access
 	 */
 	public function check(array $url = null, $redirect=true) {
-		if ($this->isLogged())
-			return true;
-
 		if (is_null($url))
 			$url = request::get();
 
@@ -241,6 +238,16 @@ class security_default extends security_abstract {
 			} else {
 				$hasRight = true;
 			}
+		} else if ($this->isLogged()) {
+			if (!empty($this->cfg->rightRoles)) {
+				$checks = array();
+				foreach($this->hasRole() as $r=>$t) {
+					foreach($this->cfg->getInArray('rightRoles', $r) as $c)
+						$checks[] = $c;
+				}
+				$hasRight = $this->isContained($url, $checks);
+			} else
+				$hasRight = true;
 		}
 
 		if (!$hasRight && $redirect) {

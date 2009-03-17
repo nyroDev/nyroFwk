@@ -2,6 +2,15 @@
 
 class module_compress_controller extends module_abstract {
 
+	protected function execCssExt($prm=null) {
+		response::getInstance()->neverExpire();
+		response::getInstance()->showFile(file::nyroExists(array(
+			'name'=>'module'.DS.nyro::getCfg()->compressModule.DS.'css'.DS.$prm[0].DS.request::get('text'),
+			'realName'=>true,
+			'type'=>'other'
+		)));
+	}
+	
 	protected function execJs($prm=null) {
 		$this->compress('js', $prm);
 	}

@@ -19,5 +19,6 @@ $cfg = array(
 	'default'=>true,
 	'spec'=>array(
 		array('module'=>'pages', 'action'=>'my')
-	)
+	),
+	'rightRoles'=>array()
 );

@@ -11,8 +11,8 @@ $cfg = array(
 	),
 	'js'=>array(
 		'alias'=>array(
-			'jquery'=>'jquery-1.3.1',
-			'jqueryui'=>'jquery-ui-personalized-1.6rc6',
+			'jquery'=>'jquery-1.3.2',
+			'jqueryui'=>'jquery-ui-1.7.custom.min',
 		),
 		'ext'=>'js',
 		'dirWeb'=>'js',

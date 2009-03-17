@@ -45,7 +45,8 @@ abstract class module_abstract extends object {
 
 		$this->beforeExec($prm);
 
-		security::getInstance()->check($this->prmExec);
+		if (!$this->cfg->render)
+			security::getInstance()->check($this->prmExec);
 
 		$fctName = ($this->cfg->render? 'render' : 'exec').$prefix.ucfirst($this->prmExec['action']);
 		if (!method_exists($this, $fctName))
