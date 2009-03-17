@@ -7,7 +7,7 @@ fieldset {
 	padding: 0;
 	border: 1px solid #BFBAB0;
 	background-color: #F2EFE9;
-	background-image: url(../img/form/fieldset_gradient.jpg);
+	background-image: url(form/fieldset_gradient.jpg);
 	background-repeat: repeat-x;
 }
 fieldset legend {
