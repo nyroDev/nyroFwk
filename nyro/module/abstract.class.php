@@ -73,6 +73,15 @@ abstract class module_abstract extends object {
 	protected function afterExec($realExec) {}
 
 	/**
+	 * Get the current view action
+	 *
+	 * @return string
+	 */
+	protected function getViewAction() {
+		return $this->cfg->viewAction;
+	}
+	
+	/**
 	 * Set the action which will use for the view
 	 *
 	 * @param string $action

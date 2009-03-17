@@ -94,7 +94,7 @@ class module_scaffold_controller extends module_abstract {
 				}
 				$this->setViewVar('links', $links);
 			} else {
-				$this->setViewAction($this->cfg->prefixExec.'List');
+				$this->setViewAction('list');
 				return $this->execScaffoldList($prm);
 			}
 		}
@@ -159,7 +159,7 @@ class module_scaffold_controller extends module_abstract {
 		$this->row = $this->table->find($id);
 		$this->hook('show');
 
-		$this->form = $this->row->getForm($this->getFields('show'), array('mode'=>'view'), false);
+		$this->form = $this->row->getForm($this->getFields('show'), array('mode'=>'view', 'sectionName'=>tr::__('scaffold_show')), false);
 		$this->form->action = array('module'=>$this->table->getName(),'action'=>'edit','param'=>$id);
 		$this->form->method = 'get';
 		$this->form->setSubmitText(tr::__('scaffold_edit'));
@@ -167,9 +167,7 @@ class module_scaffold_controller extends module_abstract {
 
 		$this->hook('formShow');
 
-		$this->setViewVars(array(
-			'form'=>$this->form
-		));
+		$this->setViewVar('form', $this->form);
 	}
 
 	protected function execScaffoldAdd($prm=null) {
@@ -185,7 +183,7 @@ class module_scaffold_controller extends module_abstract {
 		$this->row = $id? $this->table->find($id) : $this->table->getRow();
 		$this->hook($action);
 
-		$this->form = $this->row->getForm($this->getFields($action));
+		$this->form = $this->row->getForm($this->getFields($action), array('sectionName'=>tr::__('scaffold_'.$action)));
 
 		if ($this->form->refillIfSent()) {
 			if ($this->form->isValid()) {
@@ -204,9 +202,7 @@ class module_scaffold_controller extends module_abstract {
 
 		$this->hook('form'.$uAction);
 
-		$this->setViewVars(array(
-			'form'=>$this->form
-		));
+		$this->setViewVar('form', $this->form);
 	}
 
 	protected function execScaffoldDelete($prm=null) {
