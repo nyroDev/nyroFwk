@@ -499,6 +499,11 @@ final class request {
 		return !empty($_POST);
 	}
 
+	/**
+	 * Check if the current request is an Ajax
+	 *
+	 * @return bool
+	 */
 	public static function isAjax() {
 		return array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER);
 	}
@@ -608,9 +613,8 @@ final class request {
 	 * Init the module requested
 	 */
 	private static function initModule() {
-		if (!self::$module) {
+		if (!self::$module)
 			self::$module = factory::getModule(self::$uriInfo['module'], array(), self::$scaffold);
-		}
 	}
 
 	/**

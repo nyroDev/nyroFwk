@@ -169,7 +169,7 @@ final class factory {
 	 * @param array $prm Initial array
 	 * @param array $cfg Array with the parameter to overload
 	 */
-	private static function mergeCfg(array &$prm, array $cfg) {
+	public static function mergeCfg(array &$prm, array $cfg) {
 		$keepUnique = array_key_exists(KEEPUNIQUE, $prm);
 		foreach($cfg as $k=>&$v) {
 			if (is_numeric($k) && !$keepUnique) {

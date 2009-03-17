@@ -211,5 +211,14 @@ class utils {
 		}
 		return $ret;
 	}
+	
+	public static function urlify($text) {
+		$from = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ()[]~$&%*@ç!?;,:/\\^¨€{}|+<>\"' ’–«»…®";
+		$to  =  'AAAAAAaaaaaaOOOOOOooooooEEEEeeeeCcIIIIiiiiUUUUuuuuyNn          c   _     E      _________';
+		return str_replace(
+			array(' ', '_____', '____', '___', '__'),
+			'_',
+			strtr($text, $from, $to));
+	}
 
 }

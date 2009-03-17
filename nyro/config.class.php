@@ -114,7 +114,7 @@ class config {
 	 * @param bool $parent Indicate if the search should load the parent config (if virtual, should be false!)
 	 */
 	public function overload($className, $parent=false) {
-		$this->setA(factory::loadCfg($className, $parent));
+		factory::mergeCfg($this->vars, factory::loadCfg($className, $parent));
 	}
 
 	/**
