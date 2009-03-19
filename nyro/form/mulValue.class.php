@@ -50,6 +50,12 @@ abstract class form_mulValue extends form_abstract {
 			}
 			$this->cfg->group = utils::htmlOut($group);
 			$this->cfg->list = utils::htmlOut($list);
+		} else if ($this->cfg->needOut) {
+			$list = array();
+			foreach($this->cfg->list as $k=>$v) {
+				$list[utils::htmlOut($k)] = utils::htmlOut($v);
+			}
+			$this->cfg->list = $list;
 		}
 
 		$this->addRule('in', array_keys($this->cfg->list));
@@ -64,6 +70,15 @@ abstract class form_mulValue extends form_abstract {
 		$val = parent::getValue();
 		if (!is_null($this->cfg->valueNone) && $val == $this->cfg->valueNone)
 			return null;
+		if ($this->cfg->needOut) {
+			if (is_array($val)) {
+				$tmp = array();
+				foreach($val as $k=>$v)
+					$tmp[utils::htmlDeOut($k)] = utils::htmlDeOut($v);
+				$val = $tmp;
+			} else
+				$val = utils::htmlDeOut($val);
+		}
 		return $val;
 	}
 

@@ -161,12 +161,12 @@ class db_table extends object {
 							$fields[] = $t;
 					}
 					$list = array();
-					$sep = null;
+					$sep = $this->cfg->defSep;
 					$nbFieldGr = 0;
 					$sepGr = null;
 					if (!empty($this->fields[$c]['comment'])) {
 						$com = $this->fields[$c]['comment'];
-						$sep = !empty($com[0])? array_shift($com) : null;
+						$sep = !empty($com[0])? array_shift($com) : $this->cfg->defSep;
 						$list = array(array_shift($com));
 						$nbFieldGr = array_shift($com);
 						$sepGr = array_shift($com);

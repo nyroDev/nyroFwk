@@ -113,6 +113,7 @@ class form_db extends form {
 			case 'enum':
 				$type = 'radio';
 				$prm['list'] = $field['precision'];
+				$prm['needOut'] = true;
 				break;
 			case 'date':
 				$type = 'date';

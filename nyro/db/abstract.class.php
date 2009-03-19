@@ -323,20 +323,20 @@ abstract class db_abstract extends object {
 
 			$query.= $this->makeWhere($prm['where'], $prm['whereOp']);
 
+			if (!empty($prm['group']))
+				$query.= ' GROUP BY '.$prm['group'];
+
+			if (!empty($prm['having']))
+				$query.= ' HAVING '.$prm['having'];
+
+			if (!empty($prm['order']))
+				$query.= ' ORDER BY '.$prm['order'];
+
 			if (!empty($prm['nb'])) {
 				if (empty($prm['start']))
 					$prm['start'] = 0;
 				$query.= ' LIMIT '.$prm['start'].','.$prm['nb'];
 			}
-
-			if (!empty($prm['group']))
-				$query.= ' GROUP BY '.$prm['group'];
-
-			if (!empty($prm['order']))
-				$query.= ' ORDER BY '.$prm['order'];
-
-			if (!empty($prm['having']))
-				$query.= ' HAVING '.$prm['having'];
 
 			if ($prm['bindData'] && !empty($prm['bind']) && is_array($prm['bind'])) {
 				$tmp = explode('?', $query, count($prm['bind'])+1);

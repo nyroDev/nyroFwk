@@ -6,6 +6,7 @@ $cfg = array(
 	'ident'=>null,
 
 	'defId'=>'id',
+	'defSep'=>' ',
 
 	'inserted'=>'inserted',
 	'updated'=>'updated',

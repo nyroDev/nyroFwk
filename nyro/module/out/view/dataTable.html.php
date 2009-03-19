@@ -70,5 +70,5 @@
 	}
 	?>
 <?php else: ?>
-	No Data.
+	<?php echo $noData ?>
 <?php endif; ?>

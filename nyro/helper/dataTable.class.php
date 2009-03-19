@@ -81,8 +81,8 @@ class helper_dataTable extends object {
 				foreach($fields as $f)
 					$tmp[] = $tableName.'.'.$f;
 				$this->sortBy = implode(', ', $tmp);
-			} else
-				$this->sortBy = $this->cfg->sortBy;
+			} else if ($this->cfg->sortBy)
+				$this->sortBy = $this->table->getName().'.'.$this->cfg->sortBy;
 		}
 
 		$this->count = $this->table->count($this->getQuery());
@@ -234,6 +234,7 @@ class helper_dataTable extends object {
 			));
 		} else {
 			// No data
+			$tpl->set('noData', utils::htmlOut($this->cfg->noData));
 		}
 
 		return $tpl->fetch(array('tplExt'=>$type));

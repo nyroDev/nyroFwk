@@ -29,7 +29,7 @@ abstract class form_abstract extends object {
 			array('_', '_', ''),
 			$this->name);
 		$val = &$this->cfg->getRef('value');
-		$this->valid = factory::get('valid', array('value'=>&$val, 'label'=>$this->label));
+		$this->valid = factory::get($this->cfg->validType, array('value'=>&$val, 'label'=>$this->label));
 		$this->initValid();
 	}
 

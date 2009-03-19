@@ -17,7 +17,8 @@ $cfg = array(
 	'html'=>array(
 		'errorPos'=>'section',
 		'global'=>'<form [plus]>
-		[errors]
+	[hidden]
+	[errors]
 	[content]
 	[submit]
 </form>',

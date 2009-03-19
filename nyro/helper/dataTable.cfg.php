@@ -18,6 +18,8 @@ $cfg = array(
 	'iconType'=>null,
 	'fields'=>null,
 
+	'noData'=>'No Data.',
+
 	'actions'=>array(),
 	'cache'=>array(),
 );

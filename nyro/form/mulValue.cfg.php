@@ -5,6 +5,7 @@ $cfg = array(
 
 	'inline'=>false,
 
+	'needOut'=>false,
 	'list'=>null,
 	'group'=>null,
 

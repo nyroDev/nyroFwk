@@ -11,6 +11,7 @@ $cfg = array(
 
 	'htmlTagName'=>REQUIRED,
 
+	'validType'=>'valid',
 	'valid'=>array(
 		'required'=>true
 	),
