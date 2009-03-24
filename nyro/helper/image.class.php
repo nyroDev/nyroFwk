@@ -60,7 +60,12 @@ class helper_image extends helper_file {
 		$this->cfg->file = FILESROOT.$file;
 		$this->cfg->setA($prm);
 		$this->cfg->html = true;
-		return str_replace(FILESROOT, request::getPathControllerUri(), $this->build());
+		$this->cfg->fileSave = $this->makePath($this->cfg->file, $this->cfg->fileSaveAdd);
+		$fileWeb = str_replace(array(FILESROOT, '/'), array('', ','), $this->cfg->fileSave);
+		return str_replace(
+			$this->cfg->fileSave,
+			request::uri(array('module'=>'nyroUtils', 'action'=>'uploadedFiles', 'param'=>$fileWeb, 'out'=>null)),
+			$this->build());
 	}
 
 	/**
@@ -116,7 +121,6 @@ class helper_image extends helper_file {
 
 			if ($this->cfg->autoFileSave && empty($this->cfg->fileSave))
 				$this->cfg->fileSave = $this->makePath($this->cfg->file, $this->cfg->fileSaveAdd);
-
 
 			if ($this->cfg->rebuild || !file::exists($this->cfg->fileSave)) {
 				$change = false;

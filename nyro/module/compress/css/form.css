@@ -176,6 +176,9 @@ li.lineError .text, li.lineError .date, li.lineError img, li.lineError ol.mulVal
 	border: 1px solid #FD9999;
 	background: #fef2f2;
 }
+li.lineError table.mceLayout {
+	border: 1px solid #FD9999;
+}
 ol.lineErrors {
 	width: 23em;
     clear: both;

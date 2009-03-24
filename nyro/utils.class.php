@@ -68,12 +68,19 @@ class utils {
 	 * Convert html entities. If array provided, all the data will be converted
 	 *
 	 * @param array|string $val
+	 * @param bool $key In case of an array, indicate if the keys should also be processed
 	 * @return array|string
 	 */
-	public static function htmlOut($val) {
-		if (is_array($val))
-			array_walk_recursive($val, create_function('&$v', '$v = htmlentities($v);'));
-		else
+	public static function htmlOut($val, $key=false) {
+		if (is_array($val)) {
+			if ($key) {
+				$tmp = $val;
+				$val = array();
+				foreach($tmp as $k=>$t)
+					$val[htmlentities($k)] = htmlentities($t);
+			} else
+				array_walk_recursive($val, create_function('&$v', '$v = htmlentities($v);'));
+		} else
 			$val = htmlentities($val);
 		return $val;
 	}
@@ -82,15 +89,23 @@ class utils {
 	 * Opposite of htmlOut
 	 *
 	 * @param array|string $val
+	 * @param bool $key In case of an array, indicate if the keys should also be processed
 	 * @return array|string
 	 */
-	public static function htmlDeOut($val) {
-		if (is_array($val))
-			array_walk_recursive($val, create_function('&$v', '$v = html_entity_decode($v);'));
-		else
+	public static function htmlDeOut($val, $key=false) {
+		if (is_array($val)) {
+			if ($key) {
+				$tmp = $val;
+				$val = array();
+				foreach($tmp as $k=>$t)
+					$val[html_entity_decode($k)] = html_entity_decode($t);
+			} else
+				array_walk_recursive($val, create_function('&$v', '$v = html_entity_decode($v);'));
+		} else
 			$val = html_entity_decode($val);
 		return $val;
 	}
+
 	/**
 	 * Used to retrieve the data from the request
 	 *

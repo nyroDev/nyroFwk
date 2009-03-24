@@ -50,13 +50,8 @@ abstract class form_mulValue extends form_abstract {
 			}
 			$this->cfg->group = utils::htmlOut($group);
 			$this->cfg->list = utils::htmlOut($list);
-		} else if ($this->cfg->needOut) {
-			$list = array();
-			foreach($this->cfg->list as $k=>$v) {
-				$list[utils::htmlOut($k)] = utils::htmlOut($v);
-			}
-			$this->cfg->list = $list;
-		}
+		} else if ($this->cfg->needOut)
+			$this->cfg->list = utils::htmlOut($this->cfg->list, true);
 
 		$this->addRule('in', array_keys($this->cfg->list));
 	}
@@ -66,18 +61,15 @@ abstract class form_mulValue extends form_abstract {
 	 *
 	 * @return mixed
 	 */
-	public function getValue() {
+	public function getValue($outside=true) {
 		$val = parent::getValue();
 		if (!is_null($this->cfg->valueNone) && $val == $this->cfg->valueNone)
 			return null;
 		if ($this->cfg->needOut) {
-			if (is_array($val)) {
-				$tmp = array();
-				foreach($val as $k=>$v)
-					$tmp[utils::htmlDeOut($k)] = utils::htmlDeOut($v);
-				$val = $tmp;
-			} else
-				$val = utils::htmlDeOut($val);
+			if ($outside)
+				$val = utils::htmlDeOut($val, true);
+			else
+				$val = utils::htmlOut($val, true);
 		}
 		return $val;
 	}
@@ -88,10 +80,6 @@ abstract class form_mulValue extends form_abstract {
 	 * @param mixed $value The value
 	 */
 	public function setValue($value) {
-		/*
-		if (is_array($value) && !is_null($this->cfg->valueNone))
-			$value = array_filter($value, create_function('$v', 'return $v != "'.$this->cfg->valueNone.'";'));
-		*/
 		if (is_array($value) && $this->cfg->uniqValue) {
 			parent::setValue(array_shift($value));
 		} else {
@@ -108,10 +96,10 @@ abstract class form_mulValue extends form_abstract {
 	public function to($type) {
 		if ($this->cfg->mode == 'view') {
 			if ($this->cfg->uniqValue)
-				return $this->cfg->getInArray('list', $this->getValue());
+				return $this->cfg->getInArray('list', $this->getValue(false));
 			else {
 				$tmp = array();
-				foreach($this->getValue() as $v)
+				foreach($this->getValue(false) as $v)
 					$tmp[] = $this->cfg->getInArray('list', $v);
 				return implode(', ', $tmp);
 			}
@@ -133,6 +121,7 @@ abstract class form_mulValue extends form_abstract {
 				$tmpVal = null;
 			}
 			$selected = $this->isInValue($k)? $prm['selected'] : null;
+
 			$tmpVal.= str_replace(
 				array('[plus]', '[value]', '[label]'),
 				array($selected, $k, $v),

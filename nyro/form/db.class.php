@@ -102,6 +102,7 @@ class form_db extends form {
 				'ident'=>$field['link']['ident'],
 				'table'=>$field['link']['table'],
 				'sep'=>$field['link']['sep'],
+				'where'=>$field['link']['where'],
 				'sepGr'=>$field['link']['sepGr'],
 				'nbFieldGr'=>$field['link']['nbFieldGr']
 			);
@@ -131,9 +132,11 @@ class form_db extends form {
 			case 'mediumblob':
 			case 'longtext':
 			case 'longblob':
-				if (in_array('richtext', $field['comment'])) {
-					$type = array_shift($field['comment']);
-					$prm['html'] = utils::initTabNumPair($field['comment']);
+				$key = array_search('richtext', $field['comment']);
+				if ($key !== false) {
+					$type = 'richtext';
+					unset($field['comment'][$key]);
+					$prm['html'] = $field['comment'];
 					if (array_key_exists('tinyMce', $field))
 						$prm['tinyMce'] = $field['tinyMce'];
 				} else {
@@ -176,7 +179,7 @@ class form_db extends form {
 				if (count($field['comment']) == 1)
 					$prm['helper'] = $field['comment'][0];
 				else
-					$prm = array_merge($prm, utils::initTabNumPair($field['comment']));
+					$prm = array_merge($prm, $field['comment']);
 				break;
 			default:
 				$type = array_key_exists(0, $field['comment']) && !empty($field['comment'][0])? $field['comment'][0] : 'text';

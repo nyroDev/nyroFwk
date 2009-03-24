@@ -56,7 +56,15 @@ class db_pdo_mysql extends db_pdo_abstract {
 			$text = false;
 			$auto = false;
 			$htmlOut = true;
-			$comment = explode($this->cfg->sepCom, $row[$fComment]);
+			$tmp = explode($this->cfg->sepCom, $row[$fComment]);
+			$comment = array();
+			foreach($tmp as $t) {
+				$tt = explode($this->cfg->sepComVal, $t);
+				if (count($tt) == 2)
+					$comment[$tt[0]] = $tt[1];
+				else
+					$comment[] = $t;
+			}
 			if (preg_match('/^(set|enum)\((.+)\)/', $row[$fType], $matches)) {
 				$row[$fType] = $matches[1];
 				$tmp = explode(',',$matches[2]);

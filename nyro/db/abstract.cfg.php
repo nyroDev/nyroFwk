@@ -9,5 +9,6 @@ $cfg = array(
 	'fetchMode'=>db::FETCH_ASSOC,
 	'quoteIdentifier'=>'`',
 	'sepCom'=>'~',
+	'sepComVal'=>'¤',
 	'quoteValue'=>'"',
 );

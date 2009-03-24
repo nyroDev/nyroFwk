@@ -160,6 +160,7 @@ final class request {
 				'request'=>$request,
 				'lang'=>self::$cfg->lang,
 				'module'=>self::$cfg->module,
+				'moduleScaffold'=>null,
 				'action'=>self::$cfg->action,
 				'param'=>self::$cfg->param,
 				'text'=>self::$cfg->text,
@@ -614,8 +615,13 @@ final class request {
 	 * Init the module requested
 	 */
 	private static function initModule() {
-		if (!self::$module)
+		if (!self::$module) {
 			self::$module = factory::getModule(self::$uriInfo['module'], array(), self::$scaffold);
+			if (self::$scaffold) {
+				self::$uriInfo['moduleScaffold'] = self::$uriInfo['module'];
+				self::$uriInfo['module'] = 'scaffold';
+			}
+		}
 	}
 
 	/**

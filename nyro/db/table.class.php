@@ -164,14 +164,21 @@ class db_table extends object {
 					$sep = $this->cfg->defSep;
 					$nbFieldGr = 0;
 					$sepGr = null;
+					$more = array();
 					if (!empty($this->fields[$c]['comment'])) {
 						$com = $this->fields[$c]['comment'];
+						foreach($com as $kk=>$cc) {
+							if (!is_numeric($kk)) {
+								$more[$kk] = $cc;
+								unset($com[$kk]);
+							}
+						}
 						$sep = !empty($com[0])? array_shift($com) : $this->cfg->defSep;
 						$list = array(array_shift($com));
 						$nbFieldGr = array_shift($com);
 						$sepGr = array_shift($com);
 					}
-					$this->linkedTables[$c] = array(
+					$this->linkedTables[$c] = array_merge(array(
 						'table'=>$table,
 						'ident'=>$this->cfg->defId,
 						'fields'=>implode(',', $fields),
@@ -182,7 +189,7 @@ class db_table extends object {
 						'list'=>$list,
 						'nbFieldGr'=>$nbFieldGr,
 						'sepGr'=>$sepGr
-					);
+					), $more);
 				}
 			}
 		}
