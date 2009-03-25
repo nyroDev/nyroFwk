@@ -161,7 +161,6 @@ abstract class db_abstract extends object {
 			$sql = 'UPDATE '.$this->quoteIdentifier($prm['table']);
 			$sql.= ' SET '.implode(',',$set);
 			$sql.= $this->makeWhere($prm['where'], $prm['whereOp']);
-
 	        $stmt = $this->query($sql, array_values($prm['values']));
 	        return $stmt->rowCount();
 		} else
@@ -221,7 +220,8 @@ abstract class db_abstract extends object {
 					$query = '('.implode(' '.$whereOp.' ', $tmp).')';
 				} else
 					$query = '('.implode(' '.$whereOp.' ', $where).')';
-			}
+			} else
+				$query = $where;
 			$query = ($incWhere && $query? ' WHERE ' : null).$query;
 		}
 		return $query;
