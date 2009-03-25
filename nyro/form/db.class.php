@@ -73,6 +73,7 @@ class form_db extends form {
 			case 'numeric':
 				$prm['type'] = 'range_numeric';
 		}
+		$prm['valid']['required'] = false;
 		return $this->add($prm['type'], $prm);
 	}
 

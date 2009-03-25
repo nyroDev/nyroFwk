@@ -628,9 +628,13 @@ class db_table extends object {
 	public function count(array $prm) {
 		$prm = $this->selectQuery($prm, $tmpTables);
 		$prm['group'] = $prm['fields'] = $this->cfg->name.'.'.$this->getIdent();
+		
+		$prm['where'] = $this->getDb()->makeWhere($prm['where'], $prm['whereOp'], false);
 		$nb = count($prm['join']);
-		for($i=0;$i<$nb;$i++) {
-			if (array_key_exists('dir', $prm['join'][$i]) && !is_null(strpos($prm['join'][$i]['dir'], 'outer')))
+		for($i=0; $i<$nb; $i++) {
+			if (array_key_exists('dir', $prm['join'][$i]) &&
+					!is_null(strpos($prm['join'][$i]['dir'], 'outer')) &&
+					!preg_match('/`'.$prm['join'][$i]['table'].'`\./', $prm['where']))
 				unset($prm['join'][$i]);
 		}
 		return $this->getDb()->count($prm);

@@ -113,12 +113,14 @@ class valid extends object {
 	public function isIn($prm=null) {
 		$ret = true;
 		$val = is_array($this->cfg->value)? $this->cfg->value : array($this->cfg->value);
-		foreach($val as $v) {
-			if (!in_array($v, $prm)) {
-				$this->errors[] = sprintf($this->getMessage('in'), $v, $this->cfg->label);
-				$ret = false;
+		$val = array_filter($val);
+		if (!empty($val))
+			foreach($val as $v) {
+				if (!in_array($v, $prm)) {
+					$this->errors[] = sprintf($this->getMessage('in'), $v, $this->cfg->label);
+					$ret = false;
+				}
 			}
-		}
 		return $ret;
 	}
 

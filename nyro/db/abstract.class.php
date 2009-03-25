@@ -207,20 +207,23 @@ abstract class db_abstract extends object {
      * @param string $whereOp Operator (AND or OR)
      * @return null|string the where string, starting with WHERE
      */
-    public function makeWhere($where, $whereOp='AND') {
+    public function makeWhere($where, $whereOp='AND', $incWhere=true) {
     	$query = null;
-		if (!empty($where))
-			if (is_array($where)) {
+		if (!empty($where)) {
+			if ($where instanceof db_where)
+				$query = $where->toString();
+			else if (is_array($where)) {
 				if (!array_key_exists(0, $where)) {
 					$tmp = array();
 					foreach($where as $k=>$v) {
 						$tmp[] = $this->quoteIdentifier($k).'="'.$v.'"';
 					}
-					$query = ' WHERE ('.implode(' '.$whereOp.' ', $tmp).')';
+					$query = '('.implode(' '.$whereOp.' ', $tmp).')';
 				} else
-					$query = ' WHERE ('.implode(' '.$whereOp.' ', $where).')';
-			} else
-				$query = ' WHERE '.$where;
+					$query = '('.implode(' '.$whereOp.' ', $where).')';
+			}
+			$query = ($incWhere && $query? ' WHERE ' : null).$query;
+		}
 		return $query;
     }
 

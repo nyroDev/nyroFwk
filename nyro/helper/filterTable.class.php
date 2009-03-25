@@ -45,8 +45,13 @@ class helper_filterTable extends object {
 
 		$this->form = factory::get('form_db', array(
 			'filter'=>true,
+			'sectionName'=>$this->cfg->formName,
 			'action'=>array('param'=>request::createParam($prmA))
 		));
+		
+		
+		$this->form->setSubmitText($this->cfg->submitText);
+		$this->form->setSubmitplus('<a href="'.$this->clearLink().'">'.$this->cfg->clearText.'</a>');
 
 		if (!empty($this->cfg->fields)) {
 			foreach($this->cfg->fields as $field) {
@@ -124,11 +129,16 @@ class helper_filterTable extends object {
 					'op'=>'<>'
 				));
 			} else {
-				$where->add(array(
-					'field'=>$this->table->getName().'.'.$name,
-					'val'=>'%'.$val.'%',
-					'op'=>'LIKE'
-				));
+				$tmp = explode(' ', $val);
+				array_walk($tmp, create_function('&$v', '$v = trim($v);'));
+				$tmp = array_filter($tmp);
+				foreach($tmp as $t) {
+					$where->add(array(
+						'field'=>$this->table->getName().'.'.$name,
+						'val'=>'%'.$t.'%',
+						'op'=>'LIKE'
+					));
+				}
 			}
 			$this->session->set(array(
 				'name'=>$name,
@@ -160,7 +170,7 @@ class helper_filterTable extends object {
 	 * @return string
 	 */
 	public function to($type) {
-		return $this->form->to($type).'<a href="'.$this->clearLink().'">Clear</a>';
+		return $this->form->to($type);
 	}
 
 	/**
