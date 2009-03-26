@@ -127,7 +127,9 @@ class db_row extends object {
 	 * @return form_db
 	 */
 	public function getForm($showFields=null, array $formParam = array(), $passConfirm=true) {
-		$form = factory::get('form_db', $formParam);
+		$form = factory::get('form_db', array_merge($formParam, array(
+			'table'=>$this->getTable()
+		)));
 		/* @var $form form_db */
 		foreach($this->table->getField() as $f) {
 			if ($f['name'] != $this->table->getIdent() && !$f['auto'] &&

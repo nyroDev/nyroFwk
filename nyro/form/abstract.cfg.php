@@ -10,6 +10,8 @@ $cfg = array(
 	'isI18n'=>false,
 
 	'htmlTagName'=>REQUIRED,
+	
+	'classLine'=>null,
 
 	'validType'=>'valid',
 	'valid'=>array(

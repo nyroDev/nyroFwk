@@ -24,15 +24,23 @@ abstract class form_abstract extends object {
 			$this->label = ucfirst($this->name);
 		if (!is_object($this->cfg->value))
 			$this->cfg->value = utils::htmlOut($this->cfg->value);
-		$this->id = str_replace(
-			array('[]', '[', ']'),
-			array('_', '_', ''),
-			$this->name);
+		$this->id = $this->makeId($this->name);
 		$val = &$this->cfg->getRef('value');
-		$this->valid = factory::get($this->cfg->validType, array('value'=>&$val, 'label'=>$this->label));
+		$this->valid = factory::get($this->cfg->validType, array(
+			'value'=>&$val,
+			'label'=>$this->label,
+			'validEltArray'=>$this->cfg->getInArray('valid', 'validEltArray'),
+		));
+		$this->cfg->delInArray('valid', 'validEltArray');
 		$this->initValid();
 	}
 
+	protected function makeId($name) {
+		return str_replace(
+			array('[]', '[', ']'),
+			array('_', '_', ''),
+			$name);
+	}
 	/**
 	 * Get the field name
 	 *

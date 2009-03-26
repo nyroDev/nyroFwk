@@ -37,6 +37,9 @@ fieldset li {
 	width: 100%;
 	padding-bottom: 1em;
 }
+fieldset li.nyroTcha {
+	display: none;
+}
 fieldset ol ol {
 	margin: 0;
 	padding: 0;
@@ -148,6 +151,35 @@ fieldset.submit {
 fieldset.submit input {
 	margin-right: 1em;
 }
+
+/* Range */
+
+fieldset ol div.range {
+	margin-left: 9em;
+}
+fieldset ol div.range-slider {
+	margin-left: 9em;
+	width: 22em;
+	margin-bottom: 0.4em;
+}
+fieldset ol div.range label {
+    width: 3.3em;
+    float: left;
+    display: block;
+    text-align: center;
+    margin-right: 0;
+}
+fieldset ol div.range input {
+    float: left;
+    width: 9em;
+}
+fieldset ol div.range input.date {
+	width: 7em;
+}
+fieldset ol div.range img.ui-datepicker-trigger {
+	float: left;
+}
+
 
 /* Errors */
 ol.globalErrors, ol.sectionErrors, ol.lineErrors {

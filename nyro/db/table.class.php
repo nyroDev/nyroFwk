@@ -977,6 +977,20 @@ class db_table extends object {
 		);
 		return $this->select($prm);
 	}
+	
+	public function getRange($field=null) {
+		if (is_null($field))
+			$field = $this->getIdent();
+		$query = '
+			(SELECT '.$field.' FROM '.$this->getName().' ORDER BY '.$field.' ASC LIMIT 0,1)
+			UNION
+			(SELECT '.$field.' FROM '.$this->getName().' ORDER BY '.$field.' DESC LIMIT 0,1)';
+		$tmp = $this->getDb()->query($query)->fetchAll(PDO::FETCH_COLUMN);
+		return array(
+			'min'=>$tmp[0],
+			'max'=>$tmp[1],
+		);
+	}
 
 	/**
 	 * Get a row

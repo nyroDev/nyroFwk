@@ -45,6 +45,7 @@ class helper_filterTable extends object {
 
 		$this->form = factory::get('form_db', array(
 			'filter'=>true,
+			'table'=>$this->table,
 			'sectionName'=>$this->cfg->formName,
 			'action'=>array('param'=>request::createParam($prmA))
 		));

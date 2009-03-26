@@ -22,8 +22,8 @@ class helper_date extends object {
 	 * @param string $type The value type (timestamp, date, time or a key from getArray)
 	 */
 	public function set($date, $type='date', $len=null) {
-		$this->isNull = true;
-		if (is_null($date))
+		$this->isNull = false;
+		if (is_null($date) || empty($date) || $date == '0000-00-00')
 			$this->isNull = true;
 		else if ($type == 'timestamp')
 			$this->timestamp = $date;
@@ -59,7 +59,6 @@ class helper_date extends object {
 			if (!empty($matches)) {
 				$ret = array();
 				$i=1;
-				$ret = array();
 				foreach($pos as $k=>$v) {
 					$key = null;
 					switch($k) {
@@ -196,6 +195,18 @@ class helper_date extends object {
             'EE'=>$day['m'],
         );
         return str_replace(array_keys($places), $places, $form);
+	}
+
+	/**
+	 * Create a javascript code to create a new Date object
+	 *
+	 * @param string $default Default string used in case of a non setted date
+	 * @return string the Javascript code
+	 */
+	public function getJs($default='""') {
+		if ($this->isNull)
+			return $default;
+		return 'new Date('.($this->timestamp*1000).')';
 	}
 
 	/**

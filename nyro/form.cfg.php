@@ -13,6 +13,11 @@ $cfg = array(
 
 	'sepLabel'=>': ',
 	'emptyLabel'=>'&nbsp;',
+	
+	'captcha'=>array(
+		'name'=>'nyroTcha',
+		'type'=>'captcha',
+	),
 
 	'html'=>array(
 		'errorPos'=>'section',
@@ -22,9 +27,9 @@ $cfg = array(
 	[content]
 	[submit]
 </form>',
-		'line'=>'<li><label for="[id]">[label]</label>[field][des]</li>',
+		'line'=>'<li class="[classLine]"><label for="[id]">[label]</label>[field][des]</li>',
 
-		'lineError'=>'<li class="lineError"><label for="[id]" class="label">[label]</label>[field][errors][des]</li>',
+		'lineError'=>'<li class="lineError [classLine]"><label for="[id]" class="label">[label]</label>[field][errors][des]</li>',
 		'lineErrorWrap'=>'<ol class="lineErrors">[errors]</ol>',
 		'lineErrorLine'=>'<li>[error]</li>',
 

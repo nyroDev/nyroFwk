@@ -57,6 +57,13 @@ class form extends object {
 	 * @var array
 	 */
 	protected $errors = array();
+	
+	/**
+	 * Indicate if a captcha was already added
+	 *
+	 * @var bool
+	 */
+	protected $captchaAdded = false;
 
 	/**
 	 * Add the first section from the configuration file
@@ -99,6 +106,7 @@ class form extends object {
 	 * @return string
 	 */
 	public function to($type) {
+		$this->addCaptcha();
 		$ret = null;
 
 		$prm = $this->cfg->get($type);
@@ -138,8 +146,8 @@ class form extends object {
 
 				$label = $e->label?$e->label.$this->cfg->sepLabel : $this->cfg->emptyLabel;
 				$tmp = str_replace(
-					array('[des]', '[label]', '[field]', '[errors]', '[id]'),
-					array($des, $label, $e->to($type), $errors, $e->id),
+					array('[des]', '[label]', '[field]', '[errors]', '[id]', '[classLine]'),
+					array($des, $label, $e->to($type), $errors, $e->id, $e->classLine),
 					$prm[$line]);
 				if ($e->isHidden() && $hiddenGlobal)
 					$hiddens.= $tmp;
@@ -444,6 +452,7 @@ class form extends object {
 	 * Refill the whole form from the post argument
 	 */
 	public function refill() {
+		$this->addCaptcha();
 		$htVars = http_vars::getInstance();
 		foreach($this->elementsSection as $name=>$section) {
 			$val = $htVars->getVar(array(
@@ -538,6 +547,19 @@ class form extends object {
 	 */
 	public function getSection() {
 		return $this->curSection;
+	}
+	
+	/**
+	 * Add a captcha if parametred and not already added
+	 */
+	protected function addCaptcha() {
+		if (!$this->captchaAdded) {
+			if (($typeCpt = $this->cfg->getInarray('captcha', 'type')) && ($nameCpt = $this->cfg->getInarray('captcha', 'name'))) {
+				$this->add($typeCpt, $this->cfg->captcha);
+				$this->captchaAdded = true;
+				$this->cfg->setInArray('notValue', $nameCpt, $nameCpt);
+			}
+		}
 	}
 
 	public function set($key1, $key2, $val) {

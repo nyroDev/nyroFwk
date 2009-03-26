@@ -72,47 +72,51 @@ class valid extends object {
 	public function isValid() {
 		$this->errors = array();
 		$valid = true;
+		$val = $this->cfg->validEltArray && is_array($this->cfg->value) ? $this->cfg->value : array($this->cfg->value);
 		foreach($this->cfg->rules as $rule=>$prm) {
-			$valid = $this->{'is'.ucfirst($rule)}($prm) && $valid;
+			foreach($val as $v) {
+				if ($rule == 'required' || !empty($v))
+					$valid = $this->{'is'.ucfirst($rule)}($v, $prm) && $valid;
+			}
 		}
 		return $valid;
 	}
 	
-	public function isRequired($prm=null) {
-		if (empty($this->cfg->value)) {
+	public function isRequired($val, $prm=null) {
+		if (empty($val)) {
 			$this->errors[] = sprintf($this->getMessage('required'), $this->cfg->label);
 			return false;
 		}
 		return true;
 	}
 
-	public function isNumeric($prm=null) {
-		if (!is_numeric($this->cfg->value)) {
+	public function isNumeric($val, $prm=null) {
+		if (!is_numeric($val)) {
 			$this->errors[] = sprintf($this->getMessage('numeric'), $this->cfg->label);
 			return false;
 		}
 		return true;
 	}
 
-	public function isInt($prm=null) {
-		if (!is_numeric($this->cfg->value) || round($this->cfg->value) != $this->cfg->value) {
+	public function isInt($val, $prm=null) {
+		if (!is_numeric($val) || round($val) != $val) {
 			$this->errors[] = sprintf($this->getMessage('int'), $this->cfg->label);
 			return false;
 		}
 		return true;
 	}
 
-	public function isDifferent($prm=null) {
-		if ($this->cfg->value == $prm[0]) {
+	public function isDifferent($val, $prm=null) {
+		if ($val == $prm[0]) {
 			$this->errors[] = sprintf($this->getMessage('different'), $this->cfg->label, $prm[0]);
 			return false;
 		}
 		return true;
 	}
 
-	public function isIn($prm=null) {
+	public function isIn($val, $prm=null) {
 		$ret = true;
-		$val = is_array($this->cfg->value)? $this->cfg->value : array($this->cfg->value);
+		$val = is_array($val)? $val : array($val);
 		$val = array_filter($val);
 		if (!empty($val))
 			foreach($val as $v) {
@@ -124,15 +128,15 @@ class valid extends object {
 		return $ret;
 	}
 
-	public function isEqual($prm=null) {
+	public function isEqual($val, $prm=null) {
 		$ret = true;
 		if ($prm[0] instanceof form_abstract) {
-			if ($this->cfg->value != $prm[0]->getRawValue()) {
+			if ($val != $prm[0]->getRawValue()) {
 				$this->errors[] = sprintf($this->getMessage('equalInput'), $this->cfg->label, $prm[0]->label);
 				$ret = false;
 			}
 		} else {
-			if ($this->cfg->value != $prm[0]) {
+			if ($val != $prm[0]) {
 				$this->errors[] = sprintf($this->getMessage('equal'), $v, $this->cfg->label);
 				$ret = false;
 			}

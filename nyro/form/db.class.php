@@ -72,6 +72,9 @@ class form_db extends form {
 				break;
 			case 'numeric':
 				$prm['type'] = 'range_numeric';
+				$prm['valid']['validEltArray'] = true;
+				$prm['allowedRange'] = $this->cfg->table->getRange();
+				break;
 		}
 		$prm['valid']['required'] = false;
 		return $this->add($prm['type'], $prm);

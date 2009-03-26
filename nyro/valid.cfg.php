@@ -3,6 +3,7 @@ $cfg = array(
 	'label'=>REQUIRED,
 	'value'=>REQUIRED,
 	'rules'=>array(),
+	'validEltArray'=>false,
 	'messages'=>array(
 		'required'=>'%s is required.',
 		'numeric'=>'%s should be numeric.',
