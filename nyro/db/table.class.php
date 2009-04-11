@@ -653,7 +653,7 @@ class db_table extends object {
 			'order'=>''
 		));
 
-		if (!empty($prm['where']) && !is_array($prm['where']) && !is_object($prm['where'])) {
+		if (!empty($prm['where']) && !is_array($prm['where']) && !is_object($prm['where']) && strpos($prm['where'], '=') === false) {
 			$prm['where'] = $this->cfg->name.'.'.$this->cfg->ident.'='.$prm['where'];
 		}
 

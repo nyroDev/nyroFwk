@@ -53,13 +53,15 @@
 	</table>
 	<?php
 	if ($nbPage > 1) {
+		/*
 		foreach($pageLinks as $i=>$l) {
 			if ($i == $currentPage)
 				echo '<strong>'.$i.'</strong> - ';
 			else
 				echo '<a href="'.$l.'">'.$i.'</a> - ';
 		}
-		echo '<select onchange="javascript:location.href=this.value">';
+		*/
+		echo 'Pages : <select onchange="javascript:location.href=this.value">';
 		foreach($pageLinks as $i=>$l) {
 			if ($i == $currentPage)
 				echo '<option value="'.$l.'" selected="selected">'.$i.'</option>';

@@ -86,14 +86,16 @@ class form_range_date extends form_range_abstract {
 			
 			$minId = $this->makeId($this->name.'[0]');
 			$maxId = $this->makeId($this->name.'[1]');
+			
+			$minDate = $this->dates['min']->getJs(null);
+			$maxDate = $this->dates['max']->getJs(null);
+			
 			$resp->blockJquery('$("#'.$minId.'").datepicker({
-				buttonImage: "'.$dateImg.'", buttonImageOnly: true, showOn: "both",
-				maxDate: '.$this->dates['max']->getJs().',
+				buttonImage: "'.$dateImg.'", buttonImageOnly: true, showOn: "both", '.($maxDate?'maxDate: '.$maxDate.',' : null).'
 				onSelect: function(dateText) {$("#'.$maxId.'").datepicker("option", "minDate", $("#'.$minId.'").datepicker("getDate"));}
 			});');
 			$resp->blockJquery('$("#'.$maxId.'").datepicker({
-				buttonImage: "'.$dateImg.'", buttonImageOnly: true, showOn: "both",
-				minDate: '.$this->dates['min']->getJs().',
+				buttonImage: "'.$dateImg.'", buttonImageOnly: true, showOn: "both", '.($minDate?'minDate: '.$minDate.',' : null).'
 				onSelect: function(dateText) {$("#'.$minId.'").datepicker("option", "maxDate", $("#'.$maxId.'").datepicker("getDate"));}
 			});');
 		}

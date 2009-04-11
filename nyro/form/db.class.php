@@ -53,14 +53,12 @@ class form_db extends form {
 				$prm['type'] = 'text';
 				break;
 			case 'date':
-				$prm['type'] = 'range_date';
-				break;
 			case 'datetime':
 				$prm['type'] = 'range_date';
 				break;
 			case 'radio':
 				if (!empty($prm['list'])) {
-					$prm['list'][-1] = 'all';
+					$prm['list'][-1] = $this->cfg->all;
 					$prm['valueNone'] = -1;
 					$prm['value'] = -1;
 				}
@@ -73,7 +71,7 @@ class form_db extends form {
 			case 'numeric':
 				$prm['type'] = 'range_numeric';
 				$prm['valid']['validEltArray'] = true;
-				$prm['allowedRange'] = $this->cfg->table->getRange();
+				$prm['allowedRange'] = $this->cfg->table->getRange($prm['name']);
 				break;
 		}
 		$prm['valid']['required'] = false;

@@ -57,6 +57,13 @@ class form extends object {
 	 * @var array
 	 */
 	protected $errors = array();
+
+	/**
+	 * Errors manually added
+	 *
+	 * @var array
+	 */
+	protected $customErrors = array();
 	
 	/**
 	 * Indicate if a captcha was already added
@@ -251,7 +258,7 @@ class form extends object {
 	 * @return array
 	 */
 	public function getErrors() {
-		return $this->errors;
+		return array_merge_recursive($this->errors, $this->customErrors);
 	}
 
 	/**
@@ -260,7 +267,23 @@ class form extends object {
 	 * @return bool
 	 */
 	public function hasErrors() {
-		return !empty($this->errors);
+		return !empty($this->getErrors);
+	}
+	
+	/**
+	 * Add a custom error
+	 *
+	 * @param string $field Filed name to be associate with
+	 * @param string $error The error text
+	 */
+	public function addCustomError($field, $error) {
+		if ($elt = $this->get($field)) {
+			$elt->addCustomError($error);
+			return;
+		}
+		if (!array_key_exists($field, $this->customErrors))
+			$this->customErrors[$field] = array();
+		$this->customErrors[$field][] = $error;
 	}
 
 	/**
@@ -312,9 +335,8 @@ class form extends object {
 	 * @return form_element|null
 	 */
 	public function get($name) {
-		if ($this->has($name)) {
+		if ($this->has($name))
 			return $this->elements[$this->elementsSection[$name]][$name];
-		}
 		return null;
 	}
 

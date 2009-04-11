@@ -130,7 +130,8 @@ class security_default extends security_abstract {
 						$cook->save();
 					}
 					$this->logged = true;
-				}
+				} else
+					$form->addCustomError($loginField, $this->cfg->errorMsg);
 				if ($this->logged) {
 					if (is_null($page)) {
 						if ($this->session->pageFrom) {
@@ -254,7 +255,7 @@ class security_default extends security_abstract {
 			$request = request::removeLangOutUrl('/'.request::get('request'));
 			if ($request != $this->getPage('forbidden') && $request != $this->getPage('login')) {
 				$this->session->pageFrom = request::uri(request::get());
-				session::setFlash('nyroError', 'Don\'t have the permission to access to this page.');
+				session::setFlash('nyroError', $this->cfg->errorText);
 				response::getInstance()->redirect($this->getPage('forbidden', true), 403);
 			}
 		}
@@ -279,6 +280,7 @@ class security_default extends security_abstract {
 				'name'=>'stayConnected',
 				'label'=>false,
 				'uniqValue'=>true,
+				'valid'=>array('required'=>false),
 				'list'=>array(
 					1=>utils::htmlOut($this->cfg->labelStayConnected)
 				)

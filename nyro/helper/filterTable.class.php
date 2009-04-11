@@ -32,6 +32,8 @@ class helper_filterTable extends object {
 
 		if (!$this->cfg->check('clearPrm'))
 			$this->cfg->clearPrm = 'clearFilter'.ucfirst($this->table->getName());
+		$this->cfg->setinArray('actionPrmClear', $this->cfg->clearPrm, true);
+			
 		$this->initForm();
 	}
 
@@ -39,15 +41,11 @@ class helper_filterTable extends object {
 	 * Init the filter form
 	 */
 	protected function initForm() {
-
-		$prmA = request::get('paramA');
-		unset($prmA[$this->cfg->clearPrm]);
-
 		$this->form = factory::get('form_db', array(
 			'filter'=>true,
 			'table'=>$this->table,
 			'sectionName'=>$this->cfg->formName,
-			'action'=>array('param'=>request::createParam($prmA))
+			'action'=>array('paramA'=>array_merge(array_diff_key(request::get('paramA'), $this->cfg->actionPrmClear), $this->cfg->actionPrmForce))
 		));
 		
 		
@@ -159,7 +157,7 @@ class helper_filterTable extends object {
 	 * @return string
 	 */
 	public function clearLink() {
-		$prmA = request::get('paramA');
+		$prmA = array_merge(array_diff_key(request::get('paramA'), $this->cfg->actionPrmClear), $this->cfg->actionPrmForce);
 		$prmA[$this->cfg->clearPrm] = 1;
 		return request::uriDef(array('paramA'=>$prmA));
 	}

@@ -17,6 +17,13 @@ abstract class form_abstract extends object {
 	protected $valid;
 
 	/**
+	 * Errors manually added
+	 *
+	 * @var array
+	 */
+	protected $customErrors = array();
+
+	/**
 	 * Set up the valid object
 	 */
 	protected function afterInit() {
@@ -105,7 +112,7 @@ abstract class form_abstract extends object {
 	 * @return bool True if valid
 	 */
 	public function isValid() {
-		return $this->valid->isValid();
+		return $this->valid->isValid() && empty($this->customErrors);
 	}
 
 	/**
@@ -114,7 +121,16 @@ abstract class form_abstract extends object {
 	 * @return array
 	 */
 	public function getErrors() {
-		return $this->valid->getErrors();
+		return array_merge_recursive($this->valid->getErrors(), $this->customErrors);
+	}
+	
+	/**
+	 * Add a custom error
+	 *
+	 * @param string $error The error text
+	 */
+	public function addCustomError($error) {
+		$this->customErrors[] = $error;
 	}
 
 	/**
