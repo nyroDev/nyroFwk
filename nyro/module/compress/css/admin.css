@@ -31,8 +31,10 @@ ul#menu {
 	background: #F0F0F0;
 	border: 1px solid #C0C0C0;
 	padding: 0.5em 1em;
+	margin-bottom: 1em;
 }
-ul#menu li.hr {
+ul#menu li.hr span {
+	display: block;
 	border-top: 1px solid #C0C0C0;
 	margin: 0.4em -0.8em;
 }
@@ -54,4 +56,5 @@ div#container div#footer {
 	padding: 0.1em;
 	background: #F0F0F0;
 	border: 1px solid #C0C0C0;
+	margin-bottom: 1em;
 }
