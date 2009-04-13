@@ -41,6 +41,8 @@ $cfg = array(
 		'template_external_list_url'=>'',
 		'external_link_list_url'=>'',
 		'external_image_list_url'=>'',
-		'media_external_list_url'=>''
+		'media_external_list_url'=>'',
+		
+		'relative_urls'=>false
 	)
 );
