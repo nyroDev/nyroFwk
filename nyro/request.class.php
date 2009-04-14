@@ -386,7 +386,9 @@ final class request {
 
 		$tmp = array_fill(0, 4, self::$cfg->empty);
 
-		if (array_key_exists('module', $prm) && !empty($prm['module']))
+		if (array_key_exists('moduleScaffold', $prm) && !empty($prm['moduleScaffold']))
+			$tmp[0] = $prm['moduleScaffold'];
+		else if (array_key_exists('module', $prm) && !empty($prm['module']))
 			$tmp[0] = $prm['module'];
 
 		if (array_key_exists('action', $prm) && !empty($prm['action']))

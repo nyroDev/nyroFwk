@@ -29,7 +29,9 @@ class module_nyroUtils_controller extends module_abstract {
 			define('TINYMCEPATH', substr($path, 0, -1));
 			include($file);
 			exit;
-		} else
+		} else {
+			response::getInstance()->neverExpire();
 			response::getInstance()->showFile($file);
+		}
 	}
 }

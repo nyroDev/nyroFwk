@@ -98,11 +98,40 @@ class form_db extends form {
 			$type = 'list';
 			$prm['list'] = $field['link']['list'];
 			$prm['valueNone'] = 0;
+			$fields = null;
+			$join = null;
+			if ($field['link']['fields']) {
+				$linkedTable = db::get('table', $field['link']['table'], array(
+					'db'=>$this->cfg->table->getDb()
+				));
+				$tmp = array();
+				foreach(explode(',', $field['link']['fields']) as $t) {
+					if ($linkedInfo = $linkedTable->getLinkedTableName($t)) {
+						$alias = $field['name'].'_'.$linkedInfo['table'];
+						$join[] = array(
+							'table'=>$linkedInfo['table'],
+							'alias'=>$alias,
+							'dir'=>'left outer',
+							'on'=>$field['link']['table'].'.'.$linkedInfo['field'].'='.$alias.'.'.$linkedInfo['ident']
+						);
+						$ttmp = array();
+						foreach(explode(',', $linkedInfo['fields']) as $tt) {
+							$ttmp[] = $alias.'.'.$tt;
+							$ttmp[] = '"'.$linkedInfo['sep'].'"';
+						}
+						array_pop($ttmp);
+						$tmp[] = 'CONCAT('.implode(',', $ttmp).')';
+					} else
+						$tmp[] = $field['link']['table'].'.'.$t;
+				}
+				$fields.= ','.implode(',', $tmp);
+			}
 			$prm['dbList'] = array(
-				'fields'=>$field['link']['ident'].($field['link']['fields']? ','.$field['link']['fields'] : null),
+				'fields'=>$field['link']['table'].'.'.$field['link']['ident'].$fields,
 				'i18nFields'=>$field['link']['i18nFields'],
 				'ident'=>$field['link']['ident'],
 				'table'=>$field['link']['table'],
+				'join'=>$join,
 				'sep'=>$field['link']['sep'],
 				'where'=>$field['link']['where'],
 				'sepGr'=>$field['link']['sepGr'],

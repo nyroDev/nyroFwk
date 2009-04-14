@@ -185,6 +185,9 @@ class response_http extends response_abstract {
 	protected function beforeOut() {
 		foreach($this->beforeOut as $bo)
 			call_user_func($bo);
+		
+		if ($this->cfg->compress)
+			ob_start('ob_gzhandler');
 	}
 
 	/**
@@ -198,9 +201,6 @@ class response_http extends response_abstract {
 			$this->beforeOut();
 			if ($headerOnly)
 				exit(0);
-
-			if ($this->cfg->compress)
-				ob_start('ob_gzhandler');
 		}
 
 		$layout = request::isAjax()? $this->cfg->ajaxLayout : $this->cfg->layout;

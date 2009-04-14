@@ -31,6 +31,13 @@ class db_table extends object {
 	protected $linkedTables;
 
 	/**
+	 * Linked table names
+	 *
+	 * @var array
+	 */
+	protected $linkedTableNames;
+
+	/**
 	 * Related tables (with an other table)
 	 *
 	 * @var array
@@ -147,6 +154,7 @@ class db_table extends object {
 	protected function _initLinkedTables() {
 		if ($this->linkedTables === null && !$this->isI18n()) {
 			$this->linkedTables = array();
+			$this->linkedTableNames = array();
 			foreach($this->cols as $c) {
 				if (strpos($c, '_') && $this->fields[$c]['type'] != 'file') {
 					$tmp = explode('_', $c);
@@ -178,7 +186,9 @@ class db_table extends object {
 						$nbFieldGr = array_shift($com);
 						$sepGr = array_shift($com);
 					}
+					$this->linkedTableNames[$c] = $table;
 					$this->linkedTables[$c] = array_merge(array(
+						'field'=>$c,
 						'table'=>$table,
 						'ident'=>$this->cfg->defId,
 						'fields'=>implode(',', $fields),
@@ -222,6 +232,19 @@ class db_table extends object {
 	 */
 	public function isLinked($field) {
 		return array_key_exists($field, $this->linkedTables);
+	}
+	
+	/**
+	 * Get linked info with a table name
+	 *
+	 * @param string $tablename table name
+	 * @return array|null Smae result than @getLinked
+	 */
+	public function getLinkedTableName($tablename) {
+		$key = array_search($tablename, $this->linkedTableNames);
+		if ($key)
+			return $this->getLinked($key);
+		return null;
 	}
 
 	/**
@@ -686,7 +709,30 @@ class db_table extends object {
 				$tmpTables[$f] = $fieldsT;
 				$tmpTables[$f]['sep'] = $p['sep'];
 				$tmpTables[$f]['ident'] = $alias.'_'.$p['ident'];
-				array_walk($fields, create_function('&$v', '$v = "'.$alias.'.".$v." AS '.$alias.'_".$v;'));
+				$tmp = array();
+				$linkedTable = db::get('table', $p['table'], array(
+					'db'=>$this->getDb()
+				));
+				foreach($fields as $t) {
+					if ($linkedInfo = $linkedTable->getLinkedTableName($t)) {
+						$aliasT = $alias.'_'.$linkedInfo['table'];
+						$prm['join'][] = array(
+							'table'=>$linkedInfo['table'],
+							'alias'=>$aliasT,
+							'dir'=>'left outer',
+							'on'=>$alias.'.'.$linkedInfo['field'].'='.$aliasT.'.'.$linkedInfo['ident']
+						);
+						$ttmp = array();
+						foreach(explode(',', $linkedInfo['fields']) as $tt) {
+							$ttmp[] = $aliasT.'.'.$tt;
+							$ttmp[] = '"'.$linkedInfo['sep'].'"';
+						}
+						array_pop($ttmp);
+						$tmp[] = 'CONCAT('.implode(',', $ttmp).') AS '.$alias.'_'.$t;
+					} else
+						$tmp[] = $alias.'.'.$t.' AS '.$alias.'_'.$t;
+				}
+				$fields = $tmp;
 				$prm['fields'].= ','.implode(',', $fields);
 
 				if ($p['i18nFields']) {
