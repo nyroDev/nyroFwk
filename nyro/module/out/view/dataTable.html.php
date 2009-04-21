@@ -56,11 +56,14 @@
 		/*
 		foreach($pageLinks as $i=>$l) {
 			if ($i == $currentPage)
-				echo '<strong>'.$i.'</strong> - ';
+				echo '<strong>'.$i.'</strong>';
 			else
-				echo '<a href="'.$l.'">'.$i.'</a> - ';
+				echo '<a href="'.$l.'">'.$i.'</a>';
+			if ($i < $nbPage)
+				echo ' - ';
 		}
-		*/
+		// */
+		//*
 		echo 'Pages : <select onchange="javascript:location.href=this.value">';
 		foreach($pageLinks as $i=>$l) {
 			if ($i == $currentPage)
@@ -69,6 +72,7 @@
 				echo '<option value="'.$l.'">'.$i.'</option>';
 		}
 		echo '</select>';
+		// */
 	}
 	?>
 <?php else: ?>

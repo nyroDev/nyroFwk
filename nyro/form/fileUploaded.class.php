@@ -90,7 +90,7 @@ class form_fileUploaded extends object {
 	 * Add a key 'saved' in the file array info
 	 */
 	public function save() {
-		if (!$this->file['saved'] && $this->valid()) {
+		if (!$this->file['saved'] && $this->isValid()) {
 			$name = $this->safeFileName($this->file['name']);
 			$savePath = $this->dir.$name;
 			if (move_uploaded_file($this->file['tmp_name'], $savePath)) {
@@ -175,6 +175,7 @@ class form_fileUploaded extends object {
 		if ($current = $this->getCurrent()) {
 			$ret = $this->callHelper('delete', $current);
 			file::delete(FILESROOT.$current);
+			$this->setCurrent(null);
 		}
 		return $ret;
 	}
@@ -184,11 +185,14 @@ class form_fileUploaded extends object {
 	 *
 	 * @return boolean
 	 */
-	public function valid() {
+	public function isValid() {
 		$file = $this->getInfo();
-		return array_key_exists('error', $file) && $file['error'] === 0
+		$tmp = !request::isPost() ||
+			($this->cfg->current) ||
+			(array_key_exists('error', $file) && $file['error'] === 0
 			&& array_key_exists('size', $file) && $file['size'] > 0
-			&& $this->callHelper('valid', $file);
+			&& $this->callHelper('valid', $file));
+		return $tmp? null : 'required';
 	}
 
 	/**

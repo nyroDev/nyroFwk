@@ -342,6 +342,8 @@ class db_row extends object {
 			else
 				$val = $this->cfg->getInarray('data', $key);
 			return $this->table->getField($key, 'htmlOut')? utils::htmlOut($val) : $val;
+		} else if ($val = $this->cfg->getInarray('data', $key)) {
+			return $val;
 		} else if ($this->table->isRelated($key)) {
 			$key = $this->table->getRelatedTableName($key);
 			$values = $this->getValues($mode);
@@ -442,6 +444,7 @@ class db_row extends object {
 							$data[$k][] = implode($v['fk2']['link']['sep'], $tmp2);
 						}
 					}
+					$data[$k] = utils::htmlOut($data[$k]);
 				}
 
 				return array_intersect_key($data, array_flip($tmp));

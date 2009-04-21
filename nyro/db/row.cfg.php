@@ -1,6 +1,6 @@
 <?php
 $cfg = array(
-	'db'=>REQUIRED,
+	'db'=>db::getInstance(),
 	'table'=>REQUIRED,
 	'findId'=>null,
 	'data'=>array()

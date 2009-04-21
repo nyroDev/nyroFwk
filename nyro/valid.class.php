@@ -143,6 +143,14 @@ class valid extends object {
 		}
 		return $ret;
 	}
+	
+	public function isCallback($val, $prm=null) {
+		if ($tmp = call_user_func($prm[0])) {
+			$this->errors[] = sprintf($this->getMessage($tmp), $this->cfg->label);
+			return false;
+		}
+		return true;
+	}
 
 	protected function getMessage($name) {
 		return utils::htmlOut($this->cfg->getInarray('messages', $name));

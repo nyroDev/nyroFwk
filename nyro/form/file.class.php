@@ -24,6 +24,18 @@ class form_file extends form_abstract {
 		
 		if (!$this->cfg->value->isSaved() && http_vars::getInstance()->getVar($this->name.'NyroDel'))
 			$this->cfg->value->delete();
+	
+		$this->cfg->valid = array_merge($this->cfg->valid, array(
+			'callback'=>array(
+				array($this->cfg->value, 'isValid')
+			)
+		));
+	}
+	
+	protected function afterInit() {
+		parent::afterInit();
+		if (!$this->isValid())
+			$this->cfg->classLine.= ' fileError';
 	}
 
 	/**
@@ -42,6 +54,15 @@ class form_file extends form_abstract {
 	 */
 	public function setValue($value) {
 		$this->cfg->value->setCurrent($value);
+	}
+
+	/**
+	 * Check if the element is valid by using the valid object
+	 *
+	 * @return bool True if valid
+	 */
+	public function isValid2() {
+		return $this->cfg->value->isValid() && empty($this->customErrors);
 	}
 
 	public function toHtml() {

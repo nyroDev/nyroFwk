@@ -14,6 +14,7 @@ $cfg = array(
 
 	'pageLinkReplace'=>'[page]',
 	'pageLinkTpl'=>null,
+	'pageLinkTpl1'=>null,
 
 	'iconType'=>null,
 	'fields'=>null,

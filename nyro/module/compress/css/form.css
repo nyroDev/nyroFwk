@@ -218,3 +218,10 @@ ol.lineErrors {
     margin-top: 0.4em;
     margin-left: 9em;
 }
+li.fileError p {
+	border: 1px solid #FD9999;
+	background: #fef2f2;
+    width: 24.8em;
+    margin-left: 9em;
+    padding: 3px;
+}

@@ -98,6 +98,10 @@ final class db {
 			$tableName = $table;
 			if ($type == 'table' && !array_key_exists('name', $prm))
 				$prm['name'] = $table;
+			else if ($type == 'row' && !array_key_exists('table', $prm)) {
+				$db = array_key_exists('db', $prm)? $prm['db'] : self::getInstance();
+				$prm['table'] = self::get('table', $tableName, array('db'=>$db));
+			}
 		}
 
 		if (!($className = self::$cfg->getInArray($type, $tableName)) &&

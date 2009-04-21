@@ -592,7 +592,7 @@ final class request {
 	 * @return string the real request
 	 */
 	public static function alias($request) {
-		if ($request{1} != '/')
+		if (substr($request, 0, 1) != '/')
 			$request = '/'.$request;
 		foreach(self::$cfg->alias as $k=>$v) {
 			$req = preg_replace('`^'.$k.'$`', $v, $request);
