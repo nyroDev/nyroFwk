@@ -22,5 +22,7 @@ $cfg = array(
 	'noData'=>'No Data.',
 
 	'actions'=>array(),
+	'actionsAllowed'=>array(),
+	'actionsConfirmDelete'=>true,
 	'cache'=>array(),
 );

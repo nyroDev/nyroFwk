@@ -653,7 +653,7 @@ class db_table extends object {
 		$prm['group'] = $prm['fields'] = $this->cfg->name.'.'.$this->getIdent();
 		
 		$prm['where'] = $this->getDb()->makeWhere($prm['where'], $prm['whereOp'], false);
-		$nb = count($prm['join']);
+		$nb = array_key_exists('join', $prm) ? count($prm['join']) : 0;
 		for($i=0; $i<$nb; $i++) {
 			if (array_key_exists('dir', $prm['join'][$i]) &&
 					!is_null(strpos($prm['join'][$i]['dir'], 'outer')) &&
@@ -676,7 +676,9 @@ class db_table extends object {
 			'order'=>''
 		));
 
-		if (!empty($prm['where']) && !is_array($prm['where']) && !is_object($prm['where']) && strpos($prm['where'], '=') === false) {
+		if (!empty($prm['where']) && !is_array($prm['where']) && !is_object($prm['where'])
+			&& (strpos($prm['where'], '=') === false && strpos($prm['where'], '<') === false
+					&& strpos($prm['where'], '>') === false && stripos($prm['where'], 'LIKE') === false)) {
 			$prm['where'] = $this->cfg->name.'.'.$this->cfg->ident.'='.$prm['where'];
 		}
 
@@ -1032,9 +1034,10 @@ class db_table extends object {
 			UNION
 			(SELECT '.$field.' FROM '.$this->getName().' ORDER BY '.$field.' DESC LIMIT 0,1)';
 		$tmp = $this->getDb()->query($query)->fetchAll(PDO::FETCH_COLUMN);
+		$min = array_key_exists(0, $tmp) ? $tmp[0] : 0;
 		return array(
-			'min'=>$tmp[0],
-			'max'=>$tmp[1],
+			'min'=>$min,
+			'max'=>array_key_exists(1, $tmp) ? $tmp[1] : $min,
 		);
 	}
 

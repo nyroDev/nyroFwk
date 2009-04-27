@@ -1,6 +1,6 @@
 <?php
 $cfg = array(
-	'stop'=>array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR),
+	'stop'=>DEV ? true : array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR),
 	'errors'=> array(
 		E_ERROR=>'Error',
 		E_PARSE=>'Parse',

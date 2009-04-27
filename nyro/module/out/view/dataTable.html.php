@@ -41,7 +41,7 @@
 								'alt'=>$actionsAlt[$a],
 								'type'=>$iconType,
 							));
-							echo '<a href="'.$v.'">'.($img? $img : $a).'</a> ';
+							echo '<a href="'.$v.'" class="'.$a.'">'.($img? $img : $a).'</a> ';
 						}
 					echo '</td>';
 				}

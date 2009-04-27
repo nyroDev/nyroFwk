@@ -7,4 +7,4 @@
 /**
  * This function is used to handle the errors
  */
-set_error_handler(array('debug', 'errorHandler'), E_ALL);
+set_error_handler(array('debug', 'errorHandler'), E_ALL | E_STRICT);

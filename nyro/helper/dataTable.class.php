@@ -36,8 +36,8 @@ class helper_dataTable extends object {
 	 * @var array
 	 */
 	protected $data;
-
-	public function afterInit() {
+	
+	protected function afterInit() {
 		$this->table = $this->cfg->table;
 
 		if (!is_array($this->cfg->query))
@@ -185,12 +185,15 @@ class helper_dataTable extends object {
 				array_walk($headersT, create_function('&$h', '$h = "[".$h."]";'));
 				$i = 0;
 				foreach($data as $d) {
-					$tmp = $this->cfg->actions;
+					$tmp = $this->getActions($d->getId());
 					foreach($tmp as &$t) {
 						$t = str_replace($headersT, $d->getValues('flat'), $t);
 					}
 					$actions[$i] = $tmp;
 					$i++;
+				}
+				if (!empty($actions) && $this->cfg->actionsConfirmDelete) {
+					response::getInstance()->addJs('actionsConfirmDelete');
 				}
 			}
 
@@ -238,6 +241,19 @@ class helper_dataTable extends object {
 		}
 
 		return $tpl->fetch(array('tplExt'=>$type));
+	}
+
+	/**
+	 * Get the actions for a specific ID
+	 *
+	 * @param mixed $id The Row ID
+	 * @return array The filtered actions (from cfg->actions)
+	 */
+	protected function getActions($id) {
+		$tmp = $this->cfg->actions;
+		if ($val = $this->cfg->getInArray('actionsAllowed', 'id'.$id))
+			$tmp = array_intersect_key($tmp, array_flip($val));
+		return $tmp;
 	}
 
 	/**

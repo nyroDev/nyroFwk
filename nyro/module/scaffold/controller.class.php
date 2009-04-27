@@ -103,17 +103,17 @@ class module_scaffold_controller extends module_abstract {
 	protected function execScaffoldList($prm=null) {
 		$iconType = $this->cfg->iconType? $this->cfg->iconType : $this->cfg->name;
 
-		$filterTable = null;
+		$this->filterTable = null;
 		$query = null;
 		if (!empty($this->cfg->filter)) {
-			$filterTable = factory::getHelper('filterTable', array(
+			$this->filterTable = factory::getHelper('filterTable', array(
 				'table'=>$this->table,
 				'fields'=>is_array($this->cfg->filter)? $this->cfg->filter : null,
 			));
-			$query = array('where'=>$filterTable->getWhere());
+			$query = array('where'=>$this->filterTable->getWhere());
 		}
 
-		$dataTable = factory::getHelper('dataTable', array_merge(array(
+		$this->dataTable = factory::getHelper('dataTable', array_merge(array(
 			'table'=>$this->table,
 			'query'=>$query,
 			'name'=>$this->cfg->name.'DataTable',
@@ -129,12 +129,14 @@ class module_scaffold_controller extends module_abstract {
 				'show'=>tr::__('scaffold_show'),
 				'edit'=>tr::__('scaffold_edit'),
 				'delete'=>tr::__('scaffold_delete'),
-			)
+			),
 		), $this->cfg->listPrm));
+		
+		$this->hook('list');
 
 		$this->setViewVars(array(
-			'filterTable'=>$filterTable,
-			'dataTable'=>$dataTable,
+			'filterTable'=>$this->filterTable,
+			'dataTable'=>$this->dataTable,
 			'iconType'=>$iconType,
 			'addPage'=>request::uriDef(array('action'=>'add', 'param'=>''))
 		));

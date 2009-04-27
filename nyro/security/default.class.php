@@ -243,8 +243,11 @@ class security_default extends security_abstract {
 			if (!empty($this->cfg->rightRoles)) {
 				$checks = array();
 				foreach($this->hasRole() as $r=>$t) {
-					foreach($this->cfg->getInArray('rightRoles', $r) as $c)
-						$checks[] = $c;
+					$tmp = $this->cfg->getInArray('rightRoles', $r);
+					if (is_array($tmp)) {
+						foreach($tmp as $c)
+							$checks[] = $c;
+					}
 				}
 				$hasRight = $this->isContained($url, $checks);
 			} else

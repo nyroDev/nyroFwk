@@ -23,7 +23,7 @@ class form_richtext extends form_multiline {
 	 *
 	 * @param mixed $value The value
 	 */
-	public function setValue($value) {
+	public function setValue($value, $refill=false) {
 		$this->cfg->set('value', $value);
 	}
 

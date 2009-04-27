@@ -259,7 +259,6 @@ class response_http extends response_abstract {
 	 * @param string $file File Path
 	 */
 	public function showFile($file) {
-		$name = $name? $name : basename($file);
 		if (file::exists($file)) {
 			$this->addHeader('Content-Type', file::getType($file));
 			$this->addHeader('Content-length', file::size($file).'bytes');
