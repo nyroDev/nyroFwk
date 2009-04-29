@@ -54,12 +54,8 @@ class form_date extends form_abstract {
 		$resp->addJs('jqueryui');
 		if (($lang = request::get('lang')) != 'en')
 			$resp->addJs('i18n_ui.datepicker-'.$lang);
-		$dateImg = utils::getIcon(array(
-			'name'=>'show_month',
-			'type'=>'calendar',
-			'imgTag'=>false
-		));
-		$resp->blockJquery('$("#'.$this->id.'").datepicker({buttonImage: "'.$dateImg.'", buttonImageOnly: true, showOn: "both"});');
+		
+		$resp->blockJquery('$("#'.$this->id.'").datepicker('.json_encode($this->jsPrm).');');
 
 		return utils::htmlTag($this->htmlTagName,
 			array_merge($this->html, array(

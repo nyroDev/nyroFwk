@@ -79,7 +79,7 @@ abstract class form_mulValue extends form_abstract {
 	 *
 	 * @param mixed $value The value
 	 */
-	public function setValue($value) {
+	public function setValue($value, $refill=false) {
 		if (is_array($value) && $this->cfg->uniqValue) {
 			parent::setValue(array_shift($value));
 		} else {

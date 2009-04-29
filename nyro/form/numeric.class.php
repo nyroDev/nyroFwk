@@ -14,7 +14,7 @@ class form_numeric extends form_abstract {
 	 *
 	 * @param mixed $value The value
 	 */
-	public function setValue($value) {
+	public function setValue($value, $refill=false) {
 		return parent::setValue(str_replace(',', '.', $value));
 	}
 

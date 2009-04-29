@@ -38,6 +38,7 @@
 						foreach($actions[$i] as $a=>$v) {
 							$img = utils::getIcon(array(
 								'name'=>$a,
+								'attr'=>array('title'=>$actionsAlt[$a]),
 								'alt'=>$actionsAlt[$a],
 								'type'=>$iconType,
 							));

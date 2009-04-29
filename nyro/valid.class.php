@@ -145,7 +145,8 @@ class valid extends object {
 	}
 	
 	public function isCallback($val, $prm=null) {
-		if ($tmp = call_user_func($prm[0])) {
+		$tmp = call_user_func($prm[0]);
+		if ($tmp !== true) {
 			$this->errors[] = sprintf($this->getMessage($tmp), $this->cfg->label);
 			return false;
 		}

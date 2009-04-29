@@ -61,13 +61,18 @@ class db_table extends object {
 		$this->_initRelatedTables();
 		$this->_initLabels();
 
-		if ($this->cfg->check('fields'))
+		if ($this->cfg->check('fields') && is_array($this->cfg->fields) && !empty($this->cfg->fields)) {
 			$this->fields = array_merge_recursive($this->fields, array_intersect_key($this->cfg->fields, $this->fields));
+			foreach($this->fields as &$f) {
+				if (is_array($f['default']))
+					$f['default'] = array_key_exists(1, $f['default']) ? $f['default'][1] : $f['default'][0];
+			}
+		}
 
-		if ($this->cfg->check('linked'))
+		if ($this->cfg->check('linked') && is_array($this->cfg->linked) && !empty($this->cfg->linked))
 			$this->linkedTables = array_merge_recursive($this->linkedTables, $this->cfg->linked);
 
-		if ($this->cfg->check('related'))
+		if ($this->cfg->check('related') && is_array($this->relatedTables) && !empty($this->relatedTables))
 			$this->relatedTables = array_merge_recursive($this->relatedTables, $this->cfg->related);
 	}
 
@@ -198,7 +203,8 @@ class db_table extends object {
 						'sep'=>$sep,
 						'list'=>$list,
 						'nbFieldGr'=>$nbFieldGr,
-						'sepGr'=>$sepGr
+						'sepGr'=>$sepGr,
+						'where'=>null
 					), $more);
 				}
 			}

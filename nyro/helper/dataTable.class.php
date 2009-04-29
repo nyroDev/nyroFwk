@@ -152,6 +152,7 @@ class helper_dataTable extends object {
 				if (!in_array($this->table->getIdent(), $headersT))
 					array_unshift($headersT, $this->table->getIdent());
 			}
+
 			$headers = array();
 			$prmReplaceSortBy = '[sortBy]';
 			$prmReplaceSortDir = '[sortDir]';
@@ -161,9 +162,10 @@ class helper_dataTable extends object {
 			$paramUrlA['sortDir'.$this->cfg->nameParam] = $prmReplaceSortDir;
 			$paramUrlA['page'.$this->cfg->nameParam] = 1;
 			$tmpSortLink = request::uriDef(array('paramA'=>$paramUrlA));
+			
 			foreach ($headersT as $k=>$h) {
 				$typeField = $this->table->getField($h, 'type');
-				if ($typeField == 'file' && is_array($tmp = $this->table->getField($h, 'comment')))
+				if ($typeField == 'file' && is_array($tmp = $this->table->getField($h, 'comment')) && array_key_exists(0, $tmp))
 					$typeField = $tmp[0];
 				$headers[$k] = array(
 					'label' => $this->table->getLabel($h),

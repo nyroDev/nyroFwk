@@ -8,8 +8,6 @@
  * Initialize some constant if they doesn't exists
  */
 
-include_once('bootstrap.inc.php');
-
 /**
  * string Installation name
  */
@@ -49,8 +47,9 @@ if (!defined('EXTPHP'))
 /**
  * string Absolute path to the installation
  */
-if (!defined('ROOT'))
-	define('ROOT', dirname(__FILE__).DS);
+if (!defined('ROOT')) {
+	define('ROOT', dirname(dirname($_SERVER['SCRIPT_FILENAME'])).DS);
+}
 
 /**
  * string Absolute path to the nyro directory
@@ -108,6 +107,7 @@ require(NYROROOT.'autoload.'.EXTPHP);
 //*
 require(NYROROOT.'nyro.class.'.EXTPHP);
 require(NYROROOT.'cache.class.'.EXTPHP);
+require(NYROROOT.'nException.class.'.EXTPHP);
 require(NYROROOT.'nReflection.class.'.EXTPHP);
 require(NYROROOT.'object.class.'.EXTPHP);
 require(NYROROOT.'cache'.DS.'abstract.class.'.EXTPHP);

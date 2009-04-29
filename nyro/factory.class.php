@@ -153,7 +153,7 @@ final class factory {
 			if (!empty($listCfg))
 				foreach($listCfg as $lc) {
 					include($lc);
-					if ($cfg)
+					if (isset($cfg))
 						self::mergeCfg(self::$loadedCfg[$className], $cfg, $className);
 					$cfg = null;
 				}
@@ -208,7 +208,6 @@ final class factory {
 	 */
 	public static function get($className, array $cfg = array()) {
 		self::load($className);
-
 		$ref = new nReflection();
 		if ($ref->rebuild($className)) {
 			$prm = self::loadCfg($className);

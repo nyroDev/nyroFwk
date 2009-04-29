@@ -52,7 +52,7 @@ class form_file extends form_abstract {
 	 *
 	 * @param mixed $value The value
 	 */
-	public function setValue($value) {
+	public function setValue($value, $refill=false) {
 		$this->cfg->value->setCurrent($value);
 	}
 
@@ -84,7 +84,7 @@ class form_file extends form_abstract {
 					url: "'.request::uri(array(
 						'module'=>'utils',
 						'action'=>'deleteUploadFile',
-						'paramA'=>$prm
+						//'paramA'=>$prm
 						)).'",
 					success: function() {
 						me.parent("span").replaceWith("<input type=\"hidden\" name=\"'.$this->name.'NyroDel\" value=\"1\" />");

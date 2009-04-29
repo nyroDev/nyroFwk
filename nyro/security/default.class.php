@@ -185,7 +185,7 @@ class security_default extends security_abstract {
 	 * @return bool True if successful
 	 */
 	public function addRole($role) {
-		$this->roles[strtolower($role)] = true;
+		$this->roles[$role] = true;
 		return true;
 	}
 
@@ -199,7 +199,7 @@ class security_default extends security_abstract {
 		if (is_null($role))
 			return $this->roles;
 
-		return array_key_exists(strtolower($role), $this->roles);
+		return array_key_exists($role, $this->roles);
 	}
 
 	/**
@@ -213,7 +213,7 @@ class security_default extends security_abstract {
 			$this->roles = array();
 			return true;
 		}
-		unset($this->roles[strtolower($rol)]);
+		unset($this->roles[$rol]);
 		return true;
 	}
 

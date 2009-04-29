@@ -49,6 +49,7 @@ final class nyro {
 			self::init();
 
 			$resp = response::getInstance();
+			self::$cfg->overload(__CLASS__.'Response');
 
 			request::execModule();
 

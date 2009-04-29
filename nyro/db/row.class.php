@@ -213,7 +213,9 @@ class db_row extends object {
 	 * @return mixed The last inserted id
 	 */
 	public function insert() {
-		$id = $this->table->insert($this->getChangesTable());
+		$values = array_merge($this->getValues('flat'), $this->getChangesTable());
+		unset($values[$this->table->getIdent()]);
+		$id = $this->table->insert($values);
 		$this->set($this->table->getIdent(), $id);
 		$this->setNew(false);
 		$this->saveRelated();
@@ -408,7 +410,8 @@ class db_row extends object {
 				if ($mode == 'flat') {
 					foreach($this->table->getLinked() as $k=>$v) {
 						$tmp[] = $k;
-						$data[$k] = array_key_exists($key = $k.'_'.$v['ident'], $data) ? $data[$k.'_'.$v['ident']] : null;
+						if (array_key_exists($key = $k.'_'.$v['ident'], $data))
+							$data[$k] = $data[$k.'_'.$v['ident']];
 					}
 					if (array_key_exists('related', $data)) {
 						foreach($this->table->getRelated() as $k=>$v) {
@@ -476,12 +479,12 @@ class db_row extends object {
 
 		$field = $this->table->getField($key);
 		$fct = null;
-		$i = 0;
-		while(is_null($fct) && $i < count($field['comment'])) {
-			if (strpos($field['comment'][$i], 'fct:') === 0) {
-				$fct = substr($field['comment'][$i], 4);
+		
+		foreach($field['comment'] as $k=>$v) {
+			if (strpos($v, 'fct:') === 0) {
+				$fct = substr($v, 4);
+				break;
 			}
-			$i++;
 		}
 		if (!is_null($fct) && function_exists($fct))
 			$value = $fct($value);

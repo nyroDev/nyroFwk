@@ -85,13 +85,16 @@ class form_db extends form {
 	 * @return form_abstract Reference to the new element
 	 */
 	public function getFromFieldPrm(array $field) {
-		$prm = array(
-			'name'=>$field['name'],
-			'label'=>$field['label'],
-			'value'=>array_key_exists('value', $field)? $field['value'] : $field['default'],
-			'link'=>$field['link'],
-			'valid'=>array('required'=>$field['required'])
-		);
+		$prm = array_merge(array(
+				'name'=>$field['name'],
+				'label'=>$field['label'],
+				'value'=>array_key_exists('value', $field)? $field['value'] : $field['default'],
+				'link'=>$field['link'],
+				'valid'=>array('required'=>$field['required'])
+			), $field['comment']);
+
+		if (array_search('hidden', $field['comment']) !== false)
+			return array_merge($prm, array('type'=>'hidden'));
 
 		if (!empty($field['link'])) {
 			$checkType = false;
@@ -207,7 +210,7 @@ class form_db extends form {
 				break;
 			case 'file':
 				$type = 'file';
-				if (count($field['comment']) == 1)
+				if (count($field['comment']) == 1 && array_key_exists(0, $field['comment']))
 					$prm['helper'] = $field['comment'][0];
 				else
 					$prm = array_merge($prm, $field['comment']);

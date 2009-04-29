@@ -75,7 +75,7 @@ final class http_vars {
 			if ($p['trim'] && !is_null($ret) && !is_array($ret))
 				$ret = trim($ret);
 		}
-		$prm = array_merge(array('default'=>null), $prm);
+		$prm = array_merge(array('default'=>null), $p);
 		if (is_array($prm['default'])) {
 			if ($ret === null || !in_array($ret, $prm['default'])) {
 				$ret = $prm['default'][0];

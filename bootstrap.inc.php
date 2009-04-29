@@ -7,3 +7,13 @@
 /**
  * Initialize some constant juste before they're created by default
  */
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ require((defined('NYROROOT') ? NYROROOT : 'nyro/').'start.inc.php');
