@@ -65,7 +65,7 @@ class form_db extends form {
 				break;
 			case 'file':
 				$prm['type'] = 'checkbox';
-				$prm['list'] = array('1'=>'Yes');
+				$prm['list'] = array('1'=>$this->cfg->getInArray('listBool', 1));
 				$prm['uniqValue'] = true;
 				break;
 			case 'numeric':
@@ -92,6 +92,9 @@ class form_db extends form {
 				'link'=>$field['link'],
 				'valid'=>array('required'=>$field['required'])
 			), $field['comment']);
+		
+		if (array_search($field['name'], $this->cfg->autoValidRule) !== false && !array_key_exists($field['name'], $prm['valid']))
+			$prm['valid'][$field['name']] = true;
 
 		if (array_search('hidden', $field['comment']) !== false)
 			return array_merge($prm, array('type'=>'hidden'));

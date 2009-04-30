@@ -84,8 +84,8 @@ class db_row extends object {
 			}
 		} else if (!empty($this->cfg->findId)) {
 			$tmp = $this->table->find($this->cfg->findId);
-			$this->setValues($tmp->getValues('data'));
-			$this->isNew(false);
+			$this->cfg->data = $tmp->getValues('data');
+			$this->setNew(false);
 			unset($tmp);
 		}
 	}
@@ -480,10 +480,12 @@ class db_row extends object {
 		$field = $this->table->getField($key);
 		$fct = null;
 		
-		foreach($field['comment'] as $k=>$v) {
-			if (strpos($v, 'fct:') === 0) {
-				$fct = substr($v, 4);
-				break;
+		if (is_array($field['comment'])) {
+			foreach($field['comment'] as $k=>$v) {
+				if (!is_array($v) && strpos($v, 'fct:') === 0) {
+					$fct = substr($v, 4);
+					break;
+				}
 			}
 		}
 		if (!is_null($fct) && function_exists($fct))

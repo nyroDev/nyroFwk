@@ -44,6 +44,8 @@ class helper_image extends helper_file {
 	 */
 	public function upload($file, array $prm) {
 		$this->cfg->file = $file;
+		if (!array_key_exists('fileSaveAdd', $prm))
+			$this->cfg->fileSave = $file;
 		$this->cfg->setA($prm);
 		$this->cfg->rebuild = true;
 		return $this->build();
@@ -116,8 +118,7 @@ class helper_image extends helper_file {
 	 */
 	private function build() {
 		$ret = null;
-		if (file::exists($this->cfg->file)) {
-			$this->setImg($this->cfg->file);
+		if (file::exists($this->cfg->file) && $this->setImg($this->cfg->file)) {
 
 			if ($this->cfg->autoFileSave && empty($this->cfg->fileSave))
 				$this->cfg->fileSave = $this->makePath($this->cfg->file, $this->cfg->fileSaveAdd);
@@ -198,14 +199,19 @@ class helper_image extends helper_file {
 	 * Set an image and creating a ressource with it
 	 *
 	 * @param string $file The image path
+	 * @return bool Indicate if everything went well or not
 	 */
 	public function setImg($file) {
 		$this->cfg->img = $file;
 
 		$tmp = $this->createImage($file);
-		$this->imgAct = $tmp[0];
-		$this->cfg->wAct = $tmp[1];
-		$this->cfg->hAct = $tmp[2];
+		if ($tmp) {
+			$this->imgAct = $tmp[0];
+			$this->cfg->wAct = $tmp[1];
+			$this->cfg->hAct = $tmp[2];
+			return true;
+		} else
+			return false;
 	}
 
 	/**
@@ -236,7 +242,7 @@ class helper_image extends helper_file {
 	 * Create an image ressource and get the dimesnion of the
 	 *
 	 * @param string $file The image path
-	 * @return array Image ressource, height, width
+	 * @return false|array False if not a valid image or an array with Image ressource, height, width
 	 */
 	private function createImage($file) {
 		$size = getimagesize($file);
@@ -253,6 +259,8 @@ class helper_image extends helper_file {
 			case 3 :
 				$img = imagecreatefrompng($file);
 				break;
+			default:
+				return false;
 		}
 
 		return array(&$img, $size[0], $size[1]);
@@ -372,21 +380,23 @@ class helper_image extends helper_file {
 	public function mask($file) {
 		// Create the mask image ressource
 		$tmp = $this->createImage($file);
-		$this->imgTmp = $tmp[0];
-		$this->cfg->wTmp = $tmp[1];
-		$this->cfg->hTmp = $tmp[2];
+		if ($tmp) {
+			$this->imgTmp = $tmp[0];
+			$this->cfg->wTmp = $tmp[1];
+			$this->cfg->hTmp = $tmp[2];
 
-		// Resize the mask
-		if ($this->resize(array(
-			'imgName'=>'Tmp',
-			'bgColor'=>false
-			))) {
-			// Save the new size
-			$this->cfg->wTmp = imagesx($this->imgTmp);
-			$this->cfg->hTmp = imagesy($this->imgTmp);
+			// Resize the mask
+			if ($this->resize(array(
+				'imgName'=>'Tmp',
+				'bgColor'=>false
+				))) {
+				// Save the new size
+				$this->cfg->wTmp = imagesx($this->imgTmp);
+				$this->cfg->hTmp = imagesy($this->imgTmp);
+			}
+
+			imagecopymerge($this->imgAct, $this->imgTmp, 0, 0, 0, 0, $this->cfg->wAct, $this->cfg->hAct, 100);
 		}
-
-		imagecopymerge($this->imgAct, $this->imgTmp, 0, 0, 0, 0, $this->cfg->wAct, $this->cfg->hAct, 100);
 	}
 
 	/**

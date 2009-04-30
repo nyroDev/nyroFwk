@@ -182,6 +182,8 @@ class helper_dataTable extends object {
 			}
 
 			$actions = null;
+			$actionsAlt = null;
+			$actionsImg = null;
 			if (is_array($this->cfg->actions) && !empty($this->cfg->actions)) {
 				$actions = array();
 				array_walk($headersT, create_function('&$h', '$h = "[".$h."]";'));
@@ -197,12 +199,24 @@ class helper_dataTable extends object {
 				if (!empty($actions) && $this->cfg->actionsConfirmDelete) {
 					response::getInstance()->addJs('actionsConfirmDelete');
 				}
-			}
 
-			$actionsAlt = $this->cfg->actionsAlt;
-			if (is_array($actionsAlt)) {
-				foreach(array_keys($actions) as $k=>$v)
-					$actionsAlt[$k] = ucfirst($k);
+				$actionsKey = array_keys($this->cfg->actions);
+				$actionsAlt = $this->cfg->actionsAlt;
+				if (is_array($actionsAlt)) {
+					foreach($actionsKey as $v)
+						$actionsAlt[$v] = ucfirst($v);
+				}
+
+				$actionsImg = $this->cfg->actionsImg;
+				foreach($actionsKey as $v) {
+					if (!array_key_exists($v, $actionsImg))
+						$actionsImg[$v] = utils::getIcon(array(
+									'name'=>$v,
+									'attr'=>array('title'=>$actionsAlt[$v]),
+									'alt'=>$actionsAlt[$v],
+									'type'=>$this->cfg->iconType,
+								));
+				}
 			}
 
 			if ($this->cfg->sortBy) {
@@ -234,6 +248,7 @@ class helper_dataTable extends object {
 				'currentPage'=>$this->cfg->page,
 				'pageLinks'=>$pageLinks,
 				'actions'=>$actions,
+				'actionsImg'=>$actionsImg,
 				'actionsAlt'=>$actionsAlt,
 				'iconType'=>$this->cfg->iconType,
 			));
@@ -253,7 +268,10 @@ class helper_dataTable extends object {
 	 */
 	protected function getActions($id) {
 		$tmp = $this->cfg->actions;
-		if ($val = $this->cfg->getInArray('actionsAllowed', 'id'.$id))
+		$val = $this->cfg->getInArray('actionsAllowed', 'id'.$id);
+		if (!$val)
+			$val = $this->cfg->actionsAllowedDefault;
+		if (is_array($val))
 			$tmp = array_intersect_key($tmp, array_flip($val));
 		return $tmp;
 	}

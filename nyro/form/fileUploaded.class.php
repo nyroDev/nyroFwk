@@ -101,7 +101,7 @@ class form_fileUploaded extends object {
 					'savePath'=>$savePath,
 					'webPath'=>$webPath
 				);
-				if ($this->cfg->deleteCurrent && ($current = $this->getCurrent()) && array_key_exists('webPath', $this->file) && $current != $this->file['webPath']) {
+				if ($this->cfg->deleteCurrent && ($current = $this->getCurrent()) && (!array_key_exists('webPath', $this->file) || $current != $this->file['webPath'])) {
 					$this->callHelper('delete', $current);
 					file::delete(FILESROOT.$current);
 				}
@@ -216,6 +216,6 @@ class form_fileUploaded extends object {
 	}
 
 	public function __toString() {
-		return $this->getCurrent();
+		return $this->getCurrent()? $this->getCurrent() : '';
 	}
 }

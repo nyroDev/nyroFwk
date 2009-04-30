@@ -8,5 +8,7 @@ $cfg = array(
 		'in'=>'La valeur %s n\'est pas permise pour le champ "%s".',
 		'equalInput'=>'Le champ "%s" doit être égal au champ "%s".',
 		'equal'=>'La valeur %s pour le champ "%s" n\'est pas la bonne.',
+		'url'=>'Le champ "%s" doit être une URL valide.',
+		'email'=>'Le champ "%s" doit être une adresse email valide.',
 	),
 );

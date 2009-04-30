@@ -296,7 +296,8 @@ class config {
 	 * @param string $key Key on the array
 	 */
 	public function delInArray($name, $key) {
-		unset($this->vars[$name][$key]);
+		if ($this->check($name) && is_array($this->vars[$name]) && array_key_exists($key, $this->vars[$name]))
+			unset($this->vars[$name][$key]);
 	}
 
 	/**

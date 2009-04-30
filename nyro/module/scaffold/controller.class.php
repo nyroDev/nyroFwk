@@ -113,7 +113,7 @@ class module_scaffold_controller extends module_abstract {
 			$query = array('where'=>$this->filterTable->getWhere());
 		}
 
-		$this->dataTable = factory::getHelper('dataTable', array_merge(array(
+		$this->dataTable = factory::getHelper('dataTable', array_merge_recursive(array(
 			'table'=>$this->table,
 			'query'=>$query,
 			'name'=>$this->cfg->name.'DataTable',

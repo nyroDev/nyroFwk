@@ -21,6 +21,7 @@ $cfg = array(
 		'block'=>'<script type="text/javascript">%s</script>',
 		'depend'=>array(
 			'debug'=>array('jquery'),
+			'actionsConfirmDelete'=>array('jquery'),
 			'jqueryui'=>array(
 				'jquery',
 				array('file'=>'jqueryui', 'type'=>'css')

@@ -6,5 +6,8 @@ $cfg = array(
 		'1'=>'Yes',
 		'0'=>'No',
 		KEEPUNIQUE=>true
-	)
+	),
+	'autoValidRule'=>array(
+		'email', 'url'
+	),
 );

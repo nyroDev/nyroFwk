@@ -36,12 +36,7 @@
 					echo '<td>';
 					if (array_key_exists($i, $actions))
 						foreach($actions[$i] as $a=>$v) {
-							$img = utils::getIcon(array(
-								'name'=>$a,
-								'attr'=>array('title'=>$actionsAlt[$a]),
-								'alt'=>$actionsAlt[$a],
-								'type'=>$iconType,
-							));
+							$img = $actionsImg[$a];
 							echo '<a href="'.$v.'" class="'.$a.'">'.($img? $img : $a).'</a> ';
 						}
 					echo '</td>';

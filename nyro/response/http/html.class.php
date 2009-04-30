@@ -297,6 +297,12 @@ class response_http_html extends response_http {
 		return $this->block($block, 'js', $first);
 	}
 
+	/**
+	 * Add a jQuery block
+	 *
+	 * @param string $block The javascript block
+	 * @see blockJs
+	 */
 	public function blockjQuery($block) {
 		$this->addJs('jquery');
 		$this->blocksJquery[] = $block;

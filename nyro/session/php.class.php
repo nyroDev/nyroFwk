@@ -16,6 +16,8 @@ class session_php extends session_abstract {
 	 */
 	protected function afterInit() {
 		if (!session_id()) {
+			if (isset($_GET['phpsessidForce']))
+				session_id($_GET['phpsessidForce']);
 			session_start();
 			if ($this->cfg->regenerateId)
 				session_regenerate_id(true);

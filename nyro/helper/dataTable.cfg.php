@@ -22,7 +22,10 @@ $cfg = array(
 	'noData'=>'No Data.',
 
 	'actions'=>array(),
+	'actionsAlt'=>array(),
+	'actionsImg'=>array(),
 	'actionsAllowed'=>array(),
+	'actionsAllowedDefault'=>null,
 	'actionsConfirmDelete'=>true,
 	'cache'=>array(),
 );

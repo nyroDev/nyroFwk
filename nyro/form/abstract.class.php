@@ -94,7 +94,8 @@ abstract class form_abstract extends object {
 			foreach($valid as $type=>$prm)
 				if ($prm)
 					$this->addRule($type, $prm);
-		}
+		} else
+			$this->addRule($valid);
 	}
 
 	/**

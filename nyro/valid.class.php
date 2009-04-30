@@ -74,9 +74,11 @@ class valid extends object {
 		$valid = true;
 		$val = $this->cfg->validEltArray && is_array($this->cfg->value) ? $this->cfg->value : array($this->cfg->value);
 		foreach($this->cfg->rules as $rule=>$prm) {
-			foreach($val as $v) {
-				if ($rule == 'required' || !empty($v))
-					$valid = $this->{'is'.ucfirst($rule)}($v, $prm) && $valid;
+			if (!is_numeric($rule)) {
+				foreach($val as $v) {
+					if ($rule == 'required' || !empty($v))
+						$valid = $this->{'is'.ucfirst($rule)}($v, $prm) && $valid;
+				}
 			}
 		}
 		return $valid;
@@ -148,6 +150,22 @@ class valid extends object {
 		$tmp = call_user_func($prm[0]);
 		if ($tmp !== true) {
 			$this->errors[] = sprintf($this->getMessage($tmp), $this->cfg->label);
+			return false;
+		}
+		return true;
+	}
+	
+	public function isUrl($val, $prm=null) {
+		if (!ereg('^http(s)?://[a-zA-Z0-9\._]+\.[a-zA-Z]{2,4}', $val)) {
+			$this->errors[] = sprintf($this->getMessage('url'), $this->cfg->label);
+			return false;
+		}
+		return true;
+	}
+	
+	public function isEmail($val, $prm=null) {
+		if (!ereg('^[a-zA-Z0-9\._]+@[a-zA-Z0-9\._]+\.[a-zA-Z]{2,4}$', $val)) {
+			$this->errors[] = sprintf($this->getMessage('email'), $this->cfg->label);
 			return false;
 		}
 		return true;
