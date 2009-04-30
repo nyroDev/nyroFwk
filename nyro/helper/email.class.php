@@ -190,7 +190,7 @@ class helper_email extends object {
 			$addr[] = $this->formatAddr($v);
 		$to = implode(', ', $addr);
 
-		//return mail($to, $this->cfg->subject, $body, $headers, $this->cfg->addParam);
+		return mail($to, $this->cfg->subject, $body, $headers, $this->cfg->addParam);
 	}
 
 	/**
