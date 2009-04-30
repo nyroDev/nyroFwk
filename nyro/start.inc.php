@@ -47,9 +47,8 @@ if (!defined('EXTPHP'))
 /**
  * string Absolute path to the installation
  */
-if (!defined('ROOT')) {
+if (!defined('ROOT'))
 	define('ROOT', dirname(dirname($_SERVER['SCRIPT_FILENAME'])).DS);
-}
 
 /**
  * string Absolute path to the nyro directory

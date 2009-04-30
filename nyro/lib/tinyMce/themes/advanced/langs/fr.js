@@ -1,6 +1,6 @@
 tinyMCE.addI18n('fr.advanced',{
 style_select:"Styles",
-font_size:"Taille de la police",
+font_size:"Taille police",
 fontdefault:"Famille de police",
 block:"Format",
 paragraph:"Paragraphe",
