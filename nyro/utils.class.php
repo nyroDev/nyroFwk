@@ -26,11 +26,11 @@ class utils {
 
 	public static function html2Text($html) {
 		lib::load('markdownify');
-		$md = new Markdownify_Extra();
+		$md = new Markdownify_Extra(false, false, false);
 		preg_match('@<body[^>]*>(.*)</body>@siU', $html, $matches);
 		if (!empty($matches))
 			$html = $matches[1];
-		return $md->parseString($html);
+		return utf8_decode($md->parseString($html));
 	}
 
 	/**

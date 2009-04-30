@@ -190,7 +190,7 @@ class helper_email extends object {
 			$addr[] = $this->formatAddr($v);
 		$to = implode(', ', $addr);
 
-		return mail($to, $this->cfg->subject, $body, $headers, $this->cfg->addParam);
+		//return mail($to, $this->cfg->subject, $body, $headers, $this->cfg->addParam);
 	}
 
 	/**
@@ -306,7 +306,7 @@ class helper_email extends object {
 
 		if ($this->cfg->html) {
 			if (empty($this->cfg->text))
-				$text = $this->quotePrintable(utils::html2Text($this->cfg->html));
+				$text = utils::html2Text($this->cfg->html);
 
 			$boundary = $this->getBoundary();
 
@@ -501,6 +501,10 @@ class helper_email extends object {
 		$encoded = trim(str_replace("\n", $this->cfg->crlf, $encoded));
 
 		return $encoded;
+	}
+
+	public function __get($name) {
+		return $this->cfg->get($name);
 	}
 
 	public function __set($name, $val) {
