@@ -57,7 +57,7 @@ class helper_email extends object {
 		$tmp = $this->cfg->get($type);
 		if ($add) {
 			if (!is_array($tmp))
-				$to = array($tmp);
+				$tmp = array($tmp);
 		} else
 			$tmp = array();
 		$tmp[] = $addr;

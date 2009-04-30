@@ -119,7 +119,7 @@ final class request {
 
 		$controller = substr($_SERVER['SCRIPT_FILENAME'], strlen(WEBROOT));
 
-		$serverName = $_SERVER['SERVER_NAME'];
+		$serverName = array_key_exists('SERVER_NAME', $_SERVER) ? $_SERVER['SERVER_NAME'] : null;
 		$stdPort = $secure ? '443' : '80';
 		$port = ($_SERVER['SERVER_PORT'] != $stdPort && $_SERVER['SERVER_PORT'])? ':'.$_SERVER['SERVER_PORT'] : '';
 		$domain = $protocol.'://'.$serverName.$port;

@@ -83,7 +83,7 @@ class module_scaffold_controller extends module_abstract {
 	}
 
 	protected function execScaffoldIndex($prm=null) {
-		if (strtolower($this->cfg->prefixExec) == 'scaffold') {
+		if ($this->isScaffolded()) {
 			if (empty($this->cfg->name)) {
 				$db = db::getInstance();
 				$tables = $db->getTables();
@@ -98,6 +98,10 @@ class module_scaffold_controller extends module_abstract {
 				return $this->execScaffoldList($prm);
 			}
 		}
+	}
+	
+	protected function isScaffolded() {
+		return strtolower($this->cfg->prefixExec) == 'scaffold';
 	}
 
 	protected function execScaffoldList($prm=null) {
@@ -226,7 +230,7 @@ class module_scaffold_controller extends module_abstract {
 	 */
 	public function publish(array $prm = array()) {
 		// Used for the child in no scaffolded action
-		if (strpos($this->cfg->viewAction, 'scaffold') !== 0)
+		if (!$this->isScaffolded())
 			return parent::publish($prm);
 
 		if (!$this->cfg->viewAction)
