@@ -469,6 +469,20 @@ class db_table extends object {
 			return $ret[$keyVal];
 		return $ret ? $ret : $this->cfg->getInArray('label', $field);
 	}
+	
+	/**
+	 * Get the fields which are file
+	 *
+	 * @return array|null;
+	 */
+	public function getFieldFile() {
+		$ret = null;
+		foreach($this->fields as $f) {
+			if ($f['type'] == 'file')
+				$ret[] = $f['name'];
+		}
+		return $ret;
+	}
 
 	/**
 	 * Get the columns
@@ -568,6 +582,15 @@ class db_table extends object {
 		$data = array();
 		$this->dateAutoData($data, 'deleted');
 		if (empty($data)) {
+			if ($files = $this->getFieldFile()) {
+				$rows = $this->select(array('where'=>$where));
+				foreach($rows as $r) {
+					$form = $r->getForm($files);
+					foreach($files as $f) {
+						$form->get($f)->getRawValue()->delete();
+					}
+				}
+			}
 			return $this->getDb()->delete(array(
 				'table'=>$this->cfg->name,
 				'where'=>$where

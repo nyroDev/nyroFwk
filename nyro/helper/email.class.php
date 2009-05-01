@@ -306,7 +306,7 @@ class helper_email extends object {
 
 		if ($this->cfg->html) {
 			if (empty($this->cfg->text))
-				$text = utils::html2Text($this->cfg->html);
+				$text = $this->quotePrintable(utils::html2Text($this->cfg->html));
 
 			$boundary = $this->getBoundary();
 
