@@ -186,7 +186,7 @@ class response_http extends response_abstract {
 		foreach($this->beforeOut as $bo)
 			call_user_func($bo);
 		
-		if ($this->cfg->compress)
+		if ($this->cfg->compress && !ob_get_length())
 			ob_start('ob_gzhandler');
 	}
 

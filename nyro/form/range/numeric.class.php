@@ -23,7 +23,7 @@ class form_range_numeric extends form_range_abstract {
 			$min = $this->cfg->getInarray('allowedRange', 'min');
 			$max = $this->cfg->getInarray('allowedRange', 'max');
 			
-			if (!$min) $min = 1;
+			if (!$min) $min = 0;
 			if (!$max) $max = 100;
 			
 			$minVal = $this->getValue('min');

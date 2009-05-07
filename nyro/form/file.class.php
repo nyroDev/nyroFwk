@@ -92,7 +92,8 @@ class form_file extends form_abstract {
 				});
 				*/
 			});');
-		}
+		} else
+			$delLink = '</p>';
 		return '<p>'.utils::htmlTag($this->htmlTagName,
 			array_merge($this->html, array(
 				'name'=>$this->name,

@@ -23,6 +23,11 @@ final class debug {
 	 */
 	private static $timer = array();
 
+	private static function initCfg() {
+		if (!self::$cfg)
+			self::$cfg = new config(factory::loadCfg(__CLASS__));
+	}
+
 	/**
 	 * retrieve the function where the call come from
 	 *
@@ -54,11 +59,6 @@ final class debug {
 			echo $ret;
 		else
 			return $ret;
-	}
-
-	private static function initCfg() {
-		if (!self::$cfg)
-			self::$cfg = new config(factory::loadCfg(__CLASS__));
 	}
 
 	public static function errorHandler($code, $message, $file, $line) {

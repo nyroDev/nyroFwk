@@ -451,7 +451,7 @@ class helper_image extends helper_file {
 	 * @param string $col The hexadecimal color
 	 * @return array Numeric index (0: R, 1: V and 2: B)
 	 */
-	private function  hexa2dec($col) {
+	private function hexa2dec($col) {
 		return array(
 			base_convert(substr($col,0,2),16,10),
 			base_convert(substr($col,2,2),16,10),

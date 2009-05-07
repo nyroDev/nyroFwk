@@ -686,7 +686,7 @@ class db_row extends object {
 		$primary = $this->table->getPrimary();
 		$where = array();
 		foreach($primary as $p) {
-			$where[] = $p.='="'.$this->get($p).'"';
+			$where[] = $this->table->getName().'.'.$p.='="'.$this->get($p).'"';
 		}
 		return implode(' AND ', $where);
 	}
