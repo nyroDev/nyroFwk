@@ -42,7 +42,7 @@ class helper_image extends helper_file {
 	 * @return bool True if success
 	 * @see bluid
 	 */
-	public function upload($file, array $prm) {
+	public function upload($file, array $prm = array()) {
 		$this->cfg->file = $file;
 		if (!array_key_exists('fileSaveAdd', $prm))
 			$this->cfg->fileSave = $file;
@@ -58,7 +58,7 @@ class helper_image extends helper_file {
 	 * @param array $prm @see helper_mage config
 	 * @return string The HTML image tag
 	 */
-	public function view($file, array $prm) {
+	public function view($file, array $prm = array()) {
 		$this->cfg->file = FILESROOT.$file;
 		$this->cfg->setA($prm);
 		$this->cfg->html = true;
@@ -106,7 +106,7 @@ class helper_image extends helper_file {
 	 * @return bool|string True if success or HTML string if requested
 	 * @see bluid
 	 */
-	public function make(array $prm) {
+	public function make(array $prm = array()) {
 		$this->cfg->setA($prm);
 		return $this->build();
 	}

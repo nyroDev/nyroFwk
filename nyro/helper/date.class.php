@@ -194,7 +194,14 @@ class helper_date extends object {
             'EEE'=>$day['l'],
             'EE'=>$day['m'],
         );
-        return str_replace(array_keys($places), $places, $form);
+		$intermediate = array();
+		$i = 0;
+		foreach($places as $k=>$p) {
+			$intermediate[$k] = '_|_'.$i.'_|_';
+			$i++;
+		}
+		
+		return str_replace($intermediate, $places, str_replace(array_keys($intermediate), $intermediate, $form));
 	}
 
 	/**

@@ -302,7 +302,7 @@ class db_table extends object {
 	 * Initialize the related tables, if needed
 	 */
 	protected function _initRelatedTables() {
-		if ($this->relatedTables === null) {
+		if (is_null($this->relatedTables)) {
 			$this->relatedTables = array();
 			$search = $this->cfg->name.'_';
 			$tables = $this->getDb()->getTablesWith(array('start'=>$search));
