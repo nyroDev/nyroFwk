@@ -9,15 +9,9 @@
  */
 class form_numeric extends form_abstract {
 
-	/**
-	 * Set the form element value
-	 *
-	 * @param mixed $value The value
-	 */
 	public function setValue($value, $refill=false) {
 		return parent::setValue(str_replace(',', '.', $value));
 	}
-
 
 	public function toHtml() {
 		if ($this->cfg->mode == 'view')

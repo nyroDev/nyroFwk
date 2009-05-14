@@ -38,31 +38,12 @@ class form_file extends form_abstract {
 			$this->cfg->classLine.= ' fileError';
 	}
 
-	/**
-	 * Get the actual value
-	 *
-	 * @return mixed
-	 */
 	public function getValue() {
 		return $this->cfg->value->getCurrent();
 	}
 
-	/**
-	 * Set the form element value
-	 *
-	 * @param mixed $value The value
-	 */
 	public function setValue($value, $refill=false) {
 		$this->cfg->value->setCurrent($value);
-	}
-
-	/**
-	 * Check if the element is valid by using the valid object
-	 *
-	 * @return bool True if valid
-	 */
-	public function isValid2() {
-		return $this->cfg->value->isValid() && empty($this->customErrors);
 	}
 
 	public function toHtml() {

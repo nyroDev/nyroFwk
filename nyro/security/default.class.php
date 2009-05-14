@@ -1,4 +1,13 @@
 <?php
+/**
+ * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @version 0.2
+ * @package nyro
+ */
+/**
+ * Security class to check user rights.
+ * By default, allowing everything to the logged users
+ */
 class security_default extends security_abstract {
 
 	/**
@@ -73,11 +82,6 @@ class security_default extends security_abstract {
 		}
 	}
 
-	/**
-	 * Check if the user is logged
-	 *
-	 * @return bool
-	 */
 	public function isLogged() {
 		return $this->logged;
 	}
@@ -85,7 +89,7 @@ class security_default extends security_abstract {
 	/**
 	 * Get the user object
 	 *
-	 * @return null|mixed
+	 * @return null|db_row
 	 */
 	public function getUser() {
 		if ($this->isLogged() && $this->user)
@@ -93,12 +97,6 @@ class security_default extends security_abstract {
 		return null;
 	}
 
-	/**
-	 * Login the current user
-	 *
-	 * @param mixed $prm
-	 * @return bool True if successful
-	 */
 	public function login($prm = null, $page=null) {
 		$loginField = $this->cfg->getInArray('fields', 'login');
 		$passField = $this->cfg->getInArray('fields', 'pass');
@@ -161,12 +159,6 @@ class security_default extends security_abstract {
 		return $str;
 	}
 
-	/**
-	 * Logout the current user
-	 *
-	 * @param mixed $prm
-	 * @return bool True if successful
-	 */
 	public function logout($prm = null) {
 		if ($this->isLogged()) {
 			$this->session->del('cryptic');
@@ -178,23 +170,11 @@ class security_default extends security_abstract {
 		return $this->logged == false;
 	}
 
-	/**
-	 * Add a role to the current user
-	 *
-	 * @param string $role Role name
-	 * @return bool True if successful
-	 */
 	public function addRole($role) {
 		$this->roles[$role] = true;
 		return true;
 	}
 
-	/**
-	 * Check if the current user has a specific role or retrun the whole roles
-	 *
-	 * @param null|mixed $role null to get all roles
-	 * @return array|bool Array of roles or bool
-	 */
 	public function hasRole($role=null) {
 		if (is_null($role))
 			return $this->roles;
@@ -202,12 +182,6 @@ class security_default extends security_abstract {
 		return array_key_exists($role, $this->roles);
 	}
 
-	/**
-	 * Delete a role or all roles
-	 *
-	 * @param null|mixed $role null to delete all roles
-	 * @return bool True if successful
-	 */
 	public function delRole($role=null) {
 		if (is_null($role)) {
 			$this->roles = array();
@@ -217,14 +191,6 @@ class security_default extends security_abstract {
 		return true;
 	}
 
-	/**
-	 * Check if the user can access to the url given in the array (request style)
-	 * or the current URL if null is given
-	 *
-	 * @param null|array $url
-	 * @param bool $redirect Indicate if the user should be directly redirected and exit the program
-	 * @return bool True if authorized access
-	 */
 	public function check(array $url = null, $redirect=true) {
 		if (is_null($url))
 			$url = request::get();
@@ -266,11 +232,6 @@ class security_default extends security_abstract {
 		return $hasRight;
 	}
 
-	/**
-	 * Get the login Form Object
-	 *
-	 * @return form
-	 */
 	public function getLoginForm() {
 		if (!$this->form) {
 			$this->form = $this->table->getRow()->getForm(array(

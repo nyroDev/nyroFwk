@@ -76,6 +76,9 @@ class db_table extends object {
 			$this->relatedTables = array_merge_recursive($this->relatedTables, $this->cfg->related);
 	}
 
+	/**
+	 * Init the i18n table
+	 */
 	protected function _initI18n() {
 		if ($i18ntable = $this->getDb()->getI18nTable($this->getName())) {
 			$this->i18nTable = db::get('table', $i18ntable, array(

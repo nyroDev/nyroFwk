@@ -9,11 +9,6 @@
  */
 class form_hidden extends form_abstract {
 
-	/**
-	 * Check if the element is hidden
-	 *
-	 * @return bool
-	 */
 	public function isHidden() {
 		return true;
 	}

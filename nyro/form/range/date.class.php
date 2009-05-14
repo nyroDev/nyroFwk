@@ -9,7 +9,18 @@
  */
 class form_range_date extends form_range_abstract {
 
+	/**
+	 * The dates set for the range
+	 *
+	 * @var array
+	 */
 	protected $dates = array();
+
+	/**
+	 * The value set
+	 *
+	 * @var array
+	 */
 	protected $set = array('min'=>false, 'max'=>false);
 	
 	protected function afterInit() {
@@ -31,12 +42,7 @@ class form_range_date extends form_range_abstract {
 			))
 		);
 	}
-	
-	/**
-	 * Set the form element value
-	 *
-	 * @param mixed $value The value
-	 */
+
 	public function setValue($value, $refill=false, $key=null) {
 		$value = utils::htmlOut($value);
 		if (is_array($value)) {
@@ -55,11 +61,6 @@ class form_range_date extends form_range_abstract {
 		}
 	}
 
-	/**
-	 * Get the actual value
-	 *
-	 * @return mixed
-	 */
 	public function getValue($key=null, $mode='raw') {
 		if (!is_null($key)) {
 			if ($mode == 'input') {

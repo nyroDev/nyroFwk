@@ -29,6 +29,13 @@ final class tr {
 			self::$cfg = new config(factory::loadCfg(__CLASS__));
 	}
 
+	/**
+	 * Get the translation for a keyword
+	 *
+	 * @param string $key The keyword
+	 * @param bool $show Indicate if the word found should be directly shown
+	 * @return null|string
+	 */
 	public static function __($key, $show=false) {
 		self::initCfg();
 		$ret = null;

@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @version 0.2
+ * @package nyro
+ */
+/**
+ * HTTP response
+ */
 class response_http extends response_abstract {
 
 	/**
@@ -121,7 +128,10 @@ class response_http extends response_abstract {
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Make the response to expire in 10 days
+	 */
 	public function neverExpire() {
 		$this->addHeader('Expires', date('D, j M Y H:i:s', strtotime('+10 years')).' GMT');
 	}
@@ -260,6 +270,7 @@ class response_http extends response_abstract {
 	 */
 	public function showFile($file) {
 		if (file::exists($file)) {
+			$this->addHeader('Expires', date('r', time() + 60*60*24*30));
 			$this->addHeader('Content-Type', file::getType($file));
 			$this->addHeader('Content-length', file::size($file).'bytes');
 			$this->sendText(file::read($file));

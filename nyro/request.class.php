@@ -229,6 +229,7 @@ final class request {
 		if (is_array($param)) {
 			$tmp = array();
 			foreach($param as $key=>$val) {
+				$val = utils::urlify($val);
 				if (!is_numeric($key))
 					$tmp[] = $key.self::$cfg->sepParamSub.$val;
 				else
@@ -387,12 +388,12 @@ final class request {
 		$tmp = array_fill(0, 4, self::$cfg->empty);
 
 		if (array_key_exists('moduleScaffold', $prm) && !empty($prm['moduleScaffold']))
-			$tmp[0] = $prm['moduleScaffold'];
+			$tmp[0] = utils::urlify($prm['moduleScaffold']);
 		else if (array_key_exists('module', $prm) && !empty($prm['module']))
-			$tmp[0] = $prm['module'];
+			$tmp[0] = utils::urlify($prm['module']);
 
 		if (array_key_exists('action', $prm) && !empty($prm['action']))
-			$tmp[1] = $prm['action'];
+			$tmp[1] = utils::urlify($prm['action']);
 
 		if (array_key_exists('paramA', $prm) && is_array($prm['paramA']))
 			$tmp[2] = self::createParam($prm['paramA']);
@@ -400,7 +401,7 @@ final class request {
 			$tmp[2] = $prm['param'];
 
 		if (array_key_exists('text', $prm) && !empty($prm['text']))
-			$tmp[3] = $prm['text'];
+			$tmp[3] = utils::urlify($prm['text']);
 
 		while(count($tmp) > 0 && (empty($tmp[count($tmp) - 1]) || $tmp[count($tmp) - 1] == self::$cfg->empty))
 			array_pop($tmp);
@@ -432,7 +433,8 @@ final class request {
 
 		foreach($tmp as &$t)
 			$t = str_replace(array(' ', '/'), self::$cfg->empty, $t);
-
+		
+		//array_walk($tmp, create_function(&$v, '$v = utils::urlify($v);'));
 		return $prefix.implode($sep, $tmp);
 	}
 

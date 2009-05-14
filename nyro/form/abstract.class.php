@@ -42,6 +42,12 @@ abstract class form_abstract extends object {
 		$this->initValid();
 	}
 
+	/**
+	 * Make a valid id from a name
+	 *
+	 * @param string $name
+	 * @return string
+	 */
 	protected function makeId($name) {
 		return str_replace(
 			array('[]', '[', ']'),
@@ -67,7 +73,7 @@ abstract class form_abstract extends object {
 	}
 
 	/**
-	 * Get the raw valie
+	 * Get the raw value
 	 *
 	 * @return mixed
 	 */
@@ -170,6 +176,18 @@ abstract class form_abstract extends object {
 	 */
 	public function to($type) {
 		return $this->{'to'.ucfirst($type)}();
+	}
+
+	/**
+	 * Transform the element in a HTML string
+	 */
+	abstract public function toHtml();
+
+	/**
+	 * Transform the element in a XUL string
+	 */
+	public function toXul() {
+		return '';
 	}
 
 	/**

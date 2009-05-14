@@ -24,6 +24,11 @@ class response_http_html extends response_http {
 	 */
 	protected $blocks = array();
 
+	/**
+	 * Blocks to be execute once jQuery is loaded
+	 *
+	 * @var array
+	 */
 	protected $blocksJquery = array();
 
 	/**
@@ -205,6 +210,11 @@ class response_http_html extends response_http {
 			throw new nException('reponse::add: parameters file and/or type not provied');
 	}
 
+	/**
+	 * Get the included files
+	 *
+	 * @return array
+	 */
 	public function getIncFiles() {
 		return $this->incFiles;
 	}
@@ -485,6 +495,7 @@ class response_http_html extends response_http {
 		return $ret;
 	}
 
+	
 	public function send($headerOnly=false) {
 		$ret = parent::send($headerOnly);
 		return DEV ? str_replace('</body>', debug::debugger().'</body>', $ret) : $ret;

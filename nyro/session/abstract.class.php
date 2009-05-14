@@ -49,7 +49,7 @@ abstract class session_abstract extends object {
 	abstract public function get($prm);
 
 	/**
-	 * Get all session variable
+	 * Get all session variables
 	 *
 	 * @return array
 	 */

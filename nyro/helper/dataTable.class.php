@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @version 0.2
+ * @package nyro
+ */
+/**
+ * Helper to show db data with pagination
+ */
 class helper_dataTable extends object {
 
 	/**

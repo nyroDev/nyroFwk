@@ -459,6 +459,14 @@ class db_row extends object {
 		}
 	}
 
+	/**
+	 * Get only one value, using the getValues function
+	 *
+	 * @param string $name Fieldname
+	 * @param string $mode Mode used to retrieve data
+	 * @return mixed|null The value found or null
+	 * @see getValues
+	 */
 	public function getInValues($name=null, $mode='flatReal') {
 		$tmp = $this->getValues($mode);
 		if(array_key_exists($name, $tmp))

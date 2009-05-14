@@ -1,7 +1,19 @@
 <?php
-
+/**
+ * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @version 0.2
+ * @package nyro
+ */
+/**
+ * Where clause  to be used in queries
+ */
 class db_where extends object implements Countable {
 
+	/**
+	 * The wher clauses
+	 *
+	 * @var array
+	 */
 	protected $clauses;
 
 	protected function afterInit() {

@@ -196,6 +196,9 @@ class form extends object {
 			$prm['global']);
 	}
 
+	/**
+	 * Finalize the construction of the form. Should be call when i18n are present
+	 */
 	public function finalize() {
 		if ($this->isI18n()) {
 			$this->cfg->showSection = true;
@@ -584,6 +587,13 @@ class form extends object {
 		}
 	}
 
+	/**
+	 * Set configuration var with a depth of 2
+	 *
+	 * @param string $key1 The 1st index
+	 * @param string $key2 The 2nd index
+	 * @param mixed $val The value
+	 */
 	public function set($key1, $key2, $val) {
 		$this->cfg->setInArray($key1, $key2, $val);
 	}

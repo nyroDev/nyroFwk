@@ -81,7 +81,13 @@ final class nyro {
 			echo debug::trace($e);
 		}
 	}
-	
+
+	/**
+	 * Get a configuration setting
+	 *
+	 * @param string $name Confirguration key needed
+	 * @return array|mixed Array if not found
+	 */
 	public static function getGlobalCfg($name) {
 		if (self::$cfg && self::$cfg->check($name))
 			return self::$cfg->get($name);
@@ -97,10 +103,14 @@ final class nyro {
 		return self::$cfg;
 	}
 
+	/**
+	 * Handle an error to be shown to the user
+	 *
+	 * @param Exception $err
+	 * @return string The debug to be shown
+	 */
 	private static function handleError(Exception $err) {
-		echo $err; exit;
-		debug::trace($err, 2);
-		return debug::trace($err);
+		return debug::trace($err, DEV? 2 : 0);
 	}
 
 }

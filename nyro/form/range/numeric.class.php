@@ -51,8 +51,7 @@ class form_range_numeric extends form_range_abstract {
 		
 		return $ret;
 	}
-	
-	
+
 	public function toXul() {
 		return '<textbox type="number" id="'.$this->name.'" value="'.$this->value.'" min="'.$this->min.'" max="'.$this->max.'" increment="'.$this->step.'" '.utils::htmlAttribute($this->more).'/>';
 	}

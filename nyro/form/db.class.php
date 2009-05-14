@@ -45,7 +45,10 @@ class form_db extends form {
 	 * @return form_abstract Reference to the new element
 	 */
 	public function addFromFieldFilter(array $field) {
+		$saveAutoValidRule = $this->cfg->autoValidRule;
+		$this->cfg->autoValidRule = array();
 		$prm = $this->getFromFieldPrm($field);
+		$this->cfg->autoValidRule = $saveAutoValidRule;
 		unset($prm['value']);
 		switch($prm['type']) {
 			case 'multiline':

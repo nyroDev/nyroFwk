@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @version 0.2
+ * @package nyro
+ */
+/**
+ * Helper to create a db filter form
+ */
 class helper_filterTable extends object {
 
 	/**

@@ -16,7 +16,6 @@ class module extends module_abstract {
 	 * @throws nException if wrong parameter or other errors
 	 */
 	public function indexAction(array $prm = array()) {
-
 	}
 
 	/**

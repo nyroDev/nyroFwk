@@ -14,7 +14,7 @@ class module_nyroUtils_controller extends module_abstract {
 	protected function execUploadedFiles($prm=null) {
 		if (array_search('..', $prm))
 			response::getInstance()->error(null, 403);
-		response::getInstance()->showFile(FILESROOT.implode(DS, $prm));
+		response::getInstance()->showFile(FILESROOT.urldecode(implode(DS, $prm)));
 	}
 	
 	protected function execTinyMce($prm=null) {

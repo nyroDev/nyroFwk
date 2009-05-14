@@ -5,8 +5,7 @@
  * @package nyro
  */
 /**
- * HTML Response
- * Provide functions to manage the head parts
+ * XUL Response
  */
 class response_http_xul extends response_http_html {
 

@@ -59,6 +59,7 @@ abstract class form_mulValue extends form_abstract {
 	/**
 	 * Get the actual value
 	 *
+	 * @param bool $outside Indicate if it's coming from outside (ie if it should be htmlDeOut)
 	 * @return mixed
 	 */
 	public function getValue($outside=true) {
@@ -74,11 +75,6 @@ abstract class form_mulValue extends form_abstract {
 		return $val;
 	}
 
-	/**
-	 * Set the form element value
-	 *
-	 * @param mixed $value The value
-	 */
 	public function setValue($value, $refill=false) {
 		if (is_array($value) && $this->cfg->uniqValue) {
 			parent::setValue(array_shift($value));
@@ -87,12 +83,6 @@ abstract class form_mulValue extends form_abstract {
 		}
 	}
 
-	/**
-	 * Transform the element to a string to be shown
-	 *
-	 * @param string $type The output type
-	 * @return string
-	 */
 	public function to($type) {
 		if ($this->cfg->mode == 'view') {
 			if ($this->cfg->uniqValue)

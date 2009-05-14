@@ -9,20 +9,10 @@
  */
 class form_richtext extends form_multiline {
 
-	/**
-	 * Get the actual value
-	 *
-	 * @return mixed
-	 */
 	public function getValue() {
 		return $this->cfg->value;
 	}
 
-	/**
-	 * Set the form element value
-	 *
-	 * @param mixed $value The value
-	 */
 	public function setValue($value, $refill=false) {
 		$this->cfg->set('value', $value);
 	}
@@ -58,4 +48,5 @@ class form_richtext extends form_multiline {
 				'id'=>$this->id,
 			)), utils::htmlOut($this->getValue()));
 	}
+	
 }

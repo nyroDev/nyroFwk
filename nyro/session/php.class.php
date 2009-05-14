@@ -8,7 +8,6 @@
  * Manage session variable
  * Singleton
  */
-
 class session_php extends session_abstract {
 
 	/**
@@ -24,15 +23,6 @@ class session_php extends session_abstract {
 		}
 	}
 
-	/**
-	 * Get a session variable
-	 *
-	 * @param string|array $prm Array parameter:
-	 *  - string name: variable name
-	 *  - string nameSpace: variable name space
-	 *  - bool serialize: If true, the variable will be unserialize
-	 * @return mixed The variable or null if it doesn't exists
-	 */
 	public function get($prm) {
 		if ($this->check($prm)) {
 			if (is_array($prm)) {
@@ -52,11 +42,6 @@ class session_php extends session_abstract {
 		return null;
 	}
 
-	/**
-	 * Get all session variable
-	 *
-	 * @return array
-	 */
 	public function getAll() {
 		$ret = array();
 		$prefix = $this->prefixNameSpace('');
@@ -68,15 +53,6 @@ class session_php extends session_abstract {
 		return $ret;
 	}
 
-	/**
-	 * Set a session variable
-	 *
-	 * @param array $prm Array parameter:
-	 *  - string name: variable name
-	 *  - mixed val: variable value
-	 *  - string nameSpace: variable name space
-	 *  - bool serialize: If true, the variable will be unserialize
-	 */
 	public function set(array $prm) {
 		$this->setNameSpaceInArray($prm);
 		config::initTab($prm, array(
@@ -87,14 +63,6 @@ class session_php extends session_abstract {
 		$_SESSION[$this->prefixNameSpace($prm['name'])] = $prm['serialize']? serialize($prm['val']) : $prm['val'];
 	}
 
-	/**
-	 * check if a variable is set
-	 *
-	 * @param string|array $prm Array parameter:
-	 *  - string name: variable name
-	 *  - string nameSpace: variable name space
-	 * @return bool
-	 */
 	public function check($prm) {
 		if (is_array($prm)) {
 			$this->setNameSpaceInArray($prm);
@@ -128,11 +96,6 @@ class session_php extends session_abstract {
 		unset($_SESSION[$name]);
 	}
 
-	/**
-	 * Clear all the session variables and start a new session
-	 *
-	 * @param string|true|null $nameSpace If provided, will clear only the name space
-	 */
 	public function clear($nameSpace=true) {
 		$tmp = array_keys($_SESSION);
 

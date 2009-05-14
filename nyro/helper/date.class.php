@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @version 0.2
+ * @package nyro
+ */
+/**
+ * Helper to deal with date
+ */
 class helper_date extends object {
 
 	/**
@@ -9,6 +16,11 @@ class helper_date extends object {
 	 */
 	protected $timestamp;
 
+	/**
+	 * Indicate if the date was set or net
+	 *
+	 * @var bool
+	 */
 	protected $isNull = false;
 
 	protected function afterinit() {

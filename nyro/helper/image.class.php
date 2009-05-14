@@ -5,7 +5,7 @@
  * @package nyro
  */
 /**
- * manipulate image
+ * Helper to manipulate image
  */
 class helper_image extends helper_file {
 
@@ -109,6 +109,16 @@ class helper_image extends helper_file {
 	public function make(array $prm = array()) {
 		$this->cfg->setA($prm);
 		return $this->build();
+	}
+
+	public function valid(array $file, array $prm = array()) {
+		$ret = parent::valid($file, $prm);
+		if ($ret && count($file) && array_key_exists('tmp_name', $file) && file::exists($file['tmp_name'])) {
+			$size = getimagesize($file['tmp_name']);
+			if (!is_array($size) && $size[2] != 1 && $size[2] != 2 && $size[2] != 3)
+				return 'notValidImg';
+		}
+		return $ret;
 	}
 
 	/**

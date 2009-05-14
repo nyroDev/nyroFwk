@@ -24,6 +24,12 @@ class utils {
 		);
 	}
 
+	/**
+	 * Transform HTML to text, using markdownify library
+	 *
+	 * @param string $html The HTML string to transform
+	 * @return string
+	 */
 	public static function html2Text($html) {
 		lib::load('markdownify');
 		$md = new Markdownify_Extra(false, false, false);
@@ -195,6 +201,15 @@ class utils {
 		return $ret;
 	}
 
+	/**
+	 * Format a date, using helper_date
+	 *
+	 * @param string $date Date to format (compatible with strtotime)
+	 * @param string $type Format needed
+	 * @param string $len Format length needed
+	 * @return string The date formatted
+	 * @see helper_date::format
+	 */
 	public static function formatDate($date, $type='date', $len='short2') {
 		$d = factory::getHelper('date', array(
 			'timestamp'=>strtotime($date),
@@ -206,6 +221,12 @@ class utils {
 		return $d->format();
 	}
 
+	/**
+	 * Create the image tag for an image (in the img directory)
+	 *
+	 * @param string|array $prm Src string or array of attribute for the img tag
+	 * @return string The HTML img tag
+	 */
 	public static function img($prm) {
 		if (!is_array($prm))
 			$prm = array('src'=>$prm);
@@ -216,6 +237,13 @@ class utils {
 		), $prm));
 	}
 
+	/**
+	 * Get a value in an array, by specifing the path to it
+	 *
+	 * @param array $source The array source
+	 * @param array $keys The path in the $source array, numercally indexed
+	 * @return mixed
+	 */
 	public static function getValInArray(array $source, array $keys) {
 		$ret = null;
 		if (array_key_exists($keys[0], $source)) {
@@ -226,10 +254,16 @@ class utils {
 		}
 		return $ret;
 	}
-	
+
+	/**
+	 * Clean a string to be used in an URL
+	 *
+	 * @param string $text
+	 * @return string
+	 */
 	public static function urlify($text) {
-		$from = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ()[]~$&%*@ç!?;,:/\\^¨€{}|+<>\"' ’–«»…®";
-		$to  =  'AAAAAAaaaaaaOOOOOOooooooEEEEeeeeCcIIIIiiiiUUUUuuuuyNn          c   _     E      _________';
+		$from = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ()[]~$&%*@ç!?;,:/\\^¨€{}|+<>\"' ’–«»…®²";
+		$to  =  'AAAAAAaaaaaaOOOOOOooooooEEEEeeeeCcIIIIiiiiUUUUuuuuyNn          c   _     E      _________2';
 		return str_replace(
 			array(' ', '_____', '____', '___', '__'),
 			'_',

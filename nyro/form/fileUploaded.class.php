@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @version 0.2
+ * @package nyro
+ */
+/**
+ * Used by form_file to save the uploaded file
+ */
 class form_fileUploaded extends object {
 
 	/**
@@ -54,7 +61,7 @@ class form_fileUploaded extends object {
 			? factory::getHelper($this->cfg->helper, $this->getHelperPrm('factory'))
 			: null;
 
-		if ($this->cfg->autoSave && !empty($this->file))
+		if ($this->cfg->autoSave && !empty($this->file) && $this->isvalid() === true)
 			$this->save();
 	}
 
@@ -90,7 +97,7 @@ class form_fileUploaded extends object {
 	 * Add a key 'saved' in the file array info
 	 */
 	public function save() {
-		if (!$this->file['saved'] && $this->isValid()) {
+		if (!$this->file['saved'] && $this->isValid() === true) {
 			$name = $this->safeFileName($this->file['name']);
 			$savePath = $this->dir.$name;
 			if (move_uploaded_file($this->file['tmp_name'], $savePath)) {
@@ -190,9 +197,9 @@ class form_fileUploaded extends object {
 		$tmp = !request::isPost() ||
 			($this->cfg->current) ||
 			(array_key_exists('error', $file) && $file['error'] === 0
-			&& array_key_exists('size', $file) && $file['size'] > 0
-			&& $this->callHelper('valid', $file));
-		return $tmp? true : 'required';
+			&& array_key_exists('size', $file) && $file['size'] > 0);
+		$helperValid = $this->callHelper('valid', $file);
+		return $tmp? ($helperValid?$helperValid : true) : 'required';
 	}
 
 	/**

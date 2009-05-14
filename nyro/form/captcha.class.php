@@ -1,9 +1,14 @@
 <?php
-
+/**
+ * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @version 0.2
+ * @package nyro
+ */
+/**
+ * Form captcha element
+ */
 class form_captcha extends form_text {
-	/**
-	 * Set up the valid object
-	 */
+
 	protected function afterInit() {
 		if (!$this->label && !is_bool($this->label))
 			$this->label = ucfirst($this->name);
@@ -15,20 +20,10 @@ class form_captcha extends form_text {
 			$this->name);
 	}
 
-	/**
-	 * Get the valid object
-	 *
-	 * @return valid
-	 */
 	public function getValid() {
 		return null;
 	}
 
-	/**
-	 * Check if the element is valid by using the valid object
-	 *
-	 * @return bool True if valid
-	 */
 	public function isValid() {
 		$ret = empty($this->cfg->value);
 		if (!$ret && $this->cfg->errorFct && is_callable($this->cfg->errorFct))
@@ -36,20 +31,9 @@ class form_captcha extends form_text {
 		return $ret;
 	}
 
-	/**
-	 * Get all the errors for the last validation
-	 *
-	 * @return array
-	 */
 	public function getErrors() {
 		return $this->isValid()? array() : array($this->cfg->error);
 	}
 
-	/**
-	 * Add a rule to the validation
-	 *
-	 * @param string $type Validation type
-	 * @param array $prm Parameter for this rule
-	 */
 	public function addRule($type, $prm=null) {}
 }

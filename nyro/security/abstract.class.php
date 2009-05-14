@@ -1,4 +1,12 @@
 <?php
+/**
+ * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @version 0.2
+ * @package nyro
+ */
+/**
+ * Security class to check user rights
+ */
 abstract class security_abstract extends object {
 
 	/**
@@ -12,9 +20,10 @@ abstract class security_abstract extends object {
 	 * Login the current user
 	 *
 	 * @param mixed $prm
+	 * @param null|string $page The page where to be redirected. If null, config will be used
 	 * @return bool True if successful
 	 */
-	abstract public function login($prm = null);
+	abstract public function login($prm = null, $page=null);
 
 	/**
 	 * Logout the current user

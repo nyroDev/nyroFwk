@@ -5,7 +5,7 @@
  * @package nyro
  */
 /**
- * Send email
+ * Helper to send email
  */
 class helper_email extends object {
 

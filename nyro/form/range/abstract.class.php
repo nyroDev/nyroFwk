@@ -25,11 +25,13 @@ abstract class form_range_abstract extends form_abstract {
 				)))
 			));
 	}
-	
+
 	/**
 	 * Set the form element value
 	 *
 	 * @param mixed $value The value
+	 * @param boolean $refill Indicate if the value is a refill one
+	 * @param null|string $key Null if set both values or string to set only one value
 	 */
 	public function setValue($value, $refill=false, $key=null) {
 		$value = utils::htmlOut($value);
@@ -45,10 +47,11 @@ abstract class form_range_abstract extends form_abstract {
 		}
 	}
 
-
 	/**
 	 * Get the actual value
 	 *
+	 * @param null|string $key Null to get both values or string to get only one
+	 * @param string $mode How get the value in case of retriving only one value
 	 * @return mixed
 	 */
 	public function getValue($key=null, $mode='raw') {

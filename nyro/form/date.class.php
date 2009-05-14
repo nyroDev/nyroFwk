@@ -33,11 +33,6 @@ class form_date extends form_abstract {
 		return $this->date->format();
 	}
 
-	/**
-	 * Set the form element value
-	 *
-	 * @param mixed $value The value
-	 */
 	public function setValue($value, $refill=false) {
 		parent::setValue($value);
 		if ($refill)

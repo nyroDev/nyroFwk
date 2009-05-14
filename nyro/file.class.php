@@ -266,6 +266,12 @@ final class file {
 		return !self::exists($file);
 	}
 
+	/**
+	 * Delete files with a pattern
+	 *
+	 * @param string $pattern The pattern to delete files (glob used)
+	 * @return int Number of files deleted
+	 */
 	public static function multipleDelete($pattern) {
 		$nb = 0;
 		foreach(glob($pattern) as $f)
