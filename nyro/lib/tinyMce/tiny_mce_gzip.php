@@ -22,7 +22,7 @@
 	$compress = getParam("compress", "true") == "true";
 	$core = getParam("core", "true") == "true";
 	$suffix = getParam("suffix", "_src") == "_src" ? "_src" : "";
-	$cachePath = defined('TINYMCEPATH')? TINYMCEPATH : realpath("."); // Cache path, this is where the .gz files will be stored /////////////////////////// Update for nyroFwk ///////////////////////////
+	$cachePath = defined('TINYMCECACHEPATH')? TINYMCECACHEPATH : realpath("."); // Cache path, this is where the .gz files will be stored /////////////////////////// Update for nyroFwk ///////////////////////////
 	$expiresOffset = 3600 * 24 * 10; // Cache for 10 days in browser cache
 	$content = "";
 	$encodings = array();
@@ -150,7 +150,7 @@
 
 	function getFileContents($path) {
 		//$path = realpath($path);
-		$path = strpos($path, TINYMCEPATH) === false ? TINYMCEPATH.DS.$path : $path;	/////////////////////////// Update for nyroFwk ///////////////////////////
+		$path = strpos($path, TINYMCEPATH) === false && strpos($path, TINYMCECACHEPATH) === false? TINYMCEPATH.DS.$path : $path;	/////////////////////////// Update for nyroFwk ///////////////////////////
 
 		if (!$path || !@is_file($path))
 			return "";

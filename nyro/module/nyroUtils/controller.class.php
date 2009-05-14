@@ -29,6 +29,7 @@ class module_nyroUtils_controller extends module_abstract {
 			$path = str_replace($tmp, '', $file);
 			ini_set('include_path', $path);
 			define('TINYMCEPATH', substr($path, 0, -1));
+			define('TINYMCECACHEPATH', substr(TMPROOT, 0, -1));
 			include($file);
 			exit;
 		} else {
