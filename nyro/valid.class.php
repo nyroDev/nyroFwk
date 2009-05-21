@@ -171,6 +171,32 @@ class valid extends object {
 		}
 		return true;
 	}
+	
+	public function isDbUnique($val, array $prm) {
+		$table = $prm['table'] instanceof db_table? $prm['table'] : db::get('table', $prm['table']);
+		$nb = $table->count(array(
+			'where'=>array($prm['field']=>$val),
+			'whereOp'=>'LIKE'
+		));
+		if ($nb > 0) {
+			$this->errors[] = sprintf($this->getMessage('dbUnique'), $val, $this->cfg->label);
+			return false;
+		}
+		return true;
+	}
+	
+	public function isDbExists($val, array $prm) {
+		$table = $prm['table'] instanceof db_table? $prm['table'] : db::get('table', $prm['table']);
+		$nb = $table->count(array(
+			'where'=>array($prm['field']=>$val),
+			'whereOp'=>'LIKE'
+		));
+		if ($nb == 0) {
+			$this->errors[] = sprintf($this->getMessage('dbExists'), $val, $this->cfg->label);
+			return false;
+		}
+		return true;
+	}
 
 	protected function getMessage($name) {
 		return utils::htmlOut($this->cfg->getInarray('messages', $name));

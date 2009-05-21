@@ -153,12 +153,7 @@ class form_fileUploaded extends object {
 		$ret = null;
 		if ($current = $this->getCurrent()) {
 			if (!$ret = $this->callHelper('view', $current, null))
-				$ret = utils::htmlTag('a', array('href'=>request::uri(array(
-					'module'=>'nyroUtils',
-					'action'=>'uploadedFiles',
-					'param'=>str_replace('/', request::getCfg('sepParam'), $current),
-					'out'=>null
-				))), $current);
+				$ret = utils::htmlTag('a', array('href'=>request::uploadedUri($current)), $current);
 		}
 		return $ret;
 	}

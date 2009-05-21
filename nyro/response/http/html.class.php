@@ -170,7 +170,7 @@ class response_http_html extends response_http {
 			}
 
             foreach($this->cfg->getInArray($prm['type'], 'alias') as $k=>$a) {
-                if (strtolower($prm['file']) == $k)
+                if (strtolower($prm['file']) == strtolower($k))
                     $prm['file'] = $a;
             }
 
@@ -192,6 +192,7 @@ class response_http_html extends response_http {
 							));
 			else
 				$fileExists = true;
+
 			if ($fileExists) {
 				$this->incFiles[$prm['type']][$locDir][$prm['file']] = $prm;
 				if ($prm['type'] == 'css') {
@@ -360,7 +361,7 @@ class response_http_html extends response_http {
 		$ret = null;
 		switch($prm) {
 			case 'title':
-				$ret.= '<title>'.$this->getMeta('title').'</title>';
+				$ret.= '<title>'.utils::htmlOut($this->getMeta('title')).'</title>';
 				break;
 			case 'meta':
 				$ret.= $this->getHtmlMeta();
@@ -398,7 +399,7 @@ class response_http_html extends response_http {
 			$ret.= '<meta http-equiv="'.$k.'" content="'.$v.'" />'.$ln;
 		*/
 		foreach($this->cfg->meta as $k=>$v)
-			$ret.= '<meta name="'.$k.'" content="'.$v.'" />'.$ln;
+			$ret.= '<meta name="'.$k.'" content="'.utils::htmlOut($v).'" />'.$ln;
 		return $ret;
 	}
 

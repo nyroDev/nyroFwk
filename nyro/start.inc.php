@@ -87,6 +87,12 @@ if (!defined('SEARCHROOT'))
 if (!defined('KEEPUNIQUE'))
 	define('KEEPUNIQUE', 'keepUnique');
 
+/**
+ * string Key to be used in the configuration array to indicate that the value should replace what's in the parent configuration
+ */
+if (!defined('REPLACECONF'))
+	define('REPLACECONF', 'replaceConf');
+
 ini_set('include_path', MYROOT.PATH_SEPARATOR.NYROROOT);
 
 /**

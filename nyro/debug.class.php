@@ -116,7 +116,7 @@ final class debug {
 			$menu[] = '<a rel="'.$k.'">'.$icon.$v[0].'</a>';
 			$tmp = '<div class="debugElt" id="'.$k.'" style="display: none;">'.$close.'<h2>'.$icon.$v[0].'</h2>';
 			if (is_array($v[1])) {
-				if (is_numeric(key($v[1])))
+				if (is_numeric(key($v[1])) && !is_array($v[1]))
 					$tmp.= '<ol><li>'.implode('</li><li>', $v[1]).'</li></ol>';
 				else
 					$tmp.= debug::trace($v[1]);

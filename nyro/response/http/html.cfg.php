@@ -13,6 +13,7 @@ $cfg = array(
 		'alias'=>array(
 			'jquery'=>'jquery-1.3.2',
 			'jqueryui'=>'jquery-ui-1.7.custom.min',
+			'nyroModal'=>'jquery.nyroModal-1.5.0',
 		),
 		'ext'=>'js',
 		'dirWeb'=>'js',
@@ -22,6 +23,10 @@ $cfg = array(
 		'depend'=>array(
 			'debug'=>array('jquery'),
 			'actionsConfirmDelete'=>array('jquery'),
+			'nyroModal'=>array(
+				'jquery',
+				array('file'=>'nyroModal', 'type'=>'css')
+			),
 			'jqueryui'=>array(
 				'jquery',
 				array('file'=>'jqueryui', 'type'=>'css')

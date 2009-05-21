@@ -12,7 +12,7 @@ $cfg = array(
 	'rebuild'=>false,
 	'html'=>false,
 	'alt'=>'Image',
-	'plusImg'=>'border="0"',
+	'htmlDefOptions'=>array(),
 	'autoExt'=>array('gif', 'jpg', 'png'),
 	'mime'=>array(
 		'image/jpeg',

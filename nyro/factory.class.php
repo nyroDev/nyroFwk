@@ -170,27 +170,27 @@ final class factory {
 	 * @param array $cfg Array with the parameter to overload
 	 */
 	public static function mergeCfg(array &$prm, array $cfg) {
-		$keepUnique = array_key_exists(KEEPUNIQUE, $prm);
-		foreach($cfg as $k=>&$v) {
-			if (is_numeric($k) && !$keepUnique) {
-				$prm[] = &$v;
-			} else if (is_array($v) && array_key_exists($k, $prm) && is_array($prm[$k]))
-				self::mergeCfg($prm[$k], $v);
-			else
-				$prm[$k] = &$v;
+		if (!array_key_exists(REPLACECONF, $cfg)) {
+			$keepUnique = array_key_exists(KEEPUNIQUE, $prm);
+			foreach($cfg as $k=>&$v) {
+				if (is_numeric($k) && !$keepUnique) {
+					$prm[] = &$v;
+				} else if (is_array($v) && array_key_exists($k, $prm) && is_array($prm[$k]))
+					self::mergeCfg($prm[$k], $v);
+				else
+					$prm[$k] = &$v;
+			}
+		} else {
+			unset($cfg[REPLACECONF]);
+			$prm = $cfg;
 		}
-		/*
-		foreach($cfg as $k=>&$v) {
-			if (is_array($v)
-					&& array_key_exists($k, $prm)
-					&& is_array($prm[$k]))
-				$prm[$k] = array_merge($prm[$k], $v);
-			else
-				$prm[$k] = &$v;
-		}
-		// */
 	}
 
+	/**
+	 * Remove the keepUnique key
+	 *
+	 * @param array $prm Configuration array
+	 */
 	private static function removeKeepUnique(array &$prm) {
 		unset($prm[KEEPUNIQUE]);
 		foreach($prm as &$v) {

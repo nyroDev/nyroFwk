@@ -10,5 +10,7 @@ $cfg = array(
 		'equal'=>'La valeur %s pour le champ "%s" n\'est pas la bonne.',
 		'url'=>'Le champ "%s" doit être une URL valide.',
 		'email'=>'Le champ "%s" doit être une adresse email valide.',
+		'dbUnique'=>'"%s" pour le champ "%s" existe déjà.',
+		'dbExists'=>'"%s" pour le champ "%s" n\'existe pas.',
 	),
 );

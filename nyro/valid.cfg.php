@@ -14,5 +14,7 @@ $cfg = array(
 		'equal'=>'The value %s for %s is not the right one.',
 		'url'=>'%s should be a valid URL.',
 		'email'=>'%s should be a valid email address.',
+		'dbUnique'=>'%s for %s already exists.',
+		'dbExists'=>'%s for %s doesn\'t exists.',
 	),
 );

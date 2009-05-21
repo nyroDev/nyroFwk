@@ -63,10 +63,10 @@ class helper_image extends helper_file {
 		$this->cfg->setA($prm);
 		$this->cfg->html = true;
 		$this->cfg->fileSave = $this->makePath($this->cfg->file, $this->cfg->fileSaveAdd);
-		$fileWeb = str_replace(array(FILESROOT, '/'), array('', ','), $this->cfg->fileSave);
+		$fileWeb = str_replace(FILESROOT, '', $this->cfg->fileSave);
 		return str_replace(
 			$this->cfg->fileSave,
-			request::uri(array('module'=>'nyroUtils', 'action'=>'uploadedFiles', 'param'=>$fileWeb, 'out'=>null)),
+			request::uploadedUri($fileWeb),
 			$this->build());
 	}
 
@@ -191,16 +191,10 @@ class helper_image extends helper_file {
 	private function html(array $options = array()) {
 		if (file::exists($this->cfg->fileSave)) {
 			return utils::htmlTag('img',
-				array_merge($options, array(
+				array_merge($options, $this->cfg->htmlDefOptions, array(
 					'src'=>$this->cfg->fileSave,
 					'alt'=>$this->cfg->alt,
 				)));
-			$ret = str_replace('[src]', $this->cfg->fileSave, $this->html);
-			$ret = str_replace('[width]', $this->cfg->wAct, $ret);
-			$ret = str_replace('[height]', $this->cfg->hAct, $ret);
-			$ret = str_replace('[alt]', $this->cfg->alt, $ret);
-			$ret = str_replace('[plusImg]', $this->cfg->plusImg, $ret);
-			return $ret;
 		}
 		return null;
 	}

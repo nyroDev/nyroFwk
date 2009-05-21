@@ -224,12 +224,13 @@ final class request {
 	 * @param array|string $param
 	 * @return string
 	 */
-	public static function createParam($param) {
+	public static function createParam($param, $urlify=true) {
 		$ret = null;
 		if (is_array($param)) {
 			$tmp = array();
 			foreach($param as $key=>$val) {
-				$val = utils::urlify($val);
+				if ($urlify)
+					$val = utils::urlify($val);
 				if (!is_numeric($key))
 					$tmp[] = $key.self::$cfg->sepParamSub.$val;
 				else
@@ -271,6 +272,8 @@ final class request {
 	 *
 	 * @param null|string get Element you want. Possible value:
 	 *  - uri
+	 *  - pathUri
+	 *  - rootUri
 	 *  - secure
 	 *  - protocol
 	 *  - controller
@@ -290,6 +293,8 @@ final class request {
 	public static function get($get=null) {
 		if ($get == 'uri')
 			return self::get('domain').self::getPathControllerUri().self::get('request');
+		if ($get == 'pathUri')
+			return self::getPathControllerUri().self::get('request');
 		if ($get == 'rootUri')
 			return self::get('domain').self::get('path');
 		else if ($get == null)
@@ -396,7 +401,7 @@ final class request {
 			$tmp[1] = utils::urlify($prm['action']);
 
 		if (array_key_exists('paramA', $prm) && is_array($prm['paramA']))
-			$tmp[2] = self::createParam($prm['paramA']);
+			$tmp[2] = self::createParam($prm['paramA'], false);
 		else if (array_key_exists('param', $prm) && !empty($prm['param']))
 			$tmp[2] = $prm['param'];
 
@@ -433,9 +438,23 @@ final class request {
 
 		foreach($tmp as &$t)
 			$t = str_replace(array(' ', '/'), self::$cfg->empty, $t);
-		
-		//array_walk($tmp, create_function(&$v, '$v = utils::urlify($v);'));
+
 		return $prefix.implode($sep, $tmp);
+	}
+	
+	/**
+	 * Make a valid URI for an uploaded File
+	 *
+	 * @param string $file The filepath
+	 * @return string The valid URI
+	 */
+	public static function uploadedUri($file) {
+		return self::uri(array(
+					'module'=>'nyroUtils',
+					'action'=>'uploadedFiles',
+					'param'=>str_replace('/', request::getCfg('sepParam'), $file),
+					'out'=>null
+				));
 	}
 
 	/**
