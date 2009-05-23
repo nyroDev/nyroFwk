@@ -264,7 +264,7 @@ class response_http extends response_abstract {
 	}
 
 	/**
-	 * show a file to the client
+	 * Show a file to the client
 	 *
 	 * @param string $file File Path
 	 */

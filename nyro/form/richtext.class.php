@@ -40,7 +40,15 @@ class form_richtext extends form_multiline {
 			'dir'=>'web',
 			'verifExists'=>false
 		));
-		$resp->blockJs('tinyMCE.init('.json_encode($options).');');
+		if (array_key_exists('content_css', $options)) {
+			$contentCss = $options['content_css'];
+			unset($options['content_css']);
+			$options['setup'] = 'FUNCSETUP';
+			$optionsJs = json_encode($options);
+			$optionsJs = str_replace('"FUNCSETUP"', 'function(ed) {ed.onInit.add(function(ed) {setTimeout(function() {ed.dom.add(ed.dom.select("head"), "link", {rel : "stylesheet", href : "'.$contentCss.'"});}, 5);});}', $optionsJs);
+		} else
+			$optionsJs = json_encode($options);
+		$resp->blockJs('tinyMCE.init('.$optionsJs.');');
 
 		return utils::htmlTag($this->htmlTagName,
 			array_merge($this->html, array(
