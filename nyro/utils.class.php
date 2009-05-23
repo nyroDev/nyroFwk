@@ -210,13 +210,14 @@ class utils {
 	 * @return string The date formatted
 	 * @see helper_date::format
 	 */
-	public static function formatDate($date, $type='date', $len='short2') {
+	public static function formatDate($date, $type='date', $len='short2', $htmlOut=true) {
 		$d = factory::getHelper('date', array(
 			'timestamp'=>strtotime($date),
 			'defaultFormat'=>array(
 				'type'=>$type,
 				'len'=>$len
-			)
+			),
+			'htmlOut'=>$htmlOut
 		));
 		return $d->format();
 	}

@@ -5,6 +5,7 @@ $cfg = array(
 		'type'=>'datetime',
 		'len'=>'short'
 	),
+	'htmlOut'=>false,
     'formatDate'=>array(
         'short'=>'M/D/YY',         // 12/31/08
         'short2'=>'M/D/YYYY',      // 12/31/08

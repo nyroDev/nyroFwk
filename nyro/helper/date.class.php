@@ -212,8 +212,11 @@ class helper_date extends object {
 			$intermediate[$k] = '_|_'.$i.'_|_';
 			$i++;
 		}
-		
-		return str_replace($intermediate, $places, str_replace(array_keys($intermediate), $intermediate, $form));
+
+		$ret = str_replace($intermediate, $places, str_replace(array_keys($intermediate), $intermediate, $form));
+		if ($this->cfg->htmlOut)
+			$ret = utils::htmlOut($ret);
+		return $ret;
 	}
 
 	/**
