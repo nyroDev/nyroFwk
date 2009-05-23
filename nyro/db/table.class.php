@@ -82,7 +82,8 @@ class db_table extends object {
 	protected function _initI18n() {
 		if ($i18ntable = $this->getDb()->getI18nTable($this->getName())) {
 			$this->i18nTable = db::get('table', $i18ntable, array(
-				'name'=>$i18ntable
+				'name'=>$i18ntable,
+				'db'=>$this->getDb()
 			));
 		}
 	}
@@ -772,7 +773,7 @@ class db_table extends object {
 				if ($p['i18nFields']) {
 					$fieldsI18n = array();
 					$i18nTableName = $p['table'].db::getCfg('i18n');
-					$i18nTable = db::get('table', $i18nTableName);
+					$i18nTable = db::get('table', $i18nTableName, array('db'=>$this->getDb()));
 					$primary = $i18nTable->getPrimary();
 					$i18nAlias = $alias.db::getCfg('i18n');
 					$prm['join'][] = array(
@@ -831,7 +832,7 @@ class db_table extends object {
 				if ($p['fk2']['link']['i18nFields']) {
 					$fieldsI18n = array();
 					$i18nTableName = $p['table'].db::getCfg('i18n');
-					$i18nTable = db::get('table', $i18nTableName);
+					$i18nTable = db::get('table', $i18nTableName, array('db'=>$this->getDb()));
 					$primary = $i18nTable->getPrimary();
 					$prm['join'][] = array(
 						'table'=>$i18nTableName,
@@ -995,10 +996,11 @@ class db_table extends object {
 							if (!empty($v[$f]))
 								$label[] = $v[$f];
 							$v["'.$linkedKey.'"][$k][substr($f, $length)] = $v[$f];
-							unset($v[$f]);
+							if ($f != $t["ident"])
+								unset($v[$f]);
 						}
 					}
-					if ($v[$t["ident"]]) {
+					if (array_key_exists($t["ident"], $v) && $v[$t["ident"]]) {
 						$ident = substr($t["ident"], $length);
 						$v["'.$linkedKey.'"][$k][$ident] = $v[$t["ident"]];
 						$v[$k] = $v["'.$linkedKey.'"][$k]["label"] = implode($t["sep"], $label);

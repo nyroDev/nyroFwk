@@ -58,36 +58,52 @@ class db_row extends object {
 		$this->table = $this->cfg->table;
 
 		if (!empty($this->cfg->data)) {
-			$data = $this->cfg->data;
-
-			if (array_key_exists($this->table->getIdent(), $data) && $data[$this->table->getIdent()])
-				$this->setNew(false);
-			else {
-				$primary = $this->table->getPrimary();
-				$p = 0;
-				foreach($primary as $pp) {
-					if (array_key_exists($pp, $data) && $data[$pp])
-						$p++;
-				}
-				if ($p == count($primary))
-					$this->setNew(false);
-			}
-
-			$linkedKey = db::getCfg('linked');
-			if (array_key_exists($linkedKey, $data)) {
-				$this->setLinked($data[$linkedKey]);
-			}
-
-			$relatedKey = db::getCfg('related');
-			if (array_key_exists($relatedKey, $data)) {
-				$this->setRelated($data[$relatedKey]);
-			}
+			$this->loadData($this->cfg->data);
 		} else if (!empty($this->cfg->findId)) {
 			$tmp = $this->table->find($this->cfg->findId);
 			$this->cfg->data = $tmp->getValues('data');
 			$this->setNew(false);
 			unset($tmp);
 		}
+	}
+
+	/**
+	 * Load data in the row
+	 *
+	 * @param array $data
+	 */
+	public function loadData(array $data) {
+		$this->cfg->data = $data;
+		if (array_key_exists($this->table->getIdent(), $data) && $data[$this->table->getIdent()])
+			$this->setNew(false);
+		else {
+			$primary = $this->table->getPrimary();
+			$p = 0;
+			foreach($primary as $pp) {
+				if (array_key_exists($pp, $data) && $data[$pp])
+					$p++;
+			}
+			if ($p == count($primary))
+				$this->setNew(false);
+		}
+
+		$linkedKey = db::getCfg('linked');
+		if (array_key_exists($linkedKey, $data)) {
+			$this->setLinked($data[$linkedKey]);
+		}
+
+		$relatedKey = db::getCfg('related');
+		if (array_key_exists($relatedKey, $data)) {
+			$this->setRelated($data[$relatedKey]);
+		}
+	}
+
+	/**
+	 * Reload the row data against the db
+	 */
+	public function reload() {
+		if (!$this->isNew() && $this->getId())
+			$this->loadData($this->table->find($this->getId())->getValues());
 	}
 
 	/**
@@ -594,12 +610,15 @@ class db_row extends object {
 	 * Get a linked row
 	 *
 	 * @param string $field Field Name
+	 * @param bool $reload indicate if the row should be reloaded
 	 * @return db_row|null
 	 */
-	public function getLinked($field=null) {
+	public function getLinked($field=null, $reload=false) {
 		if ($this->table->isLinked($field)) {
 			if (!array_key_exists($field, $this->linked))
 				$this->linked[$field] = $this->table->getLinkedTableRow($field);
+			if ($reload && array_key_exists($field, $this->linked) && !is_null($this->linked[$field]))
+				$this->linked[$field]->reload();
 			return $this->linked[$field];
 		}
 		return null;

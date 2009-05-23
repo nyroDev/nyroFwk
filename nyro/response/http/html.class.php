@@ -435,10 +435,20 @@ class response_http_html extends response_http {
 							$ret.= '<![endif]-->'.$ln;
 					}
 				} else {
-					$ret.= $this->getIncludeTagFile($type,
-									array_keys($file),
-									$dir
-									).$ln;
+					$tmp = array();
+					foreach($file as $f) {
+						$tmp[$f['condIE']][] = $f['file'];
+					}
+					foreach($tmp as $ie=>$f) {
+						if ($ie)
+							$ret.= '<!--[if '.$ie.']>'.$ln;
+						$ret.= $this->getIncludeTagFile($type,
+										$f,
+										$dir
+										).$ln;
+						if ($ie)
+							$ret.= '<![endif]-->'.$ln;
+					}
 				}
 			}
 		}
