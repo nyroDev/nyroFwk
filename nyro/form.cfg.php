@@ -3,6 +3,7 @@ $cfg = array(
 	'mode'=>'edit',
 
 	'action'=>request::getRequested(),
+	'formPlus'=>null,
 	'method'=>'post',
 	'sectionName'=>'Form',
 	'showSection'=>true,

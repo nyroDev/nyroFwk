@@ -185,6 +185,7 @@ class form extends object {
 			if ($this->hasFiles)
 				$plus.= ' enctype="multipart/form-data"';
 		}
+		$plus.= $this->cfg->formPlus;
 
 		$errors = null;
 		if (!empty($errorsGlobal) && $errorPos == 'global') {

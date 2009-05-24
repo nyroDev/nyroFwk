@@ -57,6 +57,23 @@ class utils {
 	}
 
 	/**
+	 * Create a mailto HTML tag to send an email, with obfuscating
+	 *
+	 * @param string $email The email
+	 * @param string|null $name The name to show as text. If null, $email will be used
+	 * @param array $attributes Attributes to add to the html tag
+	 * @return string
+	 */
+	public static function mailTo($email, $name=null, array $attributes = array()) {
+		$emailObfs = null;
+		for ($i=0; $i<strlen($email); $i++)
+         $emailObfs.= '&#'.ord($email[$i]).';';
+		if (is_null($name))
+			$name = $emailObfs;
+		return self::htmlTag('a', array_merge(array('href'=>'mailto:'.$emailObfs), $attributes), $name);
+	}
+
+	/**
 	 * Create a string for HTML attribute
 	 *
 	 * @param array $prm Array for create the attribue
