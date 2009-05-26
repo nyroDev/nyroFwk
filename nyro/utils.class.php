@@ -221,7 +221,7 @@ class utils {
 	/**
 	 * Format a date, using helper_date
 	 *
-	 * @param string $date Date to format (compatible with strtotime)
+	 * @param int|string $date Int to directly set a timestamp or strong for a date to format (compatible with strtotime)
 	 * @param string $type Format needed
 	 * @param string $len Format length needed
 	 * @return string The date formatted
@@ -229,7 +229,7 @@ class utils {
 	 */
 	public static function formatDate($date, $type='date', $len='short2', $htmlOut=true) {
 		$d = factory::getHelper('date', array(
-			'timestamp'=>strtotime($date),
+			'timestamp'=>is_int($date) ? $date : strtotime($date),
 			'defaultFormat'=>array(
 				'type'=>$type,
 				'len'=>$len
@@ -245,14 +245,26 @@ class utils {
 	 * @param string|array $prm Src string or array of attribute for the img tag
 	 * @return string The HTML img tag
 	 */
-	public static function img($prm) {
+	public static function img($prm, $absolute=false) {
 		if (!is_array($prm))
 			$prm = array('src'=>$prm);
 		$alt = $prm['src'];
 		$prm['src'] = request::get('path').'img/'.$prm['src'];
+		if ($absolute)
+			$prm['src'] = request::get('domain').$prm['src'];
 		return self::htmlTag('img', array_merge(array(
 			'alt'=>$alt
 		), $prm));
+	}
+
+	/**
+	 * Render a tpl element
+	 *
+	 * @param array $prm Array configuration, with at least the module and action keys
+	 * @return string The rendered element
+	 */
+	public static function render(array $prm) {
+		return factory::get('tpl', $prm)->render($prm);
 	}
 
 	/**

@@ -409,7 +409,7 @@ class Markdownify {
         } else {
           $this->out("\n", true);
         }
-        $this->out(' ['.$tag['linkID'].']: '.$tag['href'].(isset($tag['title']) ? ' "'.$tag['title'].'"' : ''), true);
+        $this->out(' ['.(array_key_exists('linkID', $tag) ? $tag['linkID'] : null).']: '.$tag['href'].(isset($tag['title']) ? ' "'.$tag['title'].'"' : ''), true);
         $tag['unstacked'] = true;
         $this->stack['a'][$k] = $tag;
       }
@@ -689,7 +689,7 @@ class Markdownify {
       # [This link][id]
       foreach ($this->stack['a'] as $tag2) {
         if ($tag2['href'] == $tag['href'] && $tag2['title'] === $tag['title']) {
-          $tag['linkID'] = $tag2['linkID'];
+          $tag['linkID'] = array_key_exists('linkID', $tag2) ? $tag2['linkID'] : null;
           break;
         }
       }
