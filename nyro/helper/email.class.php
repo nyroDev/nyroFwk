@@ -355,7 +355,7 @@ class helper_email extends object {
 								'type'=>file::getType($file)
 							);
 							$i++;
-						$html = preg_replace('@src="('.$rootUri.'|/)(.+)"@siU', 'src="cid:'.$cid.'"', $html);
+							$html = preg_replace('@src="('.$rootUri.'|/)('.$img.')"@siU', 'src="cid:'.$cid.'"', $html);
 						}
 					}
 				}
