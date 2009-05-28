@@ -7,7 +7,7 @@
 /**
  * rowset object for fetching select results
  */
-class db_rowset extends object implements Iterator, Countable {
+class db_rowset extends object implements Iterator, Countable, ArrayAccess {
 
 	/**
 	* Iterator pointer
@@ -177,6 +177,51 @@ class db_rowset extends object implements Iterator, Countable {
 	*/
 	public function count() {
 		return $this->_count;
+	}
+
+	/**
+	 * Check if an index exists.
+	 * Required by interface ArrayAccess
+	 *
+	 * @param int $offset
+	 * @return bool
+	 */
+	public function offsetExists($offset) {
+		$this->get($offset);
+		return array_key_exists($offset, $this->_rows);
+	}
+
+	/**
+	 * Get a value.
+	 * Required by interface ArrayAccess
+	 *
+	 * @param int $offset
+	 * @return db_row
+	 */
+	public function offsetGet($offset) {
+		return $this->get($offset);
+	}
+
+	/**
+	 * Set a value.
+	 * Required by interface ArrayAccess
+	 *
+	 * @param int $offset
+	 * @param db_row $value
+	 * @return db_row
+	 */
+	public function offsetSet($offset, $value) {
+		return $this->_rows[$offset] = $value;
+	}
+
+	/**
+	 * Remove an element.
+	 * Required by interface ArrayAccess
+	 *
+	 * @param int $offset
+	 */
+	public function offsetUnset($offset) {
+		unset($this->_rows[$offset]);
 	}
 
 }
