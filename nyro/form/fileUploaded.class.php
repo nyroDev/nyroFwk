@@ -108,9 +108,12 @@ class form_fileUploaded extends object {
 					'savePath'=>$savePath,
 					'webPath'=>$webPath
 				);
-				if ($this->cfg->deleteCurrent && ($current = $this->getCurrent()) && (!array_key_exists('webPath', $this->file) || $current != $this->file['webPath'])) {
+				if ($this->cfg->deleteCurrent && ($current = $this->getCurrent())
+						&& str_replace('/', DS, $savePath) != str_replace('/', DS, FILESROOT.$current)
+						&& (!array_key_exists('webPath', $this->file) || $current != $this->file['webPath'])) {
 					$this->callHelper('delete', $current);
 					file::delete(FILESROOT.$current);
+					$this->setCurrent(null);
 				}
 				$this->saved = $webPath;
 			}
@@ -139,9 +142,11 @@ class form_fileUploaded extends object {
 	 * Set the current file path
 	 *
 	 * @param string $file
+	 * @param bool $refill
 	 */
-	public function setCurrent($file) {
-		$this->cfg->current = $file;
+	public function setCurrent($file, $refill=false) {
+		if ($file || !$refill)
+			$this->cfg->current = $file;
 	}
 
 	/**
@@ -189,11 +194,11 @@ class form_fileUploaded extends object {
 	 */
 	public function isValid() {
 		$file = $this->getInfo();
-		$tmp = !request::isPost() ||
-			($this->cfg->current) ||
+		$tmp = !request::isPost() || ($this->cfg->current) ||
 			(array_key_exists('error', $file) && $file['error'] === 0
 			&& array_key_exists('size', $file) && $file['size'] > 0);
 		$helperValid = $this->callHelper('valid', $file);
+		//echo $this->cfg->current.' : '.$tmp.'<br />';
 		return $tmp? ($helperValid?$helperValid : true) : 'required';
 	}
 

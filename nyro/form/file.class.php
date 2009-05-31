@@ -9,6 +9,13 @@
  */
 class form_file extends form_abstract {
 
+	/**
+	 * Indicate if the file was deleted
+	 *
+	 * @var bool
+	 */
+	protected $deleted = false;
+	
 	protected function beforeInit() {
 		$prm = array(
 			'name'=>$this->cfg->name,
@@ -22,8 +29,10 @@ class form_file extends form_abstract {
 
 		$this->cfg->value = factory::get('form_fileUploaded', $prm);
 		
-		if (!$this->cfg->value->isSaved() && http_vars::getInstance()->getVar($this->name.'NyroDel'))
+		if (!$this->cfg->value->isSaved() && http_vars::getInstance()->getVar($this->name.'NyroDel')) {
 			$this->cfg->value->delete();
+			$this->deleted = true;
+		}
 	
 		$this->cfg->valid = array_merge($this->cfg->valid, array(
 			'callback'=>array(
@@ -43,7 +52,8 @@ class form_file extends form_abstract {
 	}
 
 	public function setValue($value, $refill=false) {
-		$this->cfg->value->setCurrent($value);
+		if (!$this->deleted && !$refill)
+			$this->cfg->value->setCurrent($value, $refill);
 	}
 
 	public function toHtml() {
@@ -60,18 +70,6 @@ class form_file extends form_abstract {
 				var me = $(this);
 				e.preventDefault();
 				me.parent("span").replaceWith("<input type=\"hidden\" name=\"'.$this->name.'NyroDel\" value=\"1\" />");
-				/*
-				$.ajax({
-					url: "'.request::uri(array(
-						'module'=>'utils',
-						'action'=>'deleteUploadFile',
-						//'paramA'=>$prm
-						)).'",
-					success: function() {
-						me.parent("span").replaceWith("<input type=\"hidden\" name=\"'.$this->name.'NyroDel\" value=\"1\" />");
-					}
-				});
-				*/
 			});');
 		} else
 			$delLink = '</p>';

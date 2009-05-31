@@ -379,7 +379,6 @@ class form extends object {
 
 		$tmp = array();
 		foreach($ret as $k=>$v) {
-			//preg_match('/(.+)\[(.*)\]/', $k, $matches);
 			$matches = explode('|', str_replace(
 				array('][', '[', ']'),
 				array('|', '|', ''),

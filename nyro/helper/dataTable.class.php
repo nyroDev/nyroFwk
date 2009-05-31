@@ -248,7 +248,7 @@ class helper_dataTable extends object {
 			if ($this->cfg->pageLinkTpl1)
 				$pageLinks[1] = $this->cfg->pageLinkTpl1;
 
-			$tpl->setA(array(
+			$tpl->setA(array_merge(array(
 				'headers'=>$headers,
 				'list'=>$data,
 				'nbPage'=>$nbPage,
@@ -258,7 +258,7 @@ class helper_dataTable extends object {
 				'actionsImg'=>$actionsImg,
 				'actionsAlt'=>$actionsAlt,
 				'iconType'=>$this->cfg->iconType,
-			));
+			), $this->cfg->tplVars));
 		} else {
 			// No data
 			$tpl->set('noData', utils::htmlOut($this->cfg->noData));

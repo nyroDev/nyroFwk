@@ -21,6 +21,8 @@ $cfg = array(
 
 	'noData'=>'No Data.',
 
+	'tplVars'=>array(),
+
 	'actions'=>array(),
 	'actionsAlt'=>array(),
 	'actionsImg'=>array(),
