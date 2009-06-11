@@ -18,7 +18,7 @@ if (!defined('NYRONAME'))
  * string Environnement
  */
 if (!defined('NYROENV'))
-	define('NYROENV', 'prod');
+	define('NYROENV', 'front');
 
 /**
  * Enabling the dev mode

@@ -198,7 +198,6 @@ class form_fileUploaded extends object {
 			(array_key_exists('error', $file) && $file['error'] === 0
 			&& array_key_exists('size', $file) && $file['size'] > 0);
 		$helperValid = $this->callHelper('valid', $file);
-		//echo $this->cfg->current.' : '.$tmp.'<br />';
 		return $tmp? ($helperValid?$helperValid : true) : 'required';
 	}
 
