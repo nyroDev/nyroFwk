@@ -421,9 +421,10 @@ final class request {
 				$tmp[count($tmp) - 1] .= '.'.$out;
 		}
 
-		if (array_key_exists('lang', $prm) && self::isLang($prm['lang']))
-			array_unshift($tmp, $prm['lang']);
-		else if (self::getRequested('lang'))
+		if (array_key_exists('lang', $prm)) {
+			if (self::isLang($prm['lang']))
+				array_unshift($tmp, $prm['lang']);
+		} else if (self::getRequested('lang'))
 			array_unshift($tmp, self::getRequested('lang'));
 		else if (self::$cfg->lang != self::get('lang'))
 			array_unshift($tmp, self::get('lang'));

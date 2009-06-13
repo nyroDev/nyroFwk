@@ -196,7 +196,7 @@ class helper_dataTable extends object {
 				array_walk($headersT, create_function('&$h', '$h = "[".$h."]";'));
 				$i = 0;
 				foreach($data as $d) {
-					$tmp = $this->getActions($d->getId());
+					$tmp = $this->getActions($d);
 					foreach($tmp as &$t) {
 						$t = str_replace($headersT, $d->getValues('flat'), $t);
 					}
@@ -270,12 +270,14 @@ class helper_dataTable extends object {
 	/**
 	 * Get the actions for a specific ID
 	 *
-	 * @param mixed $id The Row ID
+	 * @param db_row $row The Row
 	 * @return array The filtered actions (from cfg->actions)
 	 */
-	protected function getActions($id) {
+	protected function getActions($row) {
 		$tmp = $this->cfg->actions;
-		$val = $this->cfg->getInArray('actionsAllowed', 'id'.$id);
+		$val = null;
+		if (is_callable($this->cfg->actionsAllowed))
+			$val = call_user_func($this->cfg->actionsAllowed, $row);
 		if (!$val)
 			$val = $this->cfg->actionsAllowedDefault;
 		if (is_array($val))

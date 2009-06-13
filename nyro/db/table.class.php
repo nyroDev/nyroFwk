@@ -658,8 +658,13 @@ class db_table extends object {
 
 		$ret = $this->getDb()->select($prm);
 
-		self::parseLinked($ret, $tmpTables);
+		if (!empty($ret) && !empty($this->cfg->forceValues)) {
+			foreach($ret as $k=>$v)
+				$ret[$k] = array_merge($v, $this->cfg->forceValues);
+		}
 
+		self::parseLinked($ret, $tmpTables);
+		
 		if (array_key_exists('first', $prm) && $prm['first']) {
 			if (!empty($ret))
 				return db::get('row', $this, array(

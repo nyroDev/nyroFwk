@@ -9,6 +9,7 @@ $cfg = array(
 		'pass'=>'pass',
 		'cryptic'=>'cryptic'
 	),
+	'stayConnected'=>true,
 	'labelStayConnected'=>'Stay connected',
 	'errorMsg'=>'The login/username couple doesn\'t match.',
 	'errorText'=>'You don\'t have the permission to access to this page.',

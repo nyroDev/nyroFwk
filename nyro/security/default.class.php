@@ -116,11 +116,9 @@ class security_default extends security_abstract {
 				), $this->cfg->where));
 				if ($this->user) {
 					$crypticKey = $this->cfg->getInArray('fields', 'cryptic');
-					if (!$cryptic = $this->user->get($crypticKey)) {
-						$cryptic = $this->cryptPass(uniqid(), 'Cryptic');
-						$this->user->set($crypticKey, $cryptic);
-						$this->user->save();
-					}
+					$cryptic = $this->cryptPass(uniqid(), 'Cryptic');
+					$this->user->set($crypticKey, $cryptic);
+					$this->user->save();
 					$this->session->cryptic = $cryptic;
 					if (array_key_exists('stayConnected', $prm) && $prm['stayConnected']) {
 						$cook = factory::get('http_cookie', $this->cfg->cookie);
@@ -240,15 +238,17 @@ class security_default extends security_abstract {
 			), array(
 				'action'=>$this->getPage('login')
 			), false);
-			$this->form->add('checkbox', array(
-				'name'=>'stayConnected',
-				'label'=>false,
-				'uniqValue'=>true,
-				'valid'=>array('required'=>false),
-				'list'=>array(
-					1=>utils::htmlOut($this->cfg->labelStayConnected)
-				)
-			));
+			if ($this->cfg->stayConnected) {
+				$this->form->add('checkbox', array(
+					'name'=>'stayConnected',
+					'label'=>false,
+					'uniqValue'=>true,
+					'valid'=>array('required'=>false),
+					'list'=>array(
+						1=>utils::htmlOut($this->cfg->labelStayConnected)
+					)
+				));
+			}
 		}
 
 		return $this->form;
