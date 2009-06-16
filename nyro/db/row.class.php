@@ -53,7 +53,7 @@ class db_row extends object {
 
 	protected function afterInit() {
 		if (get_class($this) == 'db_row')
-			$this->cfg->overload('db_row_'.$this->cfg->name);
+			$this->cfg->overload('db_row_'.$this->cfg->table->getName());
 
 		$this->table = $this->cfg->table;
 

@@ -127,6 +127,14 @@ final class request {
 		$requestUri = $_SERVER['REQUEST_URI'];
 		$scriptName = $_SERVER['SCRIPT_NAME'];
 
+		 if (self::$cfg->forceServerName
+			  && strpos($serverName, 'localhost') === false
+			  && strtolower(self::$cfg->forceServerName) != strtolower($serverName)) {
+			  header('HTTP/1.0 301 Moved Permanently');
+			  header('Location: '.$protocol.'://'.self::$cfg->forceServerName.$port.$requestUri);
+			  exit;
+		 }
+
 		$path = '/';
 		$requestUriTmp = substr($requestUri, 1);
 		$scriptNameTmp = substr($scriptName, 1);
@@ -417,7 +425,7 @@ final class request {
 		if ($out) {
 			if (false && empty($tmp))
 				$tmp[] = self::$cfg->empty.'.'.$out;
-			else if (!empty($tmp))
+			else if (!empty($tmp) && $out != self::$cfg->noOut)
 				$tmp[count($tmp) - 1] .= '.'.$out;
 		}
 

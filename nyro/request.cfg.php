@@ -6,8 +6,10 @@ $cfg = array(
 	'param'=>array(),
 	'text'=>null,
 	'out'=>'html',
+	'noOut'=>false,
 
 	'forceSecure'=>false,
+	'forceServerName'=>false,
 
 	'empty'=>'_',
 	'sep'=>'/',
