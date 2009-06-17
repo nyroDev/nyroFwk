@@ -16,6 +16,10 @@ class helper_email extends object {
 	 */
 	protected $attachment = array();
 
+	protected function afterInit() {
+		$this->parseHtml();
+	}
+
 	/**
 	 * Add a to address
 	 *
@@ -63,7 +67,6 @@ class helper_email extends object {
 		$tmp[] = $addr;
 		$this->cfg->set($type, $tmp);
 	}
-
 
 	/**
 	 * Attach a file
@@ -329,7 +332,6 @@ class helper_email extends object {
 		$body.= $this->textLine('');
 		$body.= $this->textLine($text);
 
-
 		if ($this->cfg->html) {
 			// HTML part
 			$body.= $this->textLine('--'.$boundary);
@@ -503,11 +505,21 @@ class helper_email extends object {
 		return $encoded;
 	}
 
+	/**
+	 * Render the HTML setting if it is set to used a tpl
+	 */
+	protected function parseHtml() {
+		if (is_array($this->cfg->html))
+			$this->cfg->html = utils::render($this->cfg->html);
+	}
+
 	public function __get($name) {
 		return $this->cfg->get($name);
 	}
 
 	public function __set($name, $val) {
 		$this->cfg->set($name, $val);
+		if ($name == 'html')
+			$this->pasreHtml();
 	}
 }
