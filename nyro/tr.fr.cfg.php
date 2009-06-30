@@ -4,6 +4,7 @@ $cfg = array(
 		'add'=>'Ajouter',
 		'edit'=>'Modifier',
 		'show'=>'Afficher',
-		'back'=>'Revenir'
+		'back'=>'Revenir',
+		'delete'=>'Supprimer'
 	)
 );

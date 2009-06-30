@@ -139,7 +139,7 @@ final class request {
 		    && $pos + strlen(self::$cfg->noOut) == strlen($requestUri)
 		    ) {
 			if ($redir)
-			    $redir = substr($redir, 0, -1*($pos+1));
+			    $redir = substr($redir, 0, -1*(strlen(self::$cfg->noOut)+1));
 			else
 			    $redir = $domain.substr($requestUri, 0, $pos-1);
 		}

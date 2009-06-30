@@ -209,9 +209,10 @@ class helper_dataTable extends object {
 
 				$actionsKey = array_keys($this->cfg->actions);
 				$actionsAlt = $this->cfg->actionsAlt;
-				if (is_array($actionsAlt)) {
+				if (!is_array($actionsAlt) || count($actionsAlt) < count($actionsKey)) {
 					foreach($actionsKey as $v)
-						$actionsAlt[$v] = ucfirst($v);
+						if (!array_key_exists($v, $actionsAlt))
+							$actionsAlt[$v] = ucfirst($v);
 				}
 
 				$actionsImg = $this->cfg->actionsImg;
