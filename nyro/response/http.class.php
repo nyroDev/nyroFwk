@@ -99,9 +99,8 @@ class response_http extends response_abstract {
 	 * @return bool True if header added
 	 */
 	public function addHeader($name, $value, $replace=true) {
-		if ($name == 'Content-Type') {
+		if ($name == 'Content-Type')
 			return $this->setContentType($value, $replace);
-		}
 		if ($replace || !$this->hasHeader($name)) {
 			$this->headers[$name] = $value;
 			return true;
@@ -133,7 +132,7 @@ class response_http extends response_abstract {
 	 * Make the response to expire in 10 days
 	 */
 	public function neverExpire() {
-		$this->addHeader('Expires', date('D, j M Y H:i:s', strtotime('+10 years')).' GMT');
+		$this->addHeader('Expires', gmdate('D, j M Y H:i:s', strtotime('+10 years')).' GMT');
 	}
 
 	/**
@@ -250,7 +249,7 @@ class response_http extends response_abstract {
 	public function sendFile($file, $name=null) {
 		$name = $name? $name : basename($file);
 		if (file::exists($file)) {
-			$this->addHeader('Expires', date('r', time() - 60*60*24*30));
+			$this->addHeader('Expires', gmdate('D, d M Y H:i:s', time() + 60*60*24*31).' GMT');
 			$this->addHeader('Pragma', 'public, no-cache');
 			$this->addHeader('Last-Modified', gmdate('D, d M Y H:i:s').' GMT');
 			$this->addHeader('Cache-Control', 'no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0');
@@ -270,9 +269,11 @@ class response_http extends response_abstract {
 	 */
 	public function showFile($file) {
 		if (file::exists($file)) {
-			$this->addHeader('Expires', date('r', time() + 60*60*24*30));
-			$this->addHeader('Content-Type', file::getType($file));
-			$this->addHeader('Content-length', file::size($file).'bytes');
+			$this->addHeader('Cache-Control', 'public', false);
+			$this->addHeader('Pragma', null, false);
+			$this->addHeader('Expires', gmdate('D, d M Y H:i:s', time() + 60*60*24*31).' GMT', false);
+			$this->addHeader('Content-Type', file::getType($file), false);
+			$this->addHeader('Content-length', file::size($file).'bytes', false);
 			$this->sendText(file::read($file));
 		}
 	}

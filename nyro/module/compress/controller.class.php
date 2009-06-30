@@ -73,6 +73,8 @@ class module_compress_controller extends module_abstract {
 			}
 		}
 
+		header('Cache-control: public');
+		header('Pragma: ');
 		echo $compressor->compress();
 		exit(0);
 	}
