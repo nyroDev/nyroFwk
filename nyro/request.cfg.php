@@ -7,6 +7,7 @@ $cfg = array(
 	'text'=>null,
 	'out'=>'html',
 	'noOut'=>false,
+        'forceNoOut'=>true,
 
 	'forceSecure'=>false,
 	'forceServerName'=>false,

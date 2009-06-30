@@ -127,13 +127,27 @@ final class request {
 		$requestUri = $_SERVER['REQUEST_URI'];
 		$scriptName = $_SERVER['SCRIPT_NAME'];
 
-		 if (self::$cfg->forceServerName
-			  && strpos($serverName, 'localhost') === false
-			  && strtolower(self::$cfg->forceServerName) != strtolower($serverName)) {
-			  header('HTTP/1.0 301 Moved Permanently');
-			  header('Location: '.$protocol.'://'.self::$cfg->forceServerName.$port.$requestUri);
-			  exit;
-		 }
+		$redir = null;
+		if (self::$cfg->forceServerName
+		    && strpos($serverName, 'localhost') === false
+		    && strtolower(self::$cfg->forceServerName) != strtolower($serverName)) {
+			$redir = $protocol.'://'.self::$cfg->forceServerName.$port.$requestUri;
+		}
+		if (self::$cfg->forceNoOut
+		    && self::$cfg->noOut
+		    && ($pos = strpos($requestUri, self::$cfg->noOut))
+		    && $pos + strlen(self::$cfg->noOut) == strlen($requestUri)
+		    ) {
+			if ($redir)
+			    $redir = substr($redir, 0, -1*($pos+1));
+			else
+			    $redir = $domain.substr($requestUri, 0, $pos-1);
+		}
+		if ($redir) {
+		    header('HTTP/1.0 301 Moved Permanently');
+		    header('Location: '.$redir);
+		    exit;
+		}
 
 		$path = '/';
 		$requestUriTmp = substr($requestUri, 1);
