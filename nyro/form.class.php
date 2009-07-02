@@ -390,7 +390,7 @@ class form extends object {
 					if (!isset($matches[$i+1]))
 						$t[$matches[$i]] = $v;
 					else {
-						if (!is_array($t[$matches[$i]]))
+						if (!array_key_exists($matches[$i], $t) || !is_array($t[$matches[$i]]))
 							$t[$matches[$i]] = array();
 						$t = &$t[$matches[$i]];
 					}

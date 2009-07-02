@@ -168,9 +168,9 @@ class tpl extends object {
 		if (!is_array($prm)){
 			$tmp = explode('/', $prm);
 			$prm = array();
-			$prm['module'] = $tmp[0];
-			$prm['action'] = $tmp[1];
-			$prm['param'] = $tmp[2];
+			$prm['module'] = isset($tmp[0]) ? $tmp[0] : null;
+			$prm['action'] = isset($tmp[1]) ? $tmp[1] : null;
+			$prm['param'] = isset($tmp[2]) ? $tmp[2] : null;
 		}
 		$prm = array_merge(array('module'=>$this->cfg->module), $prm);
 		$module = factory::getModule($prm['module'], array('render'=>true));

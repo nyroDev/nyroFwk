@@ -92,7 +92,7 @@ class form_db extends form {
 				'name'=>$field['name'],
 				'label'=>$field['label'],
 				'value'=>array_key_exists('value', $field)? $field['value'] : $field['default'],
-				'link'=>$field['link'],
+				'link'=>array_key_exists('link', $field)? $field['link'] : null,
 				'valid'=>array('required'=>$field['required'])
 			), $field['comment']);
 		

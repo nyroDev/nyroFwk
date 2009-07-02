@@ -424,10 +424,13 @@ class db_row extends object {
 				$tmp = $this->getTable()->getCols();
 
 				if ($mode == 'flat') {
-					foreach($this->table->getLinked() as $k=>$v) {
-						$tmp[] = $k;
-						if (array_key_exists($key = $k.'_'.$v['ident'], $data))
-							$data[$k] = $data[$k.'_'.$v['ident']];
+					$linked = $this->table->getLinked();
+					if (is_array($linked)) {
+						foreach($linked as $k=>$v) {
+							$tmp[] = $k;
+							if (array_key_exists($key = $k.'_'.$v['ident'], $data))
+								$data[$k] = $data[$k.'_'.$v['ident']];
+						}
 					}
 					if (array_key_exists('related', $data)) {
 						foreach($this->table->getRelated() as $k=>$v) {
@@ -448,7 +451,6 @@ class db_row extends object {
 
 				if ($mode == 'flatReal' && array_key_exists('related', $data)) {
 					foreach($this->table->getRelated() as $k=>$v) {
-
 						$tmp[] = $k;
 						$data[$k] = array();
 						$fields = explode(',', $v['fk2']['link']['fields']);
@@ -459,11 +461,12 @@ class db_row extends object {
 						foreach($data['related'][$v['fk2']['link']['table']] as $vv) {
 							$tmp2 = array();
 							foreach($fields as $f)
-								$tmp2[] = $vv[$f];
+								if (array_key_exists($f, $vv))
+									$tmp2[] = $vv[$f];
 							$data[$k][] = implode($v['fk2']['link']['sep'], $tmp2);
 						}
+						$data[$k] = utils::htmlOut($data[$k]);
 					}
-					$data[$k] = utils::htmlOut($data[$k]);
 				}
 
 				return array_intersect_key($data, array_flip($tmp));
@@ -504,7 +507,7 @@ class db_row extends object {
 		$field = $this->table->getField($key);
 		$fct = null;
 		
-		if (is_array($field['comment'])) {
+		if (isset($field['comment']) && is_array($field['comment'])) {
 			foreach($field['comment'] as $k=>$v) {
 				if (!is_array($v) && strpos($v, 'fct:') === 0) {
 					$fct = substr($v, 4);

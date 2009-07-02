@@ -893,8 +893,8 @@ class db_table extends object {
 					'tableName'=>$i18nName,
 					'tableLink'=>$fieldsTableLink,
 					'table'=>array(
-						'field'=>$p['fk2']['name'],
-						'sep'=>$p['fk2']['link']['sep'],
+						'field'=>$i18nName.'_'.$primary[0],
+						'sep'=>null,
 						'ident'=>$i18nName.'_'.$primary[1],
 					)
 				);
@@ -943,7 +943,9 @@ class db_table extends object {
 					foreach($linked['relatedTable'] as $t=>$r) {
 						if (!array_key_exists($r['tableName'], $data[$current]['related']))
 							$data[$current]['related'][$r['tableName']] = array();
-						else if (array_key_exists($r['tableName'], $idRelated[$id]) && in_array($data[$i][$r['table']['ident']], $idRelated[$id][$r['tableName']]))
+						else if (array_key_exists($id, $idRelated)
+							&& array_key_exists($r['tableName'], $idRelated[$id])
+							&& in_array($data[$i][$r['table']['ident']], $idRelated[$id][$r['tableName']]))
 							// The id was already affected to te current element, skip to the next table
 							continue;
 

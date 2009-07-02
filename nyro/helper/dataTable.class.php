@@ -88,8 +88,12 @@ class helper_dataTable extends object {
 				foreach($fields as $f)
 					$tmp[] = $tableName.'.'.$f;
 				$this->sortBy = implode(', ', $tmp);
-			} else if ($this->cfg->sortBy)
-				$this->sortBy = $this->table->getName().'.'.$this->cfg->sortBy;
+			} else if ($this->cfg->sortBy) {
+				if (strpos($this->cfg->sortBy, $this->table->getName()) !== false)
+					$this->sortBy = $this->cfg->sortBy;
+				else
+					$this->sortBy = $this->table->getName().'.'.$this->cfg->sortBy;
+			}
 		}
 
 		$this->count = $this->table->count($this->getQuery());
@@ -197,15 +201,13 @@ class helper_dataTable extends object {
 				$i = 0;
 				foreach($data as $d) {
 					$tmp = $this->getActions($d);
-					foreach($tmp as &$t) {
-						$t = str_replace($headersT, $d->getValues('flat'), $t);
-					}
+					foreach($tmp as &$t)
+						$t = str_replace($headersT, $d->getValues('flatNoRelated'), $t);
 					$actions[$i] = $tmp;
 					$i++;
 				}
-				if (!empty($actions) && $this->cfg->actionsConfirmDelete) {
+				if (!empty($actions) && $this->cfg->actionsConfirmDelete)
 					response::getInstance()->addJs('actionsConfirmDelete');
-				}
 
 				$actionsKey = array_keys($this->cfg->actions);
 				$actionsAlt = $this->cfg->actionsAlt;
@@ -264,7 +266,6 @@ class helper_dataTable extends object {
 			// No data
 			$tpl->set('noData', utils::htmlOut($this->cfg->noData));
 		}
-
 		return $tpl->fetch(array('tplExt'=>$type));
 	}
 

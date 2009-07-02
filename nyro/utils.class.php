@@ -65,12 +65,23 @@ class utils {
 	 * @return string
 	 */
 	public static function mailTo($email, $name=null, array $attributes = array()) {
-		$emailObfs = null;
-		for ($i=0; $i<strlen($email); $i++)
-         $emailObfs.= '&#'.ord($email[$i]).';';
+		$emailObfs = self::htmlObfuscate($email);
 		if (is_null($name))
 			$name = $emailObfs;
 		return self::htmlTag('a', array_merge(array('href'=>'mailto:'.$emailObfs), $attributes), $name);
+	}
+
+	/**
+	 * Create the HTML string to obfuscate a text (usually an email)
+	 *
+	 * @param string $text
+	 * @return string
+	 */
+	public static function htmlObfuscate($text) {
+		$ret = null;
+		for ($i=0; $i<strlen($text); $i++)
+			$ret.= '&#'.ord($text[$i]).';';
+		return $ret;
 	}
 
 	/**
