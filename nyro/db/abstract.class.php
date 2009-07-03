@@ -98,7 +98,7 @@ abstract class db_abstract extends object {
 				))) {
 
 			$cols = array_map(array($this, 'quoteIdentifier'), array_keys($prm['values']));
-			$vals = array_fill(0, count($cols), '?');
+			$vals = count($cols) > 0? array_fill(0, count($cols), '?') : array();
 
 			$sql = 'INSERT INTO '.$this->quoteIdentifier($prm['table']);
 			$sql.= ' ('.implode(',',$cols).') VALUES ('.implode(',',$vals).')';

@@ -548,6 +548,15 @@ final class request {
 	}
 
 	/**
+	 * Check if the request is local
+	 *
+	 * @return bool
+	 */
+	public static function isLocal() {
+		return self::get('serverName') == 'localhost';
+	}
+
+	/**
 	 * Check if the current request is an Ajax
 	 *
 	 * @return bool

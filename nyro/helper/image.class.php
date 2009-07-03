@@ -249,6 +249,8 @@ class helper_image extends helper_file {
 	 * @return false|array False if not a valid image or an array with Image ressource, height, width
 	 */
 	private function createImage($file) {
+		if (!file::exists($file) || ! is_file($file))
+			return false;
 		$size = getimagesize($file);
 
 		$img = null;
