@@ -68,7 +68,8 @@ class utils {
 		$emailObfs = self::htmlObfuscate($email);
 		if (is_null($name))
 			$name = $emailObfs;
-		return self::htmlTag('a', array_merge(array('href'=>'mailto:'.$emailObfs), $attributes), $name);
+		$emailObfs = self::htmlObfuscate('mailto:').$emailObfs;
+		return self::htmlTag('a', array_merge(array('href'=>$emailObfs), $attributes), $name);
 	}
 
 	/**

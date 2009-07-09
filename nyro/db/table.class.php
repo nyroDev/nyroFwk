@@ -251,9 +251,11 @@ class db_table extends object {
 	 * @return array|null Smae result than @getLinked
 	 */
 	public function getLinkedTableName($tablename) {
-		$key = array_search($tablename, $this->linkedTableNames);
-		if ($key)
-			return $this->getLinked($key);
+		if (is_array($this->linkedTableNames)) {
+			$key = array_search($tablename, $this->linkedTableNames);
+			if ($key)
+				return $this->getLinked($key);
+		}
 		return null;
 	}
 

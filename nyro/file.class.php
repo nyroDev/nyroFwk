@@ -106,6 +106,7 @@ final class file {
 			$name[] = $nameTmp.'.'.$ext.'.'.EXTPHP;
 			$name[] = $nameTmp.'.'.request::get('lang').'.'.$ext.'.'.EXTPHP;
 			$name[] = $nameTmp.'.'.NYROENV.'.'.$ext.'.'.EXTPHP;
+			$name[] = $nameTmp.'.'.NYROENV.'.'.request::get('lang').'.'.$ext.'.'.EXTPHP;
 		} else if ($prm['type'] == 'tpl') {
 			$ext = $prm['tplExt']? $prm['tplExt'] : request::get('out');
 			$name[] = $nameTmp.'.'.NYROENV.'.'.request::get('lang').'.'.$ext;
