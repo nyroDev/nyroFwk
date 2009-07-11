@@ -504,7 +504,7 @@ final class request {
 	 * @param string $uri
 	 * @return array
 	 */
-	protected static function uriString($uri) {
+	public static function uriString($uri) {
 		$uriA = array_values(array_filter(explode(self::$cfg->sep, $uri)));
 
 		if (empty($uriA))
