@@ -322,7 +322,7 @@ class response_http extends response_abstract {
 	 * @param int $number The HTTP error number
 	 */
 	public function error($url=null, $number=404) {
-		$url = $url? $url : '/'.$number;
-		$this->redirect(request::uri($url), $number);
+		$url = $url? request::uri($url) : '/'.$number;
+		$this->redirect($url, $number);
 	}
 }

@@ -143,6 +143,13 @@ final class request {
 			else
 			    $redir = $domain.substr($requestUri, 0, $pos-1);
 		}
+		if (self::$cfg->noController && strpos($requestUri, self::$cfg->noController) !== false) {
+			if (!$redir)
+			    $redir = $domain.$requestUri;
+			$redir = str_replace(self::$cfg->noController.'/', '', $redir);
+			if ($pos = strpos($redir, self::$cfg->noController))
+				$redir = substr($redir, 0, $pos);
+		}
 		if ($redir) {
 		    header('HTTP/1.0 301 Moved Permanently');
 		    header('Location: '.$redir);

@@ -7,7 +7,8 @@ $cfg = array(
 	'text'=>null,
 	'out'=>'html',
 	'noOut'=>false,
-        'forceNoOut'=>true,
+	'forceNoOut'=>true,
+	'noController'=>'index.php',
 
 	'forceSecure'=>false,
 	'forceServerName'=>false,
