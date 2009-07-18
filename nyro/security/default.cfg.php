@@ -19,7 +19,7 @@ $cfg = array(
 	'cryptPassword'=>'md5',
 	'cryptCryptic'=>'md5',
 
-	'default'=>true,
+	'default'=>false,
 	'spec'=>array(
 		array('module'=>'pages', 'action'=>'my')
 	),
