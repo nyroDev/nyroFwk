@@ -394,10 +394,11 @@ class response_http_html extends response_http {
 		if (array_key_exists('Content-Type', $this->headers))
 			$ret.= '<meta http-equiv="Content-Type" content="'.$this->headers['Content-Type'].'" />'.$ln;
 
-		/*
-		foreach($this->cfg->metaHttpEquiv as $k=>$v)
-			$ret.= '<meta http-equiv="'.$k.'" content="'.$v.'" />'.$ln;
-		*/
+		if ($this->cfg->titleInDes)
+			$this->cfg->setInArray('meta', 'description',
+					$this->cfg->getInarray('meta', 'title').
+					$this->cfg->titleInDes.
+					$this->cfg->getInarray('meta', 'description'));
 		foreach($this->cfg->meta as $k=>$v)
 			$ret.= '<meta name="'.$k.'" content="'.utils::htmlOut($v).'" />'.$ln;
 		return $ret;

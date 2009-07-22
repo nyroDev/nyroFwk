@@ -2,6 +2,7 @@
 $cfg = array(
 	'headers'=>array(),
 	'incFiles'=>array(),
+	'titleInDes'=>'. ',
 	'meta'=>array(
 		'title'=>NYRONAME,
 		'robots'=>'index, follow',
