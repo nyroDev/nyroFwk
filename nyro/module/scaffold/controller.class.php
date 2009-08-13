@@ -101,7 +101,7 @@ class module_scaffold_controller extends module_abstract {
 	}
 	
 	protected function isScaffolded() {
-		return strtolower($this->cfg->prefixExec) == 'scaffold';
+		return strtolower($this->prmExec['prefix']) == 'scaffold';
 	}
 
 	protected function execScaffoldList($prm=null) {

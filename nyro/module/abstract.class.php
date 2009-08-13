@@ -36,19 +36,24 @@ abstract class module_abstract extends object {
 			'module'=>$this->getName(),
 			'action'=>'index',
 			'param'=>'',
-			'paramA'=>null),
+			'paramA'=>null,
+			'prefix'=>null),
 			$prm);
 
-		$prefix = null;
-		if ($this->cfg->prefixExec && !in_array($this->prmExec['action'], $this->cfg->noPrefixExec))
-			$prefix = $this->cfg->prefixExec;
+		$this->prmExec['prefix'] = null;
+
+		if (array_key_exists(NYROENV, $this->cfg->basicPrefixExec) &&
+				in_array($this->prmExec['action'], $this->cfg->getInArray('basicPrefixExec', NYROENV)))
+			$this->prmExec['prefix'] = ucfirst(NYROENV);
+		else if ($this->cfg->prefixExec && !in_array($this->prmExec['action'], $this->cfg->noPrefixExec))
+			$this->prmExec['prefix'] = $this->cfg->prefixExec;
 
 		$this->beforeExec($prm);
 
 		if (!$this->cfg->render)
 			security::getInstance()->check($this->prmExec);
 
-		$fctName = ($this->cfg->render? 'render' : 'exec').$prefix.ucfirst($this->prmExec['action']);
+		$fctName = ($this->cfg->render? 'render' : 'exec').$this->prmExec['prefix'].ucfirst($this->prmExec['action']);
 		if (!method_exists($this, $fctName))
 			response::getInstance()->error();
 

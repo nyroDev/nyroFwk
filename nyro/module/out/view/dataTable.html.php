@@ -26,7 +26,7 @@
 				echo '<tr>';
 				foreach($headers as $h) {
 					$val = $l->get($h['name'], 'flatReal');
-					if ($h['type'] == 'date')
+					if ($h['type'] == 'date' && $val)
 						$val = utils::formatDate($val);
 					else if ($h['type'] == 'image' && $val)
 						$val = $imgHelper->view($val);

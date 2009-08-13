@@ -56,6 +56,42 @@ class form_file extends form_abstract {
 			$this->cfg->value->setCurrent($value, $refill);
 	}
 
+	/**
+	 * Make the field uploadify.
+	 * You will probably have to set the script options at least.
+	 *
+	 * @param array $opt Uploadify options
+	 */
+	public function uploadify(array $opt = array()) {
+		$resp = response::getInstance();
+		$resp->addJs('jquery');
+		$resp->addJs('uploadify');
+		$resp->addCss('uploadify');
+
+		$uploadifyOpt = array_merge(array(
+			'fileDataName'=>$this->name
+		), $opt, $this->cfg->uploadify);
+
+		if (request::get('serverName') == 'localhost')
+			$uploadifyOpt['scriptAccess'] = 'always';
+
+		$func = array();
+		foreach($uploadifyOpt as $k=>$v) {
+			if (is_string($v) && strpos($v, 'function(') === 0) {
+				$func['"'.$k.'Func"'] = $v;
+				$uploadifyOpt[$k] = $k.'Func';
+			}
+		}
+		$encoded = json_encode($uploadifyOpt);
+		if (!empty($func))
+			$encoded = str_replace(array_keys($func), $func, $encoded);
+		
+		$resp->blockjQuery('
+			$("#'.$this->id.'").fileUpload('.$encoded.');
+			$("#'.$this->id.'").closest("form").find("fieldset.submit input").hide();
+		');
+	}
+
 	public function toHtml() {
 		if ($this->cfg->mode == 'view')
 			return $this->cfg->value->getView();
