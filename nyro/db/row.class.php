@@ -744,4 +744,8 @@ class db_row extends object {
 	public function __set($name, $val) {
 		return $this->set($name, $val);
 	}
+
+	public function __toString() {
+		return $this->table->getName().'-'.$this->getId();
+	}
 }

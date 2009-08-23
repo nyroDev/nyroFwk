@@ -99,7 +99,7 @@ abstract class security_abstract extends object {
 	}
 
 	/**
-	 * Indicate if an configuration array is contained in the url
+	 * Indicate if a configuration array is contained in the url
 	 *
 	 * @param array $url
 	 * @param array $checks

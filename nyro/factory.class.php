@@ -38,20 +38,6 @@ final class factory {
 	private static $loadFiles = array();
 
 	/**
-	 * Cache object for the configuration
-	 *
-	 * @var cache_abstract
-	 */
-	private static $cacheCfg = null;
-
-	/**
-	 * Indicate if the configuration cache should be saved
-	 *
-	 * @var bool
-	 */
-	private static $saveCacheCfg = false;
-
-	/**
 	 * Cache object for the file path
 	 *
 	 * @var cache_abstract
@@ -90,14 +76,6 @@ final class factory {
 	 * Initialize the cache objects
 	 */
 	public static function initCache() {
-		self::$cacheCfg = cache::getInstance();
-		self::$cacheCfg->get(self::$loadedCfg, array(
-			'ttl'=>0,
-			'id'=>'cfg',
-			'request'=>array('uri'=>false,'meth'=>array()),
-			'serialize'=>true
-		));
-		self::$saveCacheCfg = false;
 		self::$saveCacheLoad = false;
 		self::$cacheLoad = cache::getInstance();
 		self::$cacheLoad->get(self::$loadFiles, array(
@@ -112,9 +90,6 @@ final class factory {
 	 * Save the cache
 	 */
 	public static function saveCache() {
-		if (self::$saveCacheCfg)
-			self::$cacheCfg->save();
-
 		if (self::$saveCacheLoad)
 			self::$cacheLoad->save();
 	}
@@ -129,7 +104,6 @@ final class factory {
 	public static function loadCfg($className, $searchParent=true) {
 		if (!array_key_exists($className, self::$loadedCfg)) {
 			self::$loadedCfg[$className] = array();
-			self::$saveCacheCfg = true;
 
 			if ($searchParent) {
 				$ref = new nReflection($className);

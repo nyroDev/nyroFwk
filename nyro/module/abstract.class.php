@@ -123,14 +123,52 @@ abstract class module_abstract extends object {
 		if (!$this->cfg->viewAction)
 			return null;
 
+		$tags = array();
+		$search = array('/', '<', '>');
+		$replace = array('', '', '');
+		if (is_array($this->prmExec['paramA']))
+			foreach($this->prmExec['paramA'] as $k=>$v) {
+				if (!is_numeric($k))
+					$tags[] = $k.'='.str_replace($search, $replace, $v);
+				else
+					$tags[] = str_replace($search, $replace, $v);
+			}
+		if (array_key_exists('out', $this->prmExec))
+			$tags[] = $this->prmExec['out'];
+		else
+			$tags[] = request::get('out');
 		$tpl = factory::get('tpl', array(
 			'layout'=>$this->cfg->layout,
 			'module'=>$this->getName(),
 			'action'=>$this->cfg->viewAction,
-			'cache'=>$this->cfg->cache
+			'cache'=>array_merge(array(
+				'enabled'=>$this->isCacheEnabled(),
+				'serialize'=>false,
+				'tags'=>$tags,
+				'request'=>array('uri'=>false, 'meth'=>array())
+			), $this->cfg->cache)
 		));
 		$tpl->setA($this->cfg->viewVars);
 		return $tpl->fetch($prm);
+	}
+
+	/**
+	 * Check against the configuration if the current request should be cached
+	 *
+	 * @return bool True if enabled
+	 */
+	public function isCacheEnabled() {
+		foreach($this->cfg->noCache as $val) {
+			$prm = array_intersect_key($this->prmExec, $val);
+			$match = 0;
+			foreach($val as $k=>$v) {
+				if ($prm[$k] == $v)
+					$match++;
+			}
+			if ($match == count($prm))
+				return false;
+		}
+		return true;
 	}
 
 	/**

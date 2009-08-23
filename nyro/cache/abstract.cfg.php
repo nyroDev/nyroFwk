@@ -1,5 +1,5 @@
 <?php
 $cfg = array(
-	'enabled'=> DEV ? false : true,
+	'enabled'=> DEV ? false : false,
 	'ttl'=>60,
 );

@@ -9,4 +9,5 @@ $cfg = array(
 	'viewAction'=>null,
 	'viewVars'=>array(),
 	'cache'=>array(),
+	'noCache'=>array(),
 );
