@@ -253,6 +253,8 @@ class cache_file extends cache_abstract {
 		$fileA = array(
 				NYRONAME,
 				NYROENV,
+				request::get('lang'),
+				request::get('out'),
 				$prm['callFrom'],
 				$prm['type'],
 				$prm['id'],

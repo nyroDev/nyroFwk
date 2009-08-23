@@ -133,10 +133,7 @@ abstract class module_abstract extends object {
 				else
 					$tags[] = str_replace($search, $replace, $v);
 			}
-		if (array_key_exists('out', $this->prmExec))
-			$tags[] = $this->prmExec['out'];
-		else
-			$tags[] = request::get('out');
+
 		$tpl = factory::get('tpl', array(
 			'layout'=>$this->cfg->layout,
 			'module'=>$this->getName(),
