@@ -28,7 +28,7 @@ abstract class cache_abstract extends object {
 	/**
 	 * Try to get a variable cached. If not found, information will be stored
 	 * and used with the next call from save.
-	 * The cache id is made with 5 kinds :
+	 * The cache id is made with 5 elements :
 	 *  - the $id passed to the function
 	 *  - the get, post, session or cookie variable if set
 	 *  - the class and function name where the cache is call
@@ -58,7 +58,7 @@ abstract class cache_abstract extends object {
 	/**
 	 * Try to get an output cached. If not found, information will be stored
 	 * and used with the next call from end.
-	 * The cache id is made with 5 kinds :
+	 * The cache id is made with 5 elements :
 	 *  - the $id passed to the function
 	 *  - the get, post, session or cookie variable if set
 	 *  - the class and function name where the cache is call
@@ -84,7 +84,7 @@ abstract class cache_abstract extends object {
 	abstract public function end();
 	
 	/**
-	 * Delete cached value. You cand define what you want.
+	 * Delete cached value. You can define what you want.
 	 * If you define nothing, all the cache will be deleted.
 	 * 
 	 * @param array $prm Parameter for the cached variable to deleted:
