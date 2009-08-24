@@ -154,7 +154,7 @@ abstract class module_abstract extends object {
 	 *
 	 * @return bool True if enabled
 	 */
-	public function isCacheEnabled() {
+	protected function isCacheEnabled() {
 		foreach($this->cfg->noCache as $val) {
 			$prm = array_intersect_key($this->prmExec, $val);
 			$match = 0;
@@ -166,6 +166,15 @@ abstract class module_abstract extends object {
 				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Add a cache tag
+	 *
+	 * @param mixed $val The tag to add
+	 */
+	protected function addCacheTag($val) {
+		$this->cfg->setInArrayA('cacheTags', array($val));
 	}
 
 	/**
