@@ -123,7 +123,7 @@ abstract class module_abstract extends object {
 		if (!$this->cfg->viewAction)
 			return null;
 
-		$tags = array();
+		$tags = $this->cfg->cacheTags;
 		$search = array('/', '<', '>');
 		$replace = array('', '', '');
 		if (is_array($this->prmExec['paramA']))
