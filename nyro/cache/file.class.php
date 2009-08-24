@@ -5,8 +5,7 @@
  * @package nyro
  */
 /**
- * Cache sing files
- * Singleton
+ * Cache using files
  */
 class cache_file extends cache_abstract {
 
