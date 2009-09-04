@@ -269,11 +269,11 @@ class response_http extends response_abstract {
 	 */
 	public function showFile($file) {
 		if (file::exists($file)) {
+			$this->addHeader('Content-Type', file::getType($file), true);
+			//$this->addHeader('Content-length', file::size($file).'bytes', false);
 			$this->addHeader('Cache-Control', 'public', false);
 			$this->addHeader('Pragma', null, false);
 			$this->addHeader('Expires', gmdate('D, d M Y H:i:s', time() + 60*60*24*31).' GMT', false);
-			$this->addHeader('Content-Type', file::getType($file), false);
-			$this->addHeader('Content-length', file::size($file).'bytes', false);
 			$this->sendText(file::read($file));
 		}
 	}

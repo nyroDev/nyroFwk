@@ -299,7 +299,7 @@ final class file {
 	 */
 	public static function getType($file) {
 		self::initCfg();
-		$ret = self::$cfg->getInArray('mimes', self::getExt($file));
+		$ret = self::$cfg->getInArray('mimes', strtolower(self::getExt($file)));
 		if (!$ret)
 			$ret = self::$cfg->getInArray('mimes', 'unknown');
 		return $ret;
