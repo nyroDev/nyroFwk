@@ -9,6 +9,8 @@ $cfg = array(
 	'noOut'=>false,
 	'forceNoOut'=>true,
 	'noController'=>'index.php',
+	
+	'allowScaffold'=>false,
 
 	'forceSecure'=>false,
 	'forceServerName'=>false,

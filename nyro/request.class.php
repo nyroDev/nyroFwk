@@ -678,7 +678,7 @@ final class request {
 	 */
 	private static function initModule() {
 		if (!self::$module) {
-			self::$module = factory::getModule(self::$uriInfo['module'], array(), self::$scaffold);
+			self::$module = factory::getModule(self::$uriInfo['module'], array(), self::$scaffold, self::$cfg->allowScaffold);
 			if (self::$scaffold) {
 				self::$uriInfo['moduleScaffold'] = self::$uriInfo['module'];
 				self::$uriInfo['module'] = 'scaffold';

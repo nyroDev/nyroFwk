@@ -208,18 +208,20 @@ final class factory {
 	 *
 	 * @param string $name Module name (or table name)
 	 * @param array $cfg Configuration array for the module
+	 * @param bool &$scaffold Indicate if the module was scaffolded
+	 * @param bool $allowScaffold indicate if the module should be scaffolded
 	 * @return module_abstract The new module
 	 * @throws module_exception If module not creable
 	 */
-	public static function getModule($name, array $cfg=array(), &$scaffold = false) {
+	public static function getModule($name, array $cfg=array(), &$scaffold = false, $allowScaffold=true) {
 		$className = 'module_'.$name.'_controller';
 		if (!self::isCreable($className)) {
-			if (in_array($name, db::getInstance()->getTables())) {
+			if ($allowScaffold && in_array($name, db::getInstance()->getTables())) {
 				$className = 'module_scaffold_controller';
 				$cfg['name'] = $name;
 				$scaffold = true;
 			} else
-				throw new module_exception('Factory - getModule: Name '.$name.' unknown (even with scaffolding).');
+				throw new module_exception('Factory - getModule: Name '.$name.' unknown.');
 		}
 		return self::get($className, $cfg);
 	}
