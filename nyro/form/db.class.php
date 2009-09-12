@@ -88,6 +88,7 @@ class form_db extends form {
 	 * @return form_abstract Reference to the new element
 	 */
 	public function getFromFieldPrm(array $field) {
+		$ret = array();
 		$prm = array_merge(array(
 				'name'=>$field['name'],
 				'label'=>$field['label'],
@@ -95,137 +96,148 @@ class form_db extends form {
 				'link'=>array_key_exists('link', $field)? $field['link'] : null,
 				'valid'=>array('required'=>$field['required'])
 			), $field['comment']);
-		
+
+		if ($field['unique'] && ! array_key_exists('dbUnique', $prm['valid'])) {
+			$prm['valid']['dbUnique'] = array(
+				'table'=>$this->cfg->table,
+				'field'=>$field['name']
+			);
+		}
 		if (array_search($field['name'], $this->cfg->autoValidRule) !== false && !array_key_exists($field['name'], $prm['valid']))
 			$prm['valid'][$field['name']] = true;
 
 		if (array_search('hidden', $field['comment']) !== false)
-			return array_merge($prm, array('type'=>'hidden'));
-
-		if (!empty($field['link'])) {
-			$checkType = false;
-			$type = 'list';
-			$prm['list'] = $field['link']['list'];
-			$prm['valueNone'] = 0;
-			$fields = null;
-			$join = null;
-			if ($field['link']['fields']) {
-				$linkedTable = db::get('table', $field['link']['table'], array(
-					'db'=>$this->cfg->table->getDb()
-				));
-				$tmp = array();
-				foreach(explode(',', $field['link']['fields']) as $t) {
-					if ($linkedInfo = $linkedTable->getLinkedTableName($t)) {
-						$alias = $field['name'].'_'.$linkedInfo['table'];
-						$join[] = array(
-							'table'=>$linkedInfo['table'],
-							'alias'=>$alias,
-							'dir'=>'left outer',
-							'on'=>$field['link']['table'].'.'.$linkedInfo['field'].'='.$alias.'.'.$linkedInfo['ident']
-						);
-						$ttmp = array();
-						foreach(explode(',', $linkedInfo['fields']) as $tt) {
-							$ttmp[] = $alias.'.'.$tt;
-							$ttmp[] = '"'.$linkedInfo['sep'].'"';
+			$ret = array_merge($prm, array('type'=>'hidden'));
+		else {
+			if (!empty($field['link'])) {
+				$checkType = false;
+				$type = 'list';
+				$prm['list'] = $field['link']['list'];
+				$prm['valueNone'] = 0;
+				$fields = null;
+				$join = null;
+				if ($field['link']['fields']) {
+					$linkedTable = db::get('table', $field['link']['table'], array(
+						'db'=>$this->cfg->table->getDb()
+					));
+					$tmp = array();
+					foreach(explode(',', $field['link']['fields']) as $t) {
+						if ($linkedInfo = $linkedTable->getLinkedTableName($t)) {
+							$alias = $field['name'].'_'.$linkedInfo['table'];
+							$join[] = array(
+								'table'=>$linkedInfo['table'],
+								'alias'=>$alias,
+								'dir'=>'left outer',
+								'on'=>$field['link']['table'].'.'.$linkedInfo['field'].'='.$alias.'.'.$linkedInfo['ident']
+							);
+							$ttmp = array();
+							foreach(explode(',', $linkedInfo['fields']) as $tt) {
+								$ttmp[] = $alias.'.'.$tt;
+								$ttmp[] = '"'.$linkedInfo['sep'].'"';
+							}
+							array_pop($ttmp);
+							$tmp[] = 'CONCAT('.implode(',', $ttmp).')';
+						} else
+							$tmp[] = $field['link']['table'].'.'.$t;
+					}
+					$fields.= ','.implode(',', $tmp);
+				}
+				$prm['dbList'] = array(
+					'fields'=>$field['link']['table'].'.'.$field['link']['ident'].$fields,
+					'i18nFields'=>$field['link']['i18nFields'],
+					'ident'=>$field['link']['ident'],
+					'table'=>$field['link']['table'],
+					'join'=>$join,
+					'sep'=>$field['link']['sep'],
+					'where'=>$field['link']['where'],
+					'sepGr'=>$field['link']['sepGr'],
+					'nbFieldGr'=>$field['link']['nbFieldGr']
+				);
+				$ret = array_merge($prm, array('type'=>$type));
+			} else {
+				switch($field['type']) {
+					case 'set':
+					case 'enum':
+						$type = 'radio';
+						$prm['list'] = $field['precision'];
+						$prm['needOut'] = true;
+						break;
+					case 'date':
+						$type = 'date';
+						$prm['valid']['different'] = '0000-00-00';
+						break;
+					case 'datetime':
+						$type = 'datetime';
+						$prm['valid']['different'] = '0000-00-00 00:00:00';
+						break;
+					case 'text':
+					case 'blob':
+					case 'tinytext':
+					case 'tinyblob':
+					case 'mediumtext':
+					case 'mediumblob':
+					case 'longtext':
+					case 'longblob':
+						$key = array_search('richtext', $field['comment']);
+						if ($key !== false) {
+							$type = 'richtext';
+							unset($field['comment'][$key]);
+							$prm['html'] = $field['comment'];
+							if (array_key_exists('tinyMce', $field))
+								$prm['tinyMce'] = $field['tinyMce'];
+						} else {
+							$type = 'multiline';
+							$prm['maxlength'] = $field['length'];
 						}
-						array_pop($ttmp);
-						$tmp[] = 'CONCAT('.implode(',', $ttmp).')';
-					} else
-						$tmp[] = $field['link']['table'].'.'.$t;
+						break;
+					case 'bool':
+					case 'boolean':
+					case 'tinyint':
+						$type = 'radio';
+						$prm['list'] = $this->cfg->listBool;
+						$prm['inline'] = true;
+						if ($field['type'] != 'tinyint' || ($field['type'] == 'tinyint' && $field['length'] == 1)) {
+							$prm['valid']['required'] = false;
+							break;
+						}
+					case 'year':
+					case 'bigint':
+					case 'mediumint':
+					case 'smallint':
+					case 'int':
+						$type = 'numeric';
+						$prm['maxlength'] = $field['length'];
+						$prm['valid']['int'] = true;
+						break;
+					case 'decimal':
+					case 'float':
+					case 'double':
+					case 'decimal':
+					case 'dec':
+					case 'numeric':
+					case 'fixed':
+						$type = 'numeric';
+						$prm['maxlength'] = $field['precision']? $field['length']+1 : $field['length'];
+						$prm['valid']['numeric'] = true;
+						break;
+					case 'file':
+						$type = 'file';
+						if (count($field['comment']) == 1 && array_key_exists(0, $field['comment']))
+							$prm['helper'] = $field['comment'][0];
+						else
+							$prm = array_merge($prm, $field['comment']);
+						break;
+					default:
+						$type = array_key_exists(0, $field['comment']) && !empty($field['comment'][0])? $field['comment'][0] : 'text';
+						$prm['maxlength'] = $field['length'];
 				}
-				$fields.= ','.implode(',', $tmp);
+
+				$ret = array_merge($prm, array('type'=>$type));
 			}
-			$prm['dbList'] = array(
-				'fields'=>$field['link']['table'].'.'.$field['link']['ident'].$fields,
-				'i18nFields'=>$field['link']['i18nFields'],
-				'ident'=>$field['link']['ident'],
-				'table'=>$field['link']['table'],
-				'join'=>$join,
-				'sep'=>$field['link']['sep'],
-				'where'=>$field['link']['where'],
-				'sepGr'=>$field['link']['sepGr'],
-				'nbFieldGr'=>$field['link']['nbFieldGr']
-			);
-			return array_merge($prm, array('type'=>$type));
 		}
-
-		switch($field['type']) {
-			case 'set':
-			case 'enum':
-				$type = 'radio';
-				$prm['list'] = $field['precision'];
-				$prm['needOut'] = true;
-				break;
-			case 'date':
-				$type = 'date';
-				$prm['valid']['different'] = '0000-00-00';
-				break;
-			case 'datetime':
-				$type = 'datetime';
-				$prm['valid']['different'] = '0000-00-00 00:00:00';
-				break;
-			case 'text':
-			case 'blob':
-			case 'tinytext':
-			case 'tinyblob':
-			case 'mediumtext':
-			case 'mediumblob':
-			case 'longtext':
-			case 'longblob':
-				$key = array_search('richtext', $field['comment']);
-				if ($key !== false) {
-					$type = 'richtext';
-					unset($field['comment'][$key]);
-					$prm['html'] = $field['comment'];
-					if (array_key_exists('tinyMce', $field))
-						$prm['tinyMce'] = $field['tinyMce'];
-				} else {
-					$type = 'multiline';
-					$prm['maxlength'] = $field['length'];
-				}
-				break;
-			case 'bool':
-			case 'boolean':
-			case 'tinyint':
-				$type = 'radio';
-				$prm['list'] = $this->cfg->listBool;
-				$prm['inline'] = true;
-				if ($field['type'] != 'tinyint' || ($field['type'] == 'tinyint' && $field['length'] == 1)) {
-					$prm['valid']['required'] = false;
-					break;
-				}
-			case 'year':
-			case 'bigint':
-			case 'mediumint':
-			case 'smallint':
-			case 'int':
-				$type = 'numeric';
-				$prm['maxlength'] = $field['length'];
-				$prm['valid']['int'] = true;
-				break;
-			case 'decimal':
-			case 'float':
-			case 'double':
-			case 'decimal':
-			case 'dec':
-			case 'numeric':
-			case 'fixed':
-				$type = 'numeric';
-				$prm['maxlength'] = $field['precision']? $field['length']+1 : $field['length'];
-				$prm['valid']['numeric'] = true;
-				break;
-			case 'file':
-				$type = 'file';
-				if (count($field['comment']) == 1 && array_key_exists(0, $field['comment']))
-					$prm['helper'] = $field['comment'][0];
-				else
-					$prm = array_merge($prm, $field['comment']);
-				break;
-			default:
-				$type = array_key_exists(0, $field['comment']) && !empty($field['comment'][0])? $field['comment'][0] : 'text';
-				$prm['maxlength'] = $field['length'];
-		}
-
-		return array_merge($prm, array('type'=>$type));
+		if (array_key_exists('formType', $field) && $field['formType'])
+			$ret['type'] = $field['formType'];
+		
+		return $ret;
 	}
 }

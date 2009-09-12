@@ -59,4 +59,13 @@ abstract class object {
 		$this->cfg->setInArray('attributes', $name, $value);
 	}
 
+	/**
+	 * Get the configuration object
+	 *
+	 * @return config
+	 */
+	public function getCfg() {
+		return $this->cfg;
+	}
+
 }

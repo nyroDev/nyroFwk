@@ -86,7 +86,8 @@ class helper_filterTable extends object {
 			}
 		}
 
-		if ($this->form->refillIfSent() || request::getPrm($this->cfg->clearPrm)) {
+		if (request::isPost() || request::getPrm($this->cfg->clearPrm)) {
+			$this->form->refill();
 			$this->session->clear(true);
 		} else {
 			foreach($this->form->getNames() as $name) {

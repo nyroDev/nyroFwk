@@ -52,6 +52,13 @@ class form extends object {
 	protected $hasFiles = 0;
 
 	/**
+	 * Indicates if the form has been bound
+	 *
+	 * @var boolean
+	 */
+	protected $isBound = false;
+
+	/**
 	 * Errors for the last validation
 	 *
 	 * @var array
@@ -140,7 +147,7 @@ class form extends object {
 				$line = $e->isHidden()? 'lineHidden' : 'line';
 
 				$errors = null;
-				if ($this->isSent() && !$e->isValid() && !$e->isHidden()) {
+				if ($this->isBound() && !$e->isValid() && !$e->isHidden()) {
 					$tmp = array();
 					foreach($e->getErrors() as $err) {
 						$tmp[] = str_replace('[error]', $err, $prm['lineErrorLine']);
@@ -271,7 +278,7 @@ class form extends object {
 	 * @return bool
 	 */
 	public function hasErrors() {
-		return !empty($this->getErrors);
+		return !empty($this->errors) || !empty($this->customErrors);
 	}
 	
 	/**
@@ -336,12 +343,22 @@ class form extends object {
 	 * Get a form element
 	 *
 	 * @param string $name Field name
-	 * @return form_element|null
+	 * @return form_abstract|null
 	 */
 	public function get($name) {
 		if ($this->has($name))
 			return $this->elements[$this->elementsSection[$name]][$name];
 		return null;
+	}
+
+	/**
+	 * Delete a form element
+	 *
+	 * @param string $name
+	 */
+	public function del($name) {
+		if ($this->has($name))
+			unset($this->elements[$this->elementsSection[$name]][$name]);
 	}
 
 	/**
@@ -430,6 +447,7 @@ class form extends object {
 	public function setValue($name, $value, $refill=false) {
 		if ($elm = $this->get($name)) {
 			$elm->setValue($value, $refill);
+			$this->isBound = true;
 			return true;
 		}
 		return false;
@@ -452,25 +470,21 @@ class form extends object {
 	}
 
 	/**
-	 * Check if the form is sent. (if method is get, everytime is true)
+	 * Indicates if the form has been bound
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
-	public function isSent() {
-		return ($this->cfg->method == 'get' || request::isPost());
+	public function isBound() {
+		return $this->isBound;
 	}
 
 	/**
-	 * Refill the form only if it is sent
+	 * Set the bound status
 	 *
-	 * @return bool True if refilled
+	 * @param boolean $bound
 	 */
-	public function refillIfSent() {
-		if ($this->isSent()) {
-			$this->refill();
-			return true;
-		}
-		return false;
+	public function setBound($bound) {
+		$this->isBound = $bound;
 	}
 
 	/**

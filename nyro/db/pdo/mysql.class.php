@@ -70,6 +70,7 @@ class db_pdo_mysql extends db_pdo_abstract {
 				$htmlOut = true;
 				$tmp = explode($this->cfg->sepCom, $row[$fComment]);
 				$comment = array();
+				$unique = false;
 				foreach($tmp as $t) {
 					$tt = explode($this->cfg->sepComVal, $t);
 					if (count($tt) == 2)
@@ -108,6 +109,11 @@ class db_pdo_mysql extends db_pdo_abstract {
 					$primary = true;
 					$primaryPos = $p++;
 					$identity = ($row[$fExtra] == 'auto_increment');
+				} else if (strtoupper($row[$fKey]) == 'UNI') {
+					$primary = false;
+					$primaryPos = null;
+					$identity = false;
+					$unique = true;
 				} else {
 					$primary = false;
 					$primaryPos = null;
@@ -130,6 +136,7 @@ class db_pdo_mysql extends db_pdo_abstract {
 					'primary'		=> $primary,
 					'primaryPos'	=> $primaryPos,
 					'identity'		=> $identity,
+					'unique'		=> $unique,
 					'text'			=> $text,
 					'auto'			=> $auto,
 					'htmlOut'		=> $htmlOut,

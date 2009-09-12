@@ -191,7 +191,8 @@ class module_scaffold_controller extends module_abstract {
 
 		$this->form = $this->row->getForm($this->getFields($action), array('sectionName'=>tr::__('scaffold_'.$action)));
 
-		if ($this->form->refillIfSent()) {
+		if (request::isPost()) {
+			$this->form->refill();
 			if ($this->form->isValid()) {
 				$this->row->setValues($this->form->getValues());
 				$this->hook('before'.$uAction);

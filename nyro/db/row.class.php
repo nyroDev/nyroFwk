@@ -201,6 +201,7 @@ class db_row extends object {
 			}
 			$form->setValues($tmp);
 		}
+		$form->setBound(false);
 
 		return $form;
 	}

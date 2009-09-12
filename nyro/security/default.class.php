@@ -97,14 +97,28 @@ class security_default extends security_abstract {
 		return null;
 	}
 
+	/**
+	 * Set the logged user
+	 *
+	 * @param db_row $user
+	 * @param boolean $saveLogin Indicates if the session should be saved
+	 */
+	public function setUser(db_row $user, $saveLogin=true) {
+		$this->user = $user;
+		if ($saveLogin)
+			$this->saveLogin();
+	}
+
 	public function login($prm = null, $page=null) {
 		$loginField = $this->cfg->getInArray('fields', 'login');
 		$passField = $this->cfg->getInArray('fields', 'pass');
 
 		if (is_null($prm)) {
 			$form = $this->getLoginForm();
-			if ($form->refillIfSent())
+			if (request::isPost()) {
+				$form->refill();
 				$prm = $form->getValues(true);
+			}
 		}
 
 		if (is_array($prm)
@@ -238,6 +252,7 @@ class security_default extends security_abstract {
 			), array(
 				'action'=>$this->getPage('login')
 			), false);
+			$this->form->get($this->cfg->getInArray('fields', 'login'))->getValid()->delRule('dbUnique');
 			if ($this->cfg->stayConnected) {
 				$this->form->add('checkbox', array(
 					'name'=>'stayConnected',

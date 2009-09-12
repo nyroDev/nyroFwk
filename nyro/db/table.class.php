@@ -62,7 +62,7 @@ class db_table extends object {
 		$this->_initLabels();
 
 		if ($this->cfg->check('fields') && is_array($this->cfg->fields) && !empty($this->cfg->fields)) {
-			$this->fields = array_merge_recursive($this->fields, array_intersect_key($this->cfg->fields, $this->fields));
+			factory::mergeCfg($this->fields, array_intersect_key($this->cfg->fields, $this->fields));
 			foreach($this->fields as &$f) {
 				if (is_array($f['default']))
 					$f['default'] = array_key_exists(1, $f['default']) ? $f['default'][1] : $f['default'][0];

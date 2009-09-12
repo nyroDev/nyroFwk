@@ -181,6 +181,15 @@ class config {
 	}
 
 	/**
+	 * Get the whole configuration array
+	 *
+	 * @return array
+	 */
+	public function getAll() {
+		return $this->vars;
+	}
+
+	/**
 	 * Set an array of variable to the config
 	 *
 	 * @param array $vars Variables to set

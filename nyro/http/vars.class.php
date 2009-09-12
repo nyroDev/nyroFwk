@@ -106,6 +106,37 @@ final class http_vars {
 	}
 
 	/**
+	 * Get all type variable of one type
+	 *
+	 * @param String $method Method name (get or post)
+	 * @return array
+	 */
+	public function getVars($method='post') {
+		$act = '_'.strtoupper($method);
+		return utils::htmlIn($GLOBALS[$act]);
+	}
+
+	/**
+	 * Get all post variables
+	 *
+	 * @return array
+	 * @see getVars
+	 */
+	public function posts() {
+		return $this->getvars('post');
+	}
+
+	/**
+	 * Get all get variables
+	 *
+	 * @return array
+	 * @see getVars
+	 */
+	public function gets() {
+		return $this->getvars('get');
+	}
+
+	/**
 	 * Get a GET variable
 	 *
 	 * @param string $name Variable Name
