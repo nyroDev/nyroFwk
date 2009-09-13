@@ -357,8 +357,10 @@ class form extends object {
 	 * @param string $name
 	 */
 	public function del($name) {
-		if ($this->has($name))
+		if ($this->has($name)) {
 			unset($this->elements[$this->elementsSection[$name]][$name]);
+			unset($this->elementsSection[$name]);
+		}
 	}
 
 	/**

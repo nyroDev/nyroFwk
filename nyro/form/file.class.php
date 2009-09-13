@@ -17,11 +17,13 @@ class form_file extends form_abstract {
 	protected $deleted = false;
 	
 	protected function beforeInit() {
+		$required = array_key_exists('required', $this->cfg->valid) && $this->cfg->getInArray('valid', 'required');
 		$prm = array(
 			'name'=>$this->cfg->name,
 			'current'=>$this->cfg->value,
 			'helper'=>$this->cfg->helper,
-			'helperPrm'=>$this->cfg->helperPrm
+			'helperPrm'=>$this->cfg->helperPrm,
+			'required'=>$required
 		);
 
 		if ($this->cfg->subdir)

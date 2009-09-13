@@ -9,6 +9,7 @@ $cfg = array(
 		'pass'=>'pass',
 		'cryptic'=>'cryptic'
 	),
+	'sessionNameSpace'=>'security_default',
 	'stayConnected'=>true,
 	'labelStayConnected'=>'Stay connected',
 	'errorMsg'=>'The login/username couple doesn\'t match.',

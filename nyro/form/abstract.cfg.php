@@ -13,6 +13,8 @@ $cfg = array(
 	
 	'classLine'=>null,
 
+	'disabled'=>false,
+	
 	'validType'=>'valid',
 	'valid'=>array(
 		'required'=>true

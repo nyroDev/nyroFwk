@@ -54,7 +54,7 @@ class security_default extends security_abstract {
 
 	protected function afterInit() {
 		$this->session = session::getInstance(array(
-			'nameSpace'=>'security_default'
+			'nameSpace'=>$this->cfg->sessionNameSpace
 		));
 		$this->table = db::get('table', $this->cfg->table);
 		$this->autoLogin();
@@ -64,10 +64,12 @@ class security_default extends security_abstract {
 	 * Autologin the user with session vars or an eventual cookie
 	 */
 	protected function autoLogin() {
+		$fromSession = true;
 		if (!$cryptic = $this->session->cryptic) {
 			// Try to check the cookie
 			$cook = factory::get('http_cookie', $this->cfg->cookie);
 			$cryptic = $cook->get(true);
+			$fromSession = false;
 		}
 
 		if ($cryptic) {
@@ -76,6 +78,8 @@ class security_default extends security_abstract {
 			), $this->cfg->where));
 			if ($this->user) {
 				$this->logged = true;
+				if (!$fromSession)
+					$this->hook('autologin');
 				$this->session->cryptic = $cryptic;
 			} else if (isset($cook))
 				$cook->del();
@@ -140,6 +144,7 @@ class security_default extends security_abstract {
 						$cook->save();
 					}
 					$this->logged = true;
+					$this->hook('login');
 				} else
 					$form->addCustomError($loginField, $this->cfg->errorMsg);
 				if ($this->logged) {
@@ -179,6 +184,7 @@ class security_default extends security_abstract {
 			$cook = factory::get('http_cookie', $this->cfg->cookie);
 			$cook->del();
 		}
+		$this->hook('logout');
 		return $this->logged == false;
 	}
 

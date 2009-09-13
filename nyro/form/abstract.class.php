@@ -88,6 +88,8 @@ abstract class form_abstract extends object {
 	 * @param boolean $refill Indicate if the value is a refill one
 	 */
 	public function setValue($value, $refill=false) {
+		if ($this->cfg->disabled)
+			return;
 		$this->cfg->set('value', utils::htmlOut($value));
 	}
 
@@ -120,6 +122,19 @@ abstract class form_abstract extends object {
 	 */
 	public function isValid() {
 		return $this->valid->isValid() && empty($this->customErrors);
+	}
+
+	/**
+	 * Set the disabled state
+	 *
+	 * @param boolean $disabled
+	 */
+	public function setDisabled($disabled) {
+		$this->cfg->disabled = $disabled;
+		if ($disabled)
+			$this->cfg->setInArray('html', 'disabled', 'disabled');
+		else
+			$this->cfg->delInArray('html', 'disabled');
 	}
 
 	/**

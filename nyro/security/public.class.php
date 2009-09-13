@@ -14,10 +14,12 @@ class security_public extends security_abstract {
 	}
 
 	public function login($prm = null, $page = null) {
+		$this->hook('login');
 		return false;
 	}
 
 	public function logout($prm = null) {
+		$this->hook('logout');
 		return true;
 	}
 

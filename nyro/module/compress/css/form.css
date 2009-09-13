@@ -125,7 +125,7 @@ fieldset img {
 	background-color:#F2EFE9;
 }
 fieldset p a.deleteFile {
-    background: url(../../nyroUtils/icon/default,delete.png) no-repeat;
+    background: url(form/delete.png) no-repeat;
     padding: 0;
     padding-left: 18px;
     position: relative;

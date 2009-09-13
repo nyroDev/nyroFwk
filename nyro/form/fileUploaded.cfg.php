@@ -1,5 +1,6 @@
 <?php
 $cfg = array(
+	'required'=>true,
 	'name'=>REQUIRED,
 	'dir'=>FILESROOT,
 	'subdir'=>'uploads',

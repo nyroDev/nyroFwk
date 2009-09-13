@@ -99,6 +99,17 @@ abstract class security_abstract extends object {
 	}
 
 	/**
+	 * Function to be rewritten in eventual child to change the way security works
+	 * Available actions:
+	 * - autologin
+	 * - login
+	 * - logout
+	 *
+	 * @param string $action
+	 */
+	protected function hook($name) {}
+
+	/**
 	 * Indicate if a configuration array is contained in the url
 	 *
 	 * @param array $url

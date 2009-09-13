@@ -555,6 +555,15 @@ final class request {
 	}
 
 	/**
+	 * Get the IP address of the user
+	 *
+	 * @return string
+	 */
+	public static function getIp() {
+		return $_SERVER['REMOTE_ADDR'];
+	}
+
+	/**
 	 * Check if the request is local
 	 *
 	 * @return bool

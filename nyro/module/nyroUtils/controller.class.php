@@ -4,6 +4,8 @@ class module_nyroUtils_controller extends module_abstract {
 
 	protected function execIcon($prm=null) {
 		response::getInstance()->neverExpire();
+		if (array_search('..', $prm) !== false)
+			response::getInstance()->error(null, 403);
 		response::getInstance()->showFile(file::nyroExists(array(
 			'name'=>'icons'.DS.implode(DS, $prm),
 			'realName'=>true,
@@ -12,7 +14,7 @@ class module_nyroUtils_controller extends module_abstract {
 	}
 	
 	protected function execUploadedFiles($prm=null) {
-		if (array_search('..', $prm))
+		if (array_search('..', $prm) !== false)
 			response::getInstance()->error(null, 403);
 		response::getInstance()->showFile(FILESROOT.urldecode(implode(DS, $prm)));
 	}
