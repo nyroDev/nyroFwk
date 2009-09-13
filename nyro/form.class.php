@@ -362,6 +362,21 @@ class form extends object {
 	}
 
 	/**
+	 * Reorder the fields in the current section
+	 *
+	 * @param array $order Array containing the field names in order wanted
+	 */
+	public function reOrder(array $order) {
+		$tmp = array();
+		foreach($order as $v) {
+			$e = $this->get($v);
+			if ($e)
+				$tmp[$v] = $e;
+		}
+		$this->elements[$this->getSection()] = $tmp;
+	}
+
+	/**
 	 * Get the actual value for 1 field
 	 *
 	 * @param string $name Field name
@@ -614,6 +629,22 @@ class form extends object {
 
 	public function __set($key, $val) {
 		$this->cfg->set($key, $val);
+	}
+
+	/**
+	 * Used when cloning the form to create new field element
+	 */
+	public function __clone() {
+		$this->cfg = new config($this->cfg->getAll());
+		$bound = $this->isBound;
+		foreach($this->section as $kSection=>$sectionName) {
+			foreach($this->elements[$kSection] as $name=>$e) {
+				$this->elements[$kSection][$name] = factory::get(get_class($e), unserialize(serialize($e->getCfg()->getAll())));
+				if (!is_object($e->getValue()))
+					$this->setValue($name, $e->getValue());
+			}
+		}
+		$this->isBound = $bound;
 	}
 
 }

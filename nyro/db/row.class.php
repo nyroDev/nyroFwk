@@ -165,6 +165,10 @@ class db_row extends object {
 						$form->get($name)->getValid()->delRule('required');
 						$form->get($f['name'])->getValid()->delRule('required');
 					}
+					if (!empty($showFields) && !in_array($f['name'], $showFields)) {
+						$key = array_search($name, $showFields);
+						array_splice($showFields, $key+1, 0, array($f['name']));
+					}
 				}
 			}
 		}
@@ -202,6 +206,8 @@ class db_row extends object {
 			$form->setValues($tmp);
 		}
 		$form->setBound(false);
+		if (is_array($showFields) && !empty($showFields))
+			$form->reOrder($showFields);
 
 		return $form;
 	}
