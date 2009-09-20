@@ -264,6 +264,7 @@ abstract class db_abstract extends object {
 	 *  - int start : The select start (default: 0)
 	 *  - int nb : The select limit (default: unlimited)
 	 *  - string group : The group clause (default: none)
+	 *  - string groupAfter : The group clause to be done after everything else (useful for order grouping queries) (default: none)
 	 *  - string having : The having clause (default: none)
 	 * @return string The select query
 	 * @throws nException if no table provided
@@ -282,6 +283,7 @@ abstract class db_abstract extends object {
 					'start'=>0,
 					'nb'=>'',
 					'group'=>'',
+					'groupAfter'=>'',
 					'having'=>''
 				))) {
 
@@ -350,6 +352,9 @@ abstract class db_abstract extends object {
 					$query.= $tmp2.array_shift($prm['bind']);
 				}
 			}
+
+			if ($prm['groupAfter'])
+				$query = 'SELECT * FROM ('.$query.') AS res GROUP BY '.$prm['groupAfter'];
 
 			return $query;
 		} else

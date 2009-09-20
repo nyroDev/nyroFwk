@@ -178,7 +178,7 @@ final class factory {
 	 *
 	 * @param string $className The classname to create
 	 * @param array $cfg The config
-	 * @return stdClass The new object
+	 * @return object The new object
 	 */
 	public static function get($className, array $cfg = array()) {
 		self::load($className);

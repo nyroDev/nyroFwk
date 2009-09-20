@@ -754,7 +754,7 @@ final class request {
 	 * @return bool
 	 */
 	public static function isOut($out) {
-		return array_key_exists($out, self::$cfg->outCfg);
+		return $out && array_key_exists($out, self::$cfg->outCfg);
 	}
 
 	/**
