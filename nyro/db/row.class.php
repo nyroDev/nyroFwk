@@ -61,8 +61,10 @@ class db_row extends object {
 			$this->loadData($this->cfg->data);
 		} else if (!empty($this->cfg->findId)) {
 			$tmp = $this->table->find($this->cfg->findId);
-			$this->cfg->data = $tmp->getValues('data');
-			$this->setNew(false);
+			if ($tmp) {
+				$this->cfg->data = $tmp->getValues('data');
+				$this->setNew(false);
+			}
 			unset($tmp);
 		}
 	}

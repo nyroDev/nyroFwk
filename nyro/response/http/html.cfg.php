@@ -14,7 +14,7 @@ $cfg = array(
 		'alias'=>array(
 			'jquery'=>'jquery-1.3.2',
 			'jqueryui'=>'jquery-ui-1.7.custom.min',
-			'nyroModal'=>'jquery.nyroModal-1.5.1',
+			'nyroModal'=>'jquery.nyroModal',
 		),
 		'ext'=>'js',
 		'dirWeb'=>'js',

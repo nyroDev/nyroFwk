@@ -67,6 +67,7 @@ class form_file extends form_abstract {
 	public function uploadify(array $opt = array()) {
 		$resp = response::getInstance();
 		$resp->addJs('jquery');
+		$resp->addJs('swfobject');
 		$resp->addJs('uploadify');
 		$resp->addCss('uploadify');
 
@@ -74,7 +75,7 @@ class form_file extends form_abstract {
 			'fileDataName'=>$this->name
 		), $opt, $this->cfg->uploadify);
 
-		if (request::get('serverName') == 'localhost')
+		if (request::isLocal())
 			$uploadifyOpt['scriptAccess'] = 'always';
 
 		$func = array();
@@ -89,7 +90,7 @@ class form_file extends form_abstract {
 			$encoded = str_replace(array_keys($func), $func, $encoded);
 		
 		$resp->blockjQuery('
-			$("#'.$this->id.'").fileUpload('.$encoded.');
+			$("#'.$this->id.'").uploadify('.$encoded.');
 			$("#'.$this->id.'").closest("form").find("fieldset.submit input").hide();
 		');
 	}

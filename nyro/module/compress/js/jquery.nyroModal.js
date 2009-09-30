@@ -5,8 +5,8 @@
  * Copyright (c) 2008 Cedric Nirousset (nyrodev.com)
  * Licensed under the MIT license
  *
- * $Date: 2009-07-17 (Fri, 17 Jul 2009) $
- * $version: 1.5.1
+ * $Date: 2009-08-14 (Fri, 14 Aug 2009) $
+ * $version: 1.5.2
  */
 jQuery(function($) {
 
@@ -88,6 +88,8 @@ jQuery(function($) {
 				me
 				.unbind('submit.nyroModal')
 				.bind('submit.nyroModal', function(e) {
+					if(e.isDefaultPrevented())
+						return false;
 					if (me.data('nyroModalprocessing'))
 						return true;
 					if (this.enctype == 'multipart/form-data') {
@@ -106,6 +108,8 @@ jQuery(function($) {
 				me
 				.unbind('click.nyroModal')
 				.bind('click.nyroModal', function(e) {
+					if(e.isDefaultPrevented())
+						return false;
 					e.preventDefault();
 					processModal($.extend(settings, {
 						from: this
@@ -393,7 +397,7 @@ jQuery(function($) {
 				jFrom.prepend('<input type="hidden" name="'+currentSettings.formIndicator+'" value="1" />');
 				if (currentSettings.selector)
 					jFrom.prepend('<input type="hidden" name="'+currentSettings.selIndicator+'" value="'+currentSettings.selector.substring(1)+'" />');
-				modal.tmp.html('<iframe frameborder="0" hspace="0" name="nyroModalIframe" src="javascript:false;"></iframe>');
+				modal.tmp.html('<iframe frameborder="0" hspace="0" name="nyroModalIframe" src="javascript:\'\';"></iframe>');
 				$('iframe', modal.tmp)
 					.css({
 						width: currentSettings.width,
@@ -437,7 +441,7 @@ jQuery(function($) {
 				showModal();
 			} else if (currentSettings.type == 'iframeForm') {
 				initModal();
-				modal.tmp.html('<iframe frameborder="0" hspace="0" src="javascript:false;" name="nyroModalIframe" id="nyroModalIframe"></iframe>');
+				modal.tmp.html('<iframe frameborder="0" hspace="0" src="javascript:\'\';" name="nyroModalIframe" id="nyroModalIframe"></iframe>');
 				debug('Iframe Form Load: '+url);
 				$('iframe', modal.tmp).eq(0)
 					.css({
@@ -449,7 +453,7 @@ jQuery(function($) {
 				showModal();
 			} else if (currentSettings.type == 'iframe') {
 				initModal();
-				modal.tmp.html('<iframe frameborder="0" hspace="0" src="javascript:false;" name="nyroModalIframe" id="nyroModalIframe"></iframe>');
+				modal.tmp.html('<iframe frameborder="0" hspace="0" src="javascript:\'\';" name="nyroModalIframe" id="nyroModalIframe"></iframe>');
 				debug('Iframe Load: '+url);
 				$('iframe', modal.tmp).eq(0)
 					.css({
@@ -671,8 +675,8 @@ jQuery(function($) {
 				};
 			} else if (isIE6) {
 				body.css({
-					height: body.height()+'px',
-					width: body.width()+'px',
+					height: '130%', //body.height()+'px',
+					width: '130%', //body.width()+'px',
 					position: 'static',
 					overflow: 'hidden'
 				});
@@ -692,7 +696,7 @@ jQuery(function($) {
 					}
 				});
 
-				iframeHideIE = $('<iframe id="nyroModalIframeHideIe" src="javascript:false;"></iframe>')
+				iframeHideIE = $('<iframe id="nyroModalIframeHideIe" src="javascript:\'\';"></iframe>')
 								.css($.extend({},
 									currentSettings.css.bg, {
 										opacity: 0,
@@ -839,7 +843,7 @@ jQuery(function($) {
 			if (isSwf(url))
 				return 'swf';
 
-			var reg1 = new RegExp("^http://", "g");
+			var reg1 = new RegExp("^http://|https://", "g");
 			if (url.match(reg1))
 				return 'iframe';
 		}
@@ -975,7 +979,7 @@ jQuery(function($) {
 			// Set the action for the next and prev button (or remove them)
 			modal.content.append(currentSettings.galleryLinks);
 
-			gallery.links = $('[rel*="'+currentSettings.gallery+'"]');
+			gallery.links = $('[rel="'+currentSettings.gallery+'"], [rel^="'+currentSettings.gallery+' "]');
 			gallery.index = gallery.links.index(currentSettings.from);
 
 			if (currentSettings.galleryCounts && $.isFunction(currentSettings.galleryCounts))
@@ -993,7 +997,7 @@ jQuery(function($) {
 						return false;
 					});
 				if (isIE6 && currentSettings.type == 'swf') {
-					prev.before($('<iframe id="nyroModalIframeHideIeGalleryPrev" src="javascript:false;"></iframe>').css({
+					prev.before($('<iframe id="nyroModalIframeHideIeGalleryPrev" src="javascript:\'\';"></iframe>').css({
 											position: prev.css('position'),
 											top: prev.css('top'),
 											left: prev.css('left'),
@@ -1016,7 +1020,7 @@ jQuery(function($) {
 						return false;
 					});
 				if (isIE6 && currentSettings.type == 'swf') {
-					next.before($('<iframe id="nyroModalIframeHideIeGalleryNext" src="javascript:false;"></iframe>')
+					next.before($('<iframe id="nyroModalIframeHideIeGalleryNext" src="javascript:\'\';"></iframe>')
 									.css($.extend({}, {
 											position: next.css('position'),
 											top: next.css('top'),
