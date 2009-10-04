@@ -89,7 +89,7 @@ class helper_image extends helper_file {
 	 * @param string $more To create other
 	 * @return string Thumbnail path
 	 */
-	protected function makePath($file, $more=null) {
+	public function makePath($file, $more=null) {
 		if (is_null($more))
 			$more = md5($this->cfg->w.'_'.$this->cfg->h.'_'.$this->cfg->bgColor.'_'.$this->cfg->fit);
 
@@ -305,7 +305,7 @@ class helper_image extends helper_file {
 		$dstW = $prm['w'];
 		$dstH = $prm['h'];
 
-		if (!empty($prm['w']) && !empty($prm['h'])) {
+		if ($prm['w'] && $prm['h']) {
 			// Dimensions are fixed
 			if ($prm['fit']) {
 				if ($scaleW > $scaleH) {
@@ -324,12 +324,12 @@ class helper_image extends helper_file {
 					$dstY = round(($prm['h'] - $dstH) / 2);
 				}
 			}
-		} else if (!empty($prm['w'])) {
+		} else if ($prm['w']) {
 			// Width is fixed
 			$prm['h'] = round($srcH * $scaleW);
 			$dstH = round($srcH * $scaleW);
 			$prm['fit'] = true;
-		} else if (!empty($prm['h'])) {
+		} else if ($prm['h']) {
 			// Height is fixed
 			$prm['w'] = round($srcW * $scaleH);
 			$dstW = round($srcW * $scaleH);

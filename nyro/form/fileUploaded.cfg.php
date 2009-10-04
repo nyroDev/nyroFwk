@@ -9,7 +9,9 @@ $cfg = array(
 	'deleteCurrent'=>true,
 	'helperPrm'=>array(
 		'view'=>array(
-			'h'=>200
+			'h'=>200,
+			'w'=>0,
+			'fileSaveAdd'=>'admin'
 		)
 	)
 );
