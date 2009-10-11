@@ -351,7 +351,9 @@ class response_http_html extends response_http {
 	}
 
 	/**
-	 * Get the HTML Head part requested or all (title, meta and included files)
+	 * Get the HTML Head part requested or all (title, meta and included files).
+	 * This function will only return a placeholder that will be overwritten at the very end,
+	 * juste before the content is send.
 	 *
 	 * @param string $prm The requested part (title, meta or incFiles)
 	 * @param string $ln New line character
@@ -361,18 +363,16 @@ class response_http_html extends response_http {
 		$ret = null;
 		switch($prm) {
 			case 'title':
-				$ret.= '<title>'.utils::htmlOut($this->getMeta('title')).'</title>';
+				$ret.= '[{[TITLE]}]';
 				break;
 			case 'meta':
-				$ret.= $this->getHtmlMeta();
+				$ret.= '[{[META]}]';
 				break;
 			case 'css':
-				$ret.= $this->getHtmlIncFiles('css', $ln).$ln
-						.$this->getHtmlBlocks('css', $ln);
+				$ret.= '[{[CSS]}]';
 				break;
 			case 'js':
-				$ret.= $this->getHtmlIncFiles('js', $ln).$ln
-						.$this->getHtmlBlocks('js', $ln);
+				$ret.= '[{[JS]}]';
 				break;
 			default:
 				$ret.= $this->getHtmlElt('title').$ln
@@ -380,6 +380,26 @@ class response_http_html extends response_http {
 						.$this->getHtmlElt('css', $ln);
 		}
 		return $ret.$ln;
+	}
+
+	/**
+	 * Used by the send function to replace place holders set by getHtmlelt
+	 * by actual content
+	 *
+	 * @param string $content
+	 * @return string
+	 */
+	protected function setHtmlEltIntern($content) {
+		$ln = "\n";
+		return str_replace(
+			array('[{[TITLE]}]', '[{[META]}]', '[{[CSS]}]', '[{[JS]}]'),
+			array(
+				'<title>'.utils::htmlOut($this->getMeta('title')).'</title>',
+				$this->getHtmlMeta(),
+				$this->getHtmlIncFiles('css', $ln).$ln.$this->getHtmlBlocks('css', $ln),
+				$this->getHtmlIncFiles('js', $ln).$ln.$this->getHtmlBlocks('js', $ln)
+			),
+			$content);
 	}
 
 	/**
@@ -510,6 +530,6 @@ class response_http_html extends response_http {
 	
 	public function send($headerOnly=false) {
 		$ret = parent::send($headerOnly);
-		return DEV ? str_replace('</body>', debug::debugger().'</body>', $ret) : $ret;
+		return $this->setHtmlEltIntern(DEV ? str_replace('</body>', debug::debugger().'</body>', $ret) : $ret);
 	}
 }

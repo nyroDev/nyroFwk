@@ -16,6 +16,13 @@ abstract class module_abstract extends object {
 	 */
 	protected $prmExec;
 
+	/**
+	 * Template object for the current action
+	 *
+	 * @var tpl
+	 */
+	protected $tpl;
+
 	protected function afterInit() {
 		if ($this->cfg->forceSecure)
 			request::forceSecure();
@@ -60,11 +67,45 @@ abstract class module_abstract extends object {
 		$this->setViewAction($this->prmExec['action']);
 
 		$param = is_array($this->prmExec['paramA'])? $this->prmExec['paramA'] : request::parseParam($this->prmExec['param']);
-		$ret = $this->$fctName($param);
+		
+		$tags = $this->cfg->cacheTags;
+		$search = array('/', '<', '>');
+		$replace = array('', '', '');
+		if (is_array($this->prmExec['paramA']))
+			foreach($this->prmExec['paramA'] as $k=>$v) {
+				if (!is_numeric($k))
+					$tags[] = $k.'='.str_replace($search, $replace, $v);
+				else
+					$tags[] = str_replace($search, $replace, $v);
+			}
 
-		$this->afterExec($prm);
+		$this->tpl = factory::get('tpl', array(
+			'layout'=>$this->cfg->layout,
+			'module'=>$this->getName(),
+			'action'=>$this->cfg->viewAction,
+			'cache'=>array_merge(array(
+				'enabled'=>$this->isCacheEnabled(),
+				'serialize'=>false,
+				'tags'=>$tags,
+				'request'=>array('uri'=>false, 'meth'=>array())
+			), $this->cfg->cache)
+		));
 
-		return $ret;
+		$this->prmExec['callbackPrm'] = array(
+			'fctName'=>$fctName,
+			'fctNameParam'=>$param,
+			'prm'=>$prm
+		);
+	}
+
+	public function callbackTpl(array $prm) {
+		$this->$prm['fctName']($prm['fctNameParam']);
+		$this->afterExec($prm['prm']);
+		return $this->getViewAction();
+	}
+
+	public function getReponse() {
+		return $this->tpl->getResponseProxy();
 	}
 
 	/**
@@ -102,7 +143,8 @@ abstract class module_abstract extends object {
 	 * @param mixed $value
 	 */
 	protected function setViewVar($name, $value) {
-		$this->cfg->setInArray('viewVars', $name, $value);
+		//$this->cfg->setInArray('viewVars', $name, $value);
+		$this->tpl->set($name, $value);
 	}
 
 	/**
@@ -111,7 +153,8 @@ abstract class module_abstract extends object {
 	 * @param array $values
 	 */
 	protected function setViewVars(array $values) {
-		$this->cfg->setInArrayA('viewVars', $values);
+		//$this->cfg->setInArrayA('viewVars', $values);
+		$this->tpl->setA($values);
 	}
 
 	/**
@@ -122,31 +165,11 @@ abstract class module_abstract extends object {
 	public function publish(array $prm = array()) {
 		if (!$this->cfg->viewAction)
 			return null;
-
-		$tags = $this->cfg->cacheTags;
-		$search = array('/', '<', '>');
-		$replace = array('', '', '');
-		if (is_array($this->prmExec['paramA']))
-			foreach($this->prmExec['paramA'] as $k=>$v) {
-				if (!is_numeric($k))
-					$tags[] = $k.'='.str_replace($search, $replace, $v);
-				else
-					$tags[] = str_replace($search, $replace, $v);
-			}
-
-		$tpl = factory::get('tpl', array(
-			'layout'=>$this->cfg->layout,
-			'module'=>$this->getName(),
-			'action'=>$this->cfg->viewAction,
-			'cache'=>array_merge(array(
-				'enabled'=>$this->isCacheEnabled(),
-				'serialize'=>false,
-				'tags'=>$tags,
-				'request'=>array('uri'=>false, 'meth'=>array())
-			), $this->cfg->cache)
-		));
-		$tpl->setA($this->cfg->viewVars);
-		return $tpl->fetch($prm);
+		
+		return $this->tpl->fetch(array_merge(array(
+			'callback'=>array($this, 'callbackTpl'),
+			'callbackPrm'=>$this->prmExec['callbackPrm'],
+		), $prm));
 	}
 
 	/**

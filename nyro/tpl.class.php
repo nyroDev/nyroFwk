@@ -28,6 +28,15 @@ class tpl extends object {
 	}
 
 	/**
+	 * Get the response proxy used in this tpl
+	 *
+	 * @return response_proxy
+	 */
+	public function getResponseProxy() {
+		return $this->responseProxy;
+	}
+
+	/**
 	 * Set a variable for the fecth
 	 *
 	 * @param string $name Variable name
@@ -66,6 +75,8 @@ class tpl extends object {
 		$cachedContent = false;
 		$cachedLayout = false;
 
+		response::setProxy($this->responseProxy);
+
 		if ($this->cfg->cache['auto']) {
 			$cache = cache::getInstance(array_merge(array('serialize'=>false), $this->cfg->cache));
 			$cache->get($content, array(
@@ -86,12 +97,17 @@ class tpl extends object {
 		}
 
 		if (!$cachedContent) {
+			// Nothing was cached
+			$action = $this->cfg->action;
+			if (array_key_exists('callback', $prm))
+				$action = call_user_func($prm['callback'], $prm['callbackPrm']);
 			$file = $this->findTpl($prm, array(
-				'module_'.$this->cfg->module.'_view_'.$this->cfg->action,
+				'module_'.$this->cfg->module.'_view_'.$action,
 				'module_'.$this->cfg->defaultModule.'_view_'.$this->cfg->default
 			));
 			if (file::exists($file)) {
 				$content = $this->_fetch($file);
+
 				if ($this->cfg->cache['auto'] && !$this->cfg->cache['layout']) {
 					$cache->save();
 					if ($this->responseProxy->hasCall())
@@ -122,6 +138,7 @@ class tpl extends object {
 		if (!empty($callResp))
 			$cacheResp->save();
 
+		response::clearProxy();
 		return $content;
 	}
 

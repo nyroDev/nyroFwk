@@ -27,6 +27,10 @@ class response_proxy extends object {
 		$this->response = response::getInstance();
 	}
 
+	public function getProxy() {
+		return $this;
+	}
+
 	/**
 	 * Check if call was made
 	 *

@@ -16,6 +16,8 @@ final class response {
 	 */
 	private static $inst;
 
+	private static $proxy;
+
 	/**
 	 * Get the response object according to the requested out
 	 *
@@ -26,6 +28,16 @@ final class response {
 			self::$inst = factory::get('response_'.request::getResponseName());
 			self::$inst->setContentType(request::get('out'));
 		}
+		if (self::$proxy)
+			return self::$proxy;
 		return self::$inst;
+	}
+
+	public static function setProxy(response_proxy $proxy) {
+		self::$proxy = $proxy;
+	}
+
+	public static function clearProxy() {
+		self::$proxy = null;
 	}
 }

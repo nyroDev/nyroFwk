@@ -15,8 +15,11 @@ class session_php extends session_abstract {
 	 */
 	protected function afterInit() {
 		if (!session_id()) {
-			if (isset($_GET['phpsessidForce']))
-				session_id($_GET['phpsessidForce']);
+			$sessIdForce = $this->cfg->sessIdForce;
+			if (isset($_GET[$sessIdForce]))
+				session_id($_GET[$sessIdForce]);
+			elseif (isset($_POST[$sessIdForce]))
+				session_id($_POST[$sessIdForce]);
 			session_start();
 			if ($this->cfg->regenerateId)
 				session_regenerate_id(true);
@@ -109,6 +112,15 @@ class session_php extends session_abstract {
 
 		foreach($tmp as $v)
 			$this->del($v, false);
+	}
+
+	/**
+	 * Get the sessId Name that should be sent trhough GET or POST values.
+	 *
+	 * @return string
+	 */
+	public function getSessIdForce() {
+		return $this->cfg->sessIdForce;
 	}
 
 	/**

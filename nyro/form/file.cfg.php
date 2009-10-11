@@ -17,7 +17,7 @@ $cfg = array(
 		'fileExt'=>'*.jpg;*.gif;*.png',
 		'wmode'=>'transparent',
 		'cancelImg'=>request::uri(array('lang'=>null, 'module'=>'css', 'action'=>'uploadify', 'param'=>'cancel.png', 'out'=>null)),
-		'scriptData'=>array('phpsessidForce'=>session_id())
+		'scriptData'=>array(session::getInstance()->getSessIdForce()=>session_id())
 	),
 	'html'=>array(
 		'type'=>'file',

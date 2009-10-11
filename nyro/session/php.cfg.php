@@ -1,5 +1,6 @@
 <?php
 $cfg = array(
 	'prefix'=>'sess_',
-	'regenerateId'=>false
+	'regenerateId'=>false,
+	'sessIdForce'=>'phpsessidForce'
 );
