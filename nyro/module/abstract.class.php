@@ -79,7 +79,7 @@ abstract class module_abstract extends object {
 					$tags[] = str_replace($search, $replace, $v);
 			}
 
-		$this->tpl = factory::get('tpl', array(
+		$this->tpl = factory::get('tpl', array_merge(array(
 			'layout'=>$this->cfg->layout,
 			'module'=>$this->getName(),
 			'action'=>$this->cfg->viewAction,
@@ -89,7 +89,7 @@ abstract class module_abstract extends object {
 				'tags'=>$tags,
 				'request'=>array('uri'=>false, 'meth'=>array())
 			), $this->cfg->cache)
-		));
+		), $this->cfg->tplPrm));
 
 		$this->prmExec['callbackPrm'] = array(
 			'fctName'=>$fctName,

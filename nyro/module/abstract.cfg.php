@@ -8,6 +8,7 @@ $cfg = array(
 	'layout'=>true,
 	'viewAction'=>null,
 	'viewVars'=>array(),
+	'tplPrm'=>array(),
 	'cache'=>array(),
 	'cacheTags'=>array(),
 	'noCache'=>array(),

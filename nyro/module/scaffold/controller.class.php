@@ -69,6 +69,15 @@ class module_scaffold_controller extends module_abstract {
 			$this->fields = $this->table->getField();
 			$this->indexPage = request::uriDef(array('action'=>'', 'param'=>''));
 		}
+
+		$this->cfg->tplPrm = array(
+			'layout'=>$this->cfg->layout,
+			'module'=>'scaffold',
+			'action'=>$this->cfg->name.ucfirst($this->cfg->viewAction),
+			'defaultModule'=>'scaffold',
+			'default'=>$this->cfg->viewAction,
+			'cache'=>$this->cfg->cache
+		);
 	}
 
 	/**
@@ -222,31 +231,6 @@ class module_scaffold_controller extends module_abstract {
 		$resp = response::getInstance();
 		$resp->addHeader('Location', $this->indexPage);
 		$resp->send(true);
-	}
-
-	/**
-	 * Publish the module to shown
-	 *
-	 * @return string The fetched view
-	 */
-	public function publish(array $prm = array()) {
-		// Used for the child in no scaffolded action
-		if (!$this->isScaffolded())
-			return parent::publish($prm);
-
-		if (!$this->cfg->viewAction)
-			return null;
-
-		$tpl = factory::get('tpl', array(
-			'layout'=>$this->cfg->layout,
-			'module'=>'scaffold',
-			'action'=>$this->cfg->name.ucfirst($this->cfg->viewAction),
-			'defaultModule'=>'scaffold',
-			'default'=>$this->cfg->viewAction,
-			'cache'=>$this->cfg->cache
-		));
-		$tpl->setA($this->cfg->viewVars);
-		return $tpl->fetch($prm);
 	}
 
 	/**
