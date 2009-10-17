@@ -258,7 +258,7 @@ class cache_file extends cache_abstract {
 				$prm['type'],
 				$prm['id'],
 				$prm['tagsS'],
-				cache::idRequest($prm['request'])
+				null, //cache::idRequest($prm['request'])
 			);
 		return $this->cfg->path.implode('^', $fileA).'.cache';
 	}

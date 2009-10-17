@@ -2,6 +2,7 @@
 $cfg = array(
 	'module'=>REQUIRED,
 	'action'=>REQUIRED,
+	'param'=>null,
 
 	'defaultModule'=>'out',
 	'default'=>'default',

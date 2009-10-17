@@ -239,7 +239,9 @@ final class file {
 	 */
 	public static function size($file) {
 		clearstatcache();
-		return filesize($file);
+		if (self::exists($file))
+			return filesize($file);
+		return 0;
 	}
 
 	/**

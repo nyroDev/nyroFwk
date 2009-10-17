@@ -79,10 +79,16 @@ abstract class module_abstract extends object {
 					$tags[] = str_replace($search, $replace, $v);
 			}
 
+		$paramTpl = array();
+		foreach($param as $k=>$v) {
+			$paramTpl[] = $k.':'.$v;
+		}
+
 		$this->tpl = factory::get('tpl', array_merge(array(
 			'layout'=>$this->cfg->layout,
 			'module'=>$this->getName(),
 			'action'=>$this->cfg->viewAction,
+			'param'=>implode(',', $paramTpl),
 			'cache'=>array_merge(array(
 				'enabled'=>$this->isCacheEnabled(),
 				'serialize'=>false,

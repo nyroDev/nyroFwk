@@ -58,8 +58,8 @@ final class http_vars {
 					'trim'=>true
 				))) {
 			$matches = explode('|', str_replace(
-				array('][', '[', ']'),
-				array('|', '|', ''),
+				array('[]', '][', '[', ']'),
+				array('', '|', '|', ''),
 				$p['name']
 			));
 			$name = empty($matches)? array($p['name']): $matches;
