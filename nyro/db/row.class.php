@@ -285,7 +285,7 @@ class db_row extends object {
 					$r['fk1']['name'] => $this->getId()
 				);
 				$r['tableObj']->delete($values);
-				if ($tmp = $changes[$r['tableLink']]) {
+				if (($tmp = $changes[$r['tableLink']]) && is_array($tmp)) {
 					foreach($tmp as $t)
 						$r['tableObj']->insert(array_merge($values, array($r['fk2']['name'] => $t)));
 				}
@@ -507,11 +507,12 @@ class db_row extends object {
 	 *
 	 * @param string $key Fieldname
 	 * @param mixed $value Value
+	 * @param bool $force Indicates if the value should be replaced even if it's the same
 	 * @throws nException If the key doesn't exist
 	 */
-	public function set($key, $value) {
+	public function set($key, $value, $force=false) {
 		if ($key == db::getCfg('i18n'))
-			return $this->setI18n($value);
+			return $this->setI18n($value, $force);
 
 		$field = $this->table->getField($key);
 		$fct = null;
@@ -526,7 +527,7 @@ class db_row extends object {
 		}
 		if (!is_null($fct) && function_exists($fct))
 			$value = $fct($value);
-		if ($this->get($key) !== $value)
+		if ($force || $this->get($key) !== $value)
 			$this->changes[$key] = $value;
 	}
 
@@ -534,14 +535,15 @@ class db_row extends object {
 	 * Set i18n values
 	 *
 	 * @param array $values Values
+	 * @param bool $force Indicates if the value should be replaced even if it's the same
 	 * @param string|null $lg Lang
 	 */
-	public function setI18n(array $values, $lg=null) {
+	public function setI18n(array $values, $lg=null, $force=false) {
 		if (!is_null($lg)) {
-			$this->getI18nRow($lg)->setValues($values);
+			$this->getI18nRow($lg)->setValues($values, $force);
 		} else {
 			foreach($values as $lg=>$val)
-				$this->setI18n($val, $lg);
+				$this->setI18n($val, $lg, $force);
 		}
 	}
 
@@ -549,10 +551,11 @@ class db_row extends object {
 	 * Set a values array
 	 *
 	 * @param array $values
+	 * @param bool $force Indicates if the value should be replaced even if it's the same
 	 */
-	public function setValues(array $values) {
+	public function setValues(array $values, $force=false) {
 		foreach($values as $k=>$v)
-			$this->set($k, $v);
+			$this->set($k, $v, $force);
 	}
 
 	/**

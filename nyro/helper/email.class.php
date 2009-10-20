@@ -520,6 +520,6 @@ class helper_email extends object {
 	public function __set($name, $val) {
 		$this->cfg->set($name, $val);
 		if ($name == 'html')
-			$this->pasreHtml();
+			$this->parseHtml();
 	}
 }

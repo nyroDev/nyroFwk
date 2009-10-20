@@ -314,6 +314,7 @@ class form extends object {
 		$name = null;
 		if ($type instanceof form_abstract && !$this->has($name = $type->getName())) {
 			$inst = $type;
+			$inst->renew();
 		} else if (is_string($type) && array_key_exists('name', $prm) && !$this->has($name = $prm['name'])) {
 			$inst = $this->getNew($type, $prm);
 		}
@@ -375,7 +376,7 @@ class form extends object {
 			if ($e)
 				$tmp[$v] = $e;
 		}
-		$this->elements[$this->getSection()] = $tmp;
+		$this->elements[0] = $tmp;
 	}
 
 	/**

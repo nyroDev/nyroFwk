@@ -42,6 +42,10 @@ abstract class form_abstract extends object {
 		$this->initValid();
 	}
 
+	public function renew() {
+		$this->id = $this->makeId($this->name);
+	}
+
 	/**
 	 * Make a valid id from a name
 	 *
