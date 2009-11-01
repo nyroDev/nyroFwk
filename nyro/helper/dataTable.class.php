@@ -117,6 +117,15 @@ class helper_dataTable extends object {
 	}
 
 	/**
+	 * Get the number of results
+	 *
+	 * @return int
+	 */
+	public function getCount() {
+		return $this->count;
+	}
+
+	/**
 	 * Get the number of pages
 	 *
 	 * @return int
