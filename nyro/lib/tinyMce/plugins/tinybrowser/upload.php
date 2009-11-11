@@ -1,7 +1,7 @@
 <?php
 require_once('config_tinybrowser.php');
 // Set language
-if(isset($tinybrowser['language']) && file_exists('langs/'.$tinybrowser['language'].'.php'))
+if(isset($tinybrowser['language']) && file_exists(dirname(__FILE__).'/langs/'.$tinybrowser['language'].'.php'))
 	{
 	require_once('langs/'.$tinybrowser['language'].'.php'); 
 	}
