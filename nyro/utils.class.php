@@ -312,4 +312,26 @@ class utils {
 			strtr($text, $from, $to));
 	}
 
+	/**
+	 * Encodes an array to be used as a Json object. Keeps functions declaration
+	 * 
+	 * @param array $vars
+	 * @return string
+	 */
+	public static function jsEncode($vars) {
+		$func = array();
+		foreach($vars as $k=>$v) {
+			if (is_string($v) && strpos($v, 'function(') === 0) {
+				$func['"'.$k.'Func"'] = $v;
+				$vars[$k] = $k.'Func';
+			}
+		}
+		
+		$encoded = json_encode($vars);
+		if (!empty($func))
+			$encoded = str_replace(array_keys($func), $func, $encoded);
+		
+		return $encoded;
+	}
+
 }

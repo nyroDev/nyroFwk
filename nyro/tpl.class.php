@@ -105,6 +105,7 @@ class tpl extends object {
 				'module_'.$this->cfg->module.'_view_'.$action,
 				'module_'.$this->cfg->defaultModule.'_view_'.$this->cfg->default
 			));
+			
 			if (file::exists($file)) {
 				$content = $this->_fetch($file);
 

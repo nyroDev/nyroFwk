@@ -78,19 +78,8 @@ class form_file extends form_abstract {
 		if (request::isLocal())
 			$uploadifyOpt['scriptAccess'] = 'always';
 
-		$func = array();
-		foreach($uploadifyOpt as $k=>$v) {
-			if (is_string($v) && strpos($v, 'function(') === 0) {
-				$func['"'.$k.'Func"'] = $v;
-				$uploadifyOpt[$k] = $k.'Func';
-			}
-		}
-		$encoded = json_encode($uploadifyOpt);
-		if (!empty($func))
-			$encoded = str_replace(array_keys($func), $func, $encoded);
-		
 		$resp->blockjQuery('
-			$("#'.$this->id.'").uploadify('.$encoded.');
+			$("#'.$this->id.'").uploadify('.utils::jsEncode($uploadifyOpt).');
 			$("#'.$this->id.'").closest("form").find("fieldset.submit input").hide();
 		');
 	}

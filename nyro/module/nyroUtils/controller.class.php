@@ -16,10 +16,19 @@ class module_nyroUtils_controller extends module_abstract {
 	protected function execUploadedFiles($prm=null) {
 		if (array_search('..', $prm) !== false)
 			response::getInstance()->error(null, 403);
-		response::getInstance()->showFile(FILESROOT.urldecode(implode(DS, $prm)));
+		$text = request::get('text');
+		
+		$file = FILESROOT.urldecode(implode(DS, $prm));
+		if ($text)
+			$file.= DS.$text;
+		
+		response::getInstance()->showFile($file);
 	}
 	
 	protected function execTinyMce($prm=null) {
+		if (array_key_exists(0, $prm) && $prm[0] == 'tinyBrowser') {
+			//debug::trace($prm, 2);
+		}
 		$tmp = str_replace('js/tiny_mce/', '', request::get('request'));
 		$file = file::nyroExists(array(
 			'name'=>'lib'.DS.'tinyMce'.DS.$tmp,
@@ -32,6 +41,7 @@ class module_nyroUtils_controller extends module_abstract {
 			ini_set('include_path', $path);
 			define('TINYMCEPATH', substr($path, 0, -1));
 			define('TINYMCECACHEPATH', substr(TMPROOT, 0, -1));
+			ob_clean();
 			include($file);
 			exit;
 		} else {

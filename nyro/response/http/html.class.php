@@ -477,21 +477,36 @@ class response_http_html extends response_http {
 	}
 
 	/**
-	 * Get the tag to include an external file
+	 * Get the tag to include an external file.
 	 *
 	 * @param string $type (css|js)
-	 * @param string $url Url of the content
-	 * @param string $media Media info for css
-	 * @return string The tag
+	 * @param array|string $files List of files or a single file path
+	 * @param string $dir Where to get the file (nyro|web)
+	 * @param string $media Media info for css only
+	 * @return string
 	 */
 	public function getIncludeTagFile($type, $files, $dir='nyro', $media='screen') {
+		$prm = $this->cfg->get($type);
+		$url = $this->getUrlFile($type, $files, $dir);
+		return sprintf($prm['include'], $url, $media);
+	}
+
+	/**
+	 * Get an URL for a CSS or JS file.
+	 *
+	 * @param string $type (css|js)
+	 * @param array|string $files List of files or a single file path
+	 * @param string $dir Where to get the file (nyro|web)
+	 * @return string
+	 */
+	public function getUrlFile($type, $files, $dir='nyro') {
 		$prm = $this->cfg->get($type);
 		$url = $dir == 'web'
 					? request::get('path').$prm['dirWeb']
 					: request::getPathControllerUri().$prm['dirUriNyro'];
 		$url.= '/'.(is_array($files)? implode(request::getCfg('sepParam'), $files) : $files);
 		$url.= '.'.$prm['ext'];
-		return sprintf($prm['include'], $url, $media);
+		return $url;
 	}
 
 	/**
@@ -527,7 +542,6 @@ class response_http_html extends response_http {
 		return $ret;
 	}
 
-	
 	public function send($headerOnly=false) {
 		$ret = parent::send($headerOnly);
 		return $this->setHtmlEltIntern(DEV ? str_replace('</body>', debug::debugger().'</body>', $ret) : $ret);

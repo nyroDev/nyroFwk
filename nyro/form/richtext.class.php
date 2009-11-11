@@ -40,14 +40,36 @@ class form_richtext extends form_multiline {
 			'dir'=>'web',
 			'verifExists'=>false
 		));
+		
+		if (is_array($this->cfg->tinyBrowser)) {
+			$tinyBrowser = $this->cfg->tinyBrowser;
+			$options['file_browser_callback'] = 'function(field_name, url, type, win) {
+				tinyMCE.activeEditor.windowManager.open({
+					file : "'.$tinyBrowser['url'].',type:"+type+"/",
+					file : "'.$tinyBrowser['url'].'?'.session::getInstance()->getSessIdForce().'='.urlencode(session_id()).'&type=" + type,
+					title : "'.$tinyBrowser['title'].'",
+					width : '.$tinyBrowser['width'].', 
+					height : '.$tinyBrowser['height'].',
+					resizable : "yes",
+					scrollbars : "yes",
+					inline : "yes",  // This parameter only has an effect if you use the inlinepopups plugin!
+					close_previous : "no"
+				}, {
+					window : win,
+					input : field_name
+				});
+				return false;
+			}';
+		}
+		
 		if (array_key_exists('content_css', $options)) {
 			$contentCss = $options['content_css'];
 			unset($options['content_css']);
-			$options['setup'] = 'FUNCSETUP';
-			$optionsJs = json_encode($options);
-			$optionsJs = str_replace('"FUNCSETUP"', 'function(ed) {ed.onInit.add(function(ed) {setTimeout(function() {ed.dom.add(ed.dom.select("head"), "link", {rel : "stylesheet", href : "'.$contentCss.'"});}, 5);});}', $optionsJs);
-		} else
-			$optionsJs = json_encode($options);
+			$options['setup'] = 'function(ed) {ed.onInit.add(function(ed) {setTimeout(function() {ed.dom.add(ed.dom.select("head"), "link", {rel : "stylesheet", href : "'.$contentCss.'"});}, 5);});}';
+		}
+		
+		$optionsJs = utils::jsEncode($options);
+		
 		$resp->blockJs('tinyMCE.init('.$optionsJs.');');
 
 		return utils::htmlTag($this->htmlTagName,

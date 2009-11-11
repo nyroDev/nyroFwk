@@ -99,6 +99,7 @@ abstract class module_abstract extends object {
 		$this->tpl->getCfg()->layout = $this->cfg->layout;
 		$this->tpl->getCfg()->module = $this->getName();
 		$this->tpl->getCfg()->action = $this->cfg->viewAction;
+		$this->tpl->getCfg()->default = $this->cfg->viewAction;
 
 		$this->prmExec['callbackPrm'] = array(
 			'fctName'=>$fctName,
@@ -143,6 +144,10 @@ abstract class module_abstract extends object {
 	 */
 	protected function setViewAction($action) {
 		$this->cfg->viewAction = $action;
+		if ($this->tpl) {
+			$this->tpl->getCfg()->action = $this->cfg->viewAction;
+			$this->tpl->getCfg()->default = $this->cfg->viewAction;
+		}
 	}
 
 	/**

@@ -1,5 +1,11 @@
 <?php
 $cfg = array(
+	'tinyBrowser'=>array(
+		'url'=>str_replace('.js', '.php', response::getInstance()->getUrlFile('js', 'tiny_mce/plugins/tinybrowser/tinybrowser', 'web')),
+		'width'=>770,
+		'height'=>480,
+		'title'=>'Browser'
+	),
 	'tinyMce'=>array(
 		'theme'=>'advanced',
 		'language'=>request::get('lang'),
