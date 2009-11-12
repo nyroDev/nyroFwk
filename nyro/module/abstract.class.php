@@ -214,6 +214,9 @@ abstract class module_abstract extends object {
 	 */
 	protected function addCacheTag($val) {
 		$this->cfg->setInArrayA('cacheTags', array($val));
+		if ($this->tpl) {
+			$this->tpl->getCfg()->setInarray('cache', 'tags', $this->cfg->cacheTags);
+		}
 	}
 
 	/**
