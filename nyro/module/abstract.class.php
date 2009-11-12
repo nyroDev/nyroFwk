@@ -179,12 +179,14 @@ abstract class module_abstract extends object {
 	public function publish(array $prm = array()) {
 		if (!$this->cfg->viewAction)
 			return null;
-		
+		$this->preFetch();
 		return $this->tpl->fetch(array_merge(array(
 			'callback'=>array($this, 'callbackTpl'),
 			'callbackPrm'=>$this->prmExec['callbackPrm'],
 		), $prm));
 	}
+
+	protected function preFetch() {}
 
 	/**
 	 * Check against the configuration if the current request should be cached
