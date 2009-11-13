@@ -186,6 +186,10 @@ abstract class module_abstract extends object {
 		), $prm));
 	}
 
+	/**
+	 * Function called just before fetching the TPL.
+	 * This is useful to add cacheTag or change tpl properties
+	 */
 	protected function preFetch() {}
 
 	/**

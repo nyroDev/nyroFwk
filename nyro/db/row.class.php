@@ -397,7 +397,7 @@ class db_row extends object {
 	 * @return db_row
 	 */
 	public function getI18nRow($lang) {
-		if (is_null($lang))
+		if (is_null($lang) || !$lang)
 			$lang = request::get('lang');
 		if (!array_key_exists($lang, $this->i18nRows)) {
 			$primary = $this->table->getI18nTable()->getPrimary();
@@ -539,7 +539,7 @@ class db_row extends object {
 	 * @param string|null $lg Lang
 	 */
 	public function setI18n(array $values, $lg=null, $force=false) {
-		if (!is_null($lg)) {
+		if (!is_null($lg) && $lg) {
 			$this->getI18nRow($lg)->setValues($values, $force);
 		} else {
 			foreach($values as $lg=>$val)
