@@ -74,7 +74,7 @@ class security_default extends security_abstract {
 
 		if ($cryptic) {
 			$this->user = $this->table->find(array_merge(array(
-				$this->cfg->getInArray('fields', 'cryptic')=>$cryptic
+				$this->cfg->table.'.'.$this->cfg->getInArray('fields', 'cryptic')=>$cryptic
 			), $this->cfg->where));
 			if ($this->user) {
 				$this->logged = true;
@@ -128,9 +128,10 @@ class security_default extends security_abstract {
 		if (is_array($prm)
 			&& array_key_exists($loginField, $prm)
 			&& array_key_exists($passField, $prm)) {
+				$tableName = $this->cfg->table;
 				$this->user = $this->table->find(array_merge(array(
-					$loginField=>$prm[$loginField],
-					$passField=>$this->cryptPass($prm[$passField])
+					$tableName.'.'.$loginField=>$prm[$loginField],
+					$tableName.'.'.$passField=>$this->cryptPass($prm[$passField])
 				), $this->cfg->where));
 				if ($this->user) {
 					$crypticKey = $this->cfg->getInArray('fields', 'cryptic');

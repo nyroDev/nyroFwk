@@ -43,6 +43,9 @@ h1#nyroModalTitle {
 	font-size: 12px;
 	color: #ddd;
 }
+div#nyroModalContent {
+	overflow: auto;
+}
 div.wrapper div#nyroModalContent {
 	padding: 5px;
 }
@@ -80,6 +83,7 @@ a.nyroModalPrev, a.nyroModalNext {
 	width: 40%;
 	cursor: pointer;
 	text-indent: -9999em;
+	background: left 20% no-repeat;
 	background-image: url(data:image/gif;base64,AAAA); /* Trick IE6 */
 }
 div.wrapperSwf a.nyroModalPrev, div.wrapperSwf a.nyroModalNext, div.wrapper a.nyroModalPrev, div.wrapper a.nyroModalNext {
@@ -90,11 +94,12 @@ a.nyroModalPrev {
 	left: 0;
 }
 a.nyroModalPrev:hover {
-	background: url(nyroModal/prev.gif) left 20% no-repeat;
+	background-image: url(nyroModal/prev.gif);
 }
 a.nyroModalNext {
 	right: 0;
+	background-position: right 20%;
 }
 a.nyroModalNext:hover {
-	background: url(nyroModal/next.gif) right 20% no-repeat;
+	background-image: url(nyroModal/next.gif);
 }

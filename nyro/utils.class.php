@@ -334,4 +334,27 @@ class utils {
 		return $encoded;
 	}
 
+	/**
+	 * Create a random string
+	 *
+	 * @param int $len Length of the returned string
+	 * @param null|string $ignore Character to exclude from the random string
+	 * @return string
+	 */
+	public static function randomStr($len=10, $ignore=null) {
+		$source = 'abcdefghikjlmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+		if (!is_null($ignore)) {
+			$tmp = array();
+			for($i=0;$i<strlen($ignore);$i++)
+				$tmp[] = $ignore[$i];
+			$source = str_replace($tmp, '', $source);
+		}
+		$$len = abs(intval($len));
+		$n = strlen($source)-1;
+		$r = '';
+		for($i = 0; $i < $$len; $i++)
+			$r.= $source{rand(0, $n)};
+		return $r;
+	}
+
 }

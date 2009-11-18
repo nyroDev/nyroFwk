@@ -6,7 +6,7 @@
  * Licensed under the MIT license
  *
  * $Date: 2009-08-14 (Fri, 14 Aug 2009) $
- * $version: 1.5.2
+ * $version: 1.5.5
  */
 jQuery(function($) {
 
@@ -17,10 +17,11 @@ jQuery(function($) {
 	var userAgent = navigator.userAgent.toLowerCase();
 	var browserVersion = (userAgent.match(/.+(?:rv|webkit|khtml|opera|msie)[\/: ]([\d.]+)/ ) || [0,'0'])[1];
 
-	var isIE6 = (/msie/.test(userAgent) && !/opera/.test(userAgent) && parseInt(browserVersion) < 7 && !window.XMLHttpRequest);
+	var isIE6 = (/msie/.test(userAgent) && !/opera/.test(userAgent) && parseInt(browserVersion) < 7 && (!window.XMLHttpRequest || typeof(XMLHttpRequest) === 'function'));
 	var body = $('body');
 
 	var currentSettings;
+	var callingSettings;
 
 	var shouldResize = false;
 
@@ -200,6 +201,8 @@ jQuery(function($) {
 		debug: false, // Show the debug in the background
 
 		blocker: false, // Element which will be blocked by the modal
+		
+		windowResize: true, // indicates if the modal should resize when the window is resized
 
 		modal: false, // Esc key or click backgrdound enabling or not
 
@@ -244,6 +247,7 @@ jQuery(function($) {
 		gallery: null, // Gallery name if provided
 		galleryLinks: '<a href="#" class="nyroModalPrev">Prev</a><a href="#"  class="nyroModalNext">Next</a>', // Use .nyroModalPrev and .nyroModalNext to set the navigation link
 		galleryCounts: galleryCounts, // Callback to show the gallery count
+		galleryLoop: false, // Indicate if the gallery should loop
 
 		zIndexStart: 100,
 
@@ -264,7 +268,6 @@ jQuery(function($) {
 			wrapper2: {
 			},
 			content: {
-				overflow: 'auto'
 			},
 			loading: {
 				position: 'absolute',
@@ -335,6 +338,7 @@ jQuery(function($) {
 			return;
 		debug('processModal');
 		modal.started = true;
+		callingSettings = $.extend(true, settings);
 		setDefaultCurrentSettings(settings);
 		if (!modal.full)
 			modal.blockerVars = modal.blocker = null;
@@ -363,7 +367,7 @@ jQuery(function($) {
 
 		if (currentSettings.type == 'swf') {
 			// Swf is transforming as a raw content
-			setCurrentSettings({overflow: 'hidden'}, 'css', 'content');
+			setCurrentSettings({overflow: 'visible'}, 'css', 'content');
 			currentSettings.content = '<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="'+currentSettings.width+'" height="'+currentSettings.height+'"><param name="movie" value="'+url+'"></param>';
 			var tmp = '';
 			$.each(currentSettings.swf, function(name, val) {
@@ -432,7 +436,7 @@ jQuery(function($) {
 						});
 						initSettingsSize.width = w;
 						initSettingsSize.height = h;
-						setCurrentSettings({overflow: 'hidden'}, 'css', 'content');
+						setCurrentSettings({overflow: 'visible'}, 'css', 'content');
 						modal.dataReady = true;
 						if (modal.loadingShown || modal.transition)
 							showContentOrLoading();
@@ -536,10 +540,6 @@ jQuery(function($) {
 	function setDefaultCurrentSettings(settings) {
 		debug('setDefaultCurrentSettings');
 		currentSettings = $.extend(true, {}, $.fn.nyroModal.settings, settings);
-		currentSettings.selector = '';
-		currentSettings.borderW = 0;
-		currentSettings.borderH = 0;
-		currentSettings.resizable = true;
 		setMargin();
 	}
 
@@ -675,8 +675,8 @@ jQuery(function($) {
 				};
 			} else if (isIE6) {
 				body.css({
-					height: '130%', //body.height()+'px',
-					width: '130%', //body.width()+'px',
+					height: (body.height()+200)+'px', //130%
+					width: (body.width()+200)+'px', //130%
 					position: 'static',
 					overflow: 'hidden'
 				});
@@ -715,8 +715,7 @@ jQuery(function($) {
 						backgroundColor: currentSettings.bgColor
 					}, currentSettings.css.bg))
 				.before(iframeHideIE);
-			if (!currentSettings.modal)
-				modal.bg.click(removeModal);
+			modal.bg.bind('click.nyroModal', clickBg);
 			modal.loading = $('#nyroModalLoading')
 				.css(currentSettings.css.loading)
 				.hide();
@@ -742,7 +741,7 @@ jQuery(function($) {
 			modal.content.css({width: 'auto', height: 'auto'});
 			modal.contentWrapper.css({width: 'auto', height: 'auto'});
 
-			if (!currentSettings.blocker) {
+			if (!currentSettings.blocker && currentSettings.windowResize) {
 				$(window).bind('resize.nyroModal', function() {
 					window.clearTimeout(windowResizeTimeout);
 					windowResizeTimeout = window.setTimeout(windowResizeHandler, 200);
@@ -769,6 +768,12 @@ jQuery(function($) {
 		}
 	}
 
+	// Called when user click on background
+	function clickBg(e) {
+		if (!currentSettings.modal)
+			removeModal();
+	}
+	
 	// Used for the escape key or the arrow in the gallery type
 	function keyHandler(e) {
 		if (e.keyCode == 27) {
@@ -954,6 +959,7 @@ jQuery(function($) {
 
 	// Get the current settings to be used in new links
 	function getCurrentSettingsNew() {
+		return callingSettings;
 		var currentSettingsNew = $.extend(true, {}, currentSettings);
 		if (resized.width)
 			currentSettingsNew.width = null;
@@ -1046,6 +1052,12 @@ jQuery(function($) {
 			var index = gallery.index + dir;
 			if (index >= 0 && index < gallery.links.length)
 				return gallery.links.eq(index);
+			else if (currentSettings.galleryLoop) {
+				if (index < 0)
+					return gallery.links.eq(gallery.links.length-1);
+				else
+					return gallery.links.eq(0);
+			}
 		}
 		return false;
 	}
@@ -1236,6 +1248,7 @@ jQuery(function($) {
 					modal.content.css({position: ''}); // Fix Issue #10, remove the attribute
 				modal.wrapper.css({overflow: 'hidden'}); // Used to fix a visual issue when hiding
 				modal.content.css({overflow: 'hidden'}); // Used to fix a visual issue when hiding
+				$('iframe', modal.content).hide(); // Fix issue 359
 				if ($.isFunction(currentSettings.beforeHideContent)) {
 					currentSettings.beforeHideContent(modal, currentSettings, function() {
 						currentSettings.hideContent(modal, currentSettings, function() {
