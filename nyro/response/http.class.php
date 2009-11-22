@@ -129,10 +129,10 @@ class response_http extends response_abstract {
 	}
 
 	/**
-	 * Make the response to expire in 10 days
+	 * Make the response to expire in 32 days
 	 */
 	public function neverExpire() {
-		$this->addHeader('Expires', gmdate('D, j M Y H:i:s', strtotime('+10 years')).' GMT');
+		$this->addHeader('Expires', gmdate('D, j M Y H:i:s', strtotime('+32 days')).' GMT');
 	}
 
 	/**

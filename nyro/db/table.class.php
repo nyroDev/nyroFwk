@@ -1076,7 +1076,8 @@ class db_table extends object {
 	public function getRange($field=null) {
 		if (is_null($field))
 			$field = $this->getIdent();
-		$query = 'SELECT MIN('.$field.'),MAX('.$field.') FROM '.$this->getName();
+		$query = 'SELECT MIN('.$field.'),MAX('.$field.') FROM '.$this->getName()
+					.' WHERE '.$this->cfg->whereRange;
 		$tmp = $this->getDb()->query($query)->fetchAll(PDO::FETCH_NUM);
 		$tmp = $tmp[0];
 		$min = array_key_exists(0, $tmp) ? $tmp[0] : 0;

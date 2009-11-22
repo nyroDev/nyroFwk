@@ -53,7 +53,8 @@ abstract class form_mulValue extends form_abstract {
 		} else if ($this->cfg->needOut)
 			$this->cfg->list = utils::htmlOut($this->cfg->list, true);
 
-		$this->addRule('in', array_keys($this->cfg->list));
+		if (is_array($this->cfg->list))
+			$this->addRule('in', array_keys($this->cfg->list));
 	}
 
 	/**
@@ -101,21 +102,23 @@ abstract class form_mulValue extends form_abstract {
 
 		$tmpGr = null;
 		$tmpVal = null;
-		foreach($this->cfg->list as $k=>$v) {
-			if (is_array($this->cfg->group) && array_key_exists($k, $this->cfg->group) && $tmpGr != $k) {
-				$tmpGr = $k;
-				$ret.= str_replace(
-					array('[label]', '[group]'),
-					array($this->cfg->group[$k], $tmpVal),
-					$prm['group']);
-				$tmpVal = null;
-			}
-			$selected = $this->isInValue($k)? $prm['selected'] : null;
+		if (is_array($this->cfg->list)) {
+			foreach($this->cfg->list as $k=>$v) {
+				if (is_array($this->cfg->group) && array_key_exists($k, $this->cfg->group) && $tmpGr != $k) {
+					$tmpGr = $k;
+					$ret.= str_replace(
+						array('[label]', '[group]'),
+						array($this->cfg->group[$k], $tmpVal),
+						$prm['group']);
+					$tmpVal = null;
+				}
+				$selected = $this->isInValue($k)? $prm['selected'] : null;
 
-			$tmpVal.= str_replace(
-				array('[plus]', '[value]', '[label]'),
-				array($selected, $k, $v),
-				$prm['value']);
+				$tmpVal.= str_replace(
+					array('[plus]', '[value]', '[label]'),
+					array($selected, $k, $v),
+					$prm['value']);
+			}
 		}
 
 		if (!empty($tmpGr)) {

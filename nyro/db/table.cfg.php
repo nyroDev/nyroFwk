@@ -16,6 +16,8 @@ $cfg = array(
 	'fields'=>array(),
 	'linked'=>array(),
 	'realted'=>array(),
+
+	'whereRange'=>'1',
 	
 	'label'=>array(
 		'id'=>'#'
