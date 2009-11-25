@@ -71,12 +71,9 @@ class db_table extends object {
 
 		if ($this->cfg->check('linked') && is_array($this->cfg->linked) && !empty($this->cfg->linked))
 			factory::mergeCfg($this->linkedTables, $this->cfg->linked);
-			//$this->linkedTables = array_merge_recursive($this->linkedTables, $this->cfg->linked);
 
 		if ($this->cfg->check('related') && is_array($this->relatedTables) && !empty($this->relatedTables))
 			factory::mergeCfg($this->relatedTables, $this->cfg->related);
-			//$this->relatedTables = array_merge_recursive($this->relatedTables, $this->cfg->related);
-//if (count($this->relatedTables)) debug::trace($this->relatedTables['article_tag'], 2);
 	}
 
 	/**

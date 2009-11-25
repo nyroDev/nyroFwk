@@ -157,13 +157,16 @@ final class request {
 		}
 
 		$path = '/';
-		$requestUriTmp = substr($requestUri, 1);
-		$scriptNameTmp = substr($scriptName, 1);
+		$requestUriTmp = explode('/', substr($requestUri, 1));
+		$scriptNameTmp = explode('/', substr($scriptName, 1);
+		$min = min(count($reqTmp), count($scrTmp));
 		$i = 0;
-		
-		$min = min(strlen($requestUriTmp), strlen($scriptNameTmp));
-		while($i < $min && $requestUriTmp{$i} == $scriptNameTmp{$i})
-			$path.= $requestUriTmp{$i++};
+		while ($i < $min && $requestUriTmp[$i] == $scriptNameTmp[$i]) {
+			$path.= $requestUriTmp[$i].'/';
+			$i++;
+		}
+		if ($i > 0)
+			$path = substr($path, 0, -1);
 
 		$pathWithController = (strpos($requestUri, $controller) !== false);
 
@@ -471,7 +474,7 @@ final class request {
 
 		return $prefix.implode($sep, $tmp);
 	}
-	
+
 	/**
 	 * Make a valid URI for an uploaded File
 	 *
