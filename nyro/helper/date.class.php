@@ -127,7 +127,6 @@ class helper_date extends object {
 		    'd'=>$this->get('d'),
 		    'l'=>$this->get('l'),
 		    'h'=>$this->get('h'),
-			'a'=>$this->get('a'),
 			'A'=>$this->get('A'),
 		    'H'=>$this->get('H'),
 		    'i'=>$this->get('i'),
@@ -198,7 +197,6 @@ class helper_date extends object {
 		$places = array(
             'H'=>str_pad($time['H'], 2, '0', STR_PAD_LEFT),
             'A'=>$time['A'],
-            'a'=>$time['a'],
             'h'=>str_pad($time['h'], 2, '0', STR_PAD_LEFT),
             'i'=>str_pad($time['i'], 2, '0', STR_PAD_LEFT),
             's'=>str_pad($time['s'], 2, '0', STR_PAD_LEFT),
