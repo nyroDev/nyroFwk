@@ -253,7 +253,7 @@ abstract class db_abstract extends object {
 	 *  - string table (required) : The table to work in
 	 *  - array join : tables to join. Keys are:
 	 *   - string table (required) : table to join
-	 *   - string dir: how to join (default: 'left outer')
+	 *   - string dir: how to join (default: 'left')
 	 *   - string on: on Clause to join the table (default: 1)
 	 *   - string alias: table alias (default: none)
 	 *  - array bind : Data to bind
@@ -319,7 +319,7 @@ abstract class db_abstract extends object {
 			if (is_array($prm['join'])) {
 				$join = array();
 				foreach($prm['join'] as &$v) {
-					$v = array_merge(array('dir'=>'left outer', 'on'=>1, 'alias'=>''), $v);
+					$v = array_merge(array('dir'=>'left', 'on'=>1, 'alias'=>''), $v);
 					$alias = !empty($v['alias'])? ' AS '.$this->quoteIdentifier($v['alias']) : '';
 					$join[] = strtoupper($v['dir']).' JOIN '.$this->quoteIdentifier($v['table']).$alias.' ON '.$v['on'];
 				}

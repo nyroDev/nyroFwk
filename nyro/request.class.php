@@ -165,8 +165,10 @@ final class request {
 			$path.= $requestUriTmp[$i].'/';
 			$i++;
 		}
+		/*
 		if ($i > 0)
 			$path = substr($path, 0, -1);
+		*/
 
 		$pathWithController = (strpos($requestUri, $controller) !== false);
 
