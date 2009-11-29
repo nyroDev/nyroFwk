@@ -196,6 +196,9 @@ class helper_date extends object {
         $month = $this->cfg->getInArray('month', 'm'.intval($time['m']));
         $day = $this->cfg->getInArray('day', 'd'.intval($time['l']));
 		$places = array(
+            'H'=>str_pad($time['H'], 2, '0', STR_PAD_LEFT),
+            'A'=>$time['A'],
+            'a'=>$time['a'],
             'h'=>str_pad($time['h'], 2, '0', STR_PAD_LEFT),
             'i'=>str_pad($time['i'], 2, '0', STR_PAD_LEFT),
             's'=>str_pad($time['s'], 2, '0', STR_PAD_LEFT),
