@@ -159,7 +159,7 @@ final class request {
 		$path = '/';
 		$requestUriTmp = explode('/', substr($requestUri, 1));
 		$scriptNameTmp = explode('/', substr($scriptName, 1));
-		$min = min(count($reqTmp), count($scrTmp));
+		$min = min(count($requestUriTmp), count($scriptNameTmp));
 		$i = 0;
 		while ($i < $min && $requestUriTmp[$i] == $scriptNameTmp[$i]) {
 			$path.= $requestUriTmp[$i].'/';
