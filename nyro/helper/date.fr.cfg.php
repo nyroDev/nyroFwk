@@ -8,6 +8,11 @@ $cfg = array(
         'full'=>'EEE D MMM YYYY',  // Wednesday 31 December 2008
         'fullMed'=>'EE D MM YYYY', // Wed, 31 Dec 2008
     ),
+    'formatTime'=>array(
+        'short'=>'H:i',            // 00:04
+        'medium'=>'H:i:s',         // 00:04:13
+        'long'=>'H:i:s',           // 00:04:13
+    ),
     'formatDatetime'=>array(
         'long'=>'date à time',    // 31 December 2008 at 00:04:13
         'full'=>'date à time',    // Wednesday 31 December 2008 at 00:04:13

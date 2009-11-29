@@ -16,9 +16,9 @@ $cfg = array(
         'mysql'=>'YYYY-M-D',       // 2008-12-31
     ),
     'formatTime'=>array(
-        'short'=>'h:i',            // 00:04
-        'medium'=>'h:i:s',         // 00:04:13
-        'long'=>'h:i:s',           // 00:04:13
+        'short'=>'h:i A',            // 00:04 AM
+        'medium'=>'h:i:s A',         // 00:04:13 AM
+        'long'=>'h:i:s A',           // 00:04:13 AM
         'fullMed'=>'h:i:s o',      // 00:04:13 +0200
         'full'=>'h:i:s',           // 00:04:13 +0200
         'mysql'=>'h:i:s',          // 00:04:13

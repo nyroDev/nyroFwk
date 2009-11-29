@@ -277,7 +277,7 @@ final class file {
 	 */
 	public static function multipleDelete($pattern) {
 		$nb = 0;
-		foreach(glob($pattern) as $f)
+		foreach(self::search($pattern) as $f)
 			if (self::delete($f))
 				$nb++;
 		return $nb;
