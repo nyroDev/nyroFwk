@@ -165,16 +165,12 @@ final class request {
 			$path.= $requestUriTmp[$i].'/';
 			$i++;
 		}
-		if ($i > 0)
-			$path = substr($path, 0, -1);
-		if ($path == '//')
-			$path = '/';
 
 		$pathWithController = (strpos($requestUri, $controller) !== false);
 
 		if ($pathWithController) {
 			if (strpos($path, $controller) !== false)
-				$path = substr($path, 0, -strlen($controller)-1).'/';
+				$path = substr($path, 0, -strlen($controller)-1);
 			$request = substr($requestUri, strlen($path.$controller)+1);
 		} else
 			$request = substr($requestUri, strlen($path));

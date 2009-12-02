@@ -108,7 +108,7 @@ class module_scaffold_controller extends module_abstract {
 			}
 		}
 	}
-	
+
 	protected function isScaffolded() {
 		return strtolower($this->prmExec['prefix']) == 'scaffold';
 	}
@@ -144,7 +144,7 @@ class module_scaffold_controller extends module_abstract {
 				'delete'=>tr::__('scaffold_delete'),
 			),
 		), $this->cfg->listPrm));
-		
+
 		$this->hook('list');
 
 		$this->setViewVars(array(
@@ -159,8 +159,8 @@ class module_scaffold_controller extends module_abstract {
 	 * Function to be rewritten in eventual child to change the way the scaffold works
 	 * Available actions:
 	 * - show, formShow
-	 * - add, beforeAdd, afterAdd, formAdd
-	 * - edit, beforeEdit, afterEdit, formEdit
+	 * - add, formPostAdd, beforeAdd, afterAdd, formAdd
+	 * - edit, formPostEdit, beforeEdit, afterEdit, formEdit
 	 * - delete, beforeDelete, afterDelete
 	 *
 	 * @param string $action
@@ -202,6 +202,7 @@ class module_scaffold_controller extends module_abstract {
 
 		if (request::isPost()) {
 			$this->form->refill();
+			$this->hook('formPost'.$uAction);
 			if ($this->form->isValid()) {
 				$this->row->setValues($this->form->getValues());
 				$this->hook('before'.$uAction);

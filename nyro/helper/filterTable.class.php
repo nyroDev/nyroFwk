@@ -40,7 +40,7 @@ class helper_filterTable extends object {
 		if (!$this->cfg->check('clearPrm'))
 			$this->cfg->clearPrm = 'clearFilter'.ucfirst($this->table->getName());
 		$this->cfg->setinArray('actionPrmClear', $this->cfg->clearPrm, true);
-			
+
 		$this->initForm();
 	}
 
@@ -54,8 +54,7 @@ class helper_filterTable extends object {
 			'sectionName'=>$this->cfg->formName,
 			'action'=>array('paramA'=>array_merge(array_diff_key(request::get('paramA'), $this->cfg->actionPrmClear), $this->cfg->actionPrmForce))
 		));
-		
-		
+
 		$this->form->setSubmitText($this->cfg->submitText);
 		$this->form->setSubmitplus('<a href="'.$this->clearLink().'">'.$this->cfg->clearText.'</a>');
 
@@ -95,6 +94,15 @@ class helper_filterTable extends object {
 					$this->form->setValue($name, $this->session->get($name));
 			}
 		}
+	}
+
+	/**
+	 * Get the filter form
+	 *
+	 * @return form
+	 */
+	public function getForm() {
+		return $this->form;
 	}
 
 	/**

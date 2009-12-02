@@ -243,7 +243,7 @@ class db_table extends object {
 	public function isLinked($field) {
 		return array_key_exists($field, $this->linkedTables);
 	}
-	
+
 	/**
 	 * Get linked info with a table name
 	 *
@@ -475,7 +475,7 @@ class db_table extends object {
 			return $ret[$keyVal];
 		return $ret ? $ret : $this->cfg->getInArray('label', $field);
 	}
-	
+
 	/**
 	 * Get the fields which are file
 	 *
@@ -666,7 +666,7 @@ class db_table extends object {
 		}
 
 		self::parseLinked($ret, $tmpTables);
-		
+
 		if (array_key_exists('first', $prm) && $prm['first']) {
 			if (!empty($ret))
 				return db::get('row', $this, array(
@@ -691,7 +691,7 @@ class db_table extends object {
 	public function count(array $prm) {
 		$prm = $this->selectQuery($prm, $tmpTables);
 		$prm['group'] = $prm['fields'] = $this->cfg->name.'.'.$this->getIdent();
-		
+
 		$prm['where'] = $this->getDb()->makeWhere($prm['where'], $prm['whereOp'], false);
 		$nb = array_key_exists('join', $prm) ? count($prm['join']) : 0;
 		for($i=0; $i<$nb; $i++) {
@@ -1069,7 +1069,13 @@ class db_table extends object {
 		);
 		return $this->select($prm);
 	}
-	
+
+	/**
+	 * Get the min and the max value for a field.
+	 *
+	 * @param string $field Fieldname. If null, id is used
+	 * @return array With key min and max
+	 */
 	public function getRange($field=null) {
 		if (is_null($field))
 			$field = $this->getIdent();

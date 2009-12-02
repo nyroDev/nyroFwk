@@ -60,7 +60,7 @@ class db_row extends object {
 		if (!empty($this->cfg->data)) {
 			$this->loadData($this->cfg->data);
 		} else if (!empty($this->cfg->findId)) {
-			$tmp = $this->table->find($this->cfg->findId);
+			$tmp = $this->getTable()->find($this->cfg->findId);
 			if ($tmp) {
 				$this->cfg->data = $tmp->getValues('data');
 				$this->setNew(false);
@@ -76,10 +76,10 @@ class db_row extends object {
 	 */
 	public function loadData(array $data) {
 		$this->cfg->data = $data;
-		if (array_key_exists($this->table->getIdent(), $data) && $data[$this->table->getIdent()])
+		if (array_key_exists($this->getTable()->getIdent(), $data) && $data[$this->getTable()->getIdent()])
 			$this->setNew(false);
 		else {
-			$primary = $this->table->getPrimary();
+			$primary = $this->getTable()->getPrimary();
 			$p = 0;
 			foreach($primary as $pp) {
 				if (array_key_exists($pp, $data) && $data[$pp])
@@ -105,7 +105,7 @@ class db_row extends object {
 	 */
 	public function reload() {
 		if (!$this->isNew() && $this->getId())
-			$this->loadData($this->table->find($this->getId())->getValues());
+			$this->loadData($this->getTable()->find($this->getId())->getValues());
 	}
 
 	/**
@@ -149,17 +149,17 @@ class db_row extends object {
 			'table'=>$this->getTable()
 		)));
 		/* @var $form form_db */
-		foreach($this->table->getField() as $f) {
-			if ($f['name'] != $this->table->getIdent() && !$f['auto'] &&
+		foreach($this->getTable()->getField() as $f) {
+			if ($f['name'] != $this->getTable()->getIdent() && !$f['auto'] &&
 					(empty($showFields) || in_array($f['name'], $showFields))) {
-				$f['label'] = $this->table->getLabel($f['name']);
-				$f['link'] = $this->table->getLinked($f['name']);
+				$f['label'] = $this->getTable()->getLabel($f['name']);
+				$f['link'] = $this->getTable()->getLinked($f['name']);
 				$f['value'] = $this->get($f['name']);
 				$obj = $form->addFromField($f);
 				if ($passConfirm && $obj instanceof form_password) {
 					$name = $f['name'];
 					$f['name'].= 'Confirm';
-					$f['label'] = $this->table->getLabel($f['name']);
+					$f['label'] = $this->getTable()->getLabel($f['name']);
 					$form->addFromField($f)->addRule('equal', $obj);
 					$form->addNotValue($f['name']);
 					if (!$this->isNew()) {
@@ -175,10 +175,10 @@ class db_row extends object {
 			}
 		}
 
-		foreach($this->table->getRelated() as $t=>$r) {
+		foreach($this->getTable()->getRelated() as $t=>$r) {
 			if (empty($showFields) || in_array($r['tableLink'], $showFields)) {
 				$r['name'] = $r['tableLink'];
-				$r['label'] = $this->table->getLabel($r['table']);
+				$r['label'] = $this->getTable()->getLabel($r['table']);
 				$r['valid'] = false;
 				$form->addFromRelated($r);
 			}
@@ -186,11 +186,11 @@ class db_row extends object {
 
 		$form->setValues($this->getValues('flat'));
 
-		$i18nFields = $this->table->getI18nFields();
+		$i18nFields = $this->getTable()->getI18nFields();
 		$i18nFieldsT = array();
 		foreach($i18nFields as $f) {
 			$i18nFieldsT[] = $f['name'];
-			$f['label'] = $this->table->getI18nTable()->getLabel($f['name']);
+			$f['label'] = $this->getTable()->getI18nTable()->getLabel($f['name']);
 			$form->addFromField($f, true);
 		}
 
@@ -198,7 +198,7 @@ class db_row extends object {
 
 		if ($i18nRows = $this->getI18nRows()) {
 			$tmp = array();
-			$primary = $this->table->getI18nTable()->getPrimary();
+			$primary = $this->getTable()->getI18nTable()->getPrimary();
 			foreach($i18nRows as $r) {
 				$lang = $r->get($primary[1]);
 				foreach($r->getValues() as $k=>$v) {
@@ -239,9 +239,9 @@ class db_row extends object {
 	 */
 	public function insert() {
 		$values = array_merge($this->getValues('flat'), $this->getChangesTable());
-		unset($values[$this->table->getIdent()]);
-		$id = $this->table->insert($values);
-		$this->set($this->table->getIdent(), $id);
+		unset($values[$this->getTable()->getIdent()]);
+		$id = $this->getTable()->insert($values);
+		$this->set($this->getTable()->getIdent(), $id);
 		$this->setNew(false);
 		$this->saveRelated();
 		$this->saveI18n();
@@ -261,7 +261,7 @@ class db_row extends object {
 			return true;
 
 		if ($changesTable = $this->getChangesTable())
-			$this->table->update($changesTable, $this->whereClause());
+			$this->getTable()->update($changesTable, $this->whereClause());
 
 		$this->saveRelated();
 		$this->saveI18n();
@@ -279,7 +279,7 @@ class db_row extends object {
 			throw new nException('db_row::saveRelated: try to save related for a new row');
 
 		$changes = $this->getChangesOther();
-		foreach($this->table->getRelated() as $r) {
+		foreach($this->getTable()->getRelated() as $r) {
 			if (array_key_exists($r['tableLink'], $changes)) {
 				$values = array(
 					$r['fk1']['name'] => $this->getId()
@@ -303,7 +303,7 @@ class db_row extends object {
 			throw new nException('db_row::saveI18n: try to save i18n for a new row');
 
 		if (!empty($this->i18nRows)) {
-			list($fkId, $lang) = ($this->table->getI18nTable()->getPrimary());
+			list($fkId, $lang) = ($this->getTable()->getI18nTable()->getPrimary());
 			foreach($this->i18nRows as $r) {
 				if ($r->isNew())
 					$r->set($fkId, $this->getId());
@@ -318,12 +318,12 @@ class db_row extends object {
 	 * @return bool True if successful
 	 */
 	public function delete() {
-		foreach($this->table->getRelated() as $related) {
+		foreach($this->getTable()->getRelated() as $related) {
 			$related['tableObj']->delete(array(
 				$related['fk1']['name']=>$this->getId()
 			));
 		}
-		$nb = $this->table->delete($this->whereClause());
+		$nb = $this->getTable()->delete($this->whereClause());
 		return ($nb > 0);
 	}
 
@@ -333,7 +333,7 @@ class db_row extends object {
 	 * @return mixed
 	 */
 	public function getId() {
-		return $this->get($this->table->getIdent());
+		return $this->get($this->getTable()->getIdent());
 	}
 
 	/**
@@ -349,7 +349,7 @@ class db_row extends object {
 	 * @return bool
 	 */
 	public function keyExists($key) {
-		return in_array($key, $this->table->getCols());
+		return in_array($key, $this->getTable()->getCols());
 	}
 
 	/**
@@ -368,11 +368,11 @@ class db_row extends object {
 				$val = $this->changes[$key];
 			else
 				$val = $this->cfg->getInarray('data', $key);
-			return $this->table->getField($key, 'htmlOut')? utils::htmlOut($val) : $val;
+			return $this->getTable()->getField($key, 'htmlOut')? utils::htmlOut($val) : $val;
 		} else if ($val = $this->cfg->getInarray('data', $key)) {
 			return $val;
-		} else if ($this->table->isRelated($key)) {
-			$key = $this->table->getRelatedTableName($key);
+		} else if ($this->getTable()->isRelated($key)) {
+			$key = $this->getTable()->getRelatedTableName($key);
 			$values = $this->getValues($mode);
 			return array_key_exists($key, $values)? $values[$key] : null;
 		}
@@ -400,8 +400,8 @@ class db_row extends object {
 		if (is_null($lang) || !$lang)
 			$lang = request::get('lang');
 		if (!array_key_exists($lang, $this->i18nRows)) {
-			$primary = $this->table->getI18nTable()->getPrimary();
-			$this->i18nRows[$lang] = $this->table->getI18nTable()->getRow();
+			$primary = $this->getTable()->getI18nTable()->getPrimary();
+			$this->i18nRows[$lang] = $this->getTable()->getI18nTable()->getRow();
 			$this->i18nRows[$lang]->setValues(array(
 				$primary[0]=>$this->getId(),
 				$primary[1]=>$lang
@@ -433,7 +433,7 @@ class db_row extends object {
 				$tmp = $this->getTable()->getCols();
 
 				if ($mode == 'flat') {
-					$linked = $this->table->getLinked();
+					$linked = $this->getTable()->getLinked();
 					if (is_array($linked)) {
 						foreach($linked as $k=>$v) {
 							$tmp[] = $k;
@@ -442,7 +442,7 @@ class db_row extends object {
 						}
 					}
 					if (array_key_exists('related', $data)) {
-						foreach($this->table->getRelated() as $k=>$v) {
+						foreach($this->getTable()->getRelated() as $k=>$v) {
 							$tmp[] = $k;
 							$data[$k] = array();
 							foreach($data['related'][$v['fk2']['link']['table']] as $vv) {
@@ -459,7 +459,7 @@ class db_row extends object {
 				$tmp = $this->getTable()->getCols();
 
 				if ($mode == 'flatReal' && array_key_exists('related', $data)) {
-					foreach($this->table->getRelated() as $k=>$v) {
+					foreach($this->getTable()->getRelated() as $k=>$v) {
 						$tmp[] = $k;
 						$data[$k] = array();
 						$fields = explode(',', $v['fk2']['link']['fields']);
@@ -514,9 +514,9 @@ class db_row extends object {
 		if ($key == db::getCfg('i18n'))
 			return $this->setI18n($value, $force);
 
-		$field = $this->table->getField($key);
+		$field = $this->getTable()->getField($key);
 		$fct = null;
-		
+
 		if (isset($field['comment']) && is_array($field['comment'])) {
 			foreach($field['comment'] as $k=>$v) {
 				if (!is_array($v) && strpos($v, 'fct:') === 0) {
@@ -579,7 +579,7 @@ class db_row extends object {
 	 * @return array
 	 */
 	public function getChangesTable() {
-		return array_intersect_key($this->getChanges(), $this->table->getField());
+		return array_intersect_key($this->getChanges(), $this->getTable()->getField());
 	}
 
 	/**
@@ -588,7 +588,7 @@ class db_row extends object {
 	 * @return array
 	 */
 	public function getChangesOther() {
-		return array_diff_key($this->getChanges(), array_merge($this->table->getField(), array(db::getCfg('i18n')=>true)));
+		return array_diff_key($this->getChanges(), array_merge($this->getTable()->getField(), array(db::getCfg('i18n')=>true)));
 	}
 
 	/**
@@ -629,9 +629,9 @@ class db_row extends object {
 	 * @return db_row|null
 	 */
 	public function getLinked($field=null, $reload=false) {
-		if ($this->table->isLinked($field)) {
+		if ($this->getTable()->isLinked($field)) {
 			if (!array_key_exists($field, $this->linked))
-				$this->linked[$field] = $this->table->getLinkedTableRow($field);
+				$this->linked[$field] = $this->getTable()->getLinkedTableRow($field);
 			if ($reload && array_key_exists($field, $this->linked) && !is_null($this->linked[$field]))
 				$this->linked[$field]->reload();
 			return $this->linked[$field];
@@ -647,11 +647,11 @@ class db_row extends object {
 	 */
 	public function setLinked($linked, $field=null) {
 		if (!is_null($field)) {
-			if ($this->table->isLinked($field)) {
+			if ($this->getTable()->isLinked($field)) {
 				if ($linked instanceof db_row)
 					$this->linked[$field] = $linked;
 				else
-					$this->linked[$field] = $this->table->getLinkedTableRow($field, $linked);
+					$this->linked[$field] = $this->getTable()->getLinkedTableRow($field, $linked);
 			}
 		} else {
 			foreach($linked as $f=>$v)
@@ -666,7 +666,7 @@ class db_row extends object {
 	 * @return db_rowset
 	 */
 	public function getRelated($name) {
-		$related = $this->table->getRelated($this->table->getRelatedTableName($name));
+		$related = $this->getTable()->getRelated($this->getTable()->getRelatedTableName($name));
 		return $related['tableObj']->getLinkedTable('module_nom')->select(array(
 			'where'=>$this->getWhere(array(
 				'clauses'=>factory::get('db_whereClause', array(
@@ -680,7 +680,7 @@ class db_row extends object {
 			))
 		));
 	}
-	
+
 	/**
 	 * Set new linked values
 	 *
@@ -689,15 +689,15 @@ class db_row extends object {
 	 */
 	public function setRelated($related, $name=null) {
 		if (!is_null($name)) {
-			if ($this->table->getI18nTable() && $name == $this->table->getI18nTable()->getName()) {
-				$primary = $this->table->getI18nTable()->getPrimary();
+			if ($this->getTable()->getI18nTable() && $name == $this->getTable()->getI18nTable()->getName()) {
+				$primary = $this->getTable()->getI18nTable()->getPrimary();
 				foreach($related as $r) {
-					$this->i18nRows[$r[$primary[1]]] = $this->table->getI18nTable()->getRow(
+					$this->i18nRows[$r[$primary[1]]] = $this->getTable()->getI18nTable()->getRow(
 						array_merge($r, array($primary[0]=>$this->getId())));
 				}
 			} else {
-				$name = $this->table->getRelatedTableName($name);
-				if ($this->table->isRelated($name)) {
+				$name = $this->getTable()->getRelatedTableName($name);
+				if ($this->getTable()->isRelated($name)) {
 					if (!array_key_exists($name, $this->related))
 						$this->related[$name] = array();
 
@@ -708,7 +708,7 @@ class db_row extends object {
 							if ($v instanceof db_row)
 								$this->related[$name][] = $v;
 							else
-								$this->related[$name][] = $this->table->getRelatedTableRow($name, $v);
+								$this->related[$name][] = $this->getTable()->getRelatedTableRow($name, $v);
 						}
 					}
 				}
@@ -725,22 +725,71 @@ class db_row extends object {
 	 * @return string
 	 */
 	protected function whereClause() {
-		$primary = $this->table->getPrimary();
+		$primary = $this->getTable()->getPrimary();
 		$where = array();
 		foreach($primary as $p) {
-			$where[] = $this->table->getName().'.'.$p.='="'.$this->get($p).'"';
+			$where[] = $this->getTable()->getName().'.'.$p.='="'.$this->get($p).'"';
 		}
 		return implode(' AND ', $where);
 	}
 
+	/**
+	 * Get the value of a field around the row
+	 *
+	 * @param array $prm Parameter with key:
+	 * - string field: Fieldname on which the comparison should be done and which will be retrived
+	 * - string where: Where clause to filter results
+	 * - boolean asRow: Indicates if the result should be retrieved as db_row object or simple value. Should be set to true only when using ident
+	 * @return array With 2 indexes; 0 -> field value of the previous row (or null), 1 for the next one
+	 */
+	public function getAround(array $prm = array()) {
+		config::initTab($prm, array(
+			'field'=>null,
+			'where'=>null,
+			'asRow'=>false
+		));
+
+		$field = $prm['field'];
+		$where = $prm['where'];
+
+		if (!is_null($where))
+			$where.= ' AND ';
+		if (is_null($field))
+			$field = $this->getTable()->getIdent();
+		$val = $this->get($field);
+
+		$query = '(SELECT '.$field.' FROM '.$this->getTable()->getName().' WHERE '.$where.$field.' < ? ORDER BY '.$field.' DESC LIMIT 1)
+					UNION
+				  (SELECT '.$field.' FROM '.$this->getTable()->getName().' WHERE '.$where.$field.' > ? ORDER BY '.$field.' ASC LIMIT 1)';
+		$vals = $this->getDb()->query($query, array($val, $val))->fetchAll(PDO::FETCH_NUM);
+		$ret = array(null, null);
+		if (array_key_exists(1, $vals)) {
+			$ret[0] = $vals[0][0];
+			$ret[1] = $vals[1][0];
+		} else if (array_key_exists(0, $vals)) {
+			$tmp = $vals[0][0];
+			if ($tmp > $val)
+				$ret[1] = $tmp;
+			else
+				$ret[0] = $tmp;
+		}
+		if ($prm['asRow']) {
+			if ($ret[0])
+				$ret[0] = $this->getTable()->find($ret[0]);
+			if ($ret[1])
+				$ret[1] = $this->getTable()->find($ret[1]);
+		}
+		return $ret;
+	}
+
 	public function __call($name, $prm) {
-		if ($this->table->isLinked($name)) {
+		if ($this->getTable()->isLinked($name)) {
 			if (empty($prm)) {
 				return $this->getLinked($name);
 			} else {
 				return $this->setLinked($prm[0], $name);
 			}
-		} else if ($this->table->isRelated($name)) {
+		} else if ($this->getTable()->isRelated($name)) {
 			if (empty($prm)) {
 				return $this->getRelated($name);
 			} else {
@@ -758,6 +807,6 @@ class db_row extends object {
 	}
 
 	public function __toString() {
-		return $this->table->getName().'-'.$this->getId();
+		return $this->getTable()->getName().'-'.$this->getId();
 	}
 }

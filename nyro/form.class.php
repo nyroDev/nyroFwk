@@ -71,7 +71,7 @@ class form extends object {
 	 * @var array
 	 */
 	protected $customErrors = array();
-	
+
 	/**
 	 * Indicate if a captcha was already added
 	 *
@@ -241,7 +241,7 @@ class form extends object {
 	 * @return bool True if valid
 	 */
 	public function isValid() {
-		$validRet = true;
+		$validRet = empty($this->customErrors);
 		$this->errors = array();
 		foreach($this->section as $kSection=>$sectionName) {
 			foreach($this->elements[$kSection] as $name=>$e) {
@@ -280,7 +280,7 @@ class form extends object {
 	public function hasErrors() {
 		return !empty($this->errors) || !empty($this->customErrors);
 	}
-	
+
 	/**
 	 * Add a custom error
 	 *
@@ -605,7 +605,7 @@ class form extends object {
 	public function getSection() {
 		return $this->curSection;
 	}
-	
+
 	/**
 	 * Add a captcha if parametred and not already added
 	 */

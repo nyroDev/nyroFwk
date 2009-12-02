@@ -2,7 +2,7 @@
 $cfg = array(
     'formatDate'=>array(
         'short'=>'D/M/YY',         // 12/31/08
-        'short2'=>'D/M/YYYY',      // 12/31/08
+        'short2'=>'D/M/YYYY',      // 12/31/2008
         'medium'=>'D-MM-YY',       // 31-Dec-08
         'long'=>'D MMM YYYY',      // 31 December 2008
         'full'=>'EEE D MMM YYYY',  // Wednesday 31 December 2008
