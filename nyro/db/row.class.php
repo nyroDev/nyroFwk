@@ -750,7 +750,9 @@ class db_row extends object {
 		));
 
 		$field = $prm['field'];
-		$where = $prm['where'];
+		$where = $this->getDb()->makeWhere($prm['where']);
+		if (empty($where))
+			$where = 'WHERE 1';
 
 		if (!is_null($where))
 			$where.= ' AND ';
@@ -758,9 +760,9 @@ class db_row extends object {
 			$field = $this->getTable()->getIdent();
 		$val = $this->get($field);
 
-		$query = '(SELECT '.$field.' FROM '.$this->getTable()->getName().' WHERE '.$where.$field.' < ? ORDER BY '.$field.' DESC LIMIT 1)
+		$query = '(SELECT '.$field.' FROM '.$this->getTable()->getName().' '.$where.$field.' < ? ORDER BY '.$field.' DESC LIMIT 1)
 					UNION
-				  (SELECT '.$field.' FROM '.$this->getTable()->getName().' WHERE '.$where.$field.' > ? ORDER BY '.$field.' ASC LIMIT 1)';
+				  (SELECT '.$field.' FROM '.$this->getTable()->getName().' '.$where.$field.' > ? ORDER BY '.$field.' ASC LIMIT 1)';
 		$vals = $this->getDb()->query($query, array($val, $val))->fetchAll(PDO::FETCH_NUM);
 		$ret = array(null, null);
 		if (array_key_exists(1, $vals)) {
