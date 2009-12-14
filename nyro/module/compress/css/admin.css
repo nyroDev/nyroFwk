@@ -19,7 +19,9 @@ h1, h2, h3 {
 h2 { font-size: 2.2em; }
 h3 { font-size: 2em; }
 img { border: none; }
-td, th { padding: 0.1em; }
+table {border-top: 1px solid #ccc;border-left: 1px solid #ccc;}
+td, th { padding: 0.5em; border-bottom: 1px solid #ccc; border-right: 1px solid #ccc;}
+tr:hover {background: #ccc;}
 
 ul#menu {
 	position: absolute;

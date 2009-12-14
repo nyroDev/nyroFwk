@@ -196,6 +196,28 @@ final class file {
 	}
 
 	/**
+	 * Copy a file to a new location
+	 *
+	 * @param string $oldName Old name path
+	 * @param string $newName New name path
+	 * @return bool True if success
+	 */
+	public static function copy($oldName, $newName) {
+		return copy($oldName, $newName);
+	}
+
+	/**
+	 * Move a file to a new location
+	 *
+	 * @param string $oldName Old name path
+	 * @param string $newName New name path
+	 * @return bool True if success
+	 */
+	public static function move($oldName, $newName) {
+		return rename($oldName, $newName);
+	}
+
+	/**
 	 * Create a directory, and all subdirectory if needed
 	 * If directory already exists, nothing is done
 	 *
