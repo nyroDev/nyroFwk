@@ -113,19 +113,20 @@ class helper_filterTable extends object {
 	public function getWhere() {
 		$where = $this->table->getWhere();
 		foreach($this->form->getValues(true) as $name=>$val) {
+			$field = strpos($name, '.') === false ? $this->table->getName().'.'.$name : $name;
 			if (is_array($val)) {
 				if (array_key_exists('min', $val) || array_key_exists('max', $val)) {
 					$min = array_key_exists('min', $val) && !empty($val['min'])?$val['min'] : null;
 					$max = array_key_exists('max', $val) && !empty($val['max'])?$val['max'] : null;
 					if ($min)
 						$where->add(array(
-							'field'=>$this->table->getName().'.'.$name,
+							'field'=>$field,
 							'val'=>$min,
 							'op'=>'>='
 						));
 					if ($max)
 						$where->add(array(
-							'field'=>$this->table->getName().'.'.$name,
+							'field'=>$field,
 							'val'=>$max,
 							'op'=>'<='
 						));
@@ -139,7 +140,7 @@ class helper_filterTable extends object {
 				}
 			} else if(strpos($name, '_file')) {
 				$where->add(array(
-					'field'=>$this->table->getName().'.'.$name,
+					'field'=>$field,
 					'val'=>'',
 					'op'=>'<>'
 				));
@@ -149,7 +150,7 @@ class helper_filterTable extends object {
 				$tmp = array_filter($tmp);
 				foreach($tmp as $t) {
 					$where->add(array(
-						'field'=>$this->table->getName().'.'.$name,
+						'field'=>$field,
 						'val'=>'%'.$t.'%',
 						'op'=>'LIKE'
 					));

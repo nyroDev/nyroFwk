@@ -513,7 +513,7 @@ class form extends object {
 		$htVars = http_vars::getInstance();
 		foreach($this->elementsSection as $name=>$section) {
 			$val = $htVars->getVar(array(
-				'name'=>$name,
+				'name'=>str_replace('.', '_', $name),
 				'method'=>$this->cfg->method
 			));
 			$this->setValue($name, $val, true);

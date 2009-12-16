@@ -117,7 +117,7 @@ final class request {
 
 		$protocol = $secure? 'https' : 'http';
 
-		$controller = substr($_SERVER['SCRIPT_FILENAME'], strlen(WEBROOT));
+		$controller = basename($_SERVER['SCRIPT_FILENAME']);
 
 		$serverName = array_key_exists('SERVER_NAME', $_SERVER) ? $_SERVER['SERVER_NAME'] : null;
 		$stdPort = $secure ? '443' : '80';

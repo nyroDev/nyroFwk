@@ -697,7 +697,7 @@ class db_table extends object {
 		for($i=0; $i<$nb; $i++) {
 			if (array_key_exists('dir', $prm['join'][$i]) &&
 					!is_null(strpos($prm['join'][$i]['dir'], 'outer')) &&
-					!preg_match('/`'.$prm['join'][$i]['table'].'`\./', $prm['where']))
+					!preg_match('/`'.$prm['join'][$i]['alias'].'`\./', $prm['where']))
 				unset($prm['join'][$i]);
 		}
 		return $this->getDb()->count($prm);

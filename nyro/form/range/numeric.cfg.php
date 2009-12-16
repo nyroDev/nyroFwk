@@ -1,4 +1,5 @@
 <?php
 $cfg = array(
-	'htmlTagName'=>'input'
+	'htmlTagName'=>'input',
+	'disabled'=>true,
 );
