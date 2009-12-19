@@ -14,7 +14,8 @@ $cfg = array(
 
 	'sepLabel'=>': ',
 	'emptyLabel'=>'&nbsp;',
-	
+	'requiredMoreLabel'=>'',
+
 	'captcha'=>array(
 		'name'=>'nyroTcha',
 		'type'=>'captcha',
@@ -35,7 +36,7 @@ $cfg = array(
 		'lineErrorLine'=>'<li>[error]</li>',
 
 		'lineHidden'=>'<div style="display: none;">[label][field][des]</div>',
-		'des'=>'<br />[des]',
+		'des'=>'<span>[des]</span>',
 		'section'=>'<fieldset>
 	<legend><span>[label]</span></legend>
 	<ol class="first">

@@ -143,7 +143,7 @@ class form extends object {
 			$fields = null;
 			$errorsSection = array();
 			foreach($this->elements[$kSection] as $name=>$e) {
-				$des = !empty($e->description)? str_replace('[des]', $e->description, $prm['des']) : null;
+				$des = $e->description? str_replace('[des]', utils::htmlOut($e->description), $prm['des']) : null;
 				$line = $e->isHidden()? 'lineHidden' : 'line';
 
 				$errors = null;
@@ -158,7 +158,10 @@ class form extends object {
 					$line = 'lineError';
 				}
 
-				$label = $e->label?$e->label.$this->cfg->sepLabel : $this->cfg->emptyLabel;
+				$requiredMoreLabel = $e->getValidRule('required') ? $this->cfg->requiredMoreLabel : null;
+				$label = $e->label
+						? $e->label.$requiredMoreLabel.$this->cfg->sepLabel
+						: $this->cfg->emptyLabel;
 				$tmp = str_replace(
 					array('[des]', '[label]', '[field]', '[errors]', '[id]', '[classLine]'),
 					array($des, $label, $e->to($type), $errors, $e->id, $e->classLine),

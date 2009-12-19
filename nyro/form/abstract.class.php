@@ -129,6 +129,19 @@ abstract class form_abstract extends object {
 	}
 
 	/**
+	 * Get a valide rule config
+	 *
+	 * @param string $name Rule name
+	 * @return null|mixed Null if not set or configuration if existing
+	 */
+	public function getValidRule($name) {
+		if (!$this->valid)
+			return null;
+		$tmp = $this->valid->getRules();
+		return array_key_exists($name, $tmp) ? $tmp[$name] : null;
+	}
+
+	/**
 	 * Set the disabled state
 	 *
 	 * @param boolean $disabled

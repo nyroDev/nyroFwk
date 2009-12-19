@@ -63,8 +63,9 @@ class form_db extends form {
 				$prm['type'] = 'range_date';
 				break;
 			case 'radio':
+			case 'list':
 				if (!empty($prm['list'])) {
-					$prm['list'][-1] = $this->cfg->all;
+					$prm['list'] = array_merge(array('-1'=>$this->cfg->all), $prm['list']);
 					$prm['valueNone'] = -1;
 					$prm['value'] = -1;
 				}
