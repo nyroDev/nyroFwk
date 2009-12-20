@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * Interface for db classes
@@ -811,4 +811,5 @@ class db_row extends object {
 	public function __toString() {
 		return $this->getTable()->getName().'-'.$this->getId();
 	}
+
 }

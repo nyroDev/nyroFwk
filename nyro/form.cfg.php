@@ -59,7 +59,7 @@ $cfg = array(
 		'incFiles'=>array(
 			array('type'=>'css', 'file'=>'form'),
 			array('type'=>'css', 'file'=>'form-ie', 'condIE'=>'IE'),
-		)
+		),
 	),
 
 	'htmlNoSection'=>array(
@@ -105,7 +105,7 @@ $cfg = array(
 		'incFiles'=>array(
 			array('type'=>'css', 'file'=>'form'),
 			array('type'=>'css', 'file'=>'form-ie', 'condIE'=>'IE'),
-		)
+		),
 	),
 
 );

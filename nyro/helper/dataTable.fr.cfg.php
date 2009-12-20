@@ -1,4 +1,4 @@
 <?php
 $cfg = array(
-	'noData'=>'Pas de donnÈes.',
+	'noData'=>'Pas de donn√©es.',
 );

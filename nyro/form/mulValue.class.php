@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * abstract class for multiple value form element
@@ -156,4 +156,5 @@ abstract class form_mulValue extends form_abstract {
 		else
 			return ($val == $this->cfg->value);
 	}
+
 }

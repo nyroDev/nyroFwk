@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * Security class to check user rights.

@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
  * @package nyro
  */
@@ -33,10 +33,18 @@ final class response {
 		return self::$inst;
 	}
 
+	/**
+	 * Set the proxy response
+	 *
+	 * @param response_proxy $proxy
+	 */
 	public static function setProxy(response_proxy $proxy) {
 		self::$proxy = $proxy;
 	}
 
+	/**
+	 * Clear the proxy response
+	 */
 	public static function clearProxy() {
 		self::$proxy = null;
 	}

@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author CÃ©dric Nirousset <cedric@nyrodev.com>
  * @version 0.2
  * @package nyro
  */
@@ -36,7 +36,7 @@ class utils {
 		preg_match('@<body[^>]*>(.*)</body>@siU', $html, $matches);
 		if (!empty($matches))
 			$html = $matches[1];
-		return utf8_decode($md->parseString($html));
+		return $md->parseString($html);
 	}
 
 	/**
@@ -112,11 +112,11 @@ class utils {
 				$tmp = $val;
 				$val = array();
 				foreach($tmp as $k=>$t)
-					$val[htmlentities($k)] = htmlentities($t);
+					$val[htmlentities($k)] = htmlentities(utf8_decode($t));
 			} else
-				array_walk_recursive($val, create_function('&$v', '$v = htmlentities($v);'));
+				array_walk_recursive($val, create_function('&$v', '$v = htmlentities(utf8_decode($v));'));
 		} else
-			$val = htmlentities($val);
+			$val = htmlentities(utf8_decode($val));
 		return $val;
 	}
 
@@ -133,11 +133,11 @@ class utils {
 				$tmp = $val;
 				$val = array();
 				foreach($tmp as $k=>$t)
-					$val[html_entity_decode($k)] = html_entity_decode($t);
+					$val[html_entity_decode($k)] = utf8_encode(html_entity_decode($t));
 			} else
-				array_walk_recursive($val, create_function('&$v', '$v = html_entity_decode($v);'));
+				array_walk_recursive($val, create_function('&$v', '$v = utf8_encode(html_entity_decode($v));'));
 		} else
-			$val = html_entity_decode($val);
+			$val = utf8_encode(html_entity_decode($val));
 		return $val;
 	}
 
@@ -148,10 +148,11 @@ class utils {
 	 * @return array|string
 	 */
 	public static function htmlIn($val) {
+		return $val;
 		if (is_array($val))
 			array_walk_recursive($val, create_function('&$v', '$v = utf8_decode($v);'));
 		else
-			$val = utf8_decode($val);
+			$val = $val;
 		return $val;
 	}
 
@@ -304,12 +305,12 @@ class utils {
 	 * @return string
 	 */
 	public static function urlify($text) {
-		$from = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ()[]~$&%*@ç!¡?¿;,:/\\^¨€{}|+<>\"' ’–«»…®²";
+		$from = "Ã€ÃÃ‚ÃƒÃ„Ã…Ã Ã¡Ã¢Ã£Ã¤Ã¥Ã’Ã“Ã”Ã•Ã–Ã˜Ã²Ã³Ã´ÃµÃ¶Ã¸ÃˆÃ‰ÃŠÃ‹Ã¨Ã©ÃªÃ«Ã‡Ã§ÃŒÃÃÃÃ¬Ã­Ã®Ã¯Ã™ÃšÃ›ÃœÃ¹ÃºÃ»Ã¼Ã¿Ã‘Ã±()[]~$&%*@Ã§!Â¡?Â¿;,:/\\^Â¨â‚¬{}|+<>\"' â€™â€“Â«Â»â€¦Â®Â²";
 		$to  =  'AAAAAAaaaaaaOOOOOOooooooEEEEeeeeCcIIIIiiiiUUUUuuuuyNn          c     _     E      _________2';
 		return str_replace(
 			array(' ', '_____', '____', '___', '__'),
 			'_',
-			strtr($text, $from, $to));
+			strtr(utf8_decode($text), utf8_decode($from), utf8_decode($to)));
 	}
 
 	/**

@@ -1,4 +1,4 @@
 <?php
 $cfg = array(
-	'spec'=>array()
+	'spec'=>array(),
 );

@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
  * @package nyro
  */
@@ -28,6 +28,9 @@ abstract class db_pdo_abstract extends db_abstract {
 			$this->cfg->user,
 			$this->cfg->pass,
 			$this->cfg->driverOptions);
+		
+		foreach($this->cfg->conQuery as $q)
+			$this->connection->query($q);
 
 		$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	}

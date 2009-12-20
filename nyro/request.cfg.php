@@ -22,7 +22,7 @@ $cfg = array(
 
 	'avlLang'=>array(
 		'en'=>'English',
-		'fr'=>'Français'
+		'fr'=>'FranÃ§ais'
 	),
 
 	'outCfg'=>array(
@@ -50,5 +50,5 @@ $cfg = array(
 		'/js/tiny_mce/(.+)'=>'/nyroUtils/tinyMce/\1',
 		'/css/(.+)\.(.+)'=>'/compress/cssExt/\1.\2',
 		'/css/(.+)\.css'=>'/compress/css/\1.css',
-	)
+	),
 );

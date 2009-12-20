@@ -13,6 +13,6 @@
 		echo '<li class="hr"><span></span></li>';
 	}
 	?>
-		<li><a href="<?php echo security::getInstance()->getPage('logout', true) ?>">D&eacute;connexion</a></li>
+		<li><a href="<?php echo security::getInstance()->getPage('logout', true) ?>">Déconnexion</a></li>
 	</ul>
 <?php endif; ?>

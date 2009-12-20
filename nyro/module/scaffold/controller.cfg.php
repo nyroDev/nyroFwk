@@ -12,5 +12,5 @@ $cfg = array(
 
 	'iconType'=>null,
 
-	'listPrm'=>array()
+	'listPrm'=>array(),
 );

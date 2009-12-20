@@ -13,6 +13,6 @@ $cfg = array(
 	'html'=>array(
 		'type'=>'text',
 		'class'=>'text range',
-		'maxlength'=>null
+		'maxlength'=>null,
 	),
 );

@@ -18,11 +18,11 @@ $cfg = array(
     'i18n'=>'i18n',
 
 	'default'=>array(
-		'use'=>'pdo_mysql'
+		'use'=>'pdo_mysql',
 	),
 
     'admin'=>array(
 		'use'=>'pdo_mysql',
-        'base'=>'to52'
-    )
+        'base'=>'to52',
+    ),
 );

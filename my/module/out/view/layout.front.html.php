@@ -5,6 +5,6 @@
 </head>
 <body>
 	<?php echo $content; ?>
-	<?php echo $response->getHtmlElt('js'); ?>
+<?php echo $response->getHtmlElt('js'); ?>
 </body>
 </html>

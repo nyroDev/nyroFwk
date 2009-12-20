@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * Form file element
@@ -15,7 +15,7 @@ class form_file extends form_abstract {
 	 * @var bool
 	 */
 	protected $deleted = false;
-	
+
 	protected function beforeInit() {
 		$required = array_key_exists('required', $this->cfg->valid) && $this->cfg->getInArray('valid', 'required');
 		$prm = array(
@@ -30,19 +30,19 @@ class form_file extends form_abstract {
 			$prm['subdir'] = $this->cfg->subdir;
 
 		$this->cfg->value = factory::get('form_fileUploaded', $prm);
-		
+
 		if (!$this->cfg->value->isSaved() && http_vars::getInstance()->getVar($this->name.'NyroDel')) {
 			$this->cfg->value->delete();
 			$this->deleted = true;
 		}
-	
+
 		$this->cfg->valid = array_merge($this->cfg->valid, array(
 			'callback'=>array(
 				array($this->cfg->value, 'isValid')
 			)
 		));
 	}
-	
+
 	protected function afterInit() {
 		parent::afterInit();
 		if (!$this->isValid())
@@ -114,4 +114,5 @@ class form_file extends form_abstract {
 				'id'=>$this->id,
 			)));
 	}
+
 }

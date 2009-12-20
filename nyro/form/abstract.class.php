@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * abstract class for form element
@@ -162,7 +162,7 @@ abstract class form_abstract extends object {
 	public function getErrors() {
 		return array_merge_recursive($this->valid->getErrors(), $this->customErrors);
 	}
-	
+
 	/**
 	 * Add a custom error
 	 *

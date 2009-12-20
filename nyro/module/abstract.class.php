@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * Abstract class for module classes
@@ -67,7 +67,7 @@ abstract class module_abstract extends object {
 		$this->setViewAction($this->prmExec['action']);
 
 		$param = is_array($this->prmExec['paramA'])? $this->prmExec['paramA'] : request::parseParam($this->prmExec['param']);
-		
+
 		$tags = $this->cfg->cacheTags;
 		$search = array('/', '<', '>');
 		$replace = array('', '', '');
@@ -136,7 +136,7 @@ abstract class module_abstract extends object {
 	protected function getViewAction() {
 		return $this->cfg->viewAction;
 	}
-	
+
 	/**
 	 * Set the action which will use for the view
 	 *
@@ -231,4 +231,5 @@ abstract class module_abstract extends object {
 	public function getName() {
 		return utils::getModuleName(get_class($this));
 	}
+
 }

@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * Use this interface to implements a session
@@ -134,4 +134,5 @@ abstract class session_abstract extends object {
 	public function __unset($name) {
 		$this->del($name);
 	}
+
 }

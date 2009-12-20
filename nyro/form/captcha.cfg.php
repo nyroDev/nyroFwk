@@ -5,6 +5,6 @@ $cfg = array(
 	'errorFct'=>create_function('', 'response::getInstance()->redirect(request::uri("/"));'),
 	'classLine'=>'nyroTcha',
 	'html'=>array(
-		'class'=>'captcha text'
+		'class'=>'captcha text',
 	),
 );

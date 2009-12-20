@@ -5,9 +5,9 @@ $cfg = array(
 	'listBool'=>array(
 		'1'=>'Yes',
 		'0'=>'No',
-		KEEPUNIQUE=>true
+		KEEPUNIQUE=>true,
 	),
 	'autoValidRule'=>array(
-		'email', 'url'
+		'email', 'url',
 	),
 );

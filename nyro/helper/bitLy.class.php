@@ -1,8 +1,9 @@
 <?php
-/* 
- *
+/**
+ * @author Cédric Nirousset <cedric@nyrodev.com>
+ * @version 0.2
+ * @package nyroFwk
  */
-
 /**
  * bitLy API call
  *
@@ -49,5 +50,5 @@ class helper_bitLy extends object {
 		}
 		return null;
 	}
-}
 
+}

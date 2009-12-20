@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
  * @package nyro
  */
@@ -241,7 +241,8 @@ class form_db extends form {
 		}
 		if (array_key_exists('formType', $field) && $field['formType'])
 			$ret['type'] = $field['formType'];
-		
+
 		return $ret;
 	}
+
 }

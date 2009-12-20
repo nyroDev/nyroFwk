@@ -1,14 +1,13 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * Form date element
  */
 class form_date extends form_abstract {
-
 
 	/**
 	 * Date Helper
@@ -27,7 +26,6 @@ class form_date extends form_abstract {
 			)
 		));
 	}
-
 
 	public function getValue() {
 		return $this->date->format();
@@ -49,7 +47,7 @@ class form_date extends form_abstract {
 		$resp->addJs('jqueryui');
 		if (($lang = request::get('lang')) != 'en')
 			$resp->addJs('i18n_ui.datepicker-'.$lang);
-		
+
 		$resp->blockJquery('$("#'.$this->id.'").datepicker('.json_encode($this->jsPrm).');');
 
 		return utils::htmlTag($this->htmlTagName,
@@ -67,4 +65,5 @@ class form_date extends form_abstract {
 				'value'=>$this->date->format('date', 'short2'),
 			)));
 	}
+
 }

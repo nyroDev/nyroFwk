@@ -5,7 +5,7 @@ $cfg = array(
 
 	'htmlTagName'=>'input',
 	'xulTagName'=>'textbox',
-	
+
 	'deleteLabel'=>'delete',
 
 	'uploadify'=>array(
@@ -17,10 +17,10 @@ $cfg = array(
 		'fileExt'=>'*.jpg;*.gif;*.png',
 		'wmode'=>'transparent',
 		'cancelImg'=>request::uri(array('lang'=>null, 'module'=>'css', 'action'=>'uploadify', 'param'=>'cancel.png', 'out'=>null)),
-		'scriptData'=>array(session::getInstance()->getSessIdForce()=>session_id())
+		'scriptData'=>array(session::getInstance()->getSessIdForce()=>session_id()),
 	),
 	'html'=>array(
 		'type'=>'file',
-		'class'=>'file'
-	)
+		'class'=>'file',
+	),
 );

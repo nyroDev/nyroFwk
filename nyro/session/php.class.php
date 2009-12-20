@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * Manage session variable
@@ -130,4 +130,5 @@ class session_php extends session_abstract {
 		$nameSpace = $this->cfg->nameSpace? $this->cfg->nameSpace.'_' : null;
 		return $this->cfg->prefix.$nameSpace.$name;
 	}
+
 }

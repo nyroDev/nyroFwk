@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * default module for the db table
@@ -26,4 +26,5 @@ class module extends module_abstract {
 	public function publish() {
 		return 'published';
 	}
+
 }

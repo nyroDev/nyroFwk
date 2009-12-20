@@ -15,5 +15,5 @@ $cfg = array(
 		'value'=>'<option value="[value]" [plus]>[label]</option>',
 		'selected'=>' selected="selected"',
 		'group'=>'<optgroup label="[label]">[group]</optgroup>',
-	)
+	),
 );

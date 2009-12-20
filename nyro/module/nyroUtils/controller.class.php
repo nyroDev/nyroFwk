@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @author Cédric Nirousset <cedric@nyrodev.com>
+ * @version 0.2
+ * @package nyroFwk
+ */
+/**
+ * nyroUtils Controller to handle default action
+ */
 class module_nyroUtils_controller extends module_abstract {
 
 	protected function execIcon($prm=null) {
@@ -12,19 +19,19 @@ class module_nyroUtils_controller extends module_abstract {
 			'type'=>'other'
 		)));
 	}
-	
+
 	protected function execUploadedFiles($prm=null) {
 		if (array_search('..', $prm) !== false)
 			response::getInstance()->error(null, 403);
 		$text = request::get('text');
-		
+
 		$file = FILESROOT.urldecode(implode(DS, $prm));
 		if ($text)
 			$file.= DS.$text;
-		
+
 		response::getInstance()->showFile($file);
 	}
-	
+
 	protected function execTinyMce($prm=null) {
 		if (array_key_exists(0, $prm) && $prm[0] == 'tinyBrowser') {
 			//debug::trace($prm, 2);
@@ -49,4 +56,5 @@ class module_nyroUtils_controller extends module_abstract {
 			response::getInstance()->showFile($file);
 		}
 	}
+
 }

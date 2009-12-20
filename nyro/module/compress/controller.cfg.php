@@ -2,7 +2,7 @@
 $cfg = array(
 
 	'prefixExec'=>null,
-	
+
 	// if compress == true
 	'all'=>array(
 		'php'=>false,

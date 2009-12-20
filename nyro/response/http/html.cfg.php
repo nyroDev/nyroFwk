@@ -8,7 +8,7 @@ $cfg = array(
 		'robots'=>'index, follow',
 		'description'=>'nyro project',
 		'keywords'=>'nyro, project',
-		'language'=>request::get('lang')
+		'language'=>request::get('lang'),
 	),
 	'js'=>array(
 		'alias'=>array(
@@ -26,13 +26,13 @@ $cfg = array(
 			'actionsConfirmDelete'=>array('jquery'),
 			'nyroModal'=>array(
 				'jquery',
-				array('file'=>'nyroModal', 'type'=>'css')
+				array('file'=>'nyroModal', 'type'=>'css'),
 			),
 			'jqueryui'=>array(
 				'jquery',
-				array('file'=>'jqueryui', 'type'=>'css')
-			)
-		)
+				array('file'=>'jqueryui', 'type'=>'css'),
+			),
+		),
 	),
 	'css'=>array(
 		'alias'=>array(),
@@ -41,11 +41,11 @@ $cfg = array(
 		'dirUriNyro'=>'css',
 		'include'=>'<link rel="stylesheet" href="%s" type="text/css" media="%s" />',
 		'block'=>'<style type="text/css">%s</style>',
-		'depend'=>array()
-	)
+		'depend'=>array(),
+	),
 );
 if (DEV) {
 	$cfg['incFiles'] = array(
-		array('type'=>'js', 'file'=>'jquery')
+		array('type'=>'js', 'file'=>'jquery'),
 	);
 }

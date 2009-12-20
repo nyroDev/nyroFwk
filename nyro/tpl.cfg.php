@@ -13,6 +13,6 @@ $cfg = array(
 		'auto'=>true,
 		'layout'=>true,
 		'ttl'=>60,
-		'request'=>array()
-	)
+		'request'=>array(),
+	),
 );

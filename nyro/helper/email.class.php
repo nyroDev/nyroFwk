@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * Helper to send email
@@ -522,4 +522,5 @@ class helper_email extends object {
 		if ($name == 'html')
 			$this->parseHtml();
 	}
+
 }

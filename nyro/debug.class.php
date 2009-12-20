@@ -1,11 +1,11 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
  * @package nyro
  */
 /**
- *
+ * Debugging class
  */
 final class debug {
 
@@ -136,7 +136,7 @@ final class debug {
 	}
 
 	/**
-	 * Enter description here...
+	 * Starts or ends a timer
 	 *
 	 * @param string $name Timer name
 	 * @return unknown
@@ -157,4 +157,5 @@ final class debug {
 			return self::$timer[$name][1];
 		}
 	}
+
 }

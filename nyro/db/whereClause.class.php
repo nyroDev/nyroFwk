@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * SQL Where clause
@@ -82,4 +82,5 @@ class db_whereClause extends object {
 
 		return implode(' '.$this->cfg->op.' ', $tmp);
 	}
+
 }

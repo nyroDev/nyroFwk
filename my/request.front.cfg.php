@@ -2,5 +2,5 @@
 $cfg = array(
 	'alias'=>array(
 		'/'=>'/pages/home',
-	),
+	)
 );

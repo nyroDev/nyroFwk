@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * To replace the response inside a tpl, to save all call in case of cache
@@ -84,4 +84,5 @@ class response_proxy extends object {
 	public function __toString() {
 		return '';
 	}
+
 }

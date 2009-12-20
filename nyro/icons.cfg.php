@@ -123,5 +123,5 @@ $cfg = array(
 		'world'=>array('add', 'delete', 'edit', 'go', 'link', 'show'),
 		'xhtml'=>array('add', 'delete', 'edit', 'go', 'valid', 'show'),
 		'zoom'=>array('in', 'out', 'show'),
-	)
+	),
 );

@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
  * @package nyro
  */
@@ -105,7 +105,7 @@ class tpl extends object {
 				'module_'.$this->cfg->module.'_view_'.$action,
 				'module_'.$this->cfg->defaultModule.'_view_'.$this->cfg->default
 			));
-			
+
 			if (file::exists($file)) {
 				$content = $this->_fetch($file);
 
@@ -216,4 +216,5 @@ class tpl extends object {
 	public function __set($name, $val) {
 		$this->set($name, $val);
 	}
+
 }

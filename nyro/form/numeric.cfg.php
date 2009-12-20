@@ -8,13 +8,13 @@ $cfg = array(
 	'xulTagName'=>'textbox',
 
 	'valid'=>array(
-		'numeric'=>true
+		'numeric'=>true,
 	),
 	'html'=>array(
 		'class'=>'text',
-		'type'=>'text'
+		'type'=>'text',
 	),
 	'xul'=>array(
-		'type'=>'number'
-	)
+		'type'=>'number',
+	),
 );

@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
  * @package nyro
  */
@@ -99,7 +99,7 @@ final class file {
 		$dir = explode(',', SEARCHROOT);
 
 		$nameTmp = $prm['realName'] ? $prm['name'] : str_replace('_', DS, $prm['name']);
-		
+
 		$name = array();
 		if ($prm['type'] == 'cfg') {
 			$ext = 'cfg';

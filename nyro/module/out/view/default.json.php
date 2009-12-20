@@ -1,4 +1,4 @@
 <?php
 unset($this->vars['response']);
-echo json_encode($this->vars);
+echo utils::jsEncode($this->vars);
 ?>

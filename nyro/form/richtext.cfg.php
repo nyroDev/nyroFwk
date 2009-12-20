@@ -4,7 +4,7 @@ $cfg = array(
 		'url'=>str_replace('.js', '.php', response::getInstance()->getUrlFile('js', 'tiny_mce/plugins/tinybrowser/tinybrowser', 'web')),
 		'width'=>770,
 		'height'=>480,
-		'title'=>'Browser'
+		'title'=>'Browser',
 	),
 	'tinyMce'=>array(
 		'theme'=>'advanced',
@@ -28,8 +28,8 @@ $cfg = array(
 		'external_link_list_url'=>'lists/link_list.js',
 		'external_image_list_url'=>'lists/image_list.js',
 		'media_external_list_url'=>'lists/media_list.js',
-		
-		
+
+
 		'plugins'=>'safari,pagebreak,style,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste,fullscreen,nonbreaking,xhtmlxtras',
 
 		'theme_advanced_buttons1'=>'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,cut,copy,paste,pastetext,pasteword,|,formatselect',
@@ -48,7 +48,7 @@ $cfg = array(
 		'external_link_list_url'=>'',
 		'external_image_list_url'=>'',
 		'media_external_list_url'=>'',
-		
-		'relative_urls'=>false
-	)
+
+		'relative_urls'=>false,
+	),
 );

@@ -5,6 +5,6 @@ $cfg = array(
 		'edit'=>'Modifier',
 		'show'=>'Afficher',
 		'back'=>'Revenir',
-		'delete'=>'Supprimer'
-	)
+		'delete'=>'Supprimer',
+	),
 );

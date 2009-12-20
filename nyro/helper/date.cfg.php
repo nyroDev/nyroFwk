@@ -3,7 +3,7 @@ $cfg = array(
 	'timestamp'=>time(),
 	'defaultFormat'=>array(
 		'type'=>'datetime',
-		'len'=>'short'
+		'len'=>'short',
 	),
 	'htmlOut'=>false,
     'formatDate'=>array(
@@ -59,62 +59,62 @@ $cfg = array(
     	'-'=>array(
     		'y'=>array(
     			'one'=>'one year ago',
-    			'mul'=>'%s years ago'
+    			'mul'=>'%s years ago',
     		),
     		'm'=>array(
     			'one'=>'one month ago',
-    			'mul'=>'%s months ago'
+    			'mul'=>'%s months ago',
     		),
     		'w'=>array(
     			'one'=>'one week ago',
-    			'mul'=>'%s weeks ago'
+    			'mul'=>'%s weeks ago',
     		),
     		'd'=>array(
     			'one'=>'one day ago',
-    			'mul'=>'%s days ago'
+    			'mul'=>'%s days ago',
     		),
     		'h'=>array(
     			'one'=>'one hour ago',
-    			'mul'=>'%s hours ago'
+    			'mul'=>'%s hours ago',
     		),
     		'i'=>array(
     			'one'=>'one minute ago',
-    			'mul'=>'%s minutes ago'
+    			'mul'=>'%s minutes ago',
     		),
     		's'=>array(
     			'one'=>'one second ago',
-    			'mul'=>'%s seconds ago'
+    			'mul'=>'%s seconds ago',
     		)
     	),
     	'+'=>array(
     		'y'=>array(
     			'one'=>'in one year',
-    			'mul'=>'in %s years'
+    			'mul'=>'in %s years',
     		),
     		'm'=>array(
     			'one'=>'in one month',
-    			'mul'=>'in %s months'
+    			'mul'=>'in %s months',
     		),
     		'w'=>array(
     			'one'=>'in one week',
-    			'mul'=>'in %s weeks'
+    			'mul'=>'in %s weeks',
     		),
     		'd'=>array(
     			'one'=>'in one day',
-    			'mul'=>'in %s days'
+    			'mul'=>'in %s days',
     		),
     		'h'=>array(
     			'one'=>'in one hour',
-    			'mul'=>'in %s hours'
+    			'mul'=>'in %s hours',
     		),
     		'i'=>array(
     			'one'=>'in one minute',
-    			'mul'=>'in %s minutes'
+    			'mul'=>'in %s minutes',
     		),
     		's'=>array(
     			'one'=>'in one second',
-    			'mul'=>'in %s seconds'
-    		)
-    	)
-    )
+    			'mul'=>'in %s seconds',
+    		),
+    	),
+    ),
 );

@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * Form password element
@@ -25,4 +25,5 @@ class form_password extends form_text {
 				'id'=>$this->id,
 			)));
 	}
+
 }

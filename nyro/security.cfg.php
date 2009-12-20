@@ -1,4 +1,4 @@
 <?php
 $cfg = array(
-	'use'=>NYROENV == 'admin'? 'default' : 'public'
+	'use'=>NYROENV == 'admin'? 'default' : 'public',
 );

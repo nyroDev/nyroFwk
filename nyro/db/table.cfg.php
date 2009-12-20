@@ -18,8 +18,8 @@ $cfg = array(
 	'realted'=>array(),
 
 	'whereRange'=>'1',
-	
+
 	'label'=>array(
-		'id'=>'#'
-	)
+		'id'=>'#',
+	),
 );

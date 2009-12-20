@@ -1,4 +1,4 @@
 /*
- * Made dynamicly with nyro framework
+ * Made dynamically with nyroFwk
  */
 <?php echo $content; ?>

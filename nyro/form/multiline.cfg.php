@@ -13,6 +13,6 @@ $cfg = array(
 		'maxlength'=>null,
 		'cols'=>30,
 		'rows'=>5,
-		'multiline'=>'true'
-	)
+		'multiline'=>'true',
+	),
 );

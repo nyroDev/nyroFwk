@@ -16,6 +16,6 @@ $cfg = array(
 		'table'=>null,
 		'nbFieldGr'=>0,
 		'sepGr'=>'/',
-		'sep'=>'->'
-	)
+		'sep'=>'->',
+	),
 );

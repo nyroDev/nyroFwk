@@ -9,14 +9,14 @@ $cfg = array(
 	'compress'=>true,
 
 	'headers'=>array(
-		'X-Powered-By'=>'nyroFwk '.NYROVERSION
+		'X-Powered-By'=>'nyroFwk '.NYROVERSION,
 	),
 
 	'contentTypeCfg'=>array(
 		'text'=>'text/plain',
 		'js'=>'application/javascript',
 		'json'=>'application/json',
-		'xul'=>'application/vnd.mozilla.xul+xml'
+		'xul'=>'application/vnd.mozilla.xul+xml',
 	),
 
 	'statusCfg'=>array(
@@ -60,5 +60,5 @@ $cfg = array(
 		'503'=>'Service Unavailable',
 		'504'=>'Gateway Timeout',
 		'505'=>'HTTP Version Not Supported',
-	)
+	),
 );

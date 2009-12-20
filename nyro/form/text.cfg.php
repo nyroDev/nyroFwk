@@ -6,9 +6,9 @@ $cfg = array(
 	'html'=>array(
 		'type'=>'text',
 		'class'=>'text',
-		'maxlength'=>null
+		'maxlength'=>null,
 	),
 	'xul'=>array(
-		'maxlength'=>null
-	)
+		'maxlength'=>null,
+	),
 );

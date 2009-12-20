@@ -4,5 +4,5 @@ $cfg = array(
 		'inserted'=>'Date d\'ajout',
 		'updated'=>'Date de modification',
 		'deleted'=>'Date de suppresion',
-	)
+	),
 );

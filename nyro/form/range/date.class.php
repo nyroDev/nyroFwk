@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * Form numeric element
@@ -22,7 +22,7 @@ class form_range_date extends form_range_abstract {
 	 * @var array
 	 */
 	protected $set = array('min'=>false, 'max'=>false);
-	
+
 	protected function afterInit() {
 		parent::afterInit();
 		$this->dates = array(
@@ -71,7 +71,7 @@ class form_range_date extends form_range_abstract {
 			$ret = $this->rangeValue;
 		return utils::htmlDeOut($ret);
 	}
-	
+
 	public function toHtml() {
 		if ($this->cfg->useJs) {
 			$this->cfg->setInArray('html', 'class', $this->cfg->getInArray('html', 'class').' date');
@@ -84,13 +84,13 @@ class form_range_date extends form_range_abstract {
 				'type'=>'calendar',
 				'imgTag'=>false
 			));
-			
+
 			$minId = $this->makeId($this->name.'[0]');
 			$maxId = $this->makeId($this->name.'[1]');
-			
+
 			$minDate = $this->dates['min']->getJs(null);
 			$maxDate = $this->dates['max']->getJs(null);
-			
+
 			$resp->blockJquery('$("#'.$minId.'").datepicker({
 				buttonImage: "'.$dateImg.'", buttonImageOnly: true, showOn: "both", '.($maxDate?'maxDate: '.$maxDate.',' : null).'
 				onSelect: function(dateText) {$("#'.$maxId.'").datepicker("option", "minDate", $("#'.$minId.'").datepicker("getDate"));}
@@ -103,8 +103,9 @@ class form_range_date extends form_range_abstract {
 
 		return parent::toHtml();
 	}
-	
+
 	public function toXul() {
 		return '<textbox type="number" id="'.$this->name.'" value="'.$this->value.'" min="'.$this->min.'" max="'.$this->max.'" increment="'.$this->step.'" '.utils::htmlAttribute($this->more).'/>';
 	}
+
 }

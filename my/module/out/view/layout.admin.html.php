@@ -15,7 +15,7 @@
 		<?php echo $content; ?>
 	</div>
 	<div id="footer">
-		Site d&eacute;velopp&eacute; par <a href="http://nyrodev.com/" target="_blank">NyroDev</a>
+		Site développé par <a href="http://nyrodev.com/" target="_blank">NyroDev</a>
 	</div>
 </div>
 

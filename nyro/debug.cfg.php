@@ -16,5 +16,5 @@ $cfg = array(
 		E_USER_NOTICE=>'User Notice',
 		E_USER_WARNING=>'User Warning',
 		E_WARNING=>'Warning',
-	)
+	),
 );

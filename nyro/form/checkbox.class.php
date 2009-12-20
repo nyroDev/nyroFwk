@@ -1,12 +1,12 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * Form checkbox element
  */
 class form_checkbox extends form_mulValue {
-	
+
 }

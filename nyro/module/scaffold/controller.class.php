@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * @author Cédric Nirousset <cedric@nyrodev.com>
+ * @version 0.2
+ * @package nyroFwk
+ */
+/**
+ * Scaffold controller to dynamically create administration
+ */
 class module_scaffold_controller extends module_abstract {
 
 	/**
@@ -248,4 +255,5 @@ class module_scaffold_controller extends module_abstract {
 				?array_merge($this->cols, $this->related)
 				:$this->cols);
 	}
+
 }

@@ -88,6 +88,6 @@ $cfg = array(
 		'doc'	=>	'application/msword',
 		'word'	=>	'application/msword',
 		'xl'	=>	'application/excel',
-		'eml'	=>	'message/rfc822'
-	)
+		'eml'	=>	'message/rfc822',
+	),
 );

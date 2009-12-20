@@ -8,9 +8,9 @@ $cfg = array(
 	'disable'=>array(),
 
 	'html'=>array(
-		'class'=>'date'
+		'class'=>'date',
 	),
-	
+
 	'jsPrm'=>array(
 		'buttonImage'=>utils::getIcon(array(
 				'name'=>'show_month',
@@ -18,7 +18,7 @@ $cfg = array(
 				'imgTag'=>false
 			)),
 		'buttonImageOnly'=>true,
-		'showOn'=>'both'
+		'showOn'=>'both',
 	),
 
 	'xul'=>array(),

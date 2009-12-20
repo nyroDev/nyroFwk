@@ -10,17 +10,17 @@ $cfg = array(
 	'isI18n'=>false,
 
 	'htmlTagName'=>REQUIRED,
-	
+
 	'classLine'=>null,
 
 	'disabled'=>false,
-	
+
 	'validType'=>'valid',
 	'valid'=>array(
-		'required'=>true
+		'required'=>true,
 	),
 
 	'html'=>array(
-		'name'=>null
-	)
+		'name'=>null,
+	),
 );

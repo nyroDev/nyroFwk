@@ -15,10 +15,10 @@ class module_elements_controller extends module_abstract {
 			'out'=>null
 		)));
 		*/
-		
+
 		response::getInstance()->sendText($this->tinyMceList('Image', $links));
 	}
-	
+
 	protected function execAdminTinyMceLink(array $prm = null) {
 		$links = array();
 
@@ -35,14 +35,14 @@ class module_elements_controller extends module_abstract {
 
 		response::getInstance()->sendText($this->tinyMceList('Link', $links));
 	}
-	
+
 	protected function tinyMceList($name, array $list) {
 		$tmp = array();
 		foreach($list as $l)
 			$tmp[] = '["'.$l[0].'", "'.$l[1].'"]';
 		return 'var tinyMCE'.$name.'List = new Array('.implode(', ', $tmp).');';
 	}
-	
+
 	protected function renderAdminMenu(array $prm = null) {
 		$links = array();
 		if (security::getInstance()->isLogged()) {
@@ -55,4 +55,5 @@ class module_elements_controller extends module_abstract {
 		}
 		$this->setViewVar('linksTable', $links);
 	}
+
 }

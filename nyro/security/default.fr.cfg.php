@@ -1,6 +1,6 @@
 <?php
 $cfg = array(
-	'labelStayConnected'=>'Rester connecté',
+	'labelStayConnected'=>'Rester connectÃ©',
 	'errorMsg'=>'Le couple utilisateur/mot de passe n\'existe pas.',
-	'errorText'=>'Vous n\'avez pas la permission d\'accéder à cette page.',
+	'errorText'=>'Vous n\'avez pas la permission d\'accÃ©der Ã  cette page.',
 );

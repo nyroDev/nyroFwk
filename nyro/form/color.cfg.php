@@ -1,4 +1,4 @@
 <?php
 $cfg = array(
-	'xulTagName'=>'colorpicker'
+	'xulTagName'=>'colorpicker',
 );

@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
  * @package nyro
  */
@@ -8,7 +8,7 @@
  * used to create new classes dynamicly.
  */
 class nReflection extends ReflectionClass {
-	
+
 	/**
 	 * Overload the ReflectionClass to accept no parameter
 	 *
@@ -20,7 +20,7 @@ class nReflection extends ReflectionClass {
 		else if ($elt)
 			$this->rebuild($elt);
 	}
-	
+
 	/**
 	 * Change the present class to be able to use reflection on it.
 	 *
@@ -35,7 +35,7 @@ class nReflection extends ReflectionClass {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Create a new object with one argument, a config passed in parameter.
 	 *
@@ -45,7 +45,7 @@ class nReflection extends ReflectionClass {
 	public function newInstanceCfg(config $cfg) {
 		return parent::newInstance($cfg);
 	}
-	
+
 	/**
 	 * Test if the className is a parent fo the actual class
 	 *
@@ -55,7 +55,7 @@ class nReflection extends ReflectionClass {
 	public function isSubclassOf($className) {
 		return parent::isSubclassOf(new nReflection($className));
 	}
-	
+
 	/**
 	 * Retrieve the public properties
 	 *
@@ -63,16 +63,16 @@ class nReflection extends ReflectionClass {
 	 */
 	public function getPublicProperties() {
 		$publicProps = array();
-		
+
 		$props = $this->getProperties();
 		foreach($props as $p) {
 			if ($p->isPublic())
 				$publicProps[] = $p->getName();
 		}
-		
+
 		return $publicProps;
 	}
-	
+
 	/**
 	 * Return all the parents.
 	 * The first element is the oldest
@@ -84,7 +84,7 @@ class nReflection extends ReflectionClass {
 	public static function getParentsClass($className) {
 		return class_parents($className);
 	}
-	
+
 	/**
 	 * Call a method from an object. Used when the function name is dynamic
 	 *
@@ -109,4 +109,5 @@ class nReflection extends ReflectionClass {
 			}
 		throw new nException('Method not callable');
 	}
+
 }

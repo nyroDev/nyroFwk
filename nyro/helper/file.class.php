@@ -1,12 +1,11 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
- * ????
- * @todo
+ * File upload helper
  */
 class helper_file extends object {
 
@@ -22,4 +21,5 @@ class helper_file extends object {
 			return true;
 		return (!$this->cfg->maxsize || $file['size'] < $this->cfg->maxsize) && in_array($file['type'], $this->cfg->mime);
 	}
+
 }

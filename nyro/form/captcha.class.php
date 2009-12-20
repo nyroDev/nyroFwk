@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * Form captcha element
@@ -36,4 +36,5 @@ class form_captcha extends form_text {
 	}
 
 	public function addRule($type, $prm=null) {}
+
 }

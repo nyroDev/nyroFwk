@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * HTML Response
@@ -546,4 +546,5 @@ class response_http_html extends response_http {
 		$ret = parent::send($headerOnly);
 		return $this->setHtmlEltIntern(DEV ? str_replace('</body>', debug::debugger().'</body>', $ret) : $ret);
 	}
+
 }

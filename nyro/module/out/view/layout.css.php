@@ -1,4 +1,4 @@
 /*
- * Powered by Nyro Fwk
-*/
+ * Powered by nyroFwk
+ */
 <?php echo $content; ?>

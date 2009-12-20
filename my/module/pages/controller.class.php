@@ -9,11 +9,11 @@ class module_pages_controller extends module_abstract {
 		response::getInstance()->addTitleBefore('Erreur', ' :: ');
 		$this->setViewVar('error', $prm[0]);
 	}
-	
+
 	protected function execAdminLogin(array $prm = array()) {
 		security::getInstance()->login();
 	}
-	
+
 	protected function execAdminHome(array $prm = array()) {
 		security::getInstance()->protect();
 	}
@@ -22,4 +22,5 @@ class module_pages_controller extends module_abstract {
 		security::getInstance()->logout();
 		response::getInstance()->redirect(request::uri('/'));
 	}
+
 }

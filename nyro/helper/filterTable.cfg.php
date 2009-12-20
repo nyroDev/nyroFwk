@@ -5,8 +5,8 @@ $cfg = array(
 	'clearText'=>'Clear Filter',
 	'actionPrmClear'=>array(),
 	'actionPrmForce'=>array(
-		'page'=>1
+		'page'=>1,
 	),
 	'table'=>REQUIRED,
-	'fields'=>null
+	'fields'=>null,
 );

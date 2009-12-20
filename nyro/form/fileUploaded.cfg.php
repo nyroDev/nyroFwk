@@ -11,7 +11,7 @@ $cfg = array(
 		'view'=>array(
 			'h'=>200,
 			'w'=>0,
-			'fileSaveAdd'=>'admin'
-		)
-	)
+			'fileSaveAdd'=>'admin',
+		),
+	),
 );

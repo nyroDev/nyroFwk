@@ -9,6 +9,6 @@ $cfg = array(
 		'type'=>'hidden'
 	),
 	'xul'=>array(
-		'hidden'=>'true'
-	)
+		'hidden'=>'true',
+	),
 );

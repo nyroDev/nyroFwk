@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * SQL Table interface
@@ -695,9 +695,12 @@ class db_table extends object {
 		$prm['where'] = $this->getDb()->makeWhere($prm['where'], $prm['whereOp'], false);
 		$nb = array_key_exists('join', $prm) ? count($prm['join']) : 0;
 		for($i=0; $i<$nb; $i++) {
+			$table = array_key_exists('alias', $prm['join'][$i])
+					? $prm['join'][$i]['alias']
+					: $prm['join'][$i]['table'];
 			if (array_key_exists('dir', $prm['join'][$i]) &&
 					!is_null(strpos($prm['join'][$i]['dir'], 'outer')) &&
-					!preg_match('/`'.$prm['join'][$i]['alias'].'`\./', $prm['where']))
+					!preg_match('/`'.$table.'`\./', $prm['where']))
 				unset($prm['join'][$i]);
 		}
 		return $this->getDb()->count($prm);
@@ -1111,4 +1114,5 @@ class db_table extends object {
 			'data'=>$data
 		));
 	}
+
 }

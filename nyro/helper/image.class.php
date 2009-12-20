@@ -1,11 +1,11 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
- * Helper to manipulate image
+ * Helper to manipulate and upload image
  */
 class helper_image extends helper_file {
 
@@ -466,4 +466,5 @@ class helper_image extends helper_file {
 			base_convert(substr($col,4,2),16,10)
 		);
 	}
+
 }

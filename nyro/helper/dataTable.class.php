@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * Helper to show db data with pagination
@@ -43,7 +43,7 @@ class helper_dataTable extends object {
 	 * @var array
 	 */
 	protected $data;
-	
+
 	protected function afterInit() {
 		$this->table = $this->cfg->table;
 
@@ -182,7 +182,7 @@ class helper_dataTable extends object {
 			$paramUrlA['sortDir'.$this->cfg->nameParam] = $prmReplaceSortDir;
 			$paramUrlA['page'.$this->cfg->nameParam] = 1;
 			$tmpSortLink = request::uriDef(array('paramA'=>$paramUrlA));
-			
+
 			foreach ($headersT as $k=>$h) {
 				$typeField = $this->table->getField($h, 'type');
 				if ($typeField == 'file' && is_array($tmp = $this->table->getField($h, 'comment')) && array_key_exists(0, $tmp))

@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * Abstract class db classes
@@ -396,8 +396,9 @@ abstract class db_abstract extends object {
 				$ret[] = $row;
 			}
 			return $ret;
-		} else
+		} else {
 			return $stmt->fetchAll($fetchMode);
+		}
 	}
 
 	/**

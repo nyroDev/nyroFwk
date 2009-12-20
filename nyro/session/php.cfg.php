@@ -2,5 +2,5 @@
 $cfg = array(
 	'prefix'=>'sess_',
 	'regenerateId'=>false,
-	'sessIdForce'=>'phpsessidForce'
+	'sessIdForce'=>'phpsessidForce',
 );

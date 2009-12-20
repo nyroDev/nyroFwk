@@ -1,8 +1,8 @@
 <?php
 /**
- * @author Cedric Nirousset <cedric@nyrodev.com>
+ * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * HTTP response
@@ -194,7 +194,7 @@ class response_http extends response_abstract {
 	protected function beforeOut() {
 		foreach($this->beforeOut as $bo)
 			call_user_func($bo);
-		
+
 		if ($this->cfg->compress && !ob_get_length())
 			ob_start('ob_gzhandler');
 	}
@@ -325,4 +325,5 @@ class response_http extends response_abstract {
 		$url = $url? request::uri($url) : '/'.$number;
 		$this->redirect($url, $number);
 	}
+
 }
