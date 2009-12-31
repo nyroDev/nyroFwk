@@ -24,7 +24,7 @@ final class cache {
 	/**
 	 * Get the unique cache instance
 	 *
-	 * @param array $cfg: Config for the cache instance
+	 * @param array $cfg Config for the cache instance
 	 * @return cache_abstract The instance
 	 */
 	public static function getInstance(array $cfg = array()) {
@@ -36,6 +36,10 @@ final class cache {
 	/**
 	 * Create an id depending on the request and options
 	 * get, post, session or cookie
+	 *
+	 * @param array $prm Configuration array with keys:
+	 * - boolean uri Indicate if the uri should be used (default true)
+	 * - array meth Which method used for creating the id (default array('get','post','session'))
 	 * @return string The id
 	 */
 	public static function idRequest(array $prm = array()) {

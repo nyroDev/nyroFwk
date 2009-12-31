@@ -10,6 +10,7 @@ $cfg = array(
 
 	'headers'=>array(
 		'X-Powered-By'=>'nyroFwk '.NYROVERSION,
+		'Content-Language'=>request::get('lang'),
 	),
 
 	'contentTypeCfg'=>array(

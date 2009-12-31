@@ -129,10 +129,10 @@ abstract class form_mulValue extends form_abstract {
 		} else
 			$ret.= $tmpVal;
 
-		$id = (!$this->cfg->uniqValue)? substr($this->cfg->name, 0, -2) : $this->cfg->name;
+		$this->id = (!$this->cfg->uniqValue)? substr($this->cfg->name, 0, -2) : $this->cfg->name;
 		return str_replace(
 			array('[values]', '[plus]', '[name]', '[id]'),
-			array($ret, $prm['plus'], $this->cfg->name, $id),
+			array($ret, $prm['plus'], $this->cfg->name, $this->id),
 			$prm['global'.$inline]);
 	}
 

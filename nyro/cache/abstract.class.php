@@ -11,6 +11,8 @@ abstract class cache_abstract extends object {
 
 	/**
 	 * Set the default config
+	 *
+	 * @param array $cfg
 	 */
 	public function setCfg(array $cfg) {
 		$this->cfg->setA($cfg);

@@ -165,7 +165,7 @@ class valid extends object {
 	}
 	
 	public function isEmail($val, $prm=null) {
-		if (!ereg('^[a-zA-Z0-9\._]+@[a-zA-Z0-9\._]+\.[a-zA-Z]{2,4}$', $val)) {
+		if (!filter_var($val, FILTER_VALIDATE_EMAIL)) {
 			$this->errors[] = sprintf($this->getMessage('email'), $this->cfg->label);
 			return false;
 		}

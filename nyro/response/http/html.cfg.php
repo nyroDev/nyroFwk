@@ -20,7 +20,11 @@ $cfg = array(
 		'dirWeb'=>'js',
 		'dirUriNyro'=>'js',
 		'include'=>'<script type="text/javascript" src="%s"></script>',
-		'block'=>'<script type="text/javascript">%s</script>',
+		'block'=>'<script type="text/javascript">
+//<![CDATA[
+%s
+//]]>
+</script>',
 		'depend'=>array(
 			'debug'=>array('jquery'),
 			'actionsConfirmDelete'=>array('jquery'),

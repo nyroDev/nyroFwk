@@ -189,6 +189,7 @@ class form_db extends form {
 							$prm['html'] = $field['comment'];
 							if (array_key_exists('tinyMce', $field))
 								$prm['tinyMce'] = $field['tinyMce'];
+							unset($prm['html']['tinyMce']);
 						} else {
 							$type = 'multiline';
 							$prm['maxlength'] = $field['length'];
