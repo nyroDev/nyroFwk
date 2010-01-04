@@ -112,11 +112,13 @@ class utils {
 				$tmp = $val;
 				$val = array();
 				foreach($tmp as $k=>$t)
-					$val[htmlentities($k)] = htmlentities(utf8_decode($t));
+					$val[self::htmlOut($k)] = self::htmlOut($t);
 			} else
-				array_walk_recursive($val, create_function('&$v', '$v = htmlentities(utf8_decode($v));'));
-		} else
-			$val = htmlentities(utf8_decode($val));
+				array_walk_recursive($val, create_function('&$v', '$v = utils::htmlOut($v);'));
+		} else {
+			$tmp = self::htmlChars();
+			$val = str_replace(array_keys($tmp), $tmp, $val);
+		}
 		return $val;
 	}
 
@@ -133,12 +135,61 @@ class utils {
 				$tmp = $val;
 				$val = array();
 				foreach($tmp as $k=>$t)
-					$val[html_entity_decode($k)] = utf8_encode(html_entity_decode($t));
+					$val[self::htmlDeOut($k)] = self::htmlDeOut($t);
 			} else
-				array_walk_recursive($val, create_function('&$v', '$v = utf8_encode(html_entity_decode($v));'));
-		} else
-			$val = utf8_encode(html_entity_decode($val));
+				array_walk_recursive($val, create_function('&$v', '$v = utils::htmlDeOut($v);'));
+		} else {
+			$tmp = self::htmlChars();
+			$val = str_replace($tmp, array_keys($tmp), $val);
+		}
 		return $val;
+	}
+
+	/**
+	 * HTML translation table
+	 *
+	 * @var array
+	 */
+	private static $htmlChars = null;
+
+	/**
+	 * Get the HTML translation table
+	 *
+	 * @return array
+	 */
+	public static function htmlChars() {
+		if (is_null(self::$htmlChars)) {
+			$tmp = array();
+			foreach(get_html_translation_table(HTML_ENTITIES) as $k=>$v) {
+				$tmp[utf8_encode($k)]= utf8_encode($v);
+			}
+			unset($tmp['&']); // Unset here to place it at the very top of the array
+			self::$htmlChars = array_merge(array(
+				'&'=>'&amp;',
+				'Œ'=>'&OElig;',
+				'œ'=>'&oelig;',
+				'Š'=>'&Scaron;',
+				'š'=>'&scaron;',
+				'Ÿ'=>'&Yuml;',
+				'^'=>'&circ;',
+				'˜'=>'&tilde;',
+				'–'=>'&ndash;',
+				'—'=>'&mdash;',
+				'‘'=>'&lsquo;',
+				'’'=>'&rsquo;',
+				'‚'=>'&sbquo;',
+				'“'=>'&ldquo;',
+				'”'=>'&rdquo;',
+				'„'=>'&bdquo;',
+				'†'=>'&dagger;',
+				'‡'=>'&Dagger;',
+				'‰'=>'&permil;',
+				'‹'=>'&lsaquo;',
+				'›'=>'&rsaquo;',
+				'€'=>'&euro;',
+			), $tmp);
+		}
+		return self::$htmlChars;
 	}
 
 	/**
