@@ -356,8 +356,8 @@ class utils {
 	 * @return string
 	 */
 	public static function urlify($text) {
-		$from = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ()[]~$&%*@ç!¡?¿;,:/\\^¨€{}|+<>\"' ’–«»…®²";
-		$to  =  'AAAAAAaaaaaaOOOOOOooooooEEEEeeeeCcIIIIiiiiUUUUuuuuyNn          c     _     E      _________2';
+		$from = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ()[]~$&%*@ç!¡?¿;,:/\\^¨€{}|+<>\"' ’–«»…®²°";
+		$to  =  'AAAAAAaaaaaaOOOOOOooooooEEEEeeeeCcIIIIiiiiUUUUuuuuyNn          c     _     E      _________2_';
 		return str_replace(
 			array(' ', '_____', '____', '___', '__'),
 			'_',

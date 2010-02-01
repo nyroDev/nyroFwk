@@ -1056,14 +1056,12 @@ class db_table extends object {
 		} else if (!is_array($filter))
 			$filter = explode(',', $filter);
 
-		$where = array();
+		$where =  $this->getWhere(array('op'=>'OR'));
 		foreach($filter as $f)
-			$where[] = $this->getWhere(array(
-				'clauses'=>array(
-					'field'=>$f,
-					'val'=>'%'.$text.'%',
-					'op'=>'LIKE'
-				)
+			$where->add(array(
+				'field'=>$this->getName().'.'.$f,
+				'val'=>'%'.$text.'%',
+				'op'=>'LIKE'
 			));
 
 		$prm = array(
