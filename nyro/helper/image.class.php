@@ -115,7 +115,7 @@ class helper_image extends helper_file {
 		$ret = parent::valid($file, $prm);
 		if ($ret && count($file) && array_key_exists('tmp_name', $file) && file::exists($file['tmp_name'])) {
 			$size = getimagesize($file['tmp_name']);
-			if (!is_array($size) && $size[2] != 1 && $size[2] != 2 && $size[2] != 3)
+			if (!is_array($size) && $size[2] != IMAGETYPE_GIF && $size[2] != IMAGETYPE_JPEG && $size[2] != IMAGETYPE_PNG)
 				return 'notValidImg';
 		}
 		return $ret;

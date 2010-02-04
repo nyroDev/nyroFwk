@@ -353,11 +353,22 @@ class utils {
 	 * Clean a string to be used in an URL
 	 *
 	 * @param string $text
+	 * @param string $ignore Ignore charater list
 	 * @return string
 	 */
-	public static function urlify($text) {
-		$from = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ()[]~$&%*@ç!¡?¿;,:/\\^¨€{}|+<>\"' ’–«»…®²°";
-		$to  =  'AAAAAAaaaaaaOOOOOOooooooEEEEeeeeCcIIIIiiiiUUUUuuuuyNn          c     _     E      _________2_';
+	public static function urlify($text, $ignore=null) {
+		$from = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñ()[]~$&%*@ç!¡?¿;,.:/\\^¨€{}|+<>\"' ’–«»…®²°";
+		$to   = 'AAAAAAaaaaaaOOOOOOooooooEEEEeeeeCcIIIIiiiiUUUUuuuuyNn          c     __     E      _________2_';
+		if (!is_null($ignore)) {
+			$len = strlen($ignore);
+			for($i = 0; $i < $len; $i++) {
+				$pos = strpos($from, $ignore{$i});
+				if ($pos !== false) {
+					$from = substr($from, 0, $pos).substr($from, $pos+1);
+					$to = substr($to, 0, $pos).substr($to, $pos+1);
+				}
+			}
+		}
 		return str_replace(
 			array(' ', '_____', '____', '___', '__'),
 			'_',

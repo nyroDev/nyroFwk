@@ -208,8 +208,7 @@ class form_fileUploaded extends object {
 	 * @return string Filename useable
 	 */
 	protected function safeFileName($name) {
-		$name = utils::urlify($name);
-		//$name = str_replace(' ', '_', $name);
+		$name = utils::urlify(strtolower($name), '.');
 		$ext = file::getExt($name);
 		if ($ext)
 			$ext = '.'.$ext;
