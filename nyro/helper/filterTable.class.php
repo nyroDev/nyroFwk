@@ -93,6 +93,7 @@ class helper_filterTable extends object {
 				if ($this->session->check($name))
 					$this->form->setValue($name, $this->session->get($name));
 			}
+			$this->form->setBound(false);
 		}
 	}
 
