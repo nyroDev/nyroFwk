@@ -48,7 +48,8 @@ class module_nyroUtils_controller extends module_abstract {
 			ini_set('include_path', $path);
 			define('TINYMCEPATH', substr($path, 0, -1));
 			define('TINYMCECACHEPATH', substr(TMPROOT, 0, -1));
-			ob_clean();
+			if (ob_get_length())
+				ob_clean();
 			include($file);
 			exit;
 		} else {

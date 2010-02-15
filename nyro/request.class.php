@@ -515,8 +515,12 @@ final class request {
 	public static function uriString($uri) {
 		$uriA = array_values(array_filter(explode(self::$cfg->sep, $uri)));
 
-		if (empty($uriA))
-			return array();
+		if (empty($uriA)) {
+			if ($uri == '//')
+				return array('controller'=>false);
+			else
+				return array();
+		}
 
 		$tmp = array();
 		if (strpos($uriA[0], '.php'))
@@ -538,6 +542,9 @@ final class request {
 				$tmp = array_merge($tmp, array_combine($keys, $uriA));
 			}
 		}
+
+		if (substr($uri, 0, 2) == '//')
+			$tmp['controller'] = false;
 
 		return $tmp;
 	}
