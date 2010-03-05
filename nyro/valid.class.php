@@ -173,6 +173,9 @@ class valid extends object {
 	}
 	
 	public function isDbUnique($val, array $prm) {
+		if (array_key_exists('value', $prm) && $val == $prm['value'])
+			return true;
+
 		$table = $prm['table'] instanceof db_table? $prm['table'] : db::get('table', $prm['table']);
 		$nb = $table->count(array(
 			'where'=>array($prm['field']=>$val),

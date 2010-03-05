@@ -104,7 +104,8 @@ class form_db extends form {
 		if ($field['unique'] && ! array_key_exists('dbUnique', $prm['valid'])) {
 			$prm['valid']['dbUnique'] = array(
 				'table'=>$this->cfg->table,
-				'field'=>$field['name']
+				'field'=>$field['name'],
+				'value'=>$prm['value']
 			);
 		}
 		if (array_search($field['name'], $this->cfg->autoValidRule) !== false && !array_key_exists($field['name'], $prm['valid']))
