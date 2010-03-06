@@ -96,9 +96,6 @@ class tpl extends object {
 			}
 		}
 
-		if (!is_array($callResp))
-			$callResp = array();
-
 		if (!$cachedContent) {
 			// Nothing was cached
 			$action = $this->cfg->action;
@@ -111,13 +108,11 @@ class tpl extends object {
 
 			if (file::exists($file)) {
 				$content = $this->_fetch($file);
-
-				if ($this->cfg->cache['auto'] && !$this->cfg->cache['layout']) {
+				if ($this->cfg->cache['auto'] && !$this->cfg->cache['layout'])
 					$cache->save();
-					if ($this->responseProxy->hasCall())
-						$callResp = array_merge($callResp, $this->responseProxy->getCall());
-					$this->responseProxy->initCall();
-				}
+				if ($this->responseProxy->hasCall())
+					$callResp = array_merge($callResp, $this->responseProxy->getCall());
+				$this->responseProxy->initCall();
 			}
 		}
 
@@ -131,12 +126,11 @@ class tpl extends object {
 				$this->content = $content;
 				$content = $this->_fetch($file);
 			}
-			if ($this->cfg->cache['auto'] && $this->cfg->cache['layout']) {
+			if ($this->cfg->cache['auto'] && $this->cfg->cache['layout'])
 				$cache->save();
-				if ($this->responseProxy->hasCall())
-					$callResp = array_merge($callResp, $this->responseProxy->getCall());
-				$this->responseProxy->initCall();
-			}
+			if ($this->responseProxy->hasCall())
+				$callResp = array_merge($callResp, $this->responseProxy->getCall());
+			$this->responseProxy->initCall();
 		}
 
 		if (!empty($callResp))
