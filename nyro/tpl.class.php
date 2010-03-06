@@ -86,7 +86,6 @@ class tpl extends object {
 			$cacheResp->get($callResp, array(
 				'id'=>$this->cfg->module.'-'.$this->cfg->action.'-callResp'
 			));
-			$callResp = array();
 			if (!empty($content)) {
 				$cachedContent = true;
 				$cachedLayout = $this->cfg->cache['layout'];
@@ -96,6 +95,9 @@ class tpl extends object {
 				}
 			}
 		}
+
+		if (!is_array($callResp))
+			$callResp = array();
 
 		if (!$cachedContent) {
 			// Nothing was cached

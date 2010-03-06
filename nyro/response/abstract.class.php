@@ -29,9 +29,7 @@ abstract class response_abstract extends object {
 	 * @return responseProxy
 	 */
 	public function getProxy() {
-		if (!$this->proxy)
-			$this->proxy = factory::get('response_proxy');
-		return $this->proxy;
+		return factory::get('response_proxy');
 	}
 
 	/**
