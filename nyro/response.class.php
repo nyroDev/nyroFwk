@@ -24,12 +24,12 @@ final class response {
 	 * @return response_abstract
 	 */
 	public static function getInstance() {
+		if (self::$proxy)
+			return self::$proxy;
 		if (!self::$inst) {
 			self::$inst = factory::get('response_'.request::getResponseName());
 			self::$inst->setContentType(request::get('out'));
 		}
-		if (self::$proxy)
-			return self::$proxy;
 		return self::$inst;
 	}
 
@@ -40,6 +40,15 @@ final class response {
 	 */
 	public static function setProxy(response_proxy $proxy) {
 		self::$proxy = $proxy;
+	}
+
+	/**
+	 * Return the current proxy
+	 *
+	 * @return response_proxy
+	 */
+	public static function getProxy() {
+		return self::$proxy;
 	}
 
 	/**

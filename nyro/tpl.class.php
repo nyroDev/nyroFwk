@@ -75,6 +75,7 @@ class tpl extends object {
 		$cachedContent = false;
 		$cachedLayout = false;
 
+		$oldProxy = response::getProxy();
 		response::setProxy($this->responseProxy);
 
 		if ($this->cfg->cache['auto']) {
@@ -136,7 +137,8 @@ class tpl extends object {
 		if (!empty($callResp))
 			$cacheResp->save();
 
-		response::clearProxy();
+		//response::clearProxy();
+		response::setProxy($oldProxy);
 		return $content;
 	}
 
