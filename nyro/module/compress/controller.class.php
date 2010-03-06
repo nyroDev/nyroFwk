@@ -10,9 +10,12 @@
 class module_compress_controller extends module_abstract {
 
 	protected function execCssExt($prm=null) {
+		$file = $prm[0];
+		if (request::get('text'))
+			$file.= DS.request::get('text');
 		response::getInstance()->neverExpire();
 		response::getInstance()->showFile(file::nyroExists(array(
-			'name'=>'module'.DS.nyro::getCfg()->compressModule.DS.'css'.DS.$prm[0].DS.request::get('text'),
+			'name'=>'module'.DS.nyro::getCfg()->compressModule.DS.'css'.DS.$file,
 			'realName'=>true,
 			'type'=>'other'
 		)));

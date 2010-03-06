@@ -86,6 +86,7 @@ class tpl extends object {
 			$cacheResp->get($callResp, array(
 				'id'=>$this->cfg->module.'-'.$this->cfg->action.'-callResp'
 			));
+			$callResp = array();
 			if (!empty($content)) {
 				$cachedContent = true;
 				$cachedLayout = $this->cfg->cache['layout'];
@@ -112,7 +113,7 @@ class tpl extends object {
 				if ($this->cfg->cache['auto'] && !$this->cfg->cache['layout']) {
 					$cache->save();
 					if ($this->responseProxy->hasCall())
-						$callResp = $this->responseProxy->getCall();
+						$callResp = array_merge($callResp, $this->responseProxy->getCall());
 					$this->responseProxy->initCall();
 				}
 			}
@@ -131,7 +132,7 @@ class tpl extends object {
 			if ($this->cfg->cache['auto'] && $this->cfg->cache['layout']) {
 				$cache->save();
 				if ($this->responseProxy->hasCall())
-					$callResp = $this->responseProxy->getCall();
+					$callResp = array_merge($callResp, $this->responseProxy->getCall());
 				$this->responseProxy->initCall();
 			}
 		}
