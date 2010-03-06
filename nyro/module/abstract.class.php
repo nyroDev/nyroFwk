@@ -157,7 +157,6 @@ abstract class module_abstract extends object {
 	 * @param mixed $value
 	 */
 	protected function setViewVar($name, $value) {
-		//$this->cfg->setInArray('viewVars', $name, $value);
 		$this->tpl->set($name, $value);
 	}
 
@@ -167,7 +166,6 @@ abstract class module_abstract extends object {
 	 * @param array $values
 	 */
 	protected function setViewVars(array $values) {
-		//$this->cfg->setInArrayA('viewVars', $values);
 		$this->tpl->setA($values);
 	}
 

@@ -107,14 +107,8 @@ class tpl extends object {
 				'module_'.$this->cfg->defaultModule.'_view_'.$this->cfg->default
 			));
 
-			if (file::exists($file)) {
+			if (file::exists($file))
 				$content = $this->_fetch($file);
-				if ($this->cfg->cache['auto'] && !$this->cfg->cache['layout'])
-					$cache->save();
-				if ($this->responseProxy->hasCall())
-					$callResp = array_merge($callResp, $this->responseProxy->getCall());
-				$this->responseProxy->initCall();
-			}
 		}
 
 		if ($this->cfg->layout && !$cachedLayout) {
@@ -129,15 +123,13 @@ class tpl extends object {
 			}
 			if ($this->cfg->cache['auto'] && $this->cfg->cache['layout'])
 				$cache->save();
-			if ($this->responseProxy->hasCall())
-				$callResp = array_merge($callResp, $this->responseProxy->getCall());
-			$this->responseProxy->initCall();
 		}
 
-		if (!empty($callResp))
+		if ($cacheResp && $this->responseProxy->hasCall()) {
+			$callResp = $this->responseProxy->getCall();
 			$cacheResp->save();
+		}
 
-		//response::clearProxy();
 		response::setProxy($oldProxy);
 		return $content;
 	}
