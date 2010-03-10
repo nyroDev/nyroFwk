@@ -78,6 +78,8 @@ class tpl extends object {
 		$oldProxy = response::getProxy();
 		response::setProxy($this->responseProxy);
 
+		$cacheResp = null;
+
 		if ($this->cfg->cache['auto']) {
 			$cache = cache::getInstance(array_merge(array('serialize'=>false), $this->cfg->cache));
 			$cache->get($content, array(

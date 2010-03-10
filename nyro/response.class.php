@@ -38,7 +38,7 @@ final class response {
 	 *
 	 * @param response_proxy $proxy
 	 */
-	public static function setProxy(response_proxy $proxy) {
+	public static function setProxy($proxy) {
 		self::$proxy = $proxy;
 	}
 

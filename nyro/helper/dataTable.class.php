@@ -210,8 +210,14 @@ class helper_dataTable extends object {
 				$i = 0;
 				foreach($data as $d) {
 					$tmp = $this->getActions($d);
+					$tmpVals = $d->getValues('flatNoRelated');
+					$vals = array();
+					foreach($headersT as $k=>$v) {
+						$v = substr($v, 1, -1);
+						$vals[$k] = array_key_exists($v, $tmpVals) ? $tmpVals[$v] : null;
+					}
 					foreach($tmp as &$t)
-						$t = str_replace($headersT, $d->getValues('flatNoRelated'), $t);
+						$t = str_replace($headersT, $vals, $t);
 					$actions[$i] = $tmp;
 					$i++;
 				}
