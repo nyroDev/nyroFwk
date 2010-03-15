@@ -50,5 +50,6 @@ $cfg = array(
 if (DEV) {
 	$cfg['incFiles'] = array(
 		array('type'=>'js', 'file'=>'jquery'),
+		array('type'=>'js', 'file'=>'jquery.lint'),
 	);
 }
