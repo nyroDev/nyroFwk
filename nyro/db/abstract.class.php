@@ -212,14 +212,11 @@ abstract class db_abstract extends object {
 			if ($where instanceof db_where)
 				$query = $where->toString();
 			else if (is_array($where)) {
-				if (!array_key_exists(0, $where)) {
-					$tmp = array();
-					foreach($where as $k=>$v) {
-						$tmp[] = $this->quoteIdentifier($k).'="'.$v.'"';
-					}
-					$query = '('.implode(' '.$whereOp.' ', $tmp).')';
-				} else
-					$query = '('.implode(' '.$whereOp.' ', $where).')';
+				$tmp = array();
+				foreach($where as $k=>$v) {
+					$tmp[] = is_numeric($k) ? $v : $this->quoteIdentifier($k).'="'.$v.'"';
+				}
+				$query = '('.implode(' '.$whereOp.' ', $tmp).')';
 			} else
 				$query = $where;
 			$query = ($incWhere && $query? ' WHERE ' : null).$query;

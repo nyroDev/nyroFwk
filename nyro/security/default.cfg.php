@@ -9,6 +9,7 @@ $cfg = array(
 		'pass'=>'pass',
 		'cryptic'=>'cryptic',
 	),
+	'formOptions'=>array(),
 	'sessionNameSpace'=>'security_default',
 	'stayConnected'=>true,
 	'labelStayConnected'=>'Stay connected',

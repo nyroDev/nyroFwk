@@ -146,7 +146,7 @@ class security_default extends security_abstract {
 					}
 					$this->logged = true;
 					$this->hook('login');
-				} else
+				} else if ($form)
 					$form->addCustomError($loginField, $this->cfg->errorMsg);
 				if ($this->logged) {
 					if (is_null($page)) {
@@ -256,9 +256,9 @@ class security_default extends security_abstract {
 			$this->form = $this->table->getRow()->getForm(array(
 				$this->cfg->getInArray('fields', 'login'),
 				$this->cfg->getInArray('fields', 'pass')
-			), array(
+			), array_merge($this->cfg->formOptions, array(
 				'action'=>$this->getPage('login')
-			), false);
+			)), false);
 			$this->form->get($this->cfg->getInArray('fields', 'login'))->getValid()->delRule('dbUnique');
 			if ($this->cfg->stayConnected) {
 				$this->form->add('checkbox', array(
