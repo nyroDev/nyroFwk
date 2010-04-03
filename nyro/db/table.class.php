@@ -167,8 +167,8 @@ class db_table extends object {
 			foreach($this->cols as $c) {
 				if (strpos($c, '_') && $this->fields[$c]['type'] != 'file') {
 					$tmp = explode('_', $c);
-					$table = array_shift($tmp);
 					$num = is_numeric($tmp[0])? array_shift($tmp) : 1;
+					$table = array_shift($tmp);
 					$fields = array();
 					$i18nFields = array();
 					foreach($tmp as $t) {

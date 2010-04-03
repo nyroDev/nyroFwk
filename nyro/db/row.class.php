@@ -160,6 +160,10 @@ class db_row extends object {
 					$name = $f['name'];
 					$f['name'].= 'Confirm';
 					$f['label'] = $this->getTable()->getLabel($f['name']);
+					$moreConf = $this->getTable()->getCfg()->getInArray('fields', $f['name']);
+					if (is_array($moreConf) && array_key_exists('comment', $moreConf)) {
+						factory::mergeCfg($f, $moreConf);
+					}
 					$form->addFromField($f)->addRule('equal', $obj);
 					$form->addNotValue($f['name']);
 					if (!$this->isNew()) {
