@@ -109,6 +109,26 @@ class response_http_html extends response_http {
 	}
 
 	/**
+	 * Get a link content
+	 *
+	 * @param string $rel Rel name
+	 * @return array|null
+	 */
+	public function getLink($rel) {
+		return $this->cfg->getInArray('link', $rel);
+	}
+
+	/**
+	 * Set a link content
+	 *
+	 * @param string $rel Rel name
+	 * @param array $attributes Link attributes
+	 */
+	public function setLink($rel, array $attributes) {
+		$this->cfg->setInArray('link', $rel, $attributes);
+	}
+
+	/**
 	 * Add a string before the acual meta, with a spearator if needed
 	 *
 	 * @param string $name Meta Name
@@ -421,6 +441,8 @@ class response_http_html extends response_http {
 					$this->cfg->getInarray('meta', 'description'));
 		foreach($this->cfg->meta as $k=>$v)
 			$ret.= '<meta name="'.$k.'" content="'.utils::htmlOut($v).'" />'.$ln;
+		foreach($this->cfg->link as $k=>$v)
+			$ret.= utils::htmlTag('link', array_merge(array('rel'=>$k), utils::htmlOut($v))).$ln;
 		return $ret;
 	}
 

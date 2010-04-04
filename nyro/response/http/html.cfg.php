@@ -10,6 +10,7 @@ $cfg = array(
 		'keywords'=>'nyro, project',
 		'language'=>request::get('lang'),
 	),
+	'link'=>array(),
 	'js'=>array(
 		'alias'=>array(
 			'jqueryui'=>'jquery-ui-1.7.custom.min',
