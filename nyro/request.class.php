@@ -696,6 +696,31 @@ final class request {
 	private static function initModule() {
 		if (!self::$module) {
 			self::$module = factory::getModule(self::$uriInfo['module'], array(), self::$scaffold, self::$cfg->allowScaffold);
+			if (self::$module instanceof module_scaffold_controller && !self::$cfg->allowScaffold) {
+				// Need to test if the action was expressly defined
+				$ref = new nReflection();
+				$className = 'module_'.self::$uriInfo['module'].'_controller';
+				
+				$prefix = null;
+				$action = self::$uriInfo['action'];
+				if (array_key_exists(NYROENV, self::$module->getCfg()->basicPrefixExec) &&
+						in_array($action, self::$module->getCfg()->getInArray('basicPrefixExec', NYROENV)))
+					$prefix = ucfirst(NYROENV);
+				else if (self::$module->getCfg()->prefixExec && !in_array($action, self::$module->getCfg()->noPrefixExec))
+					$prefix = self::$module->getCfg()->prefixExec;
+				
+				$exec = 'exec'.$prefix.ucFirst($action);
+				if ($ref->rebuild($className)) {
+					if ($ref->getMethod($exec)->getDeclaringClass()->name != $className)
+						throw new module_exception('Request - initModule: '.self::$uriInfo['module'].'.'.$exec.' not found.');
+				}
+				
+				/*
+				debug::trace(self::$module, 2);
+				echo self::$module->getCfg()->prefixExec; exit;
+				throw new module_exception('Factory - getModule: Name '.$name.' unknown.');
+				*/
+			}
 			if (self::$scaffold) {
 				self::$uriInfo['moduleScaffold'] = self::$uriInfo['module'];
 				self::$uriInfo['module'] = 'scaffold';
