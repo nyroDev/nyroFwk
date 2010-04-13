@@ -714,12 +714,6 @@ final class request {
 					if ($ref->getMethod($exec)->getDeclaringClass()->name != $className)
 						throw new module_exception('Request - initModule: '.self::$uriInfo['module'].'.'.$exec.' not found.');
 				}
-				
-				/*
-				debug::trace(self::$module, 2);
-				echo self::$module->getCfg()->prefixExec; exit;
-				throw new module_exception('Factory - getModule: Name '.$name.' unknown.');
-				*/
 			}
 			if (self::$scaffold) {
 				self::$uriInfo['moduleScaffold'] = self::$uriInfo['module'];
