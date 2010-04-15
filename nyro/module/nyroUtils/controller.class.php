@@ -52,10 +52,8 @@ class module_nyroUtils_controller extends module_abstract {
 				ob_clean();
 			include($file);
 			exit;
-		} else {
-			response::getInstance()->neverExpire();
+		} else
 			response::getInstance()->showFile($file);
-		}
 	}
 
 }

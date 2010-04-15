@@ -250,7 +250,7 @@ class response_http extends response_abstract {
 		$name = $name? $name : basename($file);
 		if (file::exists($file)) {
 			$this->cfg->compress = false;
-			$this->addHeader('Expires', gmdate('D, d M Y H:i:s', time() + 60*60*24*31).' GMT');
+			$this->neverexpire();
 			$this->addHeader('Pragma', 'public, no-cache');
 			$this->addHeader('Last-Modified', gmdate('D, d M Y H:i:s').' GMT');
 			$this->addHeader('Cache-Control', 'no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0');
@@ -271,11 +271,12 @@ class response_http extends response_abstract {
 	public function showFile($file) {
 		if (file::exists($file)) {
 			$this->cfg->compress = false;
+			$this->neverexpire();
+			$this->addHeader('Last-Modified', gmdate('D, j M Y H:i:s', filemtime($file)).' GMT', true);
 			$this->addHeader('Content-Type', file::getType($file), true);
 			//$this->addHeader('Content-length', file::size($file).'bytes', false);
 			$this->addHeader('Cache-Control', 'public', false);
 			$this->addHeader('Pragma', null, false);
-			$this->addHeader('Expires', gmdate('D, d M Y H:i:s', time() + 60*60*24*31).' GMT', false);
 			$this->sendText(file::read($file));
 		}
 	}
