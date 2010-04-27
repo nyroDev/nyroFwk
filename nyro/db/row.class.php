@@ -634,8 +634,14 @@ class db_row extends object {
 	 */
 	public function getLinked($field=null, $reload=false) {
 		if ($this->getTable()->isLinked($field)) {
-			if (!array_key_exists($field, $this->linked))
-				$this->linked[$field] = $this->getTable()->getLinkedTableRow($field);
+			if (!array_key_exists($field, $this->linked)) {
+				$data = null;
+				if ($val = $this->get($field, 'flatReal')) {
+					$tmp = $this->getTable()->getLinked($field);
+					$data[$tmp['ident']] = $val;
+				}
+				$this->linked[$field] = $this->getTable()->getLinkedTableRow($field, $data);
+			}
 			if ($reload && array_key_exists($field, $this->linked) && !is_null($this->linked[$field]))
 				$this->linked[$field]->reload();
 			return $this->linked[$field];

@@ -1107,10 +1107,13 @@ class db_table extends object {
 				$data[$f['name']] = $f['default'];
 		}
 
-		return db::get('row', $this, array(
+		$prm = array(
 			'db'=>$this->getDb(),
 			'data'=>$data
-		));
+		);
+		if (array_key_exists($this->getIdent(), $data) && $data[$this->getIdent()])
+			$prm['findId'] = $data[$this->getIdent()];
+		return db::get('row', $this, $prm);
 	}
 
 }
