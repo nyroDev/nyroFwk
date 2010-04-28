@@ -13,7 +13,7 @@ $cfg = array(
 	'link'=>array(),
 	'js'=>array(
 		'alias'=>array(
-			'jqueryui'=>'jquery-ui-1.7.custom.min',
+			'jqueryui'=>'jquery-ui-1.8.custom.min',
 			'nyroModal'=>'jquery.nyroModal',
 		),
 		'ext'=>'js',
@@ -37,6 +37,7 @@ $cfg = array(
 				array('file'=>'jqueryui', 'type'=>'css'),
 			),
 		),
+		'dependAfter'=>array(),
 	),
 	'css'=>array(
 		'alias'=>array(),
@@ -48,6 +49,13 @@ $cfg = array(
 		'depend'=>array(),
 	),
 );
+if (($lang = request::get('lang')) != 'en') {
+	$cfg['js']['dependAfter'] = array(
+		'jqueryui'=>array(
+			'i18n_jquery.ui.datepicker-'.$lang,
+		),
+	);
+}
 if (DEV) {
 	$cfg['incFiles'] = array(
 		array('type'=>'js', 'file'=>'jquery'),

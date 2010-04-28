@@ -182,6 +182,8 @@ class response_http_html extends response_http {
 			'condIE'=>false,
 			'verifExists'=>true
 		))) {
+			$ret = false;
+			$firstFile = $prm['file'];
 			foreach($this->getDepend($prm['file'], $prm['type']) as $d) {
 				if (is_array($d))
 					$this->add(array_merge($prm, $d));
@@ -224,9 +226,17 @@ class response_http_html extends response_http {
 							$this->add(array_merge($prm, array('file'=>$prefix.$m)));
 					}
 				}
-				return true;
+				$ret = true;
 			}
-			return false;
+
+			foreach($this->getDepend($firstFile, $prm['type'], true) as $d) {
+				if (is_array($d))
+					$this->add(array_merge($prm, $d));
+				else
+					$this->add(array_merge($prm, array('file'=>$d)));
+			}
+
+			return $ret;
 		} else
 			throw new nException('reponse::add: parameters file and/or type not provied');
 	}
@@ -247,10 +257,10 @@ class response_http_html extends response_http {
 	 * @param string $type File type (js or css)
 	 * @return array
 	 */
-	public function getDepend($file, $type='js') {
+	public function getDepend($file, $type='js', $after=false) {
 		$ret = array();
 
-		$depend = $this->cfg->getInArray($type, 'depend');
+		$depend = $this->cfg->getInArray($type, 'depend'.($after?'After' : null));
 		if (is_array($depend) && array_key_exists($file, $depend)) {
 			if (is_array($depend[$file]))
 				$ret = $depend[$file];
