@@ -383,16 +383,19 @@ class utils {
 	 */
 	public static function jsEncode($vars) {
 		$func = array();
-		foreach($vars as $k=>$v) {
-			if (is_string($v) && strpos($v, 'function(') === 0) {
-				$func['"'.$k.'Func"'] = $v;
-				$vars[$k] = $k.'Func';
+		if (is_array($vars)) {
+			foreach($vars as $k=>$v) {
+				if (is_string($v) && strpos($v, 'function(') === 0) {
+					$func['"'.$k.'Func"'] = $v;
+					$vars[$k] = $k.'Func';
+				}
 			}
 		}
 		
 		$encoded = json_encode($vars);
 		if (!empty($func))
 			$encoded = str_replace(array_keys($func), $func, $encoded);
+
 		
 		return $encoded;
 	}

@@ -111,7 +111,7 @@ class form_db extends form {
 		if (array_search($field['name'], $this->cfg->autoValidRule) !== false && !array_key_exists($field['name'], $prm['valid']))
 			$prm['valid'][$field['name']] = true;
 
-		if (array_search('hidden', $field['comment']) !== false)
+		if (array_search('hidden', $field['comment'], true) !== false)
 			$ret = array_merge($prm, array('type'=>'hidden'));
 		else {
 			if (!empty($field['link'])) {

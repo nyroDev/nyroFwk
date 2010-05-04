@@ -204,6 +204,7 @@ abstract class db_abstract extends object {
      *
      * @param string|array $where
      * @param string $whereOp Operator (AND or OR)
+	 * @param bool $incWhere Indicates if the WHERE keywords should be included at the beginning
      * @return null|string the where string, starting with WHERE
      */
     public function makeWhere($where, $whereOp='AND', $incWhere=true) {

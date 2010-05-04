@@ -719,7 +719,17 @@ class db_table extends object {
 			'order'=>''
 		));
 
-		if (!empty($prm['where']) && !is_array($prm['where']) && !is_object($prm['where'])
+		if (is_array($prm['where'])) {
+			foreach($prm['where'] as $k=>$v) {
+				if (!is_numeric($k) && strpos($k, '.') === false) {
+					$newK = $this->cfg->name.'.'.$k;
+					if (!array_key_exists($newK, $prm['where'])) {
+						$prm['where'][$newK] = $v;
+						unset($prm['where'][$k]);
+					}
+				}
+			}
+		} else if (!empty($prm['where']) && !is_array($prm['where']) && !is_object($prm['where'])
 			&& (strpos($prm['where'], '=') === false && strpos($prm['where'], '<') === false
 					&& strpos($prm['where'], '>') === false && stripos($prm['where'], 'LIKE') === false
 					 && stripos($prm['where'], 'IN') === false)) {

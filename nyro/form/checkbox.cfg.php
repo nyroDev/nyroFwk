@@ -5,6 +5,7 @@ $cfg = array(
 	'html'=>array(
 		'plus'=>null,
 		'global'=>'<ol class="mulValue checkboxes">[values]</ol>',
+		'globalInline'=>'<ol class="mulValue checkboxes inline">[values]</ol>',
 		'value'=>'<li><input type="checkbox" name="[name]" value="[value]" id="[id]-[value]" [plus]/><label for="[id]-[value]">[label]</label></li>',
 		'selected'=>' checked="checked"',
 		'group'=>'<li><em>[label]</em></li>[group]',
