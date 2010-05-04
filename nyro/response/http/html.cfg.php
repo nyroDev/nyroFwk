@@ -13,7 +13,7 @@ $cfg = array(
 	'link'=>array(),
 	'js'=>array(
 		'alias'=>array(
-			'jqueryui'=>'jquery-ui-1.8.custom.min',
+			'jqueryui'=>'jquery-ui.min',
 			'nyroModal'=>'jquery.nyroModal',
 		),
 		'ext'=>'js',
