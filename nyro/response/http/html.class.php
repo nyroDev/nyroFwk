@@ -31,13 +31,6 @@ class response_http_html extends response_http {
 	 */
 	protected $blocksJquery = array();
 
-	/**
-	 * Used to store the TinyMce Gzip Option
-	 *
-	 * @var array
-	 */
-	protected $tinyMceGzipOpt = null;
-
 	protected function afterInit() {
 		parent::afterInit();
 		$this->incFiles = array(
@@ -184,6 +177,10 @@ class response_http_html extends response_http {
 		))) {
 			$ret = false;
 			$firstFile = $prm['file'];
+			
+			if (strpos($firstFile, 'jquery') === 0 && $firstFile != 'jquery')
+				$this->addJS('jquery');
+
 			foreach($this->getDepend($prm['file'], $prm['type']) as $d) {
 				if (is_array($d))
 					$this->add(array_merge($prm, $d));
@@ -362,25 +359,6 @@ class response_http_html extends response_http {
 	}
 
 	/**
-	 * Add options for the tinyMceGzip
-	 *
-	 * @param string $type Attribute key
-	 * @param string $value Values separate by ,
-	 */
-	public function tinyMceGzip($type, $value) {
-		if (!$this->tinyMceGzipOpt)
-			$this->tinyMceGzipOpt = array();
-		$val = explode(',', $value);
-
-		if (array_key_exists($type, $this->tinyMceGzipOpt)) {
-			$val = array_diff($val, $this->tinyMceGzipOpt[$type]);
-			$this->tinyMceGzipOpt[$type] = array_merge($this->tinyMceGzipOpt[$type], $val);
-		} else {
-			$this->tinyMceGzipOpt[$type] = $val;
-		}
-	}
-
-	/**
 	 * Get the HTML Head part requested or all (title, meta and included files).
 	 * This function will only return a placeholder that will be overwritten at the very end,
 	 * juste before the content is send.
@@ -551,20 +529,8 @@ class response_http_html extends response_http {
 	protected function getHtmlBlocks($type, $ln="\n") {
 		$ret = null;
 
-		if ($type == 'js' && $this->tinyMceGzipOpt) {
-			if (array_key_exists('plugins', $this->tinyMceGzipOpt))
-				$this->tinyMceGzipOpt['plugins'] = implode(',', $this->tinyMceGzipOpt['plugins']);
-			if (array_key_exists('themes', $this->tinyMceGzipOpt))
-				$this->tinyMceGzipOpt['themes'] = implode(',', $this->tinyMceGzipOpt['themes']);
-			if (array_key_exists('languages', $this->tinyMceGzipOpt))
-				$this->tinyMceGzipOpt['languages'] = implode(',', $this->tinyMceGzipOpt['languages']);
-			$this->tinyMceGzipOpt['disk_cache'] = 'true';
-			$this->tinyMceGzipOpt['debug'] = 'false';
-			$ret.= sprintf($this->cfg->getInArray('js', 'block'), 'tinyMCE_GZ.init('.json_encode($this->tinyMceGzipOpt).');').$ln;
-		}
-
 		if ($type == 'js' && !empty($this->blocksJquery))
-			$this->blockJs('jQuery(function($) {'.implode("\n", $this->blocksJquery).'});');
+			$this->blockJs('jQuery(function($) {'.$ln.implode($ln, $this->blocksJquery).$ln.'});');
 
 		if (array_key_exists($type, $this->blocks)) {
 			$prm = $this->cfg->get($type);

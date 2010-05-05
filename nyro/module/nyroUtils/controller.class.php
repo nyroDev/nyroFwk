@@ -33,10 +33,12 @@ class module_nyroUtils_controller extends module_abstract {
 	}
 
 	protected function execTinyMce($prm=null) {
-		if (array_key_exists(0, $prm) && $prm[0] == 'tinyBrowser') {
-			//debug::trace($prm, 2);
-		}
-		$tmp = str_replace('js/tiny_mce/', '', request::get('request'));
+		$search = 'js/tiny_mce/';
+		$request = request::get('request');
+		$pos = strpos($request, $search);
+		if ($pos === false)
+			exit;
+		$tmp = substr($request, $pos+strlen($search));
 		$file = file::nyroExists(array(
 			'name'=>'lib'.DS.'tinyMce'.DS.$tmp,
 			'realName'=>true,

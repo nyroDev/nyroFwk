@@ -7,6 +7,7 @@ $cfg = array(
 		'title'=>'Browser',
 	),
 	'tinyMce'=>array(
+		'script_url'=>request::uri('js/tiny_mce/tiny_mce_gzip.php'.(DEV ? null : '?diskcache=true')),
 		'theme'=>'advanced',
 		'language'=>request::get('lang'),
 

@@ -20,26 +20,9 @@ class form_richtext extends form_multiline {
 	public function toHtml() {
 		if ($this->cfg->mode == 'view')
 			return $this->getValue();
-		$options = array_merge($this->tinyMce, array(
-			'mode'=>'exact',
-			'elements'=>$this->id
-		));
+
+		$options = $this->tinyMce;
 		array_filter($options);
-
-		$resp = response::getInstance()->getProxy();
-
-		if (array_key_exists('plugins', $options))
-			$resp->tinyMceGzip('plugins', $options['plugins']);
-		if (array_key_exists('theme', $options))
-			$resp->tinyMceGzip('themes', $options['theme']);
-		if (array_key_exists('language', $options))
-			$resp->tinyMceGzip('languages', $options['language']);
-
-		$resp->addJs(array(
-			'file'=>'tiny_mce/tiny_mce_gzip',
-			'dir'=>'web',
-			'verifExists'=>false
-		));
 
 		if (is_array($this->cfg->tinyBrowser)) {
 			$tinyBrowser = $this->cfg->tinyBrowser;
@@ -68,9 +51,9 @@ class form_richtext extends form_multiline {
 			$options['setup'] = 'function(ed) {ed.onInit.add(function(ed) {setTimeout(function() {ed.dom.add(ed.dom.select("head"), "link", {rel : "stylesheet", href : "'.$contentCss.'"});}, 5);});}';
 		}
 
-		$optionsJs = utils::jsEncode($options);
-
-		$resp->blockJs('tinyMCE.init('.$optionsJs.');');
+		$resp = response::getInstance()->getProxy();
+		$resp->addJs('jquery.tinymce');
+		$resp->blockjQuery('$("#'.$this->id.'").tinymce('.utils::jsEncode($options).');');
 
 		return utils::htmlTag($this->htmlTagName,
 			array_merge($this->html, array(
