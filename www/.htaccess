@@ -2,8 +2,8 @@
 	Options FollowSymLinks
 	RewriteEngine On
 
-	RewriteRule ^(.*)php/img/(.*)$ img/$2 [QSA,L]
-	RewriteRule ^(.*)/img/(.*)$ img/$2 [QSA,L]
+	RewriteRule ^(.*)\.php/img/(.*)$ img/$2 [C]
+	RewriteRule ^/img/(.*)$ img/$2 [QSA,L]
 
 	RewriteCond %{REQUEST_FILENAME} !^dir.*$
 

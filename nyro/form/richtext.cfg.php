@@ -8,6 +8,7 @@ $cfg = array(
 	),
 	'tinyMce'=>array(
 		'script_url'=>request::uri('js/tiny_mce/tiny_mce_gzip.php'.(DEV ? null : '?diskcache=true')),
+		'height'=>340,
 		'theme'=>'advanced',
 		'language'=>request::get('lang'),
 
