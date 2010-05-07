@@ -39,11 +39,14 @@ class valid extends object {
 	 *
 	 * @param string $type Validation type
 	 * @param array $prm Parameter for this rule
+	 * @param string $msg The error message
 	 */
-	public function addRule($type, $prm=null) {
+	public function addRule($type, $prm=null, $msg=null) {
 		if (!is_array($prm))
 			$prm = array($prm);
 		$this->cfg->setInArray('rules', $type, $prm);
+		if (!is_null($msg))
+			$this->setMessage($type, $msg);
 	}
 
 	/**
@@ -147,8 +150,9 @@ class valid extends object {
 	}
 	
 	public function isCallback($val, $prm=null) {
-		$tmp = call_user_func($prm[0]);
+		$tmp = call_user_func($prm, $val);
 		if ($tmp !== true) {
+			$tmp = is_string($tmp) ? $tmp : 'callback';
 			$msg = $this->getMessage($tmp);
 			$this->errors[] = $msg ? sprintf($msg, $this->cfg->label) : $tmp;
 			return false;
@@ -203,6 +207,16 @@ class valid extends object {
 
 	protected function getMessage($name) {
 		return utils::htmlOut($this->cfg->getInarray('messages', $name));
+	}
+
+	/**
+	 * Set an error message
+	 *
+	 * @param string $name Message keyname
+	 * @param string $msg The message
+	 */
+	public function setMessage($name, $msg) {
+		$this->cfg->setInArray('messages', $name, $msg);
 	}
 
 	/**

@@ -37,9 +37,7 @@ class form_file extends form_abstract {
 		}
 
 		$this->cfg->valid = array_merge($this->cfg->valid, array(
-			'callback'=>array(
-				array($this->cfg->value, 'isValid')
-			)
+			'callback'=>array($this->cfg->value, 'isValid')
 		));
 	}
 
