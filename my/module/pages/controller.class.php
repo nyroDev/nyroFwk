@@ -7,6 +7,7 @@ class module_pages_controller extends module_abstract {
 
 	protected function execError(array $prm = array()) {
 		response::getInstance()->addTitleBefore('Erreur', ' :: ');
+		response::getInstance()->setStatus($prm[0]);
 		$this->setViewVar('error', $prm[0]);
 	}
 

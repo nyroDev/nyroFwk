@@ -7,7 +7,8 @@ $cfg = array(
 	),
 );
 
-if (strpos(request::get('serverName'), 'handball-saint-vit.fr') !== false) {
+if (strpos(request::get('serverName'), 'mywebsite.com') !== false) {
+	// Database config for prod server
 	$cfg['nyro']['base'] = 'prod';
 	$cfg['nyro']['user'] = 'prod';
 	$cfg['nyro']['pass'] = 'prod';

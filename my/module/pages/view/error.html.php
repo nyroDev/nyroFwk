@@ -1,8 +1,6 @@
-<h1>Une erreur est survenue</h1>
+<h1>An error occured</h1>
 <br />
 <p>
-	Peut-être que vous essayez d'accéder à une page qui n'existe plus.<br /><br />
-	Recommencez depuis <a href="<?php echo request::uri('/') ?>">la page d'accueil</a>.<br /><br />
-	Si vous pensez qu'il s'agit d'un problème du site, vous pouvez utilisez le formulaire
-	de <a href="<?php echo request::uri('/contact') ?>">contact</a> pour nous l'expliquer.
+	Maybe you tried to access a page that doesn't exist anymore.<br /><br />
+	Try again from <a href="<?php echo request::uri('/') ?>">the homepage</a>.<br /><br />
 </p>
