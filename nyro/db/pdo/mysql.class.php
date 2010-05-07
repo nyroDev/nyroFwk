@@ -2,7 +2,7 @@
 /**
  * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * Interface for db classes

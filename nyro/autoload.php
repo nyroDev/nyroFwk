@@ -2,7 +2,7 @@
 /**
  * @author Cédric Nirousset <cedric@nyrodev.com>
  * @version 0.2
- * @package nyro
+ * @package nyroFwk
  */
 /**
  * This function allows us to avoid "including/requiring" all our class files
