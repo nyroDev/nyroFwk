@@ -30,12 +30,12 @@ abstract class object {
 	}
 
 	/**
-	 * Call juste before the configuration initialisation
+	 * Call just before the configuration initialisation
 	 */
 	protected function beforeInit() {}
 
 	/**
-	 * Call juste after the configuration initialisation
+	 * Call just after the configuration initialisation
 	 */
 	protected function afterInit() {}
 

@@ -5,7 +5,7 @@
  * @package nyroFwk
  */
 /**
- * Initialize some constant juste before they're created by default
+ * Initialize some constant just before they're created by default
  */
 
 define('NYRONAME', 'nyroApp');

@@ -361,7 +361,7 @@ class response_http_html extends response_http {
 	/**
 	 * Get the HTML Head part requested or all (title, meta and included files).
 	 * This function will only return a placeholder that will be overwritten at the very end,
-	 * juste before the content is send.
+	 * just before the content is send.
 	 *
 	 * @param string $prm The requested part (title, meta or incFiles)
 	 * @param string $ln New line character
