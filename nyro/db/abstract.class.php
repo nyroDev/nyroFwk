@@ -314,11 +314,15 @@ abstract class db_abstract extends object {
 
 			$query = 'SELECT '.$f.' FROM '.$tableName;
 
+			$tblAlias = array();
 			if (is_array($prm['join'])) {
 				$join = array();
 				foreach($prm['join'] as &$v) {
 					$v = array_merge(array('dir'=>'left', 'on'=>1, 'alias'=>''), $v);
-					$alias = !empty($v['alias'])? ' AS '.$this->quoteIdentifier($v['alias']) : '';
+					if (!empty($v['alias'])) {
+						$alias = ' AS '.$this->quoteIdentifier($v['alias']);
+						$tblAlias[$v['table']] = $v['alias'];
+					}
 					$join[] = strtoupper($v['dir']).' JOIN '.$this->quoteIdentifier($v['table']).$alias.' ON '.$v['on'];
 				}
 				$query.= ' '.implode(' ', $join).' ';
@@ -354,9 +358,34 @@ abstract class db_abstract extends object {
 			if ($prm['groupAfter'])
 				$query = 'SELECT * FROM ('.$query.') AS res GROUP BY '.$prm['groupAfter'];
 
-			return $query;
+			return $this->tableAlias($query, $tblAlias);
 		} else
 			throw new nException('db_abstract - selectQuery : The table is missing.');
+	}
+
+	/**
+	 * Apply the table alias to a query
+	 *
+	 * @param string $query The query
+	 * @param array $tblAlias The alias (keys: tablenames, values: aliases)
+	 * @return string The query with the aliases applied
+	 */
+	protected function tableAlias($query, array $tblAlias) {
+		$search = array();
+		$replace = array();
+		foreach($tblAlias as $tbl=>$alias) {
+			$search = array_merge($search, array(
+				' '.$tbl.'.',
+				' '.$this->quoteIdentifier($tbl).'.',
+				'('.$this->quoteIdentifier($tbl).'.'
+			));
+			$replace = array_merge($replace, array(
+				' '.$alias.'.',
+				' '.$this->quoteIdentifier($alias).'.',
+				'('.$this->quoteIdentifier($alias).'.'
+			));
+		}
+		return str_replace($search, $replace, $query);
 	}
 
 	/**

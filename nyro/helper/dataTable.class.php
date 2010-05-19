@@ -95,8 +95,6 @@ class helper_dataTable extends object {
 					$this->sortBy = $this->table->getName().'.'.$this->cfg->sortBy;
 			}
 		}
-
-		$this->count = $this->table->count($this->getQuery());
 	}
 
 	/**
@@ -122,6 +120,8 @@ class helper_dataTable extends object {
 	 * @return int
 	 */
 	public function getCount() {
+		if (is_null($this->count))
+			$this->count = count($this->getData());
 		return $this->count;
 	}
 

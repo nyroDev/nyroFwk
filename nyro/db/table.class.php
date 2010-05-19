@@ -657,7 +657,6 @@ class db_table extends object {
 	 */
 	public function select(array $prm = array()) {
 		$prm = $this->selectQuery($prm, $tmpTables);
-
 		$ret = $this->getDb()->select($prm);
 
 		if (!empty($ret) && !empty($this->cfg->forceValues)) {
