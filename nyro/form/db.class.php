@@ -50,6 +50,11 @@ class form_db extends form {
 	public function addFromFieldFilter(array $field) {
 		$saveAutoValidRule = $this->cfg->autoValidRule;
 		$this->cfg->autoValidRule = array();
+		if (isset($field['formTypeFilter'])) {
+			$field['formType'] = $field['formTypeFilter'];
+		} else if (isset($field['formType'])) {
+			unset($field['formType']);
+		}
 		$prm = $this->getFromFieldPrm($field);
 		$this->cfg->autoValidRule = $saveAutoValidRule;
 		unset($prm['value']);
@@ -64,11 +69,11 @@ class form_db extends form {
 				break;
 			case 'radio':
 			case 'list':
-				if (!empty($prm['list'])) {
+				//if (!empty($prm['list'])) {
 					$prm['list'] = array_merge(array('-1'=>$this->cfg->all), $prm['list']);
 					$prm['valueNone'] = -1;
 					$prm['value'] = -1;
-				}
+				//}
 				break;
 			case 'file':
 				$prm['type'] = 'checkbox';
@@ -83,6 +88,26 @@ class form_db extends form {
 		}
 		$prm['valid']['required'] = false;
 		return $this->add($prm['type'], $prm);
+	}
+
+	/**
+	 * Add a form element for a related filter, especially for a filter
+	 *
+	 * @param array $related
+	 */
+	public function addFromRelatedFilter(array $related) {
+		$prm = array(
+			'dbList'=>$related['fk2']['link'],
+			'name'=>$related['name'],
+			'label'=>$related['label'],
+			'valid'=>array_key_exists('valid', $related)? $related['valid'] : false
+		);
+		$prm['dbList']['fields'] = $related['fk2']['link']['ident'].
+				($prm['dbList']['fields']? ','.$prm['dbList']['fields'] : null);
+		$type = 'checkbox';
+		if (array_key_exists('formTypeFilter', $related) && $related['formTypeFilter'])
+			$type = $related['formTypeFilter'];
+		return $this->add($type, $prm);
 	}
 
 	/**
@@ -243,7 +268,6 @@ class form_db extends form {
 		}
 		if (array_key_exists('formType', $field) && $field['formType'])
 			$ret['type'] = $field['formType'];
-
 		return $ret;
 	}
 

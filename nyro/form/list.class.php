@@ -9,4 +9,9 @@
  */
 class form_list extends form_mulValue {
 
+	protected function afterInit() {
+		parent::afterInit();
+		$this->cfg->inline = false;
+	}
+
 }

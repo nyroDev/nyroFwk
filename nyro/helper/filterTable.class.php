@@ -67,7 +67,7 @@ class helper_filterTable extends object {
 				} else if ($r = $this->table->getRelated($field)) {
 					$r['name'] = $r['tableLink'];
 					$r['label'] = $this->table->getLabel($r['table']);
-					$this->form->addFromRelated($r);
+					$this->form->addFromRelatedFilter($r);
 				}
 			}
 		} else {
@@ -166,7 +166,7 @@ class helper_filterTable extends object {
 		if (count($where)) {
 			return $where;
 		}
-		return null;
+		return 1;
 	}
 
 	/**
