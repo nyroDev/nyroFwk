@@ -86,7 +86,14 @@ class valid extends object {
 		}
 		return $valid;
 	}
-	
+
+	/**
+	 * Check if the value is here
+	 *
+	 * @param mixed $val The value to test against
+	 * @param null $prm The parameter for the test (not used here)
+	 * @return bool True if valid
+	 */
 	public function isRequired($val, $prm=null) {
 		if (empty($val)) {
 			$this->errors[] = sprintf($this->getMessage('required'), $this->cfg->label);
@@ -95,6 +102,13 @@ class valid extends object {
 		return true;
 	}
 
+	/**
+	 * Check if the value is numeric
+	 *
+	 * @param mixed $val The value to test against
+	 * @param null $prm The parameter for the test (not used here)
+	 * @return bool True if valid
+	 */
 	public function isNumeric($val, $prm=null) {
 		if (!is_numeric($val)) {
 			$this->errors[] = sprintf($this->getMessage('numeric'), $this->cfg->label);
@@ -103,6 +117,13 @@ class valid extends object {
 		return true;
 	}
 
+	/**
+	 * Check if the value is integer
+	 *
+	 * @param mixed $val The value to test against
+	 * @param null $prm The parameter for the test (not used here)
+	 * @return bool True if valid
+	 */
 	public function isInt($val, $prm=null) {
 		if (!is_numeric($val) || round($val) != $val) {
 			$this->errors[] = sprintf($this->getMessage('int'), $this->cfg->label);
@@ -111,6 +132,13 @@ class valid extends object {
 		return true;
 	}
 
+	/**
+	 * Check if the value is different. Strandard PHP test is done
+	 *
+	 * @param mixed $val The value to test against
+	 * @param mixed $prm The parameter for the test. Key 0 should be here and is the value to test against
+	 * @return bool True if valid
+	 */
 	public function isDifferent($val, $prm=null) {
 		if ($val == $prm[0]) {
 			$this->errors[] = sprintf($this->getMessage('different'), $this->cfg->label, $prm[0]);
@@ -119,6 +147,13 @@ class valid extends object {
 		return true;
 	}
 
+	/**
+	 * Check if the value is contained in an array
+	 *
+	 * @param mixed $val The value to test against
+	 * @param array|string $prm The parameter for the test Array to search in or string to test directly against
+	 * @return bool True if valid
+	 */
 	public function isIn($val, $prm=null) {
 		$ret = true;
 		$val = is_array($val)? $val : array($val);
@@ -133,6 +168,13 @@ class valid extends object {
 		return $ret;
 	}
 
+	/**
+	 * Check if the value is equal to another
+	 *
+	 * @param mixed $val The value to test against
+	 * @param form_abstract|string $prm The parameter for the test. If form_abstract is provided, the rawValue will be used for the test
+	 * @return bool True if valid
+	 */
 	public function isEqual($val, $prm=null) {
 		$ret = true;
 		if ($prm[0] instanceof form_abstract) {
@@ -148,7 +190,14 @@ class valid extends object {
 		}
 		return $ret;
 	}
-	
+
+	/**
+	 * Check if the value using a callback
+	 *
+	 * @param mixed $val The value to test against
+	 * @param mixed $prm A valid PHP callback. This callback should true if valid or false if not or a string if a specific message should be used
+	 * @return bool True if valid
+	 */
 	public function isCallback($val, $prm=null) {
 		$tmp = call_user_func($prm, $val);
 		if ($tmp !== true) {
@@ -159,7 +208,14 @@ class valid extends object {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * Check if the value is an URL (starting with http)
+	 *
+	 * @param mixed $val The value to test against
+	 * @param null $prm The parameter for the test (not used here)
+	 * @return bool True if valid
+	 */
 	public function isUrl($val, $prm=null) {
 		if (!ereg('^http(s)?://[a-zA-Z0-9\._]+\.[a-zA-Z]{2,4}', $val)) {
 			$this->errors[] = sprintf($this->getMessage('url'), $this->cfg->label);
@@ -167,7 +223,14 @@ class valid extends object {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * Check if the value is an email address
+	 *
+	 * @param mixed $val The value to test against
+	 * @param null $prm The parameter for the test (not used here)
+	 * @return bool True if valid
+	 */
 	public function isEmail($val, $prm=null) {
 		if (!filter_var($val, FILTER_VALIDATE_EMAIL)) {
 			$this->errors[] = sprintf($this->getMessage('email'), $this->cfg->label);
@@ -175,7 +238,17 @@ class valid extends object {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * Check if the value is not present in a database table
+	 *
+	 * @param mixed $val The value to test against
+	 * @param array $prm The parameter for the test with keys:
+	 *  - mixed value: a value to ignore the test
+	 *  - db_table|string: Table object or tablename (required)
+	 *  - string field: Fieldname to test against
+	 * @return bool True if valid
+	 */
 	public function isDbUnique($val, array $prm) {
 		if (array_key_exists('value', $prm) && $val == $prm['value'])
 			return true;
@@ -191,7 +264,16 @@ class valid extends object {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * Check if the value exists in a database table
+	 *
+	 * @param mixed $val The value to test against
+	 * @param array $prm The parameter for the test with keys:
+	 *  - db_table|string: Table object or tablename (required)
+	 *  - string field: Fieldname to test against
+	 * @return bool True if valid
+	 */
 	public function isDbExists($val, array $prm) {
 		$table = $prm['table'] instanceof db_table? $prm['table'] : db::get('table', $prm['table']);
 		$nb = $table->count(array(
@@ -205,8 +287,14 @@ class valid extends object {
 		return true;
 	}
 
+	/**
+	 * Get a message for an error
+	 *
+	 * @param string $name Error name
+	 * @return string The message
+	 */
 	protected function getMessage($name) {
-		return utils::htmlOut($this->cfg->getInarray('messages', $name));
+		return utils::htmlOut($this->cfg->getInArray('messages', $name));
 	}
 
 	/**
