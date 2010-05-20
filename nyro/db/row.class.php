@@ -531,7 +531,7 @@ class db_row extends object {
 		}
 		if (!is_null($fct) && function_exists($fct))
 			$value = $fct($value);
-		if ($force || $this->get($key) !== $value)
+		if ($force || $this->get($key) != $value)
 			$this->changes[$key] = $value;
 	}
 

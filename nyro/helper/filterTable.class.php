@@ -48,12 +48,12 @@ class helper_filterTable extends object {
 	 * Init the filter form
 	 */
 	protected function initForm() {
-		$this->form = factory::get('form_db', array(
+		$this->form = factory::get('form_db', array_merge($this->cfg->formOpts, array(
 			'filter'=>true,
 			'table'=>$this->table,
 			'sectionName'=>$this->cfg->formName,
 			'action'=>array('paramA'=>array_merge(array_diff_key(request::get('paramA'), $this->cfg->actionPrmClear), $this->cfg->actionPrmForce))
-		));
+		)));
 
 		$this->form->setSubmitText($this->cfg->submitText);
 		$this->form->setSubmitplus('<a href="'.$this->clearLink().'">'.$this->cfg->clearText.'</a>');
@@ -61,26 +61,26 @@ class helper_filterTable extends object {
 		if (!empty($this->cfg->fields)) {
 			foreach($this->cfg->fields as $field) {
 				if ($f = $this->table->getField($field)) {
-					$f['label'] = $this->table->getLabel($f['name']);
+					$f['label'] = $this->getLabel($f['name']);
 					$f['link'] = $this->table->getLinked($f['name']);
 					$this->form->addFromFieldFilter($f);
 				} else if ($r = $this->table->getRelated($field)) {
+					$r['label'] = $this->getLabel($r['table']);
 					$r['name'] = $r['tableLink'];
-					$r['label'] = $this->table->getLabel($r['table']);
 					$this->form->addFromRelatedFilter($r);
 				}
 			}
 		} else {
 			// All fields
 			foreach($this->table->getField() as $f) {
-				$f['label'] = $this->table->getLabel($f['name']);
+				$f['label'] = $this->getLabel($f['name']);
 				$f['link'] = $this->table->getLinked($f['name']);
 				$this->form->addFromFieldFilter($f);
 			}
 
 			foreach($this->table->getRelated() as $t=>$r) {
 				$r['name'] = $r['tableLink'];
-				$r['label'] = $this->table->getLabel($r['table']);
+				$r['label'] = $this->getLabel($r['table']);
 				$this->form->addFromRelated($r);
 			}
 		}
@@ -167,6 +167,18 @@ class helper_filterTable extends object {
 			return $where;
 		}
 		return 1;
+	}
+
+	/**
+	 * Get the label for a fieldname or a tablename
+	 *
+	 * @param string $name
+	 * @return string The label
+	 */
+	public function getLabel($name) {
+		return array_key_exists($name, $this->cfg->label) ?
+				$this->cfg->getInArray('label', $name) :
+				$this->table->getLabel($name);
 	}
 
 	/**
