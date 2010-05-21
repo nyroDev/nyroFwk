@@ -322,7 +322,8 @@ abstract class db_abstract extends object {
 					$alias = null;
 					if (!empty($v['alias'])) {
 						$alias = ' AS '.$this->quoteIdentifier($v['alias']);
-						$tblAlias[$v['table']] = $v['alias'];
+						if ($v['table'] != $table->getName())
+							$tblAlias[$v['table']] = $v['alias'];
 					}
 					$join[] = strtoupper($v['dir']).' JOIN '.$this->quoteIdentifier($v['table']).$alias.' ON '.$v['on'];
 				}
