@@ -319,6 +319,7 @@ abstract class db_abstract extends object {
 				$join = array();
 				foreach($prm['join'] as &$v) {
 					$v = array_merge(array('dir'=>'left', 'on'=>1, 'alias'=>''), $v);
+					$alias = null;
 					if (!empty($v['alias'])) {
 						$alias = ' AS '.$this->quoteIdentifier($v['alias']);
 						$tblAlias[$v['table']] = $v['alias'];
