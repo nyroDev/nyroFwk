@@ -166,7 +166,7 @@ class helper_filterTable extends object {
 		if (count($where)) {
 			return $where;
 		}
-		return 1;
+		return null;
 	}
 
 	/**
