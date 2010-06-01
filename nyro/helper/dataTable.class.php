@@ -121,7 +121,7 @@ class helper_dataTable extends object {
 	 */
 	public function getCount() {
 		if (is_null($this->count))
-			$this->count = count($this->getData());
+			$this->count = count($this->table->select($this->getQuery()));
 		return $this->count;
 	}
 
@@ -131,7 +131,7 @@ class helper_dataTable extends object {
 	 * @return int
 	 */
 	public function getNbPage() {
-		return ceil($this->count / $this->cfg->nbPerPage);
+		return ceil($this->getCount() / $this->cfg->nbPerPage);
 	}
 
 	/**
