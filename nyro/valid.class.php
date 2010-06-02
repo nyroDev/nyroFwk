@@ -42,7 +42,7 @@ class valid extends object {
 	 * @param string $msg The error message
 	 */
 	public function addRule($type, $prm=null, $msg=null) {
-		if (!is_array($prm))
+		if (!is_array($prm) && !is_callable($prm))
 			$prm = array($prm);
 		$this->cfg->setInArray('rules', $type, $prm);
 		if (!is_null($msg))
