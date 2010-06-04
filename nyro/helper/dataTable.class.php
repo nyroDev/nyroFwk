@@ -169,7 +169,7 @@ class helper_dataTable extends object {
 					$headersT[] = db::getCfg('i18n').$f['name'];
 			} else {
 				$headersT = $this->cfg->fields;
-				if (!in_array($this->table->getIdent(), $headersT))
+				if ($this->cfg->addIdentField && !in_array($this->table->getIdent(), $headersT))
 					array_unshift($headersT, $this->table->getIdent());
 			}
 
@@ -206,6 +206,8 @@ class helper_dataTable extends object {
 			$actionsImg = null;
 			if (is_array($this->cfg->actions) && !empty($this->cfg->actions)) {
 				$actions = array();
+				if (!$this->cfg->addIdentField)
+					array_unshift($headersT, $this->table->getIdent());
 				array_walk($headersT, create_function('&$h', '$h = "[".$h."]";'));
 				$i = 0;
 				foreach($data as $d) {
@@ -276,6 +278,8 @@ class helper_dataTable extends object {
 				'actionsImg'=>$actionsImg,
 				'actionsAlt'=>$actionsAlt,
 				'iconType'=>$this->cfg->iconType,
+				'sortBy'=>$this->sortBy,
+				'sortDir'=>$this->cfg->sortDir,
 			), $this->cfg->tplVars));
 		} else {
 			// No data

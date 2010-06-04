@@ -10,6 +10,7 @@ $cfg = array(
         'short'=>'M/D/YY',         // 12/31/08
         'short2'=>'M/D/YYYY',      // 12/31/2008
         'medium'=>'D-MM-YY',       // 31-Dec-08
+		'month'=>'MMM YYYY',       // December 2008
         'long'=>'D MMM YYYY',      // 31 December 2008
         'full'=>'EEE D MMM YYYY',  // Wednesday 31 December 2008
         'fullMed'=>'EE, D MM YYYY',// Wed, 31 Dec 2008

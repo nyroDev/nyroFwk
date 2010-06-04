@@ -17,6 +17,7 @@ $cfg = array(
 	'pageLinkTpl1'=>null,
 
 	'iconType'=>null,
+	'addIdentField'=>true,
 	'fields'=>null,
 
 	'noData'=>'No Data.',
