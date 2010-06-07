@@ -91,6 +91,24 @@ class response_http extends response_abstract {
 	}
 
 	/**
+	 * Get the ajax layout will be used
+	 *
+	 * @return string
+	 */
+	public function getAjaxLayout() {
+		return $this->cfg->ajaxLayout;
+	}
+
+	/**
+	 * Set a new ajax layout to use
+	 *
+	 * @param string $ajaxLayout
+	 */
+	public function setAjaxlayout($ajaxLayout) {
+		$this->cfg->ajaxLayout = $ajaxLayout;
+	}
+
+	/**
 	 * Add a http header to the response
 	 *
 	 * @param string $name Header name
