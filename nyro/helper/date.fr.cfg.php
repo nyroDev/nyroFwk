@@ -33,7 +33,7 @@ $cfg = array(
         'm4'=>array('s'=>'A', 'm'=>'Avr', 'l'=>'Avril'),
         'm5'=>array('s'=>'M', 'm'=>'Mai', 'l'=>'Mai'),
         'm6'=>array('s'=>'J', 'm'=>'Jui', 'l'=>'Juin'),
-        'm7'=>array('s'=>'J', 'm'=>'Jui', 'l'=>'Juillet'),
+        'm7'=>array('s'=>'J', 'm'=>'Jul', 'l'=>'Juillet'),
         'm8'=>array('s'=>'A', 'm'=>'Aoû', 'l'=>'Août'),
         'm9'=>array('s'=>'S', 'm'=>'Sep', 'l'=>'Septembre'),
         'm10'=>array('s'=>'O', 'm'=>'Oct', 'l'=>'Octobre'),

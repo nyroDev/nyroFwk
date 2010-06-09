@@ -10,6 +10,7 @@ $cfg = array(
         'short'=>'M/D/YY',         // 12/31/08
         'short2'=>'M/D/YYYY',      // 12/31/2008
         'medium'=>'D-MM-YY',       // 31-Dec-08
+		'shortMonth'=>'MM YYYY',   // Dec 2008
 		'month'=>'MMM YYYY',       // December 2008
         'long'=>'D MMM YYYY',      // 31 December 2008
         'full'=>'EEE D MMM YYYY',  // Wednesday 31 December 2008
@@ -48,7 +49,7 @@ $cfg = array(
         'm4'=>array('s'=>'A', 'm'=>'Apr', 'l'=>'April'),
         'm5'=>array('s'=>'M', 'm'=>'May', 'l'=>'May'),
         'm6'=>array('s'=>'J', 'm'=>'Jun', 'l'=>'June'),
-        'm7'=>array('s'=>'J', 'm'=>'Jui', 'l'=>'July'),
+        'm7'=>array('s'=>'J', 'm'=>'Jul', 'l'=>'July'),
         'm8'=>array('s'=>'A', 'm'=>'Aug', 'l'=>'August'),
         'm9'=>array('s'=>'S', 'm'=>'Sep', 'l'=>'September'),
         'm10'=>array('s'=>'O', 'm'=>'Oct', 'l'=>'October'),
