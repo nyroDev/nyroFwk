@@ -742,10 +742,12 @@ class db_table extends object {
 
 		if (is_array($prm['fields'])) {
 			array_walk($prm['fields'],
-				create_function('&$v', '$v = strpos(".", $v) === false? "'.$this->cfg->name.'.".$v: $v;'));
+				create_function('&$v', '$v = strpos($v, ".") === false? "'.$this->cfg->name.'.".$v: $v;'));
 			$prm['fields'] = implode(',', $prm['fields']);
 		}
 
+		$join = isset($prm['join']) ? $prm['join'] : array();
+		$prm['join'] = array();
 		$tmpTables = array();
 		if (!empty($this->linkedTables)) {
 			foreach($this->linkedTables as $f=>$p) {
@@ -920,6 +922,8 @@ class db_table extends object {
 				unset($prm['nb']);
 			}
 		}
+
+		$prm['join'] = array_merge($prm['join'], $join);
 
 		return $prm;
 	}

@@ -89,7 +89,7 @@ class helper_dataTable extends object {
 					$tmp[] = $tableName.'.'.$f;
 				$this->sortBy = implode(', ', $tmp);
 			} else if ($this->cfg->sortBy) {
-				if (strpos($this->cfg->sortBy, $this->table->getName()) !== false)
+				if (strpos($this->cfg->sortBy, $this->table->getName()) !== false || strpos($this->cfg->sortBy, ".") !== false)
 					$this->sortBy = $this->cfg->sortBy;
 				else
 					$this->sortBy = $this->table->getName().'.'.$this->cfg->sortBy;
@@ -103,6 +103,7 @@ class helper_dataTable extends object {
 	 * @return db_rowset
 	 */
 	public function getData() {
+		try {
 		if (is_null($this->data))
 			$this->data = $this->table->select(array_merge(
 				$this->getQuery(),
@@ -112,6 +113,9 @@ class helper_dataTable extends object {
 					'order'=>$this->sortBy? $this->sortBy.' '.$this->cfg->sortDir : ''
 				)));
 		return $this->data;
+		} catch(Exception $e) {
+			debug::trace($e, 2);
+		}
 	}
 
 	/**
@@ -120,9 +124,13 @@ class helper_dataTable extends object {
 	 * @return int
 	 */
 	public function getCount() {
+		try {
 		if (is_null($this->count))
 			$this->count = count($this->table->select($this->getQuery()));
 		return $this->count;
+		} catch(Exception $e) {
+			debug::trace($e, 2);
+		}
 	}
 
 	/**
