@@ -1,6 +1,7 @@
 <?php
 $cfg = array(
 	'lang'=>'en',
+	'forceLang'=>false,
 	'module'=>'pages',
 	'action'=>'index',
 	'param'=>array(),

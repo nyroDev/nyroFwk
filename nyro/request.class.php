@@ -130,7 +130,6 @@ final class request {
 			}
 		}
 		self::$cfg->avlLang = array_merge($avlLangs, $avlLangsTmp);
-		
 
 		$secure = (array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] == 'on');
 
@@ -169,11 +168,6 @@ final class request {
 			if ($pos = strpos($redir, self::$cfg->noController))
 				$redir = substr($redir, 0, $pos);
 		}
-		if ($redir) {
-		    header('HTTP/1.0 301 Moved Permanently');
-		    header('Location: '.$redir);
-		    exit;
-		}
 
 		$path = '/';
 		$requestUriTmp = explode('/', substr($requestUri, 1));
@@ -193,6 +187,26 @@ final class request {
 			$request = substr($requestUri, strlen($path.$controller)+1);
 		} else
 			$request = substr($requestUri, strlen($path));
+
+		if (self::$cfg->forceLang) {
+			$forceLang = self::$cfg->forceLang === true ? self::$cfg->lang : self::$cfg->forceLang;
+			if ($requestUri != $path && strpos($requestUri, '/'.$forceLang.'/') === false) {
+				$redirWork = $redir ? $redir : $domain.$requestUri;
+				$search = $path.($pathWithController? $controller.'/' : null);
+				$pos = strpos($redirWork, $search) + strlen($search);
+				$end = strpos($redirWork, '/', $pos+1);
+				$end = $end ? $end-$pos : strlen($redirWork);
+				$curLang = substr($redirWork, $pos, $end);
+				if (!self::isLang($curLang))
+					$redir = substr($redirWork, 0, $pos).$forceLang.'/'.substr($redirWork, $pos);
+			}
+		}
+
+		if ($redir) {
+		    header('HTTP/1.0 301 Moved Permanently');
+		    header('Location: '.$redir);
+		    exit;
+		}
 
 		self::extractGet($request, true);
 
@@ -470,13 +484,20 @@ final class request {
 				$tmp[count($tmp) - 1] .= '.'.$out;
 		}
 
+		$forceLang = self::$cfg->forceLang ? (self::$cfg->forceLang === true ? self::$cfg->lang : self::$cfg->forceLang) : null;
 		if (array_key_exists('lang', $prm)) {
 			if (self::isLang($prm['lang']))
 				array_unshift($tmp, $prm['lang']);
+			else if ($forceLang)
+				array_unshift($tmp, $forceLang);
 		} else if (self::getRequested('lang'))
 			array_unshift($tmp, self::getRequested('lang'));
 		else if (self::$cfg->lang != self::get('lang'))
 			array_unshift($tmp, self::get('lang'));
+		else if ($forceLang && count($tmp))
+			array_unshift($tmp, $forceLang);
+		if ($forceLang && count($tmp) == 1 && $tmp[0] == $forceLang)
+			$tmp = array();
 
 		$prefix = array_key_exists('absolute', $prm) && $prm['absolute']? request::get('domain') : null;
 		$prefix.= self::get('path');
@@ -784,7 +805,7 @@ final class request {
 				// Need to test if the action was expressly defined
 				$ref = new nReflection();
 				$className = 'module_'.self::$uriInfo['module'].'_controller';
-				
+
 				$prefix = null;
 				$action = self::$uriInfo['action'];
 				if (array_key_exists(NYROENV, self::$module->getCfg()->basicPrefixExec) &&
@@ -792,7 +813,7 @@ final class request {
 					$prefix = ucfirst(NYROENV);
 				else if (self::$module->getCfg()->prefixExec && !in_array($action, self::$module->getCfg()->noPrefixExec))
 					$prefix = self::$module->getCfg()->prefixExec;
-				
+
 				$exec = 'exec'.$prefix.ucFirst($action);
 				if ($ref->rebuild($className)) {
 					if ($ref->getMethod($exec)->getDeclaringClass()->name != $className)
