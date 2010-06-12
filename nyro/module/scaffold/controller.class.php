@@ -212,7 +212,7 @@ class module_scaffold_controller extends module_abstract {
 			$this->form->refill();
 			$this->hook('formPost'.$uAction);
 			if ($this->form->isValid()) {
-				$this->row->setValues($this->form->getValues());
+				$this->row->setValues($this->form->getValues(true));
 				$this->hook('before'.$uAction);
 				if ($this->row->save()) {
 					$this->hook('after'.$uAction);

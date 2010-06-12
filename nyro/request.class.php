@@ -120,6 +120,18 @@ final class request {
 		$alias = array_reverse($alias, true);
 		self::$cfg->alias = $alias;
 
+		// Put the default lang at the top of avialable langs
+		$avlLangsTmp = self::$cfg->avlLang;
+		$avlLangs = array();
+		foreach($avlLangsTmp as $k=>$v) {
+			if ($k == self::$cfg->lang) {
+				$avlLangs[$k] = $v;
+				unset($avlLangsTmp[$k]);
+			}
+		}
+		self::$cfg->avlLang = array_merge($avlLangs, $avlLangsTmp);
+		
+
 		$secure = (array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] == 'on');
 
 		$protocol = $secure? 'https' : 'http';

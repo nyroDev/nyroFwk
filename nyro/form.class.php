@@ -213,13 +213,37 @@ class form extends object {
 	public function finalize() {
 		if ($this->isI18n()) {
 			$this->cfg->showSection = true;
+			$nb = 0;
+			if ($this->cfg->forceOnlyOneLang)
+				$requiredFields = array();
 			foreach(request::avlLang(true) as $lg=>$lang) {
 				$this->addSection($lang);
+				$groupedFieldsAdded = false;
 				foreach($this->i18nElements as $e) {
 					$e['prm']['isI18n'] = true;
-					$e['prm']['name'] = db::getCfg('i18n').'['.$lg.']['.$e['prm']['name'].']';
+					$initName = $e['prm']['name'];
+					$e['prm']['name'] = db::getCfg('i18n').'['.$lg.']['.$initName.']';
+					if ($this->cfg->forceOnlyOneLang) {
+						if ($nb == 0) {
+							if ($e['prm']['valid']['required'])
+								$requiredFields[] = $initName;
+						} else {
+							if (!$groupedFieldsAdded && $e['prm']['valid']['required'] && count($requiredFields)) {
+								$fields = array();
+								foreach($requiredFields as $v)
+									$fields[] = db::getCfg('i18n').'['.$lg.']['.$v.']';
+								$e['prm']['valid']['groupedFields'] = array(
+									'form'=>$this,
+									'fields'=>$fields
+								);
+								$groupedFieldsAdded = true;
+							}
+							$e['prm']['valid']['required'] = false;
+						}
+					}
 					$this->add($e['type'], $e['prm']);
 				}
+				$nb++;
 			}
 		}
 	}

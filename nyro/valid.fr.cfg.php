@@ -12,5 +12,6 @@ $cfg = array(
 		'email'=>'Le champ "%s" doit être une adresse email valide.',
 		'dbUnique'=>'"%s" pour le champ "%s" existe déjà.',
 		'dbExists'=>'"%s" pour le champ "%s" n\'existe pas.',
+		'groupedFields'=>'Si "%s" est rempli, vous devez remplir d\'autres champs.',
 	),
 );

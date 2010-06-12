@@ -79,7 +79,7 @@ class valid extends object {
 		foreach($this->cfg->rules as $rule=>$prm) {
 			if (!is_numeric($rule)) {
 				foreach($val as $v) {
-					if ($rule == 'required' || !empty($v))
+					if (($rule == 'required' || $rule == 'groupedFields') || !empty($v))
 						$valid = $this->{'is'.ucfirst($rule)}($v, $prm) && $valid;
 				}
 			}
@@ -189,6 +189,31 @@ class valid extends object {
 			}
 		}
 		return $ret;
+	}
+
+	/**
+	 * Check if all parametred fields of of a form are all eiher empty or all present
+	 *
+	 * @param mixed $val The value to test against (not used)
+	 * @param array $prm An array with the keys:
+	 * - form form: The form where to retrieve the values
+	 * - array fields: The grouped fields names
+	 * @return bool True if valid
+	 */
+	public function isGroupedFields($val, $prm=null) {
+		$nbFilled = 0;
+		foreach($prm['fields'] as $f) {
+			$val = $prm['form']->getValue($f);
+			if (!empty($val))
+				$nbFilled++;
+		}
+		$ret = $nbFilled == 0 || $nbFilled == count($prm['fields']);
+		if (!$ret) {
+			// not valid
+			$this->errors[] = sprintf($this->getMessage('groupedFields'), $this->cfg->label);
+			return false;
+		}
+		return true;
 	}
 
 	/**

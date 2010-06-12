@@ -16,5 +16,6 @@ $cfg = array(
 		'email'=>'%s should be a valid email address.',
 		'dbUnique'=>'%s for %s already exists.',
 		'dbExists'=>'%s for %s doesn\'t exists.',
+		'groupedFields'=>'If %s is filled, you have to fill other(s) field(s).',
 	),
 );
