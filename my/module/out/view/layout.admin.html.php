@@ -11,7 +11,7 @@
 )) ?>
 
 <div id="container">
-	<div id="content">
+	<div id="contentDiv">
 		<?php echo $content; ?>
 	</div>
 	<div id="footer">

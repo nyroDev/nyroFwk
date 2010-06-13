@@ -191,15 +191,25 @@ final class request {
 		if (self::$cfg->forceLang) {
 			$forceLang = self::$cfg->forceLang === true ? self::$cfg->lang : self::$cfg->forceLang;
 			if ($requestUri != $path && strpos($requestUri, '/'.$forceLang.'/') === false
-					&& !in_array($request, self::$cfg->noForceLang)) {
-				$redirWork = $redir ? $redir : $domain.$requestUri;
-				$search = $domain.$path.($pathWithController? $controller.'/' : null);
-				$pos = strpos($redirWork, $search) + strlen($search);
-				$end = strpos($redirWork, '/', $pos+1);
-				$end = $end ? $end-$pos : strlen($redirWork);
-				$curLang = substr($redirWork, $pos, $end);
-				if (!self::isLang($curLang))
-					$redir = substr($redirWork, 0, $pos).$forceLang.'/'.substr($redirWork, $pos);
+					&& $request) {
+				$continue = true;
+				$i = 0;
+				$cpt = count(self::$cfg->noForceLang);
+				while($continue && $i < $cpt) {
+					if (strpos($request, self::$cfg->noForceLang[$i]) === 0)
+						$continue = false;
+					$i++;
+				}
+				if ($continue) {
+					$redirWork = $redir ? $redir : $domain.$requestUri;
+					$search = $domain.$path.($pathWithController? $controller.'/' : null);
+					$pos = strpos($redirWork, $search) + strlen($search);
+					$end = $pos < strlen($redirWork) ? strpos($redirWork, '/', $pos+1) : false;
+					$end = $end ? $end-$pos : strlen($redirWork);
+					$curLang = substr($redirWork, $pos, $end);
+					if (!self::isLang($curLang))
+						$redir = substr($redirWork, 0, $pos).$forceLang.'/'.substr($redirWork, $pos);
+				}
 			}
 		}
 

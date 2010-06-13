@@ -49,7 +49,7 @@ class db_pdo_mysql extends db_pdo_abstract {
 		));
 		$ret = array();
 		if (!$cache->get($ret, array('id'=>'fields-'.$table))) {
-			$stmt = $this->query('SHOW FULL FIELDS FROM '.$table);
+			$stmt = $this->query('SHOW FULL FIELDS FROM '.$this->quoteIdentifier($table));
 
 			$fField		= 'Field';
 			$fType		= 'Type';

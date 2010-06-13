@@ -23,7 +23,7 @@ table {border-top: 1px solid #ccc;border-left: 1px solid #ccc;}
 td, th { padding: 0.5em; border-bottom: 1px solid #ccc; border-right: 1px solid #ccc;}
 tr:hover {background: #ccc;}
 
-ul#menu {
+#menu {
 	position: absolute;
 	top: 50px;
 	left: 0.5em;
@@ -33,25 +33,25 @@ ul#menu {
 	padding: 0.5em 1em;
 	margin-bottom: 1em;
 }
-ul#menu li.hr span {
+#menu .hr span {
 	display: block;
 	border-top: 1px solid #C0C0C0;
 	margin: 0.4em -0.8em;
 }
-div#container {
+#container {
 	position: absolute;
 	top: 50px;
 	left: 16em;
 	right: 0.5em;
 }
-div#container div#content {
+#container #contentDiv {
 	min-height: 14em;
 	padding: 1.5em;
 	background: #F0F0F0;
 	border: 1px solid #C0C0C0;
 	margin-bottom: 0.4em;
 }
-div#container div#footer {
+#container #footer {
 	text-align: center;
 	padding: 0.1em;
 	background: #F0F0F0;

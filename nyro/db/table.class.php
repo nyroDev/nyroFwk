@@ -736,7 +736,7 @@ class db_table extends object {
 		}
 
 		$prm = array_merge(array(
-			'fields'=>$this->cfg->name.'.*',
+			'fields'=>$this->getDb()->quoteIdentifier($this->cfg->name).'.*',
 			'table'=>$this->cfg->name,
 		), $prm);
 
