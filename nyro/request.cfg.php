@@ -2,6 +2,7 @@
 $cfg = array(
 	'lang'=>'en',
 	'forceLang'=>false,
+	'noForceLang'=>array(),
 	'module'=>'pages',
 	'action'=>'index',
 	'param'=>array(),

@@ -190,9 +190,10 @@ final class request {
 
 		if (self::$cfg->forceLang) {
 			$forceLang = self::$cfg->forceLang === true ? self::$cfg->lang : self::$cfg->forceLang;
-			if ($requestUri != $path && strpos($requestUri, '/'.$forceLang.'/') === false) {
+			if ($requestUri != $path && strpos($requestUri, '/'.$forceLang.'/') === false
+					&& !in_array($request, self::$cfg->noForceLang)) {
 				$redirWork = $redir ? $redir : $domain.$requestUri;
-				$search = $path.($pathWithController? $controller.'/' : null);
+				$search = $domain.$path.($pathWithController? $controller.'/' : null);
 				$pos = strpos($redirWork, $search) + strlen($search);
 				$end = strpos($redirWork, '/', $pos+1);
 				$end = $end ? $end-$pos : strlen($redirWork);
