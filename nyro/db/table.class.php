@@ -421,6 +421,7 @@ class db_table extends object {
 				$labels[$c] = ucwords(str_replace('_', ' ', strtolower(substr($c, 0, -5))));
 			else
 				$labels[$c] = ucwords(str_replace('_', ' ', strtolower($c)));
+			$this->fields[$c]['label'] = $labels[$c];
 		}
 		foreach($this->relatedTables as $r) {
 			if (array_key_exists($r['table'], $cfgLabel) && $label = $cfgLabel[$r['table']]) {
@@ -958,13 +959,13 @@ class db_table extends object {
 						$delete = false;
 					} else
 						$current = $ids[$id];
-
 					foreach($linked['relatedTable'] as $t=>$r) {
 						if (!array_key_exists($r['tableName'], $data[$current]['related']))
 							$data[$current]['related'][$r['tableName']] = array();
-						else if (array_key_exists($id, $idRelated)
-							&& array_key_exists($r['tableName'], $idRelated[$id])
-							&& in_array($data[$i][$r['table']['ident']], $idRelated[$id][$r['tableName']]))
+						if (!$data[$i][$r['table']['ident']]
+							|| (array_key_exists($id, $idRelated)
+								&& array_key_exists($r['tableName'], $idRelated[$id])
+								&& in_array($data[$i][$r['table']['ident']], $idRelated[$id][$r['tableName']])))
 							// The id was already affected to te current element, skip to the next table
 							continue;
 
@@ -985,8 +986,7 @@ class db_table extends object {
 						}
 
 						foreach($r['tableLink'] as $tl) {
-							if (!empty($data[$i][$tl]))
-								$tmp[substr($tl, strlen($t)+1)] = $data[$i][$tl];
+							$tmp[substr($tl, strlen($t)+1)] = $data[$i][$tl];
 							unset($data[$i][$tl]);
 						}
 
@@ -1007,7 +1007,6 @@ class db_table extends object {
 					unset($linked['nb']);
 					unset($linked['st']);
 				}
-
 			}
 
 			$linkedKey = db::getCfg('linked');

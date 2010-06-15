@@ -225,3 +225,12 @@ li.fileError p {
     margin-left: 9em;
     padding: 3px;
 }
+.subFields {
+    margin-left: 1em;
+    margin-top: 0.2em;
+}
+.subFields .mulValue {
+    border: none;
+    width: auto;
+    float: right;
+}

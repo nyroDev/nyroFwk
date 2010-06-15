@@ -114,10 +114,10 @@ abstract class form_mulValue extends form_abstract {
 				}
 				$selected = $this->isInValue($k)? $prm['selected'] : null;
 
-				$tmpVal.= str_replace(
-					array('[plus]', '[value]', '[label]'),
-					array($selected, $k, $v),
-					$prm['value']);
+				$tmpVal.= $this->updateLine($type, $k, str_replace(
+						array('[plus]', '[value]', '[label]'),
+						array($selected, $k, $v),
+						$prm['value']));
 			}
 		}
 
@@ -134,6 +134,18 @@ abstract class form_mulValue extends form_abstract {
 			array('[values]', '[plus]', '[name]', '[id]'),
 			array($ret, $prm['plus'], $this->cfg->name, $this->id),
 			$prm['global'.$inline]);
+	}
+
+	/**
+	 * Update a line before adding to the out
+	 *
+	 * @param string $type Out type
+	 * @param mixed $val The line value
+	 * @param string $line The current line
+	 * @return string The updated line
+	 */
+	protected function updateLine($type, $val, $line) {
+		return $line;
 	}
 
 	public function toHtml() {

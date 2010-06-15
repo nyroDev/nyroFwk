@@ -289,9 +289,21 @@ class db_row extends object {
 					$r['fk1']['name'] => $this->getId()
 				);
 				$r['tableObj']->delete($values);
+				$hasFields = isset($r['fields']) && count($r['fields']);
 				if (($tmp = $changes[$r['tableLink']]) && is_array($tmp)) {
-					foreach($tmp as $t)
-						$r['tableObj']->insert(array_merge($values, array($r['fk2']['name'] => $t)));
+					foreach($tmp as $t) {
+						$curValues = $values;
+						if ($hasFields) {
+							foreach($t as $k=>$v) {
+								if ($k == db::getCfg('relatedValue'))
+									$curValues[$r['fk2']['name']] = $v;
+								else
+									$curValues[$k] = $v;
+							}
+						} else
+							$curValues = array_merge($values, array($r['fk2']['name'] => $t));
+						$r['tableObj']->insert($curValues);
+					}
 				}
 			}
 		}
@@ -449,8 +461,19 @@ class db_row extends object {
 						foreach($this->getTable()->getRelated() as $k=>$v) {
 							$tmp[] = $k;
 							$data[$k] = array();
+							$hasFields = isset($v['fields']) && count($v['fields']);
 							foreach($data['related'][$v['fk2']['link']['table']] as $vv) {
-								$data[$k][] = $vv[$v['fk2']['link']['ident']];
+								if ($hasFields) {
+									$curVal = array(
+										db::getCfg('relatedValue')=>$vv[$v['fk2']['link']['ident']]
+									);
+									foreach($v['fields'] as $kF=>$vF) {
+										$curVal[$kF] = $vv[$kF];
+									}
+									$data[$k][] = $curVal;
+								} else {
+									$data[$k][] = $vv[$v['fk2']['link']['ident']];
+								}
 							}
 						}
 					}

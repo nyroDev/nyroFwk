@@ -36,6 +36,11 @@ class form_db extends form {
 		$prm['dbList']['fields'] = $related['fk2']['link']['ident'].
 				($prm['dbList']['fields']? ','.$prm['dbList']['fields'] : null);
 		$type = 'checkbox';
+		if (isset($related['fields']) && count($related['fields'])) {
+			$type = 'checkbox_fields';
+			$prm['table'] = $related['tableObj'];
+			$prm['fields'] = $related['fields'];
+		}
 		if (array_key_exists('formType', $related) && $related['formType'])
 			$type = $related['formType'];
 		return $this->add($type, $prm);

@@ -16,6 +16,7 @@ $cfg = array(
     'defCfg'=>'default',
 
     'i18n'=>'i18n',
+	'relatedValue'=>'value',
 
 	'default'=>array(
 		'use'=>'pdo_mysql',

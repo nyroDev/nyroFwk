@@ -36,6 +36,7 @@ $cfg = array(
 				'jquery',
 				array('file'=>'jqueryui', 'type'=>'css'),
 			),
+			'checkboxFields'=>array('jquery'),
 		),
 		'dependAfter'=>array(),
 	),
