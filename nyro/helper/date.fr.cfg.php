@@ -14,8 +14,8 @@ $cfg = array(
         'long'=>'H:i:s',           // 00:04:13
     ),
     'formatDatetime'=>array(
-        'long'=>'date à time',    // 31 December 2008 at 00:04:13
-        'full'=>'date à time',    // Wednesday 31 December 2008 at 00:04:13
+        'long'=>'date à time',    // 31 December 2008 à 00:04:13
+        'full'=>'date à time',    // Wednesday 31 December 2008 à 00:04:13
     ),
     'day'=>array(
         'd0'=>array('s'=>'D', 'm'=>'Dim', 'l'=>'Dimanche'),

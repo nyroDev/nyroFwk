@@ -10,6 +10,7 @@ $cfg = array(
 	'show'=>null,
 	'edit'=>null,
 
+	'allowAdd'=>true,
 	'iconType'=>null,
 
 	'listPrm'=>array(),

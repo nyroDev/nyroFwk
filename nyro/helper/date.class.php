@@ -126,6 +126,7 @@ class helper_date extends object {
 		    'm'=>$this->get('m'),
 		    'd'=>$this->get('d'),
 		    'l'=>$this->get('l'),
+		    'w'=>$this->get('w'),
 		    'h'=>$this->get('h'),
 			'A'=>$this->get('A'),
 		    'H'=>$this->get('H'),
@@ -193,7 +194,7 @@ class helper_date extends object {
         }
 
         $month = $this->cfg->getInArray('month', 'm'.intval($time['m']));
-        $day = $this->cfg->getInArray('day', 'd'.intval($time['l']));
+        $day = $this->cfg->getInArray('day', 'd'.intval($time['w']));
 		$places = array(
             'H'=>str_pad($time['H'], 2, '0', STR_PAD_LEFT),
             'A'=>$time['A'],

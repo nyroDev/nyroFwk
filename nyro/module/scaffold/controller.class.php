@@ -159,6 +159,7 @@ class module_scaffold_controller extends module_abstract {
 			'filterTable'=>$this->filterTable,
 			'dataTable'=>$this->dataTable,
 			'iconType'=>$iconType,
+			'allowAdd'=>$this->cfg->allowAdd,
 			'addPage'=>request::uriDef(array('action'=>'add', 'param'=>''))
 		));
 	}
@@ -174,7 +175,6 @@ class module_scaffold_controller extends module_abstract {
 	 * @param string $action
 	 */
 	protected function hook($action) {}
-
 
 	protected function execScaffoldShow($prm=null) {
 		$id = $prm[0];
@@ -194,6 +194,9 @@ class module_scaffold_controller extends module_abstract {
 	}
 
 	protected function execScaffoldAdd($prm=null) {
+		if (!$this->cfg->allowAdd) {
+			response::getInstance()->redirect($this->indexPage);
+		}
 		return $this->addEditForm('add');
 	}
 
