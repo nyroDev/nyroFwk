@@ -117,12 +117,16 @@ fieldset ol label strong {
 	text-transform: uppercase;
 }
 fieldset img {
-	padding:1em;
-	border:1px solid #ccc;
-	border-top-color:#eee;
-	border-right-color:#ddd;
-	border-bottom-color:#bbb;
-	background-color:#F2EFE9;
+	padding: 0.4em;
+	border: 1px solid #bbb;
+	border-top-color: #ddd;
+	border-right-color: #ccc;
+	border-bottom-color: #aaa;
+	background-color: #FDFDFD;
+}
+fieldset .uploadifyQueueItem img {
+	padding: 0;
+	border: none;
 }
 fieldset p a.deleteFile {
     background: url(form/delete.png) no-repeat;
@@ -130,14 +134,6 @@ fieldset p a.deleteFile {
     padding-left: 18px;
     position: relative;
     top: -6px;
-}
-fieldset img {
-	padding: 0.4em;
-	border: 1px solid #bbb;
-	border-top-color: #ddd;
-	border-right-color: #ccc;
-	border-bottom-color: #aaa;
-	background-color: #FDFDFD;
 }
 fieldset.submit {
 	float: none;

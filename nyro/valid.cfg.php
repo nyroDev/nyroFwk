@@ -4,6 +4,11 @@ $cfg = array(
 	'value'=>REQUIRED,
 	'rules'=>array(),
 	'validEltArray'=>false,
+	'noNeedRequired'=>array(
+		'required',
+		'groupedFields',
+		'atLeastOneField'
+	),
 	'messages'=>array(
 		'required'=>'%s is required.',
 		'numeric'=>'%s should be numeric.',
@@ -17,5 +22,6 @@ $cfg = array(
 		'dbUnique'=>'%s for %s already exists.',
 		'dbExists'=>'%s for %s doesn\'t exists.',
 		'groupedFields'=>'If %s is filled, you have to fill other(s) field(s).',
+		'atLeastOneField'=>'%s should be filled.',
 	),
 );

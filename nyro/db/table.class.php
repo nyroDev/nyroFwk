@@ -976,7 +976,8 @@ class db_table extends object {
 							if ($kk != 'sep' && $kk != 'ident' && $kk != db::getCfg('i18n')) {
 								if (!empty($data[$i][$fTab]))
 									$label[] = $data[$i][$fTab];
-								unset($data[$i][$fTab]);
+								if ($fTab != $r['table']['ident'])
+									unset($data[$i][$fTab]);
 							}
 						}
 						if (!empty($label)) {

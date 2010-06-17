@@ -75,11 +75,12 @@ class valid extends object {
 	public function isValid() {
 		$this->errors = array();
 		$valid = true;
+		$noNeedRequired = $this->cfg->noNeedRequired;
 		$val = $this->cfg->validEltArray && is_array($this->cfg->value) ? $this->cfg->value : array($this->cfg->value);
 		foreach($this->cfg->rules as $rule=>$prm) {
 			if (!is_numeric($rule)) {
 				foreach($val as $v) {
-					if (($rule == 'required' || $rule == 'groupedFields') || !empty($v))
+					if ((in_array($rule, $noNeedRequired)) || !empty($v))
 						$valid = $this->{'is'.ucfirst($rule)}($v, $prm) && $valid;
 				}
 			}
@@ -192,7 +193,7 @@ class valid extends object {
 	}
 
 	/**
-	 * Check if all parametred fields of of a form are all eiher empty or all present
+	 * Check if all parametred fields of a form are all eiher empty or all present
 	 *
 	 * @param mixed $val The value to test against (not used)
 	 * @param array $prm An array with the keys:
@@ -211,6 +212,30 @@ class valid extends object {
 		if (!$ret) {
 			// not valid
 			$this->errors[] = sprintf($this->getMessage('groupedFields'), $this->cfg->label);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Check if all at least one of the paramtred fields is present
+	 *
+	 * @param mixed $val The value to test against (not used)
+	 * @param array $prm An array with the keys:
+	 * - form form: The form where to retrieve the values
+	 * - array fields: The fields names
+	 * @return bool True if valid
+	 */
+	public function isAtLeastOneField($val, $prm=null) {
+		$nbFilled = 0;
+		foreach($prm['fields'] as $f) {
+			$val = $prm['form']->getValue($f);
+			if (!empty($val))
+				$nbFilled++;
+		}
+		if ($nbFilled == 0) {
+			// not valid
+			$this->errors[] = sprintf($this->getMessage('atLeastOneField'), $this->cfg->label);
 			return false;
 		}
 		return true;

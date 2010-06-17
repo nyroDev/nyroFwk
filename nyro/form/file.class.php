@@ -61,8 +61,9 @@ class form_file extends form_abstract {
 	 * You will probably have to set the script options at least.
 	 *
 	 * @param array $opt Uploadify options
+	 * @param boolean $hideSubmit Indicate if the submit button should be hide by JavaScript
 	 */
-	public function uploadify(array $opt = array()) {
+	public function uploadify(array $opt = array(), $hideSubmit = true) {
 		$resp = response::getInstance();
 		$resp->addJs('jquery');
 		$resp->addJs('swfobject');
@@ -71,15 +72,14 @@ class form_file extends form_abstract {
 
 		$uploadifyOpt = array_merge(array(
 			'fileDataName'=>$this->name
-		), $opt, $this->cfg->uploadify);
+		), $this->cfg->uploadify, $opt);
 
 		if (request::isLocal())
 			$uploadifyOpt['scriptAccess'] = 'always';
 
-		$resp->blockjQuery('
-			$("#'.$this->id.'").uploadify('.utils::jsEncode($uploadifyOpt).');
-			$("#'.$this->id.'").closest("form").find("fieldset.submit input").hide();
-		');
+		$resp->blockjQuery('$("#'.$this->id.'").uploadify('.utils::jsEncode($uploadifyOpt).');');
+		if ($hideSubmit)
+			$resp->blockjQuery('$("#'.$this->id.'").closest("form").find("fieldset.submit input").hide();');
 	}
 
 	public function toHtml() {
