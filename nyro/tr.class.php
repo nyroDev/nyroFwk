@@ -34,9 +34,10 @@ final class tr {
 	 *
 	 * @param string $key The keyword
 	 * @param bool $show Indicate if the word found should be directly shown
+	 * @param bool $out Indicate if the word should be outted
 	 * @return null|string
 	 */
-	public static function __($key, $show=false) {
+	public static function __($key, $show=false, $out=true) {
 		self::initCfg();
 		$ret = null;
 		if (strpos($key, '_') !== false) {
@@ -44,7 +45,9 @@ final class tr {
 			$ret = self::$cfg->getInArray($keys[0], $keys[1]);
 		} else
 			$ret = self::$cfg->get($key);
-		$ret = nl2br(utils::htmlOut($ret));
+		if ($out)
+			$ret = utils::htmlOut($ret);
+		$ret = nl2br($ret);
 		if ($show)
 			echo $ret;
 		else

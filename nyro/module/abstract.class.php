@@ -84,7 +84,7 @@ abstract class module_abstract extends object {
 			$paramTpl[] = $k.':'.$v;
 		}
 
-		$this->tpl = factory::get('tpl', array_merge_recursive(array(
+		$conf = array(
 			'layout'=>$this->cfg->layout,
 			'module'=>$this->getName(),
 			'action'=>$this->cfg->viewAction,
@@ -95,7 +95,8 @@ abstract class module_abstract extends object {
 				'tags'=>$tags,
 				'request'=>array('uri'=>false, 'meth'=>array())
 			), $this->cfg->cache)
-		), $this->cfg->tplPrm));
+		);
+		$this->tpl = factory::get('tpl', array_merge_recursive($conf, $this->cfg->tplPrm));
 		$this->tpl->getCfg()->layout = $this->cfg->layout;
 		$this->tpl->getCfg()->module = $this->getName();
 		$this->tpl->getCfg()->action = $this->cfg->viewAction;

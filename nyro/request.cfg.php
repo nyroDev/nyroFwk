@@ -3,7 +3,7 @@ $cfg = array(
 	'lang'=>'en',
 	'forceLang'=>false,
 	'noForceLang'=>array(
-		'css/', 'img/', 'nyroUtils/'
+		'css/', 'js/', 'img/', 'nyroUtils/'
 	),
 	'module'=>'pages',
 	'action'=>'index',
