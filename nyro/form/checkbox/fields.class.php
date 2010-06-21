@@ -64,14 +64,16 @@ class form_checkbox_fields extends form_checkbox {
 			$vals = http_vars::getInstance()->post($this->name.'_fields');
 			$tmpVal = $value;
 			$value = array();
-			foreach($tmpVal as $v) {
-				$curVal = array(
-					db::getCfg('relatedValue')=>$v
-				);
-				foreach($this->cfg->fields as $f) {
-					$curVal[$f['name']] = isset($vals[$v]) && isset($vals[$v][$f['name']]) ? $vals[$v][$f['name']] : null;
+			if (is_array($tmpVal)) {
+				foreach($tmpVal as $v) {
+					$curVal = array(
+						db::getCfg('relatedValue')=>$v
+					);
+					foreach($this->cfg->fields as $f) {
+						$curVal[$f['name']] = isset($vals[$v]) && isset($vals[$v][$f['name']]) ? $vals[$v][$f['name']] : null;
+					}
+					$value[] = $curVal;
 				}
-				$value[] = $curVal;
 			}
 		}
 		parent::setValue($value);
@@ -88,29 +90,20 @@ class form_checkbox_fields extends form_checkbox {
 	protected function updateLine($type, $val, $line) {
 		$form = clone $this->form;
 
-		$find = false;
 		if (is_array($this->cfg->value))
 			foreach($this->cfg->value as $v) {
 				if ($v[db::getCfg('relatedValue')] == $val) {
-					$find = true;
 					foreach($v as $k=>$vv) {
 						if ($k != db::getCfg('relatedValue')) {
-							$name = str_replace('[name]', $k, $this->replaceName);
-							$form->get($name)->getCfg()->name = str_replace($this->cfg->replaceKey, $val, $name);
-							$form->get($name)->renew();
-							$form->setValue($name, $vv);
+							$form->setValue(str_replace('[name]', $k, $this->replaceName), $vv);
 						}
 					}
 				}
 			}
-		if (!$find) {
-			foreach($v as $k=>$vv) {
-				if ($k != db::getCfg('relatedValue')) {
-					$name = str_replace('[name]', $k, $this->replaceName);
-					$form->get($name)->getCfg()->name = str_replace($this->cfg->replaceKey, $val, $name);
-					$form->get($name)->renew();
-				}
-			}
+		foreach($this->cfg->fields as $f) {
+			$name = str_replace('[name]', $f['name'], $this->replaceName);
+			$form->get($name)->getCfg()->name = str_replace($this->cfg->replaceKey, $val, $name);
+			$form->get($name)->renew();
 		}
 
 		return str_replace('[fields]', $form->__toString(), $line);

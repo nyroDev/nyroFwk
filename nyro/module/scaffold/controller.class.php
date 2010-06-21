@@ -134,7 +134,7 @@ class module_scaffold_controller extends module_abstract {
 			$query = array('where'=>$this->filterTable->getWhere());
 		}
 
-		$this->dataTable = factory::getHelper('dataTable', array_merge_recursive(array(
+		$conf = array(
 			'table'=>$this->table,
 			'query'=>$query,
 			'name'=>$this->cfg->name.'DataTable',
@@ -151,7 +151,9 @@ class module_scaffold_controller extends module_abstract {
 				'edit'=>tr::__('scaffold_edit'),
 				'delete'=>tr::__('scaffold_delete'),
 			),
-		), $this->cfg->listPrm));
+		);
+		factory::mergeCfg($conf, $this->cfg->listPrm);
+		$this->dataTable = factory::getHelper('dataTable', $conf);
 
 		$this->hook('list');
 
