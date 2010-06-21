@@ -102,7 +102,7 @@ class form_fileUploaded extends object {
 			$savePath = $this->dir.$name;
 			if (move_uploaded_file($this->file['tmp_name'], $savePath)) {
 				$tmpName = $this->callHelper('upload', $savePath);
-				if ($tmpName) {
+				if ($tmpName && !is_bool($tmpName)) {
 					$name = $tmpName;
 					$savePath = $this->dir.$tmpName;
 				}
