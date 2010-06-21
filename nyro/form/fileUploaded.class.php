@@ -101,7 +101,11 @@ class form_fileUploaded extends object {
 			$name = $this->safeFileName($this->file['name']);
 			$savePath = $this->dir.$name;
 			if (move_uploaded_file($this->file['tmp_name'], $savePath)) {
-				$this->callHelper('upload', $savePath);
+				$tmpName = $this->callHelper('upload', $savePath);
+				if ($tmpName) {
+					$name = $tmpName;
+					$savePath = $this->dir.$tmpName;
+				}
 				$webPath = str_replace(DS, '/', $this->subdir.$name);
 				$this->file['saved'] = array(
 					'name'=>$name,
