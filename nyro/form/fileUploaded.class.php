@@ -52,7 +52,14 @@ class form_fileUploaded extends object {
 		}
 		file::createDir($this->dir);
 
-		if (array_key_exists($this->cfg->name, $_FILES)) {
+		if (strpos($this->cfg->name, '[')) {
+			$tmp = explode('[', str_replace(']', '', $this->cfg->name));
+			$tmpfile = utils::getValInArray($_FILES, $tmp);
+			if (!empty($tmpfile) && is_array($tmpfile)) {
+				$this->file = $tmpfile;
+				$this->file['saved'] = false;
+			}
+		} else if (array_key_exists($this->cfg->name, $_FILES)) {
 			$this->file = $_FILES[$this->cfg->name];
 			$this->file['saved'] = false;
 		}

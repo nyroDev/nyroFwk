@@ -255,16 +255,32 @@ final class request {
 			$tmp = array();
 			foreach($_FILES as $k=>$p) {
 				if (is_array($p['name'])) {
-					// multiple files
-					$tmp[$k] = array();
-					foreach($p['name'] as $i=>$v) {
-						$tmp[$k][$i] = array(
-							'name'=>$v,
-							'type'=>$_FILES[$k]['type'][$i],
-							'tmp_name'=>$_FILES[$k]['tmp_name'][$i],
-							'error'=>$_FILES[$k]['error'][$i],
-							'size'=>$_FILES[$k]['size'][$i],
-						);
+					if (is_array(current($p['name']))) {
+						// multiple files with multiple element
+						$tmp[$k] = array();
+						foreach($p['name'] as $i=>$v) {
+							foreach($v as $kk=>$vv) {
+								$tmp[$k][$i][$kk] = array(
+									'name'=>$vv,
+									'type'=>$_FILES[$k]['type'][$i][$kk],
+									'tmp_name'=>$_FILES[$k]['tmp_name'][$i][$kk],
+									'error'=>$_FILES[$k]['error'][$i][$kk],
+									'size'=>$_FILES[$k]['size'][$i][$kk],
+								);
+							}
+						}
+					} else {
+						// multiple files
+						$tmp[$k] = array();
+						foreach($p['name'] as $i=>$v) {
+							$tmp[$k][$i] = array(
+								'name'=>$v,
+								'type'=>$_FILES[$k]['type'][$i],
+								'tmp_name'=>$_FILES[$k]['tmp_name'][$i],
+								'error'=>$_FILES[$k]['error'][$i],
+								'size'=>$_FILES[$k]['size'][$i],
+							);
+						}
 					}
 				} else
 					$tmp[$k] = $p;
