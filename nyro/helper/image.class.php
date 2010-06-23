@@ -39,7 +39,6 @@ class helper_image extends helper_file {
 	 *
 	 * @param string $file The image uploaded
 	 * @param array $prm The parameter for the image
-	 * @return bool True if success
 	 * @see bluid
 	 */
 	public function upload($file, array $prm = array()) {
@@ -48,7 +47,7 @@ class helper_image extends helper_file {
 			$this->cfg->fileSave = $file;
 		$this->cfg->setA($prm);
 		$this->cfg->rebuild = true;
-		return $this->build();
+		return basename($this->build());
 	}
 
 	/**

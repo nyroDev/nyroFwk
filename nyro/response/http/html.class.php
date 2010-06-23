@@ -526,7 +526,7 @@ class response_http_html extends response_http {
 	 * @param string $ln New line character
 	 * @return string
 	 */
-	protected function getHtmlBlocks($type, $ln="\n") {
+	public function getHtmlBlocks($type, $ln="\n") {
 		$ret = null;
 
 		if ($type == 'js' && !empty($this->blocksJquery))

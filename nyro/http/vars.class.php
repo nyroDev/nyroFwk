@@ -72,6 +72,8 @@ final class http_vars {
 				$act = '_'.strtoupper($p['method']);
 				$ret = utils::getValInArray($GLOBALS[$act], $name);
 			}
+			if ($act == '_GET')
+				$ret = is_array($ret) ? array_map('urldecode', $ret) : urldecode($ret);
 			if ($p['trim'] && !is_null($ret) && !is_array($ret))
 				$ret = trim($ret);
 		}
