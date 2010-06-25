@@ -9,6 +9,7 @@ $cfg = array(
 		'page'=>1,
 	),
 	'table'=>REQUIRED,
+	'sessionName'=>null,
 	'fields'=>null,
 	'label'=>array()
 );

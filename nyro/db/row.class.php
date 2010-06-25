@@ -700,7 +700,7 @@ class db_row extends object {
 	 */
 	public function getRelated($name) {
 		$related = $this->getTable()->getRelated($this->getTable()->getRelatedTableName($name));
-		return $related['tableObj']->getLinkedTable('module_nom')->select(array(
+		return $related['tableObj']->getLinkedTable($related['fk2']['name'])->select(array(
 			'where'=>$this->getWhere(array(
 				'clauses'=>factory::get('db_whereClause', array(
 					'name'=>$related['fk2']['link']['table'].'.'.$related['fk2']['link']['ident'],

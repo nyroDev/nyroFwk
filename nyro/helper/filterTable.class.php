@@ -32,9 +32,11 @@ class helper_filterTable extends object {
 
 	protected function afterInit() {
 		$this->table = $this->cfg->table;
+		if (!$this->cfg->sessionName)
+			$this->cfg->sessionName = $this->table->getName();
 
 		$this->session = session::getInstance(array(
-			'nameSpace'=>'filterTable_'.$this->table->getName()
+			'nameSpace'=>'filterTable_'.$this->cfg->sessionName
 		));
 
 		if (!$this->cfg->check('clearPrm'))

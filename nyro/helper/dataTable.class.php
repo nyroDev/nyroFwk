@@ -53,22 +53,24 @@ class helper_dataTable extends object {
 		if (empty($this->cfg->module))
 			$this->cfg->module = utils::getModuleName(debug::callFrom(6, null));
 
-		$this->session = session::getInstance(array(
-			'nameSpace'=>'dataTable_'.$this->cfg->name
-		));
+		if ($this->cfg->useSession)
+			$this->session = session::getInstance(array(
+				'nameSpace'=>'dataTable_'.$this->cfg->name
+			));
 
 		$paramFromRequest = array('page', 'sortBy', 'sortDir');
 		$paramA = request::get('paramA');
 		foreach($paramFromRequest as $pfr) {
-			if ($this->session->check($pfr))
+			if ($this->cfg->useSession && $this->session->check($pfr))
 				$this->cfg->set($pfr, $this->session->get($pfr));
 
 			if (array_key_exists($pfr.$this->cfg->nameParam, $paramA)) {
 				$val = $paramA[$pfr.$this->cfg->nameParam];
-				$this->session->set(array(
-					'name'=>$pfr,
-					'val'=>$val
-				));
+				if ($this->cfg->useSession)
+					$this->session->set(array(
+						'name'=>$pfr,
+						'val'=>$val
+					));
 				$this->cfg->set($pfr, $val);
 			}
 		}
