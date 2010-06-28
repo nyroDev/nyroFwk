@@ -288,10 +288,13 @@ abstract class db_abstract extends object {
 			$table = db::get('table', $prm['table']);
 			$tableName = $this->quoteIdentifier($prm['table']);
 			if (is_array($prm['fields'])) {
-				array_walk($prm['fields'], array($this, 'quoteIdentifier'));
-				$f = implode(',', $prm['fields']);
-			} else
-				$f = $prm['fields'];
+				$f = implode(',', array_map(array($this, 'quoteIdentifier'), $prm['fields']));
+			} else {
+				if (strpos($prm['fields'], $this->cfg->quoteIdentifier) === false) {
+					$f = implode(',', array_map(array($this, 'quoteIdentifier'), explode(',', $prm['fields'])));
+				} else
+					$f = $prm['fields'];
+			}
 
 			if (!empty($prm['i18nFields'])) {
 				$i18nTable = db::get('table', $prm['table'].db::getCfg('i18n'));
@@ -503,10 +506,16 @@ abstract class db_abstract extends object {
 	 * @return string The quoted identifier.
 	 */
 	public function quoteIdentifier($ident) {
-		return $this->cfg->quoteIdentifier
-			.implode($this->cfg->quoteIdentifier.'.'.$this->cfg->quoteIdentifier,
-				explode('.', $ident))
+		$tmpSpace = explode(' ', $ident);
+		$tmp = explode('.', $tmpSpace[0]);
+		if (count($tmp) == 1 && $tmp[0] == '*')
+			return '*';
+		else if (count($tmp) == 2 && $tmp[1] == '*')
+			return $this->cfg->quoteIdentifier.$tmp[0].$this->cfg->quoteIdentifier.'.*';
+		$tmpSpace[0] = $this->cfg->quoteIdentifier
+			.implode($this->cfg->quoteIdentifier.'.'.$this->cfg->quoteIdentifier, $tmp)
 			.$this->cfg->quoteIdentifier;
+		return implode(' ', $tmpSpace);
 	}
 
 	/**
