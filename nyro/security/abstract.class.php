@@ -103,6 +103,7 @@ abstract class security_abstract extends object {
 	 * Available actions:
 	 * - autologin
 	 * - login
+	 * - redirectError
 	 * - logout
 	 *
 	 * @param string $action

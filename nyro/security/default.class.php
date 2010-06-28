@@ -244,6 +244,7 @@ class security_default extends security_abstract {
 			if ($request != $this->getPage('forbidden') && $request != $this->getPage('login')) {
 				$this->session->pageFrom = request::uri(request::get());
 				session::setFlash('nyroError', $this->cfg->errorText);
+				$this->hook('redirectError');
 				response::getInstance()->redirect($this->getPage('forbidden', true), 403);
 			}
 		}
