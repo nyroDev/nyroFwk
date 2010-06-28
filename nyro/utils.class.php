@@ -296,7 +296,7 @@ class utils {
 			'timestamp'=>is_int($date) ? $date : strtotime($date),
 			'defaultFormat'=>array(
 				'type'=>$type,
-				'len'=>$len
+				'len'=>$type == 'datetime' && $len == 'short2' ? 'short' : $len
 			),
 			'htmlOut'=>$htmlOut
 		));
