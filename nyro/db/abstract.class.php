@@ -506,6 +506,8 @@ abstract class db_abstract extends object {
 	 * @return string The quoted identifier.
 	 */
 	public function quoteIdentifier($ident) {
+		if (strpos($ident, '(') !== false)
+			return $ident;
 		$tmpSpace = explode(' ', $ident);
 		$tmp = explode('.', $tmpSpace[0]);
 		if (count($tmp) == 1 && $tmp[0] == '*')

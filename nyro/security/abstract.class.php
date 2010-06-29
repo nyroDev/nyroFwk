@@ -101,7 +101,8 @@ abstract class security_abstract extends object {
 	/**
 	 * Function to be rewritten in eventual child to change the way security works
 	 * Available actions:
-	 * - autologin
+	 * - autoLogin
+	 * - autoLoginSession
 	 * - login
 	 * - redirectError
 	 * - logout

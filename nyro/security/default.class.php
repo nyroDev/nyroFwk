@@ -78,8 +78,7 @@ class security_default extends security_abstract {
 			), $this->cfg->where));
 			if ($this->user) {
 				$this->logged = true;
-				if (!$fromSession)
-					$this->hook('autologin');
+				$this->hook('autoLogin'.($fromSession ? 'Session' : null));
 				$this->session->cryptic = $cryptic;
 			} else if (isset($cook))
 				$cook->del();
