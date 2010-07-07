@@ -24,6 +24,13 @@ class helper_image extends helper_file {
 	private $imgTmp;
 
 	/**
+	 * Image information
+	 *
+	 * @var array
+	 */
+	private $info;
+
+	/**
 	 * Destructor
 	 */
 	public function __destruct() {
@@ -61,12 +68,18 @@ class helper_image extends helper_file {
 		$this->cfg->file = FILESROOT.$file;
 		$this->cfg->setA($prm);
 		$this->cfg->html = true;
-		$this->cfg->fileSave = $this->makePath($this->cfg->file, $this->cfg->fileSaveAdd);
+		if ($this->cfg->originalView) {
+			$this->cfg->fileSave = $this->cfg->file;
+			$ret = $this->html();
+		} else {
+			$this->cfg->fileSave = $this->makePath($this->cfg->file, $this->cfg->fileSaveAdd);
+			$ret = $this->build();
+		}
 		$fileWeb = str_replace(FILESROOT, '', $this->cfg->fileSave);
 		return str_replace(
 			$this->cfg->fileSave,
 			request::uploadedUri($fileWeb),
-			$this->build());
+			$ret);
 	}
 
 	/**
@@ -91,10 +104,12 @@ class helper_image extends helper_file {
 	public function makePath($file, $more=null) {
 		if (is_null($more))
 			$more = md5($this->cfg->w.'_'.$this->cfg->h.'_'.$this->cfg->bgColor.'_'.$this->cfg->fit);
+		if ($more)
+			$more = '_'.$more;
 
 		return preg_replace(
 			'/\.('.implode('|', $this->cfg->autoExt).')$/i',
-			'_'.$more.'.'.file::getExt($file),
+			$more.'.'.file::getExt($file),
 			$file);
 	}
 
@@ -239,7 +254,6 @@ class helper_image extends helper_file {
 		}
 		if ($ret)
 			$this->cfg->fileSave = $file;
-
 		return $ret;
 	}
 
@@ -252,25 +266,25 @@ class helper_image extends helper_file {
 	private function createImage($file) {
 		if (!file::exists($file) || ! is_file($file))
 			return false;
-		$size = getimagesize($file);
+		$this->info = getimagesize($file);
 
 		$img = null;
 
-		switch ($size[2]) {
-			case 1 :
+		switch ($this->info[2]) {
+			case IMAGETYPE_GIF:
 				$img = imagecreatefromgif($file);
 				break;
-			case 2 :
+			case IMAGETYPE_JPEG:
 				$img = imagecreatefromjpeg($file);
 				break;
-			case 3 :
+			case IMAGETYPE_PNG:
 				$img = imagecreatefrompng($file);
 				break;
 			default:
 				return false;
 		}
 
-		return array(&$img, $size[0], $size[1]);
+		return array(&$img, $this->info[0], $this->info[1]);
 	}
 
 	/**
@@ -343,28 +357,25 @@ class helper_image extends helper_file {
 			$dstH = $prm['h'];
 		}
 
-		$imgDst = imagecreatetruecolor($prm['w'],$prm['h']);
+		$imgDst = imagecreatetruecolor($prm['w'], $prm['h']);
 
-		if (!$prm['fit']) {
-			$cl = array();
-			// Background
-			if (empty($prm['bgColor'])) {
-				// For a transparent Background : the color inverse of the first Pixel
-				$rgb = ImageColorAt($img, 1, 1);
-				$clT = imagecolorsforindex($img, $rgb);
-				$cl[0] = 255 - $clT['red'];
-				$cl[1] = 255 - $clT['green'];
-				$cl[2] = 255 - $clT['blue'];
-			} else {
-				$cl = $this->hexa2dec($prm['bgColor']);
+		if (empty($prm['bgColor']) && ($this->info[2] == IMAGETYPE_GIF || $this->info[2] == IMAGETYPE_PNG)) {
+			$transparency = imagecolortransparent($img);
+			if ($transparency >= 0) {
+				$transparentColor  = imagecolorsforindex($img, $trnprt_indx);
+				$transparency      = imagecolorallocate($imgDst, $transparentColor['red'], $transparentColor['green'], $transparentColor['blue']);
+				imagefill($imgDst, 0, 0, $transparency);
+				imagecolortransparent($imgDst, $transparency);
+			} else if ($this->info[2] == IMAGETYPE_PNG) {
+				imagealphablending($imgDst, false);
+				imagesavealpha($imgDst, true);
+				$color = imagecolorallocatealpha($imgDst, 255, 255, 255, 127);
+				imagefilledrectangle($imgDst, 0,  0, $prm['w'], $prm['H'], $color);
 			}
-
+		} else if (!$prm['fit']) {
+			$cl = $this->hexa2dec($prm['bgColor']);
 			$clR = imagecolorallocate($imgDst, $cl[0], $cl[1], $cl[2]);
 			imagefill($imgDst, 0, 0, $clR);
-
-			if (empty($prm['bgColor']))
-				// Make background transparent
-				imagecolortransparent($imgDst, $clR);
 		}
 
 		// Copy form $img to $imgDst With the parameter defined
@@ -460,9 +471,9 @@ class helper_image extends helper_file {
 	 */
 	private function hexa2dec($col) {
 		return array(
-			base_convert(substr($col,0,2),16,10),
-			base_convert(substr($col,2,2),16,10),
-			base_convert(substr($col,4,2),16,10)
+			base_convert(substr($col, 0, 2), 16, 10),
+			base_convert(substr($col, 2, 2), 16, 10),
+			base_convert(substr($col, 4, 2), 16, 10)
 		);
 	}
 
