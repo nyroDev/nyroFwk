@@ -596,6 +596,26 @@ class form extends object {
 	}
 
 	/**
+	 * Move a field to another section
+	 *
+	 * @param string $name Fieldname
+	 * @param int $section Section Number. If null, current section will be used
+	 * @return bool True if the field was found and moved
+	 */
+	public function moveToSection($name, $section=null) {
+		$f = $this->get($name);
+		if ($f) {
+			$curSection = $this->elementsSection[$name];
+			$section = $section ? $section : $this->curSection;
+			$this->elements[$section][$name] = $f;
+			$this->elementsSection[$name] = $section;
+			unset($this->elements[$curSection][$name]);
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Change the mode of the form
 	 *
 	 * @param string $mode edit or view
