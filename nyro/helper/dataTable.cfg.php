@@ -23,7 +23,10 @@ $cfg = array(
 
 	'noData'=>'No Data.',
 
-	'tplVars'=>array(),
+	'tplVars'=>array(
+		'sortIndicatorAsc'=>'^',
+		'sortIndicatorDesc'=>'v',
+	),
 
 	'actions'=>array(),
 	'actionsAlt'=>array(),

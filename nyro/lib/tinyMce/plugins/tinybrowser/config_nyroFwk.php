@@ -4,7 +4,7 @@ $_SESSION[$tinybrowser['sessioncheck']] = true;
 
 $tinybrowser['language'] = request::get('lang');
 
-$tinybrowser['docroot'] = FILESROOT.DS.'tinyBrowser';
+$tinybrowser['docroot'] = FILESROOT.'tinyBrowser';
 
 // File upload paths (set to absolute by default)
 $tinybrowser['path']['image'] = '/images/'; // Image files location - also creates a '_thumbs' subdirectory within this path to hold the image thumbnails

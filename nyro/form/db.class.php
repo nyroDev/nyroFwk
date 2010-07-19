@@ -75,7 +75,7 @@ class form_db extends form {
 			case 'radio':
 			case 'list':
 				//if (!empty($prm['list'])) {
-					$prm['list'] = array_merge(array('-1'=>$this->cfg->all), $prm['list']);
+					$prm['list'] += array('-1'=>$this->cfg->all);
 					$prm['valueNone'] = -1;
 					$prm['value'] = -1;
 				//}

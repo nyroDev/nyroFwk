@@ -288,6 +288,7 @@ class helper_dataTable extends object {
 				'actionsImg'=>$actionsImg,
 				'actionsAlt'=>$actionsAlt,
 				'iconType'=>$this->cfg->iconType,
+				'tblName'=>$this->table->getName(),
 				'sortBy'=>$this->sortBy,
 				'sortDir'=>$this->cfg->sortDir,
 			), $this->cfg->tplVars));

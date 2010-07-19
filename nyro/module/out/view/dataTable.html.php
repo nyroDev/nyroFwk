@@ -4,9 +4,15 @@
 			<tr>
 				<?php
 				foreach($headers as $h) {
-					if ($h['url'])
-						echo '<th><a href="'.$h['url'].'">'.$h['label'].'</a></th>';
-					else
+					if ($h['url']) {
+						if ($h['name'] == $sortBy || $tblName.'.'.$h['name'] == $sortBy) {
+							echo '<th>
+								<a href="'.$h['url'].'">'.$h['label'].'</a>
+								'.($sortDir == 'asc' ? $sortIndicatorAsc : $sortIndicatorDesc).'
+								</th>';
+						} else
+							echo '<th><a href="'.$h['url'].'">'.$h['label'].'</a></th>';
+					} else
 						echo '<th>'.$h['label'].'</th>';
 					if ($h['type'] == 'image')
 						$imgHelper = factory::getHelper('image', array(
@@ -26,10 +32,21 @@
 				echo '<tr>';
 				foreach($headers as $h) {
 					$val = $l->get($h['name'], 'flatReal');
-					if ($h['type'] == 'date' && $val)
-						$val = utils::formatDate($val);
-					else if ($h['type'] == 'image' && $val)
-						$val = $imgHelper->view($val);
+					switch($h['type']) {
+						case 'date':
+							$val = $val ? utils::formatDate($val) : $val;
+							break;
+						case 'datetime':
+						case 'timestamp':
+							$val = $val ? utils::formatDate($val, 'datetime') : $val;
+							break;
+						case 'image':
+							$val = $val ? $imgHelper->view($val) : $val;
+							break;
+						case 'tinyint':
+							$val = $val ? 'Oui' : 'Non';
+							break;
+					}
 					echo '<td>'.(is_array($val)? implode(', ', $val) : $val).'</td>';
 				}
 				if ($actions) {

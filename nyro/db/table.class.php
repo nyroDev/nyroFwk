@@ -318,8 +318,9 @@ class db_table extends object {
 					'db'=>$this->getDb()
 				));
 				$fields = $table->getField();
+				$fk1 = $fk2 = null;
 				foreach($fields as $k=>$v) {
-					if (strpos($k, $this->cfg->name) !== false) {
+					if (is_null($fk1) && strpos($k, $this->cfg->name) !== false) {
 						$fk1 = array_merge($v, array('link'=>$table->getLinked($k)));
 						unset($fields[$k]);
 					} else if (strpos($k, $relatedTable) !== false) {
