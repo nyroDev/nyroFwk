@@ -158,17 +158,21 @@ class helper_image extends helper_file {
 					}
 				} else {
 					// Resize
-					if($this->resize(array(
-						'w'=>$this->cfg->w,
-						'h'=>$this->cfg->h,
-						'bgColor'=>$this->cfg->bgColor,
-						'fit'=>$this->cfg->fit
-						))) {
-						// Save the new size
-						$this->cfg->wAct = imagesx($this->imgAct);
-						$this->cfg->hAct = imagesy($this->imgAct);
-						if ($this->cfg->w || $this->cfg->h)
-							$change = true;
+					if ($this->cfg->resizeSmaller ||
+							($this->cfg->w > 0 && $this->cfg->wAct > $this->cfg->w) ||
+							($this->cfg->h > 0 && $this->cfg->hAct > $this->cfg->h)) {
+						if($this->resize(array(
+							'w'=>$this->cfg->w,
+							'h'=>$this->cfg->h,
+							'bgColor'=>$this->cfg->bgColor,
+							'fit'=>$this->cfg->fit
+							))) {
+							// Save the new size
+							$this->cfg->wAct = imagesx($this->imgAct);
+							$this->cfg->hAct = imagesy($this->imgAct);
+							if ($this->cfg->w || $this->cfg->h)
+								$change = true;
+						}
 					}
 				}
 
