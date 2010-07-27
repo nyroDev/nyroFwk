@@ -169,6 +169,7 @@ class module_scaffold_controller extends module_abstract {
 	/**
 	 * Function to be rewritten in eventual child to change the way the scaffold works
 	 * Available actions:
+	 * - list
 	 * - show, formShow
 	 * - add, formPostAdd, beforeAdd, afterAdd, formAdd
 	 * - edit, formPostEdit, beforeEdit, afterEdit, formEdit

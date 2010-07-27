@@ -563,7 +563,7 @@ final class request {
 	 * @return string the uri
 	 * @see uri
 	 */
-	public static function uriDef(array $prm, array $use=array('lang', 'module', 'action', 'param', 'out')) {
+	public static function uriDef(array $prm = array(), array $use=array('lang', 'module', 'action', 'param', 'out')) {
 		$tmp = array();
 
 		foreach($use as $u) {
