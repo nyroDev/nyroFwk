@@ -295,6 +295,7 @@ class helper_dataTable extends object {
 		} else {
 			// No data
 			$tpl->set('noData', utils::htmlOut($this->cfg->noData));
+			$tpl->setA($this->cfg->tplVars);
 		}
 		return $tpl->fetch(array('tplExt'=>$type));
 	}

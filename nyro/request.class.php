@@ -184,7 +184,8 @@ final class request {
 		if ($pathWithController) {
 			if (strpos($path, $controller) !== false)
 				$path = substr($path, 0, -strlen($controller)-1);
-			$request = substr($requestUri, strlen($path.$controller)+1);
+			$len = strlen($path.$controller);
+			$request = (isset($requestUri[$len]) && $requestUri[$len] == '?') ? '' : substr($requestUri, $len+1);
 		} else
 			$request = substr($requestUri, strlen($path));
 
