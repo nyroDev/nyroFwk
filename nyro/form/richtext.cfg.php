@@ -2,6 +2,7 @@
 $cfg = array(
 	'tinyBrowser'=>array(
 		'url'=>str_replace('.js', '.php', response::getInstance()->getUrlFile('js', 'tiny_mce/plugins/tinybrowser/tinybrowser', 'web')),
+		'subdir'=>null,
 		'width'=>770,
 		'height'=>480,
 		'title'=>'Browser',

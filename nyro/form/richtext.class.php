@@ -28,8 +28,7 @@ class form_richtext extends form_multiline {
 			$tinyBrowser = $this->cfg->tinyBrowser;
 			$options['file_browser_callback'] = 'function(field_name, url, type, win) {
 				tinyMCE.activeEditor.windowManager.open({
-					file : "'.$tinyBrowser['url'].',type:"+type+"/",
-					file : "'.$tinyBrowser['url'].'?'.session::getInstance()->getSessIdForce().'='.urlencode(session_id()).'&type=" + type,
+					file : "'.$tinyBrowser['url'].'?'.session::getInstance()->getSessIdForce().'='.urlencode(session_id()).'&type=" + type'.($tinyBrowser['subdir'] ? '+"&subdir='.$tinyBrowser['subdir'].'"' : '').',
 					title : "'.$tinyBrowser['title'].'",
 					width : '.$tinyBrowser['width'].',
 					height : '.$tinyBrowser['height'].',
