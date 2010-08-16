@@ -366,7 +366,8 @@ class helper_image extends helper_file {
 		if (empty($prm['bgColor']) && ($this->info[2] == IMAGETYPE_GIF || $this->info[2] == IMAGETYPE_PNG)) {
 			$transparency = imagecolortransparent($img);
 			if ($transparency >= 0) {
-				$transparentColor  = imagecolorsforindex($img, $trnprt_indx);
+				$trnprtIndex = imagecolortransparent($img);
+				$transparentColor  = imagecolorsforindex($img, $trnprtIndex);
 				$transparency      = imagecolorallocate($imgDst, $transparentColor['red'], $transparentColor['green'], $transparentColor['blue']);
 				imagefill($imgDst, 0, 0, $transparency);
 				imagecolortransparent($imgDst, $transparency);
@@ -374,7 +375,7 @@ class helper_image extends helper_file {
 				imagealphablending($imgDst, false);
 				imagesavealpha($imgDst, true);
 				$color = imagecolorallocatealpha($imgDst, 255, 255, 255, 127);
-				imagefilledrectangle($imgDst, 0,  0, $prm['w'], $prm['H'], $color);
+				imagefilledrectangle($imgDst, 0,  0, $prm['w'], $prm['h'], $color);
 			}
 		} else if (!$prm['fit']) {
 			$cl = $this->hexa2dec($prm['bgColor']);

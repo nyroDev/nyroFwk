@@ -267,7 +267,7 @@ class valid extends object {
 	 * @return bool True if valid
 	 */
 	public function isUrl($val, $prm=null) {
-		if (!preg_match('@^http(s)?://[a-zA-Z0-9\._]+\.[a-zA-Z]{2,4}@', $val)) {
+		if (!filter_var($val, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
 			$this->errors[] = sprintf($this->getMessage('url'), $this->cfg->label);
 			return false;
 		}

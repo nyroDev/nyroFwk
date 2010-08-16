@@ -565,12 +565,14 @@ class db_row extends object {
 	 * @param bool $force Indicates if the value should be replaced even if it's the same
 	 * @param string|null $lg Lang
 	 */
-	public function setI18n(array $values, $lg=null, $force=false) {
+	public function setI18n(array $values, $force=false, $lg=null) {
 		if (!is_null($lg) && $lg) {
-			$this->getI18nRow($lg)->setValues($values, $force);
+			$values = array_filter($values);
+			if (count($values))
+				$this->getI18nRow($lg)->setValues($values, $force);
 		} else {
 			foreach($values as $lg=>$val)
-				$this->setI18n($val, $lg, $force);
+				$this->setI18n($val, $force, $lg);
 		}
 	}
 
