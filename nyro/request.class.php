@@ -139,11 +139,11 @@ final class request {
 
 		$serverName = array_key_exists('SERVER_NAME', $_SERVER) ? $_SERVER['SERVER_NAME'] : null;
 		$stdPort = $secure ? '443' : '80';
-		$port = ($_SERVER['SERVER_PORT'] != $stdPort && $_SERVER['SERVER_PORT'])? ':'.$_SERVER['SERVER_PORT'] : '';
+		$port = (array_key_exists('SERVER_PORT', $_SERVER) && $_SERVER['SERVER_PORT'] != $stdPort && $_SERVER['SERVER_PORT'])? ':'.$_SERVER['SERVER_PORT'] : '';
 		$domain = $protocol.'://'.$serverName.$port;
 
-		$requestUri = $_SERVER['REQUEST_URI'];
 		$scriptName = $_SERVER['SCRIPT_NAME'];
+		$requestUri = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : ('/'.$scriptName.(array_key_exists(1, $_SERVER['argv']) ? $_SERVER['argv'][1] : ''));
 
 		$redir = null;
 		if (self::$cfg->forceServerName
