@@ -109,7 +109,7 @@ class Moxiecode_CSSCompressor {
 		header("Vary: Accept-Encoding");  // Handle proxies
 
 		// Use etag support for MSIE 7+, IE 6 doesn't support etags over gzip
-		if ($this->_settings['etags'] || preg_match('/MSIE/i', $_SERVER['HTTP_USER_AGENT'])) {
+		if ($this->_settings['etags']) {// || preg_match('/MSIE/i', $_SERVER['HTTP_USER_AGENT'])) {
 			// We need to use etags on IE since it will otherwise always load the contents
 
 			$remoteEtag = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? trim($_SERVER['HTTP_IF_NONE_MATCH']) : false;
