@@ -2,6 +2,7 @@
 $cfg = array(
 	'lang'=>'en',
 	'forceLang'=>false,
+	'forceNoLang'=>false,
 	'noForceLang'=>array(
 		'css/', 'js/', 'img/', 'nyroUtils/'
 	),

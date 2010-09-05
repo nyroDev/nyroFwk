@@ -759,11 +759,12 @@ class db_row extends object {
 	 *
 	 * @return string
 	 */
-	protected function whereClause() {
+	public function whereClause() {
 		$primary = $this->getTable()->getPrimary();
+		$values = $this->getValues('flat');
 		$where = array();
 		foreach($primary as $p) {
-			$where[] = $this->getTable()->getName().'.'.$p.='="'.$this->get($p).'"';
+			$where[] = $this->getTable()->getName().'.'.$p.='="'.$values[$p].'"';
 		}
 		return implode(' AND ', $where);
 	}

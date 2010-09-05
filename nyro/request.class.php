@@ -189,7 +189,12 @@ final class request {
 		} else
 			$request = substr($requestUri, strlen($path));
 
-		if (self::$cfg->forceLang) {
+		if (self::$cfg->forceNoLang) {
+			$forceNoLang = self::$cfg->forceNoLang === true ? self::$cfg->lang : self::$cfg->forceNoLang;
+			if ($requestUri != $path && strpos($requestUri, '/'.$forceNoLang.'/') !== false && $request) {
+				$redir = str_replace('/'.$forceNoLang.'/', '/', $redir ? $redir : $domain.$requestUri);
+			}
+		} else if (self::$cfg->forceLang) {
 			$forceLang = self::$cfg->forceLang === true ? self::$cfg->lang : self::$cfg->forceLang;
 			if ($requestUri != $path && strpos($requestUri, '/'.$forceLang.'/') === false
 					&& $request) {
@@ -202,6 +207,7 @@ final class request {
 					$i++;
 				}
 				if ($continue) {
+					// lang not found, force it
 					$redirWork = $redir ? $redir : $domain.$requestUri;
 					$search = $domain.$path.($pathWithController? $controller.'/' : null);
 					$pos = strpos($redirWork, $search) + strlen($search);
