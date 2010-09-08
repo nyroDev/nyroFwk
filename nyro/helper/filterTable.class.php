@@ -148,14 +148,22 @@ class helper_filterTable extends object {
 					'op'=>'<>'
 				));
 			} else {
-				$tmp = explode(' ', $val);
-				array_walk($tmp, create_function('&$v', '$v = trim($v);'));
-				$tmp = array_filter($tmp);
-				foreach($tmp as $t) {
+				$f = $this->table->getField($name);
+				if (!array_key_exists('text', $f) || $f['text']) {
+					$tmp = explode(' ', $val);
+					array_walk($tmp, create_function('&$v', '$v = trim($v);'));
+					$tmp = array_filter($tmp);
+					foreach($tmp as $t) {
+						$where->add(array(
+							'field'=>$field,
+							'val'=>'%'.$t.'%',
+							'op'=>'LIKE'
+						));
+					}
+				} else {
 					$where->add(array(
 						'field'=>$field,
-						'val'=>'%'.$t.'%',
-						'op'=>'LIKE'
+						'val'=>$val
 					));
 				}
 			}
