@@ -30,6 +30,13 @@ class helper_filterTable extends object {
 	 */
 	protected $session;
 
+	/**
+	 * Indicates if the form has values
+	 *
+	 * @var bool
+	 */
+	protected $hasValues = false;
+
 	protected function afterInit() {
 		$this->table = $this->cfg->table;
 		if (!$this->cfg->sessionName)
@@ -86,6 +93,7 @@ class helper_filterTable extends object {
 				$this->form->addFromRelated($r);
 			}
 		}
+		$defValues = $this->form->getValues();
 
 		if (request::isPost() || request::getPrm($this->cfg->clearPrm)) {
 			$this->form->refill();
@@ -97,6 +105,10 @@ class helper_filterTable extends object {
 			}
 			$this->form->setBound(false);
 		}
+		foreach($this->form->getValues() as $k=>$v) {
+			if ($v != $defValues[$k])
+				$this->hasValues = true;
+		}
 	}
 
 	/**
@@ -106,6 +118,15 @@ class helper_filterTable extends object {
 	 */
 	public function getForm() {
 		return $this->form;
+	}
+
+	/**
+	 * Indicates if the form fomter has values or not
+	 *
+	 * @return bool
+	 */
+	public function hasValues() {
+		return $this->hasValues;
 	}
 
 	/**
