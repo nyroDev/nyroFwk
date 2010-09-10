@@ -90,8 +90,17 @@ abstract class form_mulValue extends form_abstract {
 				return $this->cfg->getInArray('list', $this->getValue(false));
 			else {
 				$tmp = array();
+				if (is_array($this->cfg->list)) {
+					foreach($this->cfg->list as $k=>$v) {
+						if ($this->isInValue($k)) {
+							$tmp[] = $this->updateLine($type, $k, $v);
+						}
+					}
+				}
+				/*
 				foreach($this->getValue(false) as $v)
 					$tmp[] = $this->cfg->getInArray('list', $v);
+				*/
 				return implode(', ', $tmp);
 			}
 		}

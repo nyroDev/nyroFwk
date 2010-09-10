@@ -88,6 +88,23 @@ class form_checkbox_fields extends form_checkbox {
 	}
 
 	protected function updateLine($type, $val, $line) {
+		if ($this->cfg->mode == 'view') {
+			$tmp = array();
+			if (is_array($this->cfg->value))
+				foreach($this->cfg->value as $v) {
+					if ($v[db::getCfg('relatedValue')] == $val) {
+						foreach($v as $kk=>$vv) {
+							if ($kk != db::getCfg('relatedValue') && $vv) {
+								$tmp[] = $this->form->get(str_replace('[name]', $kk, $this->replaceName))->label.$this->cfg->sepLabelViewSubValues.$vv;
+							}
+						}
+					}
+				}
+			if (count($tmp))
+				$line.= ' ('.implode($this->cfg->sepViewSubValues, $tmp).')';
+			return $line;
+		}
+		
 		$form = clone $this->form;
 
 		if (is_array($this->cfg->value))
@@ -105,7 +122,7 @@ class form_checkbox_fields extends form_checkbox {
 			$form->get($name)->getCfg()->name = str_replace($this->cfg->replaceKey, $val, $name);
 			$form->get($name)->renew();
 		}
-
+		
 		return str_replace('[fields]', $form->__toString(), $line);
 	}
 	

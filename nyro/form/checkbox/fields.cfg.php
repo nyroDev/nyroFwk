@@ -3,6 +3,8 @@ $cfg = array(
 	'table'=>REQUIRED,
 	'fields'=>REQUIRED,
 	'replaceKey'=>'REPLACEKEY',
+	'sepViewSubValues'=>', ',
+	'sepLabelViewSubValues'=>': ',
 	'html'=>array(
 		'value'=>'<li class="checkbox_fields"><input type="checkbox" name="[name]" value="[value]" id="[id]-[value]" [plus]/><label for="[id]-[value]">[label]</label><div class="subFields">[fields]</div></li>',
 	),
