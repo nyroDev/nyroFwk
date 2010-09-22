@@ -185,6 +185,7 @@ class form_db extends form {
 					'join'=>$join,
 					'sep'=>$field['link']['sep'],
 					'where'=>$field['link']['where'],
+					'order'=>$field['link']['order'],
 					'sepGr'=>$field['link']['sepGr'],
 					'nbFieldGr'=>$field['link']['nbFieldGr']
 				);

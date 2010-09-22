@@ -208,7 +208,8 @@ class db_table extends object {
 						'list'=>$list,
 						'nbFieldGr'=>$nbFieldGr,
 						'sepGr'=>$sepGr,
-						'where'=>null
+						'where'=>null,
+						'order'=>implode(' ASC, ', $fields).' ASC'
 					), $more);
 				}
 			}
