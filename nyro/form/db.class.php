@@ -150,6 +150,7 @@ class form_db extends form {
 				$prm['list'] = $field['link']['list'];
 				$prm['valueNone'] = 0;
 				$fields = null;
+				$order = null;
 				$join = null;
 				if ($field['link']['fields']) {
 					$linkedTable = db::get('table', $field['link']['table'], array(
@@ -176,6 +177,7 @@ class form_db extends form {
 							$tmp[] = $field['link']['table'].'.'.$t;
 					}
 					$fields.= ','.implode(',', $tmp);
+					$order = implode(' ASC, ', $tmp).' ASC';
 				}
 				$prm['dbList'] = array(
 					'fields'=>$field['link']['table'].'.'.$field['link']['ident'].$fields,
@@ -185,7 +187,7 @@ class form_db extends form {
 					'join'=>$join,
 					'sep'=>$field['link']['sep'],
 					'where'=>$field['link']['where'],
-					'order'=>$field['link']['order'],
+					'order'=>$order,
 					'sepGr'=>$field['link']['sepGr'],
 					'nbFieldGr'=>$field['link']['nbFieldGr']
 				);

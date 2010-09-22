@@ -209,7 +209,6 @@ class db_table extends object {
 						'nbFieldGr'=>$nbFieldGr,
 						'sepGr'=>$sepGr,
 						'where'=>null,
-						'order'=>implode(' ASC, ', $fields).' ASC'
 					), $more);
 				}
 			}
