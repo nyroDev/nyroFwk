@@ -24,6 +24,20 @@ class module_scaffold_controller extends module_abstract {
 	protected $row = null;
 
 	/**
+	 * FilterTable for list
+	 *
+	 * @var helper_filterTable
+	 */
+	protected $filterTable;
+
+	/**
+	 * Datatable for list
+	 *
+	 * @var helper_dataTable
+	 */
+	protected $dataTable;
+
+	/**
 	 * Form in action show, add, and edit
 	 *
 	 * @var form

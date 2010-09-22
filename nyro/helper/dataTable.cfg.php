@@ -4,6 +4,7 @@ $cfg = array(
 	'query'=>null,
 
 	'name'=>REQUIRED,
+	'sessionName'=>null,
 	'useSession'=>true,
 
 	'nameParam'=>null,

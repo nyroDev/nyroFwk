@@ -55,7 +55,7 @@ class helper_dataTable extends object {
 
 		if ($this->cfg->useSession)
 			$this->session = session::getInstance(array(
-				'nameSpace'=>'dataTable_'.$this->cfg->name
+				'nameSpace'=>'dataTable_'.($this->cfg->sessionName ? $this->cfg->sessionName : $this->cfg->name)
 			));
 
 		$paramFromRequest = array('page', 'sortBy', 'sortDir');
@@ -105,7 +105,6 @@ class helper_dataTable extends object {
 	 * @return db_rowset
 	 */
 	public function getData() {
-		try {
 		if (is_null($this->data))
 			$this->data = $this->table->select(array_merge(
 				$this->getQuery(),
@@ -115,9 +114,6 @@ class helper_dataTable extends object {
 					'order'=>$this->sortBy? $this->sortBy.' '.$this->cfg->sortDir : ''
 				)));
 		return $this->data;
-		} catch(Exception $e) {
-			debug::trace($e, 2);
-		}
 	}
 
 	/**
@@ -126,13 +122,9 @@ class helper_dataTable extends object {
 	 * @return int
 	 */
 	public function getCount() {
-		try {
 		if (is_null($this->count))
 			$this->count = count($this->table->select($this->getQuery()));
 		return $this->count;
-		} catch(Exception $e) {
-			debug::trace($e, 2);
-		}
 	}
 
 	/**

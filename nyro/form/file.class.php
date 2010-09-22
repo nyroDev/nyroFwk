@@ -93,9 +93,8 @@ class form_file extends form_abstract {
 					.$this->cfg->value->getView().'</span></p>';
 			response::getInstance()->blockJquery('
 			$("#'.$this->id.'NyroDel").click(function(e) {
-				var me = $(this);
 				e.preventDefault();
-				me.parent("span").replaceWith("<input type=\"hidden\" name=\"'.$this->name.'NyroDel\" value=\"1\" />");
+				$(this).parent("span").replaceWith("<input type=\"hidden\" name=\"'.$this->name.'NyroDel\" value=\"1\" />");
 			});');
 		} else
 			$delLink = '</p>';

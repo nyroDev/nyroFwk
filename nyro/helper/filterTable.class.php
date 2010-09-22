@@ -170,7 +170,7 @@ class helper_filterTable extends object {
 				));
 			} else {
 				$f = $this->table->getField($name);
-				if (!array_key_exists('text', $f) || $f['text']) {
+				if (is_array($f) && (!array_key_exists('text', $f) || $f['text'])) {
 					$tmp = explode(' ', $val);
 					array_walk($tmp, create_function('&$v', '$v = trim($v);'));
 					$tmp = array_filter($tmp);
