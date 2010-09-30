@@ -283,6 +283,12 @@ class utils {
 	}
 
 	/**
+	 *
+	 * @var helper_date
+	 */
+	protected static $date;
+
+	/**
 	 * Format a date, using helper_date
 	 *
 	 * @param int|string $date Int to directly set a timestamp or strong for a date to format (compatible with strtotime)
@@ -292,15 +298,18 @@ class utils {
 	 * @see helper_date::format
 	 */
 	public static function formatDate($date, $type='date', $len='short2', $htmlOut=true) {
-		$d = factory::getHelper('date', array(
-			'timestamp'=>is_int($date) ? $date : strtotime($date),
+		if (is_null(self::$date)) {
+			self::$date = factory::getHelper('date');
+		}
+		self::$date->getCfg()->setA(array(
 			'defaultFormat'=>array(
 				'type'=>$type,
 				'len'=>$type == 'datetime' && $len == 'short2' ? 'short' : $len
 			),
 			'htmlOut'=>$htmlOut
 		));
-		return $d->format();
+		self::$date->set($date);
+		return self::$date->format();
 	}
 
 	/**
