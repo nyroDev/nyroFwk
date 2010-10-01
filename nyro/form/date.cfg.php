@@ -8,7 +8,7 @@ $cfg = array(
 	'disable'=>array(),
 
 	'html'=>array(
-		'class'=>'date',
+		'class'=>'text date',
 	),
 
 	'jsPrm'=>array(

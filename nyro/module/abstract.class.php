@@ -152,6 +152,16 @@ abstract class module_abstract extends object {
 	}
 
 	/**
+	 * Get a variable for the view
+	 *
+	 * @param string $name Variable name
+	 * @return mixed|null The value or null if not existing
+	 */
+	protected function getViewVar($name) {
+		return $this->tpl->get($name);
+	}
+
+	/**
 	 * Add a variable to the view
 	 *
 	 * @param string $name Variable name

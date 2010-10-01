@@ -11,7 +11,7 @@ $cfg = array(
 		'numeric'=>true,
 	),
 	'html'=>array(
-		'class'=>'text',
+		'class'=>'text numeric',
 		'type'=>'text',
 	),
 	'xul'=>array(

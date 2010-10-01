@@ -82,7 +82,7 @@ fieldset ol .text, fieldset ol .date {
 	font-family: Verdana;
 	font-size: 1em;
 }
-fieldset ol .date {
+fieldset ol .date, fieldset ol .numeric {
 	width: 7em;
 }
 fieldset ol img.ui-datepicker-trigger {

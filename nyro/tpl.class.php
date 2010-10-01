@@ -37,6 +37,16 @@ class tpl extends object {
 	}
 
 	/**
+	 * Get a variable value for the fetch
+	 *
+	 * @param string $name Variable name
+	 * @return mixed|null The value or null if not existing
+	 */
+	public function get($name) {
+		return isset($this->vars[$name]) ? $this->vars[$name] : null;
+	}
+
+	/**
 	 * Set a variable for the fecth
 	 *
 	 * @param string $name Variable name
@@ -199,6 +209,17 @@ class tpl extends object {
 		return $this->fetch();
 	}
 
+	/**
+	 * Get a variable, with a convenient way $tpl->name
+	 *
+	 * @param string $name Name to set
+	 * @return mixed|null The value or null if not existing
+	 * @see get
+	 */
+	public function __get($name) {
+		return $this->get($name);
+	}
+	
 	/**
 	 * Set a variable, with a convenient way $tpl->name = $value
 	 *
