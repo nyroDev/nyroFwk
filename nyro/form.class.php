@@ -143,7 +143,7 @@ class form extends object {
 			$fields = null;
 			$errorsSection = array();
 			foreach($this->elements[$kSection] as $name=>$e) {
-				$des = $e->description? str_replace('[des]', utils::htmlOut($e->description), $prm['des']) : null;
+				$des = $e->description? str_replace('[des]', $e->getDescription(), $prm['des']) : null;
 				$line = $e->isHidden()? 'lineHidden' : 'line';
 
 				$errors = null;

@@ -97,6 +97,13 @@ abstract class form_abstract extends object {
 		$this->cfg->set('value', utils::htmlOut($value));
 	}
 
+	public function getDescription() {
+		$ret = $this->cfg->description;
+		if ($this->cfg->outDescription)
+			$ret = utils::htmlOut($ret);
+		return $ret;
+	}
+
 	/**
 	 * Set the validation rules
 	 */

@@ -308,7 +308,7 @@ class utils {
 			),
 			'htmlOut'=>$htmlOut
 		));
-		self::$date->set($date);
+		self::$date->set($date, is_int($date) ? 'timestamp' : 'date');
 		return self::$date->format();
 	}
 

@@ -123,8 +123,8 @@ class helper_email extends object {
 			$this->cfg->replyTo = $this->cfg->from;
 		$headers.= $this->headerLine('Reply-To', '<'.$this->cfg->replyTo.'>');
 
-        if(!empty($this->cfg->confirmReading))
-            $headers.= $this->headerLine('Disposition-Notification-To', '<'.trim($this->cfg->confirmReading).'>');
+		if(!empty($this->cfg->confirmReading))
+			$headers.= $this->headerLine('Disposition-Notification-To', '<'.trim($this->cfg->confirmReading).'>');
 
 		if (!empty($this->cfg->cc))
 			$headers.= $this->headerLine('Cc', $this->headerAddr($this->cfg->cc));
@@ -132,9 +132,9 @@ class helper_email extends object {
 		if (!empty($this->cfg->bcc))
 			$headers.= $this->headerLine('Bcc', $this->headerAddr($this->cfg->bcc));
 
-        $headers.= $this->headerLine('Message-ID', '<'.uniqid().'@'.$this->cfg->serverName.'>');
-        $headers.= $this->headerLine('X-Priority', $this->cfg->priority);
-        $headers.= $this->headerLine('X-Mailer', $this->cfg->xMailer);
+		$headers.= $this->headerLine('Message-ID', '<'.uniqid().'@'.$this->cfg->serverName.'>');
+		$headers.= $this->headerLine('X-Priority', $this->cfg->priority);
+		$headers.= $this->headerLine('X-Mailer', $this->cfg->xMailer);
 
 		if (is_array($this->cfg->customHeader))
 			foreach($this->cfg->customHeader as $k=>$v)
@@ -305,11 +305,13 @@ class helper_email extends object {
 	protected function getBody(&$headers=null) {
 		$body = null;
 
-		$text = $this->quotePrintable($this->cfg->text);
+		//$text = $this->quotePrintable($this->cfg->text);
+		$text = $this->cfg->text;
 
 		if ($this->cfg->html) {
 			if (empty($this->cfg->text))
-				$text = $this->quotePrintable(utils::html2Text($this->cfg->html));
+				//$text = $this->quotePrintable(utils::html2Text($this->cfg->html));
+				$text = utils::html2Text($this->cfg->html);
 
 			$boundary = $this->getBoundary();
 
@@ -327,10 +329,10 @@ class helper_email extends object {
 		}
 		$body.= $this->headerLine('Content-Type', 'text/plain; charset='.$this->cfg->charset.'');
 		//$body.= $this->textLine(' charset="'.$this->cfg->charset.'"');
-		$body.= $this->headerLine('Content-Transfer-Encoding', 'quoted-printable'); //$this->cfg->encoding);
+		$body.= $this->headerLine('Content-Transfer-Encoding', $this->cfg->encoding);
 		$body.= $this->headerLine('Content-Disposition', 'inline');
-		$body.= $this->textLine('');
-		$body.= $this->textLine($text);
+		$body.= $this->textLine(null);
+		$body.= $this->textLine($this->encode($text));
 
 		if ($this->cfg->html) {
 			// HTML part
@@ -373,10 +375,11 @@ class helper_email extends object {
 
 			$body.= $this->headerLine('Content-Type', 'text/html; charset='.$this->cfg->charset.'');
 			//$body.= $this->textLine(' charset="'.$this->cfg->charset.'"');
-			$body.= $this->headerLine('Content-Transfer-Encoding', 'quoted-printable'); //$this->cfg->encoding);
+			$body.= $this->headerLine('Content-Transfer-Encoding', $this->cfg->encoding);
 			$body.= $this->headerLine('Content-Disposition', 'inline');
 			$body.= $this->textLine(null);
-			$body.= $this->textLine($this->quotePrintable($html));
+			//$body.= $this->textLine($this->quotePrintable($html));
+			$body.= $this->textLine($this->encode($html));
 
 			if (!empty($inlineImages)) {
 				foreach($inlineImages as $img) {

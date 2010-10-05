@@ -4,6 +4,7 @@ $cfg = array(
 
 	'label'=>null,
 	'description'=>null,
+	'outDescription'=>true,
 	'name'=>REQUIRED,
 	'value'=>null,
 
