@@ -1,7 +1,7 @@
 <?php
 $cfg = array(
 
-	'crlf'=>"\r\n",
+	'crlf'=>"\n",
 
 	'xMailer'=>'nyroMail',
 	'charset'=>'utf-8',

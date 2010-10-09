@@ -113,6 +113,7 @@ class helper_email extends object {
 			$this->cfg->serverName = request::get('serverName');
 
 		$headers = '';
+
 		$headers.= $this->headerLine('Return-Path', $this->cfg->from);
 		$headers.= $this->headerLine('Date', date("D, d M Y G:i:s O"));
 		$headers.= $this->headerLine('X-Sender', $this->cfg->from);
@@ -189,7 +190,7 @@ class helper_email extends object {
 			$addr[] = $this->formatAddr($v);
 		$to = implode(', ', $addr);
 
-		return mail($to, $this->cfg->subject, $body, $headers, $this->cfg->addParam);
+		return mail($to, $this->encodeHeader($this->cfg->subject), $body, $headers, $this->cfg->addParam);
 	}
 
 	/**
@@ -457,7 +458,7 @@ class helper_email extends object {
 	protected function formatAddr($addr) {
 		if (is_array($addr)) {
 			if (array_key_exists(1, $addr))
-				return $this->encodeHeader($addr[1], 'phrase').' <'.$addr[0].'>';
+				return $this->encodeHeader($addr[1]).' <'.$addr[0].'>';
 			else
 				return $addr[0];
 		} else
@@ -471,26 +472,18 @@ class helper_email extends object {
 	 * @param string $type Type of content (text or phrase)
 	 * @return string
 	 */
-	protected function encodeHeader($val, $type='text') {
+	protected function encodeHeader($val) {
 		$nb = 0;
 
-		switch ($type) {
-			case 'phrase':
-				if (!preg_match('/[\200-\377]/', $val)) {
-					$encoded = addcslashes($val, "\0..\37\177\\\"");
-					if (($val == $encoded) &&
-						!preg_match('/[^A-Za-z0-9!#$%&\'*+\/=?^_`{|}~ -]/', $val))
-						return ($encoded);
-					else
-						return '"'.$encoded.'"';
-				}
-				$nb = preg_match_all('/[^\040\041\043-\133\135-\176]/', $val, $matches);
-				break;
-			case 'text':
-			default:
-				$nb = preg_match_all('/[\000-\010\013\014\016-\037\177-\377]/', $val, $matches);
-				break;
+		if (!preg_match('/[\200-\377]/', $val)) {
+			$encoded = addcslashes($val, "\0..\37\177\\\"");
+			if (($val == $encoded) &&
+				!preg_match('/[^A-Za-z0-9!#$%&\'*+\/=?^_`{|}~ -]/', $val))
+				return ($encoded);
+			else
+				return '"'.$encoded.'"';
 		}
+		$nb = preg_match_all('/[^\040\041\043-\133\135-\176]/', $val, $matches);
 
 		if ($nb == 0)
 			return $val;
