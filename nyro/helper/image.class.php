@@ -161,11 +161,11 @@ class helper_image extends helper_file {
 					if ($this->cfg->resizeSmaller ||
 							($this->cfg->w > 0 && $this->cfg->wAct > $this->cfg->w) ||
 							($this->cfg->h > 0 && $this->cfg->hAct > $this->cfg->h)) {
-						if($this->resize(array(
-							'w'=>$this->cfg->w,
-							'h'=>$this->cfg->h,
-							'bgColor'=>$this->cfg->bgColor,
-							'fit'=>$this->cfg->fit
+						if ($this->resize(array(
+								'w'=>$this->cfg->w,
+								'h'=>$this->cfg->h,
+								'bgColor'=>$this->cfg->bgColor,
+								'fit'=>$this->cfg->fit
 							))) {
 							// Save the new size
 							$this->cfg->wAct = imagesx($this->imgAct);

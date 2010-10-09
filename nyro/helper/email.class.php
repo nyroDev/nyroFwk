@@ -113,28 +113,26 @@ class helper_email extends object {
 			$this->cfg->serverName = request::get('serverName');
 
 		$headers = '';
-		$headers.= $this->headerLine('Date', date("D, j M Y G:i:s O"));
 		$headers.= $this->headerLine('Return-Path', $this->cfg->from);
+		$headers.= $this->headerLine('Date', date("D, d M Y G:i:s O"));
 		$headers.= $this->headerLine('X-Sender', $this->cfg->from);
-		$headers.= $this->headerLine('From', $this->formatAddr(array(
-										$this->cfg->from, $this->cfg->fromName)));
+		$headers.= $this->headerLine('Message-ID', '<'.uniqid().'@'.$this->cfg->serverName.'>');
+		$headers.= $this->headerLine('X-Priority', $this->cfg->priority);
+		$headers.= $this->headerLine('X-Mailer', $this->cfg->xMailer);
+		$headers.= $this->headerLine('From', $this->formatAddr(array($this->cfg->from, $this->cfg->fromName)));
 
 		if (empty($this->cfg->replyTo))
 			$this->cfg->replyTo = $this->cfg->from;
-		$headers.= $this->headerLine('Reply-To', '<'.$this->cfg->replyTo.'>');
+		$headers.= $this->headerLine('Reply-To', $this->formatAddr($this->cfg->replyTo));
 
 		if(!empty($this->cfg->confirmReading))
-			$headers.= $this->headerLine('Disposition-Notification-To', '<'.trim($this->cfg->confirmReading).'>');
+			$headers.= $this->headerLine('Disposition-Notification-To', $this->formatAddr($this->cfg->confirmReading));
 
 		if (!empty($this->cfg->cc))
 			$headers.= $this->headerLine('Cc', $this->headerAddr($this->cfg->cc));
 
 		if (!empty($this->cfg->bcc))
 			$headers.= $this->headerLine('Bcc', $this->headerAddr($this->cfg->bcc));
-
-		$headers.= $this->headerLine('Message-ID', '<'.uniqid().'@'.$this->cfg->serverName.'>');
-		$headers.= $this->headerLine('X-Priority', $this->cfg->priority);
-		$headers.= $this->headerLine('X-Mailer', $this->cfg->xMailer);
 
 		if (is_array($this->cfg->customHeader))
 			foreach($this->cfg->customHeader as $k=>$v)
@@ -156,8 +154,7 @@ class helper_email extends object {
 
 		switch($message_type) {
 			case 'simpleText':
-				$contentType = 'text/plain';
-				$headers.= $this->headerLine('Content-Type', $contentType.'; charset="'.$this->cfg->charset.'"');
+				$headers.= $this->headerLine('Content-Type', 'text/plain; charset='.$this->cfg->charset);
 				$headers.= $this->headerLine('Content-Transfer-Encoding', $this->cfg->encoding);
 				$body = $this->encode($this->cfg->text);
 				break;
@@ -165,7 +162,6 @@ class helper_email extends object {
 			case 'altAttach':
 				$boundaryMix = $this->getBoundary();
 				$headers.= $this->headerLine('Content-Type', 'multipart/mixed; boundary="'.$boundaryMix.'"');
-				//$headers.= $this->textLine(' boundary="'.$boundaryMix.'"');
 
 				// Content Part
 				$body = $this->textLine('--'.$boundaryMix);
