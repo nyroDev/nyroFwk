@@ -10,6 +10,8 @@ $cfg = array(
 	'show'=>null,
 	'edit'=>null,
 
+	'formOpts'=>array(),
+
 	'allowAdd'=>true,
 	'iconType'=>null,
 

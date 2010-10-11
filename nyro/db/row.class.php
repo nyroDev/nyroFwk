@@ -192,10 +192,13 @@ class db_row extends object {
 
 		$i18nFields = $this->getTable()->getI18nFields();
 		$i18nFieldsT = array();
+		
 		foreach($i18nFields as $f) {
-			$i18nFieldsT[] = $f['name'];
-			$f['label'] = $this->getTable()->getI18nTable()->getLabel($f['name']);
-			$form->addFromField($f, true);
+			if ((empty($showFields) || in_array(db::getCfg('i18n').$f['name'], $showFields))) {
+				$i18nFieldsT[] = $f['name'];
+				$f['label'] = $this->getTable()->getI18nTable()->getLabel($f['name']);
+				$form->addFromField($f, true);
+			}
 		}
 
 		$form->finalize();
@@ -702,6 +705,9 @@ class db_row extends object {
 	 */
 	public function getRelated($name) {
 		$related = $this->getTable()->getRelated($this->getTable()->getRelatedTableName($name));
+		$id = $this->getId();
+		if (!$id)
+			return array();
 		return $related['tableObj']->getLinkedTable($related['fk2']['name'])->select(array(
 			'where'=>$this->getWhere(array(
 				'clauses'=>factory::get('db_whereClause', array(
@@ -709,7 +715,7 @@ class db_row extends object {
 					'in'=>$this->getDb()->selectQuery(array(
 						'fields'=>$related['fk2']['name'],
 						'table'=>$related['tableLink'],
-						'where'=>$related['fk1']['name'].'='.$this->getId()
+						'where'=>$related['fk1']['name'].'='.$id
 					))
 				))
 			))

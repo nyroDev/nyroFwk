@@ -226,7 +226,7 @@ class module_scaffold_controller extends module_abstract {
 		$this->row = $id? $this->table->find($id) : $this->table->getRow();
 		$this->hook($action);
 
-		$this->form = $this->row->getForm($this->getFields($action), array('sectionName'=>tr::__('scaffold_'.$action)));
+		$this->form = $this->row->getForm($this->getFields($action), array_merge(array('sectionName'=>tr::__('scaffold_'.$action)), $this->cfg->formOpts));
 
 		if (request::isPost()) {
 			$this->form->refill();
@@ -269,12 +269,17 @@ class module_scaffold_controller extends module_abstract {
 	 * @return array
 	 */
 	protected function getFields($action) {
-		return ($this->cfg->check($action) &&
-			($tmp = $this->cfg->get($action)) &&
-			is_array($tmp))? $tmp
-			: ($this->cfg->autoRelated
-				?array_merge($this->cols, $this->related)
-				:$this->cols);
+		$tmp = $this->cfg->get($action);
+		if (is_array($tmp))
+			return $tmp;
+		$ret = $this->cols;
+		if ($this->cfg->autoRelated)
+			$ret = array_merge($ret, $this->related);
+		if (count($this->table->getI18nFields())) {
+			foreach($this->table->getI18nFields() as $v)
+				$ret[] = db::getCfg('i18n').$v['name'];
+		}
+		return $ret;
 	}
 
 }
