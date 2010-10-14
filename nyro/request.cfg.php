@@ -19,6 +19,7 @@ $cfg = array(
 
 	'forceSecure'=>false,
 	'forceServerName'=>false,
+	'defaultServerName'=>null,
 
 	'empty'=>'_',
 	'sep'=>'/',
