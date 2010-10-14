@@ -137,7 +137,7 @@ class security_default extends security_abstract {
 					$cryptic = $this->cryptPass(uniqid(), 'Cryptic');
 					$this->user->set($crypticKey, $cryptic);
 					$this->user->save();
-					$this->log($cryptic);
+					$this->logFromCryptic($cryptic);
 					if (array_key_exists('stayConnected', $prm) && $prm['stayConnected']) {
 						$cook = factory::get('http_cookie', $this->cfg->cookie);
 						$cook->set($cryptic);
