@@ -437,7 +437,7 @@ class form extends object {
 		$ret = array_diff_key($ret, $this->cfg->notValue);
 
 		if ($onlyFilled)
-			$ret = array_filter($ret, create_function('$v', 'return $v != "";'));
+			$ret = array_filter($ret, create_function('$v', 'return $v ? true : false;'));
 
 		$tmp = array();
 		foreach($ret as $k=>$v) {

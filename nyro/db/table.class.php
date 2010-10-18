@@ -717,7 +717,8 @@ class db_table extends object {
 		config::initTab($prm, array(
 			'where'=>'',
 			'whereOp'=>'AND',
-			'order'=>''
+			'order'=>'',
+			'autoJoin'=>true,
 		));
 
 		if (is_array($prm['where'])) {
@@ -751,7 +752,7 @@ class db_table extends object {
 		$join = isset($prm['join']) ? $prm['join'] : array();
 		$prm['join'] = array();
 		$tmpTables = array();
-		if (!empty($this->linkedTables)) {
+		if (!empty($this->linkedTables) && $prm['autoJoin']) {
 			foreach($this->linkedTables as $f=>$p) {
 				$alias = $f;
 				$prm['join'][] = array(
@@ -820,7 +821,7 @@ class db_table extends object {
 			}
 		}
 
-		if (!empty($this->relatedTables) || $this->i18nTable) {
+		if ((!empty($this->relatedTables) && $prm['autoJoin']) || $this->i18nTable) {
 			foreach($this->relatedTables as $f=>$p) {
 				$prm['join'][] = array(
 					'table'=>$f,
