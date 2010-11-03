@@ -408,7 +408,7 @@ final class request {
 	 * @see get
 	 */
 	public static function getRequested($get=null) {
-		if ($get == null) {
+		if (is_null($get)) {
 			$uriInfo = self::$requestedUriInfo;
 			unset($uriInfo['paramA']);
 			return $uriInfo;

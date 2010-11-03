@@ -109,6 +109,12 @@ abstract class form_mulValue extends form_abstract {
 		$inline = $this->cfg->inline? 'Inline' : null;
 		$ret = null;
 
+		$tmp = $prm;
+		unset($tmp['plus'], $tmp['global'], $tmp['globalInline'], $tmp['value'], $tmp['selected'], $tmp['group']);
+		$prm['plus'].= ' ';
+		foreach($tmp as $k=>$v)
+				$prm['plus'].= $k.'="'.$v.'" ';
+
 		$tmpGr = null;
 		$tmpVal = null;
 		if (is_array($this->cfg->list)) {
