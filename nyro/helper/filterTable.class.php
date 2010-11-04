@@ -155,10 +155,10 @@ class helper_filterTable extends object {
 							'op'=>'<='
 						));
 				} else {
-					$field = $this->table->getRelated($name);
+					$fieldRel = $this->table->getRelated($name);
 					$where->add(array(
-						'field'=>$field['tableLink'].'.'.$field['fk2']['name'],
-						'val'=>$val,
+						'field'=>$fieldRel ? $fieldRel['tableLink'].'.'.$fieldRel['fk2']['name'] : $field,
+						'val'=>array_map(array($this->table->getDb(), 'quoteValue'), $val),
 						'op'=>'IN'
 					));
 				}

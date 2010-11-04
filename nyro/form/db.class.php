@@ -73,12 +73,14 @@ class form_db extends form {
 				$prm['type'] = 'range_date';
 				break;
 			case 'radio':
+				$prm['type'] = 'checkbox';
+				$prm['valueNone'] = -1;
+				$prm['value'] = -1;
+				break;
 			case 'list':
-				//if (!empty($prm['list'])) {
-					$prm['list'] += array('-1'=>$this->cfg->all);
-					$prm['valueNone'] = -1;
-					$prm['value'] = -1;
-				//}
+				$prm['list'] += array('-1'=>$this->cfg->all);
+				$prm['valueNone'] = -1;
+				$prm['value'] = -1;
 				break;
 			case 'file':
 				$prm['type'] = 'checkbox';
