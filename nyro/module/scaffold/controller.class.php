@@ -207,7 +207,10 @@ class module_scaffold_controller extends module_abstract {
 
 		$this->hook('formShow');
 
-		$this->setViewVar('form', $this->form);
+		$this->setViewVars(array(
+			'row'=>$this->row,
+			'form'=>$this->form
+		));
 	}
 
 	protected function execScaffoldAdd($prm=null) {
@@ -247,7 +250,10 @@ class module_scaffold_controller extends module_abstract {
 
 		$this->hook('form'.$uAction);
 
-		$this->setViewVar('form', $this->form);
+		$this->setViewVars(array(
+			'row'=>$this->row,
+			'form'=>$this->form
+		));
 	}
 
 	protected function execScaffoldDelete($prm=null) {
