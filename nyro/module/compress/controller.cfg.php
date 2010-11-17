@@ -7,13 +7,13 @@ $cfg = array(
 	'all'=>array(
 		'php'=>false,
 		'compress'=>DEV ? false : true,
+		'disk_cache'=>DEV ? false : true,
+		'etags'=>DEV ? false : true,
 		'expires_offset'=>'32d',
-		'disk_cache'=>true,
 		'cache_dir'=>TMPROOT.'compress',
 		'gzip_compress'=>true,
 		'remove_whitespace'=>true,
 		'charset'=>'UTF-8',
-		'etags'=>false,
 	),
 	'js'=>array(
 		'php'=>true,
