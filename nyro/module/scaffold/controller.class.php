@@ -163,7 +163,7 @@ class module_scaffold_controller extends module_abstract {
 			),
 			'actionsAlt'=>array(
 				'show'=>tr::__('scaffold_show'),
-				'edit'=>tr::__('scaffold_edit'),
+				'edit'=>tr::__('scaffold_goEdit'),
 				'delete'=>tr::__('scaffold_delete'),
 			),
 		);
