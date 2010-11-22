@@ -41,6 +41,16 @@ class form_db extends form {
 			$prm['table'] = $related['tableObj'];
 			$prm['fields'] = $related['fields'];
 		}
+		if (count($prm['dbList']['fields'])) {
+			$tmp = array();
+			foreach(explode(',', $prm['dbList']['fields']) as $f) {
+				if ($f != $prm['dbList']['ident']) {
+					$tmp[] = $f;
+				}
+			}
+			if (count($tmp))
+				$prm['dbList']['order'] = implode(' ASC, ', $tmp).' ASC';
+		}
 		if (array_key_exists('formType', $related) && $related['formType'])
 			$type = $related['formType'];
 		return $this->add($type, $prm);
@@ -73,7 +83,8 @@ class form_db extends form {
 				$prm['type'] = 'range_date';
 				break;
 			case 'radio':
-				$prm['type'] = 'checkbox';
+				if ($field['type'] != 'tinyint')
+					$prm['type'] = 'checkbox';
 				$prm['valueNone'] = -1;
 				$prm['value'] = -1;
 				break;

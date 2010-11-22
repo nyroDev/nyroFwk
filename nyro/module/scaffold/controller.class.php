@@ -145,6 +145,7 @@ class module_scaffold_controller extends module_abstract {
 				'table'=>$this->table,
 				'fields'=>is_array($this->cfg->filter)? $this->cfg->filter : null,
 			));
+			$this->hook('listFilter');
 			$query = array('where'=>$this->filterTable->getWhere());
 		}
 
@@ -183,7 +184,7 @@ class module_scaffold_controller extends module_abstract {
 	/**
 	 * Function to be rewritten in eventual child to change the way the scaffold works
 	 * Available actions:
-	 * - list
+	 * - list, listFilter
 	 * - show, formShow
 	 * - add, formPostAdd, beforeAdd, afterAdd, formAdd
 	 * - edit, formPostEdit, beforeEdit, afterEdit, formEdit
@@ -202,7 +203,7 @@ class module_scaffold_controller extends module_abstract {
 		$this->form = $this->row->getForm($this->getFields('show'), array('mode'=>'view', 'sectionName'=>tr::__('scaffold_show')), false);
 		$this->form->action = array('module'=>$this->table->getName(),'action'=>'edit','param'=>$id);
 		$this->form->method = 'get';
-		$this->form->setSubmitText(tr::__('scaffold_edit'));
+		$this->form->setSubmitText(tr::__('scaffold_goEdit'));
 		$this->form->setSubmitplus('<a href="'.$this->indexPage.'">'.tr::__('scaffold_back').'</a>');
 
 		$this->hook('formShow');

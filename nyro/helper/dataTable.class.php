@@ -325,7 +325,14 @@ class helper_dataTable extends object {
 	 * @return string
 	 */
 	public function __toString() {
-		return $this->to(request::get('out'));
+		try {
+			return $this->to(request::get('out'));
+		} catch (Exception $e) {
+			if (DEV)
+				debug::trace($e, 2);
+			else
+			   throw $e;
+		}
 	}
 
 }
