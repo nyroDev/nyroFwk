@@ -83,7 +83,9 @@ class form_db extends form {
 				$prm['type'] = 'range_date';
 				break;
 			case 'radio':
-				if ($field['type'] != 'tinyint')
+				if ($field['type'] == 'tinyint')
+					$prm['list'] += array('-1'=>$this->cfg->all);
+				else
 					$prm['type'] = 'checkbox';
 				$prm['valueNone'] = -1;
 				$prm['value'] = -1;
@@ -123,6 +125,16 @@ class form_db extends form {
 		$prm['dbList']['fields'] = $related['fk2']['link']['ident'].
 				($prm['dbList']['fields']? ','.$prm['dbList']['fields'] : null);
 		$type = 'checkbox';
+		if (count($prm['dbList']['fields'])) {
+			$tmp = array();
+			foreach(explode(',', $prm['dbList']['fields']) as $f) {
+				if ($f != $prm['dbList']['ident']) {
+					$tmp[] = $f;
+				}
+			}
+			if (count($tmp))
+				$prm['dbList']['order'] = implode(' ASC, ', $tmp).' ASC';
+		}
 		if (array_key_exists('formTypeFilter', $related) && $related['formTypeFilter'])
 			$type = $related['formTypeFilter'];
 		return $this->add($type, $prm);

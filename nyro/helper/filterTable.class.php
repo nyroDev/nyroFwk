@@ -96,7 +96,8 @@ class helper_filterTable extends object {
 		$defValues = $this->form->getValues();
 
 		if (request::isPost() || request::getPrm($this->cfg->clearPrm)) {
-			$this->form->refill();
+			if (request::isPost())
+				$this->form->refill();
 			$this->session->clear(true);
 		} else {
 			foreach($this->form->getNames() as $name) {
@@ -136,67 +137,68 @@ class helper_filterTable extends object {
 	 */
 	public function getWhere() {
 		$where = $this->table->getWhere();
-		foreach($this->form->getValues(true) as $name=>$val) {
+		foreach($this->form->getValues() as $name=>$val) {
 			$field = strpos($name, '.') === false ? $this->table->getName().'.'.$name : $name;
-			if (is_array($val)) {
-				if (array_key_exists('min', $val) || array_key_exists('max', $val)) {
-					$min = array_key_exists('min', $val) && !empty($val['min'])?$val['min'] : null;
-					$max = array_key_exists('max', $val) && !empty($val['max'])?$val['max'] : null;
-					if ($min)
+			if (!is_null($val) && ($val || $val === '0')) {
+				if (is_array($val)) {
+					if (array_key_exists('min', $val) || array_key_exists('max', $val)) {
+						$min = array_key_exists('min', $val) && !empty($val['min'])?$val['min'] : null;
+						$max = array_key_exists('max', $val) && !empty($val['max'])?$val['max'] : null;
+						if ($min)
+							$where->add(array(
+								'field'=>$field,
+								'val'=>$min,
+								'op'=>'>='
+							));
+						if ($max)
+							$where->add(array(
+								'field'=>$field,
+								'val'=>$max,
+								'op'=>'<='
+							));
+					} else {
+						$fieldRel = $this->table->getRelated($name);
 						$where->add(array(
-							'field'=>$field,
-							'val'=>$min,
-							'op'=>'>='
-						));
-					if ($max)
-						$where->add(array(
-							'field'=>$field,
-							'val'=>$max,
-							'op'=>'<='
-						));
-				} else {
-					$fieldRel = $this->table->getRelated($name);
-					$where->add(array(
-						'field'=>$fieldRel ? $fieldRel['tableLink'].'.'.$fieldRel['fk2']['name'] : $field,
-						'val'=>array_map(array($this->table->getDb(), 'quoteValue'), $val),
-						'op'=>'IN'
-					));
-				}
-			} else if(strpos($name, '_file')) {
-				$where->add(array(
-					'field'=>$field,
-					'val'=>'',
-					'op'=>'<>'
-				));
-			} else {
-				$f = $this->table->getField($name);
-				if (is_array($f) && (!array_key_exists('text', $f) || $f['text'])) {
-					$tmp = explode(' ', $val);
-					array_walk($tmp, create_function('&$v', '$v = trim($v);'));
-					$tmp = array_filter($tmp);
-					foreach($tmp as $t) {
-						$where->add(array(
-							'field'=>$field,
-							'val'=>'%'.$t.'%',
-							'op'=>'LIKE'
+							'field'=>$fieldRel ? $fieldRel['tableLink'].'.'.$fieldRel['fk2']['name'] : $field,
+							'val'=>array_map(array($this->table->getDb(), 'quoteValue'), $val),
+							'op'=>'IN'
 						));
 					}
-				} else {
+				} else if(strpos($name, '_file')) {
 					$where->add(array(
 						'field'=>$field,
-						'val'=>$val
+						'val'=>'',
+						'op'=>'<>'
 					));
+				} else {
+					$f = $this->table->getField($name);
+					if (is_array($f) && (!array_key_exists('text', $f) || $f['text'])) {
+						$tmp = explode(' ', $val);
+						array_walk($tmp, create_function('&$v', '$v = trim($v);'));
+						$tmp = array_filter($tmp);
+						foreach($tmp as $t) {
+							$where->add(array(
+								'field'=>$field,
+								'val'=>'%'.$t.'%',
+								'op'=>'LIKE'
+							));
+						}
+					} else {
+						$where->add(array(
+							'field'=>$field,
+							'val'=>$val
+						));
+					}
 				}
+				$this->session->set(array(
+					'name'=>$name,
+					'val'=>$val
+				));
 			}
-			$this->session->set(array(
-				'name'=>$name,
-				'val'=>$val
-			));
 		}
 
-		if (count($where)) {
+		if (count($where))
 			return $where;
-		}
 		return null;
 	}
 

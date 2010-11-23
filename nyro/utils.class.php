@@ -130,6 +130,8 @@ class utils {
 	 * @return array|string
 	 */
 	public static function htmlDeOut($val, $key=false) {
+		if (is_null($val))
+			return $val;
 		if (is_array($val)) {
 			if ($key) {
 				$tmp = $val;
