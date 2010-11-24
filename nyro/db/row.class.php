@@ -415,7 +415,7 @@ class db_row extends object {
 	 * @param string $lang Lang needed (if null, the current will be used or a new row will be created)
 	 * @return db_row
 	 */
-	public function getI18nRow($lang) {
+	public function getI18nRow($lang=null) {
 		if (is_null($lang) || !$lang)
 			$lang = request::get('lang');
 		if (!array_key_exists($lang, $this->i18nRows)) {

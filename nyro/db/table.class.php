@@ -241,7 +241,7 @@ class db_table extends object {
 	 * @return bool
 	 */
 	public function isLinked($field) {
-		return array_key_exists($field, $this->linkedTables);
+		return is_array($this->linkedTables) && array_key_exists($field, $this->linkedTables);
 	}
 
 	/**
@@ -691,7 +691,10 @@ class db_table extends object {
 	 */
 	public function count(array $prm) {
 		$prm = $this->selectQuery($prm, $tmpTables);
-		$prm['group'] = $prm['fields'] = $this->cfg->name.'.'.$this->getIdent();
+		if ($this->getIdent())
+			$prm['group'] = $prm['fields'] = $this->cfg->name.'.'.$this->getIdent();
+		else
+			$prm['group'] = $prm['fields'] = $this->cfg->name.'.'.implode(','.$this->cfg->name.'.', $this->getPrimary());
 
 		$prm['where'] = $this->getDb()->makeWhere($prm['where'], $prm['whereOp'], false);
 		$nb = array_key_exists('join', $prm) ? count($prm['join']) : 0;
