@@ -79,7 +79,7 @@ class form_file extends form_abstract {
 
 		$resp->blockjQuery('$("#'.$this->id.'").uploadify('.utils::jsEncode($uploadifyOpt).');');
 		if ($hideSubmit)
-			$resp->blockjQuery('$("#'.$this->id.'").closest("form").find("fieldset.submit input").hide();');
+			$resp->blockjQuery('$("#'.$this->id.'").closest("form").find("fieldset.submit").hide();');
 	}
 
 	public function toHtml() {
