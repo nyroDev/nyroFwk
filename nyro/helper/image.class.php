@@ -34,9 +34,9 @@ class helper_image extends helper_file {
 	 * Destructor
 	 */
 	public function __destruct() {
-		if ($this->imgAct)
+		if ($this->imgAct && is_resource($this->imgAct))
 			@imagedestroy($this->imgAct);
-		if ($this->imgTmp)
+		if ($this->imgTmp && is_resource($this->imgTmp))
 			@imagedestroy($this->imgTmp);
 	}
 
@@ -460,7 +460,7 @@ class helper_image extends helper_file {
 		if ($y == -1)
 			$y = round($this->cfg->hAct / 2 - $h / 2);
 
-		$this->imgTmp = imagecreatetruecolor($this->cfg->w,$this->cfg->h);
+		$this->imgTmp = imagecreatetruecolor($this->cfg->w, $this->cfg->h);
 		imagecopyresampled($this->imgTmp, $this->imgAct, 0, 0, $x, $y, $this->cfg->w, $this->cfg->h, $w, $h);
 
 		$this->imgAct = $this->imgTmp;
