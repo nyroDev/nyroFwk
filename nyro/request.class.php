@@ -348,9 +348,7 @@ final class request {
 	 */
 	public static function forward($request) {
 		self::$uriInfo = array_merge(self::$uriInfo, self::analyseRequest($request));
-
 		self::$module = factory::getModule(self::$uriInfo['module']);
-
 		return self::execModule();
 	}
 
@@ -358,10 +356,8 @@ final class request {
 	 * Force the request to be secure, by redirting to the same url with https
 	 */
 	public static function forceSecure() {
-		if (!self::get('secure')) {
-			$uri = str_replace('http://', 'https://', self::uri(array('absolute'=>1)));
-			response::getInstance()->redirect($uri);
-		}
+		if (!self::get('secure'))
+			response::getInstance()->redirect(str_replace('http://', 'https://', self::uriDef(array('absolute'=>1))));
 	}
 
 	/**
@@ -573,9 +569,8 @@ final class request {
 	public static function uriDef(array $prm = array(), array $use=array('lang', 'module', 'action', 'param', 'out')) {
 		$tmp = array();
 
-		foreach($use as $u) {
+		foreach($use as $u)
 			$tmp[$u] = self::getRequested($u);
-		}
 
 		return self::uri(array_merge($tmp, $prm));
 	}
