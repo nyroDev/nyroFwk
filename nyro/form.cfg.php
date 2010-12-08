@@ -2,7 +2,7 @@
 $cfg = array(
 	'mode'=>'edit',
 
-	'action'=>request::getRequested(),
+	'action'=>request::get('localUri'),
 	'formPlus'=>null,
 	'method'=>'post',
 	'sectionName'=>'Form',

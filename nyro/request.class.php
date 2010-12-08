@@ -386,6 +386,8 @@ final class request {
 	public static function get($get=null) {
 		if ($get == 'uri')
 			return self::get('domain').self::getPathControllerUri().self::get('request');
+		if ($get == 'localUri')
+			return self::getPathControllerUri().self::get('request');
 		if ($get == 'pathUri')
 			return self::getPathControllerUri().self::get('request');
 		if ($get == 'rootUri')

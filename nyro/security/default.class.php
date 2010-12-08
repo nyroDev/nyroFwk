@@ -266,7 +266,7 @@ class security_default extends security_abstract {
 				$this->cfg->getInArray('fields', 'login'),
 				$this->cfg->getInArray('fields', 'pass')
 			), array_merge($this->cfg->formOptions, array(
-				'action'=>$this->getPage('login')
+				'action'=>request::uri($this->getPage('login'))
 			)), false);
 			$this->form->get($this->cfg->getInArray('fields', 'login'))->getValid()->delRule('dbUnique');
 			if ($this->cfg->stayConnected) {

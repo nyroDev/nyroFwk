@@ -61,7 +61,7 @@ class helper_filterTable extends object {
 			'filter'=>true,
 			'table'=>$this->table,
 			'sectionName'=>$this->cfg->formName,
-			'action'=>array('paramA'=>array_merge(array_diff_key(request::get('paramA'), $this->cfg->actionPrmClear), $this->cfg->actionPrmForce))
+			'action'=>request::uriDef(array('paramA'=>array_merge(array_diff_key(request::get('paramA'), $this->cfg->actionPrmClear), $this->cfg->actionPrmForce)))
 		)));
 
 		$this->form->setSubmitText($this->cfg->submitText);

@@ -191,7 +191,7 @@ class form extends object {
 				foreach($prm['incFiles'] as $f)
 					response::getInstance()->add($f);
 
-			$plus = 'action="'.request::uri($this->cfg->action).'" method="'.$this->cfg->method.'"';
+			$plus = 'action="'.$this->cfg->action.'" method="'.$this->cfg->method.'"';
 			if ($this->hasFiles)
 				$plus.= ' enctype="multipart/form-data"';
 		}

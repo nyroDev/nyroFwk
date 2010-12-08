@@ -157,9 +157,9 @@ class module_scaffold_controller extends module_abstract {
 			'cache'=>$this->cfg->cache,
 			'fields'=>$this->cfg->list,
 			'actions'=>array(
-				'show'=>request::uriDef(array('action'=>'show','param'=>'[id]')),
-				'edit'=>request::uriDef(array('action'=>'edit','param'=>'[id]')),
-				'delete'=>request::uriDef(array('action'=>'delete','param'=>'[id]')),
+				'show'=>request::uriDef(array('action'=>'show', 'param'=>'[id]')),
+				'edit'=>request::uriDef(array('action'=>'edit', 'param'=>'[id]')),
+				'delete'=>request::uriDef(array('action'=>'delete', 'param'=>'[id]')),
 			),
 			'actionsAlt'=>array(
 				'show'=>tr::__('scaffold_show'),
@@ -201,7 +201,7 @@ class module_scaffold_controller extends module_abstract {
 		$this->hook('show');
 
 		$this->form = $this->row->getForm($this->getFields('show'), array('mode'=>'view', 'sectionName'=>tr::__('scaffold_show')), false);
-		$this->form->action = array('module'=>$this->table->getName(),'action'=>'edit','param'=>$id);
+		$this->form->action = request::uriDef(array('module'=>$this->table->getName(),'action'=>'edit', 'param'=>$id));
 		$this->form->method = 'get';
 		$this->form->setSubmitText(tr::__('scaffold_goEdit'));
 		$this->form->setSubmitplus('<a href="'.$this->indexPage.'">'.tr::__('scaffold_back').'</a>');

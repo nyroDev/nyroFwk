@@ -8,7 +8,7 @@ $cfg = array(
 	),
 	'noSecurity'=>array(
 		array('module'=>'compress'),
-		array('module'=>'pages','action'=>'logout'),
-		array('module'=>'pages','action'=>'login'),
+		array('module'=>'pages', 'action'=>'logout'),
+		array('module'=>'pages', 'action'=>'login'),
 	),
 );
