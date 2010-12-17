@@ -47,6 +47,10 @@ class form_range_numeric extends form_range_abstract {
 				slide: function(event, ui) {
 					$("#'.$this->makeId($this->name.'[0]').'").val(ui.values[0]);
 					$("#'.$this->makeId($this->name.'[1]').'").val(ui.values[1]);
+				},
+				change: function() {
+					$("#'.$this->makeId($this->name.'[0]').'").change();
+					$("#'.$this->makeId($this->name.'[1]').'").change();
 				}
 			})'.($this->cfg->disabled?'.next(".range").find("input").attr("disabled", "disabled")' : null).';
 			;');

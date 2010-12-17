@@ -72,7 +72,7 @@ abstract class security_abstract extends object {
 	 *
 	 * @return form
 	 */
-	abstract public function getLoginForm();
+	abstract public function getLoginForm(array $prm = array());
 
 	/**
 	 * Redirect the user if not logged

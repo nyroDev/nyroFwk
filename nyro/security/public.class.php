@@ -52,7 +52,7 @@ class security_public extends security_abstract {
 		return $hasRight;
 	}
 
-	public function getLoginForm() {
+	public function getLoginForm(array $prm = array()) {
 		return null;
 	}
 

@@ -287,6 +287,7 @@ class helper_dataTable extends object {
 		} else {
 			// No data
 			$tpl->set('noData', utils::htmlOut($this->cfg->noData));
+			$tpl->set('list', null);
 			$tpl->setA($this->cfg->tplVars);
 		}
 		return $tpl->fetch(array('tplExt'=>$type));
@@ -328,9 +329,10 @@ class helper_dataTable extends object {
 		try {
 			return $this->to(request::get('out'));
 		} catch (Exception $e) {
-			if (DEV)
+			if (DEV) {
+				print_r($e); exit;
 				debug::trace($e, 2);
-			else
+			} else
 			   throw $e;
 		}
 	}

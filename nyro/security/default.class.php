@@ -260,12 +260,12 @@ class security_default extends security_abstract {
 		return $hasRight;
 	}
 
-	public function getLoginForm() {
+	public function getLoginForm(array $prm = array()) {
 		if (!$this->form) {
 			$this->form = $this->table->getRow()->getForm(array(
 				$this->cfg->getInArray('fields', 'login'),
 				$this->cfg->getInArray('fields', 'pass')
-			), array_merge($this->cfg->formOptions, array(
+			), array_merge($this->cfg->formOptions, $prm, array(
 				'action'=>request::uri($this->getPage('login'))
 			)), false);
 			$this->form->get($this->cfg->getInArray('fields', 'login'))->getValid()->delRule('dbUnique');

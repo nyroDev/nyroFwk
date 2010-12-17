@@ -399,15 +399,18 @@ class response_http_html extends response_http {
 	 */
 	protected function setHtmlEltIntern($content) {
 		$ln = "\n";
+		$jsBlocks = $this->getHtmlBlocks('js', $ln);
+		$addJsBlocks = request::isAjax() && strpos($content, '[{[JS]}]') === false;
 		return str_replace(
 			array('[{[TITLE]}]', '[{[META]}]', '[{[CSS]}]', '[{[JS]}]'),
 			array(
 				'<title>'.utils::htmlOut($this->getMeta('title')).'</title>',
 				$this->getHtmlMeta(),
 				$this->getHtmlIncFiles('css', $ln).$ln.$this->getHtmlBlocks('css', $ln),
-				$this->getHtmlIncFiles('js', $ln).$ln.$this->getHtmlBlocks('js', $ln)
+				$this->getHtmlIncFiles('js', $ln).$ln.$jsBlocks
 			),
-			$content);
+			$content).($addJsBlocks ? $jsBlocks : null);
+
 	}
 
 	/**
