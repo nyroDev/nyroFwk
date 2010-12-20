@@ -578,7 +578,9 @@ final class request {
 	}
 
 	/**
-	 * Convert a string uri to an array usuable for request::uri
+	 * Convert a string uri to an array usuable for request::uri.
+	 * Starting with // will remove the controller.
+	 * Starting with /// will remove the controller and absolutize the URI.
 	 *
 	 * @param string $uri
 	 * @return array
@@ -589,6 +591,8 @@ final class request {
 		if (empty($uriA)) {
 			if ($uri == '//')
 				return array('controller'=>false);
+			else if ($uri == '///')
+				return array('absolute'=>true, 'controller'=>false);
 			else
 				return array();
 		}
@@ -616,6 +620,8 @@ final class request {
 
 		if (substr($uri, 0, 2) == '//')
 			$tmp['controller'] = false;
+		if (substr($uri, 0, 3) == '///')
+			$tmp['absolute'] = true;
 
 		return $tmp;
 	}

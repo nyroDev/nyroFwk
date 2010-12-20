@@ -112,6 +112,18 @@ class security_default extends security_abstract {
 			$this->saveLogin();
 	}
 
+	/**
+	 * Save the login.
+	 * Set a new cryptic, save the DB user and save it in session.
+	 */
+	protected function saveLogin() {
+		$crypticKey = $this->cfg->getInArray('fields', 'cryptic');
+		$cryptic = $this->cryptPass(uniqid(), 'Cryptic');
+		$this->user->set($crypticKey, $cryptic);
+		$this->user->save();
+		$this->logFromCryptic($cryptic);
+	}
+
 	public function login($prm = null, $page=null) {
 		$loginField = $this->cfg->getInArray('fields', 'login');
 		$passField = $this->cfg->getInArray('fields', 'pass');
@@ -133,17 +145,12 @@ class security_default extends security_abstract {
 					$tableName.'.'.$passField=>$this->cryptPass($prm[$passField])
 				), $this->cfg->where));
 				if ($this->user) {
-					$crypticKey = $this->cfg->getInArray('fields', 'cryptic');
-					$cryptic = $this->cryptPass(uniqid(), 'Cryptic');
-					$this->user->set($crypticKey, $cryptic);
-					$this->user->save();
-					$this->logFromCryptic($cryptic);
+					$this->saveLogin();
 					if (array_key_exists('stayConnected', $prm) && $prm['stayConnected']) {
 						$cook = factory::get('http_cookie', $this->cfg->cookie);
-						$cook->set($cryptic);
+						$cook->set($this->user->get($this->cfg->getInArray('fields', 'cryptic')));
 						$cook->save();
 					}
-					$this->logged = true;
 					$this->hook('login');
 				} else if ($form)
 					$form->addCustomError($loginField, $this->cfg->errorMsg);
@@ -169,6 +176,7 @@ class security_default extends security_abstract {
 	 */
 	public function logFromCryptic($cryptic) {
 		$this->session->cryptic = $cryptic;
+		$this->logged = true;
 	}
 
 	/**
