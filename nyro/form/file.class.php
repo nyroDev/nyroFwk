@@ -88,8 +88,8 @@ class form_file extends form_abstract {
 
 		$delLink = null;
 		if ($this->cfg->value->getCurrent()) {
-			$delLink = '<span><br /><br />
-				<a href="#" class="deleteFile" id="'.$this->id.'NyroDel">'.$this->cfg->deleteLabel.'</a><br />'
+			$delLink = '<span>
+				<a href="#" class="deleteFile" id="'.$this->id.'NyroDel">'.$this->cfg->deleteLabel.'</a>'
 					.$this->cfg->value->getView().'</span></p>';
 			response::getInstance()->blockJquery('
 			$("#'.$this->id.'NyroDel").click(function(e) {

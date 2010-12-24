@@ -477,11 +477,13 @@ class helper_email extends object {
 
 		if (!preg_match('/[\200-\377]/', $val)) {
 			$encoded = addcslashes($val, "\0..\37\177\\\"");
-			if (($val == $encoded) &&
-				!preg_match('/[^A-Za-z0-9!#$%&\'*+\/=?^_`{|}~ -]/', $val))
-				return ($encoded);
+			return $encoded;
+			/*
+			if (($val == $encoded) && !preg_match('/[^A-Za-z0-9!#$%&\'*+\/=?^_`{|}~ -]/', $val))
+				return $encoded;
 			else
-				return '"'.$encoded.'"';
+				return $encoded;
+			 */
 		}
 		$nb = preg_match_all('/[^\040\041\043-\133\135-\176]/', $val, $matches);
 

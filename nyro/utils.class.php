@@ -94,7 +94,7 @@ class utils {
 	public static function htmlAttribute(array $prm) {
 		$tmp = array();
 		foreach($prm as $k=>$v)
-			if (!empty($v))
+			if (!empty($v) || $v === 0 || $v === '0')
 				$tmp[] = $k.'="'.$v.'"';
 		return implode(' ', $tmp);
 	}

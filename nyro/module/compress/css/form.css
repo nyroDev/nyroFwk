@@ -132,8 +132,8 @@ fieldset p a.deleteFile {
     background: url(form/delete.png) no-repeat;
     padding: 0;
     padding-left: 18px;
-    position: relative;
-    top: -6px;
+	display: block;
+	margin: 5px 0;
 }
 fieldset.submit {
 	float: none;
