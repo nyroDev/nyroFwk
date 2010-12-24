@@ -212,8 +212,8 @@ class helper_image extends helper_file {
 				array_merge($options, $this->cfg->htmlDefOptions, array(
 					'src'=>$this->cfg->fileSave,
 					'alt'=>$this->cfg->alt,
-					'width'=>$this->cfg->w,
-					'height'=>$this->cfg->h,
+					'width'=>$this->cfg->w ? $this->cfg->w : null,
+					'height'=>$this->cfg->h ? $this->cfg->h : null,
 				)));
 		}
 		return null;
