@@ -274,16 +274,21 @@ final class file {
 	 */
 	public static function delete($file) {
 		if (self::exists($file)) {
-			@unlink($file);
-			clearstatcache();
-			if (self::exists($file)) {
-				$filesys = str_replace("/", "\\", $file);
-				@system("del $filesys");
+			if (is_dir($file)) {
+				self::multipleDelete($file.'/*');
+				@rmdir($file);
+			} else {
+				@unlink($file);
 				clearstatcache();
 				if (self::exists($file)) {
-					@chmod($file, 0775);
-					@unlink($file);
+					$filesys = str_replace("/", "\\", $file);
 					@system("del $filesys");
+					clearstatcache();
+					if (self::exists($file)) {
+						@chmod($file, 0775);
+						@unlink($file);
+						@system("del $filesys");
+					}
 				}
 			}
 			clearstatcache();

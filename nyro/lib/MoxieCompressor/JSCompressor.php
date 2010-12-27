@@ -122,7 +122,7 @@ class Moxiecode_JSCompressor {
 			}
 
 			header('ETag:' . $etag);
-		} else
+		} //else // Updated by Nyro
 			header("Expires: " . gmdate("D, d M Y H:i:s", time() + $this->_parseTime($this->_settings['expires_offset'])) . " GMT");
 
 		header("Cache-Control: public, max-age=" . $this->_parseTime($this->_settings['expires_offset']));
