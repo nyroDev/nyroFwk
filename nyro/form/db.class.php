@@ -107,6 +107,7 @@ class form_db extends form {
 				break;
 		}
 		$prm['valid']['required'] = false;
+		$prm['valid']['dbUnique'] = false;
 		return $this->add($prm['type'], $prm);
 	}
 
