@@ -44,7 +44,7 @@
 							$val = $val ? $imgHelper->view($val) : $val;
 							break;
 						case 'tinyint':
-							$val = $val ? 'Oui' : 'Non';
+							$val = ucfirst(tr::__($val ? 'yes' : 'no'));
 							break;
 					}
 					echo '<td>'.(is_array($val)? implode(', ', $val) : $val).'</td>';

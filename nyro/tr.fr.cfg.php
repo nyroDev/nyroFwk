@@ -1,5 +1,7 @@
 <?php
 $cfg = array(
+	'yes'=>'oui',
+	'no'=>'non',
 	'scaffold'=>array(
 		'add'=>'Ajouter',
 		'goEdit'=>'Modifier',
