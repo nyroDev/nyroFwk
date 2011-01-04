@@ -380,10 +380,10 @@ class utils {
 				}
 			}
 		}
-		return str_replace(
+		return trim(str_replace(
 			array(' ', '_____', '____', '___', '__'),
 			'_',
-			strtr(utf8_decode($text), utf8_decode($from), utf8_decode($to)));
+			strtr(utf8_decode($text), utf8_decode($from), utf8_decode($to))), '_');
 	}
 
 	/**

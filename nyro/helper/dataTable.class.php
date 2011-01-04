@@ -306,8 +306,14 @@ class helper_dataTable extends object {
 			$val = call_user_func($this->cfg->actionsAllowed, $row);
 		if (!$val)
 			$val = $this->cfg->actionsAllowedDefault;
-		if (is_array($val))
-			$tmp = array_intersect_key($tmp, array_flip($val));
+		if (is_array($val)) {
+			$tmp2 = array();
+			foreach($val as $v) {
+				if (isset($tmp[$v]))
+					$tmp2[$v] = $tmp[$v];
+			}
+			$tmp = $tmp2;
+		}
 		return $tmp;
 	}
 
