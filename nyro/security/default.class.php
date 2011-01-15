@@ -258,7 +258,7 @@ class security_default extends security_abstract {
 		if (!$hasRight && $redirect) {
 			$request = request::removeLangOutUrl('/'.request::get('request'));
 			if ($request != $this->getPage('forbidden') && $request != $this->getPage('login')) {
-				$this->session->pageFrom = request::uri(request::get());
+				$this->session->pageFrom = request::get('localUri');
 				session::setFlash('nyroError', $this->cfg->errorText);
 				$this->hook('redirectError');
 				response::getInstance()->redirect($this->getPage('forbidden', true), 403);
@@ -291,6 +291,15 @@ class security_default extends security_abstract {
 		}
 
 		return $this->form;
+	}
+
+	/**
+	 * Return the session object used for security
+	 *
+	 * @return session_abstract
+	 */
+	public function getSession() {
+		return $this->session;
 	}
 
 }
