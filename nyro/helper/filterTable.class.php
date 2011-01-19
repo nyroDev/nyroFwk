@@ -77,6 +77,12 @@ class helper_filterTable extends object {
 					$r['label'] = $this->getLabel($r['table']);
 					$r['name'] = $r['tableLink'];
 					$this->form->addFromRelatedFilter($r);
+				} else if ($this->table->hasI18n() && db::isI18nName($field) && ($f = $this->table->getI18nTable()->getField(db::unI18nName($field)))) {
+					$name = db::unI18nName($field);
+					$f['name'] = $field;
+					$f['label'] = $this->getLabel($field);
+					$f['link'] = $this->table->getI18nTable()->getLinked($name);
+					$this->form->addFromFieldFilter($f);
 				}
 			}
 		} else {
@@ -183,6 +189,33 @@ class helper_filterTable extends object {
 								'op'=>'LIKE'
 							));
 						}
+					} else if ($this->table->hasI18n() && db::isI18nName($name) && ($f = $this->table->getI18nTable()->getField(db::unI18nName($name)))) {
+						$tblName = $this->table->getI18nTable()->getName();
+						$prim = $this->table->getI18nTable()->getPrimary();
+						$field = $tblName.'.'.db::unI18nName($name);
+						$clause = '('.$this->table->getName().'.'.$this->table->getIdent().' IN (SELECT '.$tblName.'.'.$prim[0].' FROM '.$tblName.' WHERE ';
+
+						$tmpWhere = $this->table->getI18nTable()->getWhere(array('op'=>'OR'));
+
+						if (!array_key_exists('text', $f) || $f['text']) {
+							$tmp = explode(' ', $val);
+							array_walk($tmp, create_function('&$v', '$v = trim($v);'));
+							$tmp = array_filter($tmp);
+							foreach($tmp as $t) {
+								$tmpWhere->add(array(
+									'field'=>$field,
+									'val'=>'%'.$t.'%',
+									'op'=>'LIKE'
+								));
+							}
+						} else {
+							$tmpWhere->add(array(
+								'field'=>$field,
+								'val'=>$val
+							));
+						}
+						$clause.= $tmpWhere.'))';
+						$where->add($clause);
 					} else {
 						$where->add(array(
 							'field'=>$field,

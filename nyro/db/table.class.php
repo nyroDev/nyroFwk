@@ -98,6 +98,15 @@ class db_table extends object {
 	}
 
 	/**
+	 * Indicate if the thable has a i18n table
+	 *
+	 * @return bool
+	 */
+	public function hasI18n() {
+		return !is_null($this->i18nTable);
+	}
+
+	/**
 	 * Get the i18n table
 	 *
 	 * @return db_table
