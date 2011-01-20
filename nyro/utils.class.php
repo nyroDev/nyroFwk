@@ -368,8 +368,12 @@ class utils {
 	 * @return string
 	 */
 	public static function urlify($text, $ignore=null) {
-		$from = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÿÑñß()[]~$&%*@ç!¡?¿;,.:/\\^¨€{}|+<>\"' ’–«»…®²°";
-		$to   = 'AAAAAAaaaaaaOOOOOOooooooEEEEeeeeCcIIIIiiiiUUUUuuuuyNns          c     __     E      _________2_';
+		$text = str_replace(
+			array('ß' , 'æ',  'Æ',  '¼',   '½',   '¾',   '‰',   '™'),
+			array('ss', 'ae', 'AE', '1/4', '1/2', '3/4', '0/00', 'TM'),
+			$text);
+		$from = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøðÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÝÿÑñÐÞþ()[]~¤$&%*@ç§¶!¡†?¿;,.:/\\^¨€¢£¥{}|¦+÷×±<>\"' ’–«»…©®¹²³°";
+		$to   = 'AAAAAAaaaaaaOOOOOOoooooooEEEEeeeeCcIIIIiiiiUUUUuuuuYyNnDPp           cS       __     EcPY          _______CR123_';
 		if (!is_null($ignore)) {
 			$len = strlen($ignore);
 			for($i = 0; $i < $len; $i++) {
