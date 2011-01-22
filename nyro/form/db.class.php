@@ -231,6 +231,7 @@ class form_db extends form {
 						$prm['valid']['different'] = '0000-00-00';
 						break;
 					case 'datetime':
+					case 'timestamp':
 						$type = 'datetime';
 						$prm['valid']['different'] = '0000-00-00 00:00:00';
 						break;
