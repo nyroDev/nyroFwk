@@ -13,6 +13,7 @@ $cfg = array(
 	'notValue'=>array(),
 
 	'forceOnlyOneLang'=>false,
+	'noForceLang'=>false,
 
 	'sepLabel'=>': ',
 	'emptyLabel'=>'&nbsp;',

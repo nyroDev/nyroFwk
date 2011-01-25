@@ -214,7 +214,7 @@ class form extends object {
 		if ($this->isI18n()) {
 			$this->cfg->showSection = true;
 			$nb = 0;
-			if ($this->cfg->forceOnlyOneLang)
+			if ($this->cfg->forceOnlyOneLang || $this->cfg->noForceLang)
 				$requiredFields = array();
 			foreach(request::avlLang(true) as $lg=>$lang) {
 				$this->addSection($lang);
@@ -223,7 +223,7 @@ class form extends object {
 					$e['prm']['isI18n'] = true;
 					$initName = $e['prm']['name'];
 					$e['prm']['name'] = db::getCfg('i18n').'['.$lg.']['.$initName.']';
-					if ($this->cfg->forceOnlyOneLang) {
+					if ($this->cfg->forceOnlyOneLang || $this->cfg->noForceLang) {
 						if ($nb == 0) {
 							if ($e['prm']['valid']['required'])
 								$requiredFields[] = $initName;
@@ -238,8 +238,9 @@ class form extends object {
 								);
 								$groupedFieldsAdded = true;
 							}
-							$e['prm']['valid']['required'] = false;
 						}
+						if ($nb > 0 || $this->cfg->noForceLang)
+							$e['prm']['valid']['required'] = false;
 					}
 					$this->add($e['type'], $e['prm']);
 				}
