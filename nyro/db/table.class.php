@@ -600,12 +600,11 @@ class db_table extends object {
 		$this->dateAutoData($data, 'deleted');
 		if (empty($data)) {
 			if ($files = $this->getFieldFile()) {
-				$rows = $this->select(array('where'=>$where));
+				$rows = $this->select(array('autoJoin'=>false, 'where'=>$where));
 				foreach($rows as $r) {
 					$form = $r->getForm($files);
-					foreach($files as $f) {
+					foreach($files as $f)
 						$form->get($f)->getRawValue()->delete();
-					}
 				}
 			}
 			return $this->getDb()->delete(array(

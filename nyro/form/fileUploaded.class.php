@@ -190,7 +190,7 @@ class form_fileUploaded extends object {
 	 */
 	public function delete() {
 		$ret = false;
-		if ($current = $this->getCurrent()) {
+		if (($current = $this->getCurrent()) && file::exists($current)) {
 			$ret = $this->callHelper('delete', $current);
 			file::delete(FILESROOT.$current);
 			$this->setCurrent(null);
