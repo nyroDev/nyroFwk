@@ -146,10 +146,12 @@ final class request {
 		$requestUri = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : ('/'.$scriptName.(array_key_exists(1, $_SERVER['argv']) ? $_SERVER['argv'][1] : ''));
 
 		$redir = null;
+		$forceServerName = null;
 		if (self::$cfg->forceServerName
 		    && strpos($serverName, 'localhost') === false
 		    && strtolower(self::$cfg->forceServerName) != strtolower($serverName)) {
-			$redir = $protocol.'://'.self::$cfg->forceServerName.$port.$requestUri;
+			$forceServerName = self::$cfg->forceServerName;
+			$redir = $protocol.'://'.$forceServerName.$port.$requestUri;
 		}
 		if (self::$cfg->forceNoOut
 		    && self::$cfg->noOut
@@ -209,7 +211,7 @@ final class request {
 				if ($continue) {
 					// lang not found, force it
 					$redirWork = $redir ? $redir : $domain.$requestUri;
-					$search = $domain.$path.($pathWithController? $controller.'/' : null);
+					$search = ($forceServerName ? $forceServerName : $domain).$path.($pathWithController? $controller.'/' : null);
 					$pos = strpos($redirWork, $search) + strlen($search);
 					$end = $pos < strlen($redirWork) ? strpos($redirWork, '/', $pos+1) : false;
 					$end = $end ? $end-$pos : strlen($redirWork);

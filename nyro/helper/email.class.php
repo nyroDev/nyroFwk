@@ -172,10 +172,10 @@ class helper_email extends object {
 				foreach($this->attachment as $at) {
 					$body.= $this->textLine('--'.$boundaryMix);
 					$body.= $this->headerLine('Content-Type', $at['type'].'; name="'.$at['name'].'"');
-					$body.= $this->headerLine('Content-Transfer-Encoding', $this->cfg->encoding);
+					$body.= $this->headerLine('Content-Transfer-Encoding', , $this->cfg->fileEncoding);
 					$body.= $this->headerLine('Content-Disposition', 'attachment; name="'.$at['name'].'"');
 					$body.= $this->textLine(null);
-					$body.= $this->encode(file::read($at['file']));
+					$body.= $this->encode(file::read($at['file']), $this->cfg->fileEncoding);
 					$body.= $this->textLine(null);
 				}
 				$body.= $this->textLine('--'.$boundaryMix.'--');
@@ -382,11 +382,11 @@ class helper_email extends object {
 				foreach($inlineImages as $img) {
 					$body.= $this->textLine('--'.$boundaryRel);
 					$body.= $this->headerLine('Content-Type', $img['type'].'; name="'.$img['name'].'"');
-					$body.= $this->headerLine('Content-Transfer-Encoding', $this->cfg->encoding);
+					$body.= $this->headerLine('Content-Transfer-Encoding', $this->cfg->fileEncoding);
 					$body.= $this->headerLine('Content-ID', '<'.$img['cid'].'>');
 					$body.= $this->headerLine('Content-Disposition', 'inline; filename="'.$img['name'].'"');
 					$body.= $this->textLine(null);
-					$body.= $this->textLine($this->encode(file::read($img['file'])));
+					$body.= $this->textLine($this->encode(file::read($img['file']), $this->cfg->fileEncoding));
 				}
 				$body.= $this->textLine('--'.$boundaryRel.'--');
 				$body.= $this->textLine(null);
@@ -403,10 +403,12 @@ class helper_email extends object {
 	 * Encode a content regarding the encoding config
 	 *
 	 * @param string $val
+	 * @param null|string $encoding Force encoding type to use
 	 * @return string
 	 */
-	protected function encode($val) {
-		switch($this->cfg->encoding) {
+	protected function encode($val, $encoding=null) {
+		$encoding = is_null($encoding) ? $this->cfg->encoding : $encoding;
+		switch ($encoding) {
 			case 'base64';
 				return chunk_split(base64_encode($val));
 		}

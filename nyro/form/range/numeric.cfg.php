@@ -1,5 +1,5 @@
 <?php
 $cfg = array(
 	'htmlTagName'=>'input',
-	'disabled'=>true,
+	'disabled'=>false,
 );

@@ -5,7 +5,8 @@ $cfg = array(
 
 	'xMailer'=>'nyroMail',
 	'charset'=>'utf-8',
-	'encoding'=>'base64',
+	'encoding'=>'quoted-printable',
+	'fileEncoding'=>'base64',
 	'sender'=>'nyrodev.com',
 	'serverName'=>null,
 	'priority'=>3,
