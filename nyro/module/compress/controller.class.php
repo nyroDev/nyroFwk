@@ -55,7 +55,6 @@ class module_compress_controller extends module_abstract {
 					else
 						$tmp.= file::read($f);
 				}
-
 			}
 			response::getInstance()->sendText($tmp);
 		}

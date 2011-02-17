@@ -172,7 +172,7 @@ class helper_email extends object {
 				foreach($this->attachment as $at) {
 					$body.= $this->textLine('--'.$boundaryMix);
 					$body.= $this->headerLine('Content-Type', $at['type'].'; name="'.$at['name'].'"');
-					$body.= $this->headerLine('Content-Transfer-Encoding', , $this->cfg->fileEncoding);
+					$body.= $this->headerLine('Content-Transfer-Encoding', $this->cfg->fileEncoding);
 					$body.= $this->headerLine('Content-Disposition', 'attachment; name="'.$at['name'].'"');
 					$body.= $this->textLine(null);
 					$body.= $this->encode(file::read($at['file']), $this->cfg->fileEncoding);

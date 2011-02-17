@@ -82,6 +82,15 @@ class response_http_html extends response_http {
 	}
 
 	/**
+	 * Set the titleInDes setting
+	 *
+	 * @param false|string $titleInDes The string to use or false to deactivate
+	 */
+	public function setTitleInDes($titleInDes) {
+		$this->cfg->titleInDes = $titleInDes;
+	}
+
+	/**
 	 * Get a meta content
 	 *
 	 * @param string $name Meta name
