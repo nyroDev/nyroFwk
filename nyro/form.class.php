@@ -400,12 +400,58 @@ class form extends object {
 	public function reOrder(array $order) {
 		$tmp = array();
 		foreach($order as $v) {
-			$e = $this->get($v);
-			if ($e)
-				$tmp[$v] = $e;
+			if (isset($this->elementsSection[$v]) && $this->elementsSection[$v] == $this->curSection) {
+				$e = $this->get($v);
+				if ($e)
+					$tmp[$v] = $e;
+			}
 		}
-		$this->elements[0] = $tmp;
+		foreach($this->elements[$this->curSection] as $name=>$elt) {
+			if (!isset($tmp[$name]))
+				$tmp[$name] = $elt;
+		}
+		$this->elements[$this->curSection] = $tmp;
 	}
+
+	/**
+	 * Reorder the sections
+	 *
+	 * @param array $order Array containing either the section index or the section name
+	 */
+	public function reOrderSection(array $order) {
+		$section = $elements = $elementsSection = $trans = array();
+		$cur = 0;
+		foreach($order as $v) {
+			$old = is_int($v) ? $v : array_search($v, $this->section);
+			if (!is_null($old) && $old !== false && isset($this->section[$old])) {
+				$new = $cur;
+				$trans[$old] = $new;
+				$section[$new] = $this->section[$old];
+				$elements[$new] = $this->elements[$old];
+				foreach(array_keys($elements[$new]) as $k)
+					$elementsSection[$k] = $new;
+				$cur++;
+			}
+		}
+		if (count($section) < count($this->section)) {
+			foreach($this->section as $old=>$v) {
+				if (!isset($trans[$old])) {
+					$new = $cur;
+					$trans[$old] = $new;
+					$section[$new] = $this->section[$old];
+					$elements[$new] = $this->elements[$old];
+					foreach(array_keys($elements[$new]) as $k)
+						$elementsSection[$k] = $new;
+					$cur++;
+				}
+			}
+		}
+
+		$this->section = $section;
+		$this->elements = $elements;
+		$this->elementsSection = $elementsSection;
+	}
+
 
 	/**
 	 * Get the actual value for 1 field

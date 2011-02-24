@@ -133,7 +133,10 @@ class helper_dataTable extends object {
 	 * @return int
 	 */
 	public function getNbPage() {
-		return ceil($this->getCount() / $this->cfg->nbPerPage);
+		$nbPage = ceil($this->getCount() / $this->cfg->nbPerPage);
+		if ($this->cfg->nbPageMax && $nbPage > $this->cfg->nbPageMax)
+			$nbPage = $this->cfg->nbPageMax;
+		return $nbPage;
 	}
 
 	/**

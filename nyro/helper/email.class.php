@@ -478,8 +478,7 @@ class helper_email extends object {
 		$nb = 0;
 
 		if (!preg_match('/[\200-\377]/', $val)) {
-			$encoded = addcslashes($val, "\0..\37\177\\\"");
-			return $encoded;
+			return addcslashes($val, "\0..\37\177\\\"");
 			/*
 			if (($val == $encoded) && !preg_match('/[^A-Za-z0-9!#$%&\'*+\/=?^_`{|}~ -]/', $val))
 				return $encoded;

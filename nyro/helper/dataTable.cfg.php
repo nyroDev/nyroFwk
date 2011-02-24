@@ -10,6 +10,7 @@ $cfg = array(
 	'nameParam'=>null,
 
 	'nbPerPage'=>50,
+	'nbPageMax'=>false,
 	'page'=>1,
 	'sortBy'=>null,
 	'sortDir'=>'asc',
