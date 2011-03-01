@@ -25,18 +25,14 @@ class utils {
 	}
 
 	/**
-	 * Transform HTML to text, using markdownify library
+	 * Transform HTML to text, using html2text library
 	 *
 	 * @param string $html The HTML string to transform
 	 * @return string
 	 */
 	public static function html2Text($html) {
-		lib::load('markdownify');
-		$md = new Markdownify_Extra(false, false, false);
-		preg_match('@<body[^>]*>(.*)</body>@siU', $html, $matches);
-		if (!empty($matches))
-			$html = $matches[1];
-		return $md->parseString($html);
+		lib::load('html2text');
+		return html2text($html);
 	}
 
 	/**
