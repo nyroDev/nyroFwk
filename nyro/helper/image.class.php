@@ -192,6 +192,31 @@ class helper_image extends helper_file {
 						}
 					}
 				}
+				
+				if ($this->cfg->grayFilter) {
+					// Copy form $img to $imgDst With the parameter defined, with grayscale
+					if (function_exists('imagefilter')) {
+						imagefilter($this->imgAct, IMG_FILTER_GRAYSCALE);
+					} else {
+						// Manual Grayscale
+						$imgTmp = $this->imgAct;
+						$x = imagesx($imgTmp);
+						$y = imagesy($imgTmp);
+						$this->imgAct = imagecreatetruecolor($x, $y);
+						imagecolorallocate($this->imgAct, 0, 0, 0);
+						for ($i = 0; $i < $x; $i++) {
+							for ($j = 0; $j < $y; $j++) {
+								$rgb = imagecolorat($imgTmp, $i, $j);
+								$r = ($rgb >> 16) & 0xFF;
+								$g = ($rgb >> 8) & 0xFF;
+								$b = $rgb & 0xFF;
+								$color = max(array($r, $g, $b));
+								imagesetpixel($this->imgAct, $i, $j, imagecolorexact($this->imgAct, $color, $color, $color));
+							}
+						}
+						imagedestroy($imgTmp);
+					}
+				}
 
 				if (!empty($this->cfg->mask) && file::exists($this->cfg->mask)) {
 					$this->mask($this->cfg->mask);
@@ -400,42 +425,8 @@ class helper_image extends helper_file {
 			imagefill($imgDst, 0, 0, $clR);
 		}
 
-		if ($this->cfg->grayFilter) {
-			// Copy form $img to $imgDst With the parameter defined, with grayscale
-			if (function_exists('imagefilter')) {
-				imagefilter($imgDst, IMG_FILTER_GRAYSCALE);
-			} else {
-				$imgTmp = imagecreatetruecolor($prm['w'], $prm['h']);
-
-				if (empty($prm['bgColor']) && ($this->info[2] == IMAGETYPE_GIF || $this->info[2] == IMAGETYPE_PNG)) {
-					$transparency = imagecolortransparent($img);
-					if ($transparency >= 0) {
-						$trnprtIndex = imagecolortransparent($img);
-						$transparentColor  = imagecolorsforindex($img, $trnprtIndex);
-						$transparency      = imagecolorallocate($imgTmp, $transparentColor['red'], $transparentColor['green'], $transparentColor['blue']);
-						imagefill($imgTmp, 0, 0, $transparency);
-						imagecolortransparent($imgTmp, $transparency);
-					} else if ($this->info[2] == IMAGETYPE_PNG) {
-						imagealphablending($imgTmp, false);
-						imagesavealpha($imgTmp, true);
-						$color = imagecolorallocatealpha($imgTmp, 255, 255, 255, 127);
-						imagefilledrectangle($imgTmp, 0,  0, $prm['w'], $prm['h'], $color);
-					}
-				} else if (!$prm['fit']) {
-					$cl = $this->hexa2dec($prm['bgColor']);
-					$clR = imagecolorallocate($imgTmp, $cl[0], $cl[1], $cl[2]);
-					imagefill($imgTmp, 0, 0, $clR);
-				}
-
-				imagecopyresampled($imgTmp, $img, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH);
-				imagecopymergegray($imgDst, $imgTmp, 0, 0, 0, 0, $prm['w'], $prm['h'], 100);
-				imagedestroy($imgTmp);
-			}
-		} else {
-			// Copy form $img to $imgDst With the parameter defined
-			imagecopyresampled($imgDst, $img, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH);
-		}
-
+		// Copy form $img to $imgDst With the parameter defined
+		imagecopyresampled($imgDst, $img, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH);
 
 		// Destroy the image ressource source
 		imagedestroy($img);
