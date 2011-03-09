@@ -176,6 +176,23 @@ class helper_image extends helper_file {
 					}
 				}
 
+				if (!empty($this->cfg->filters)) {
+					foreach($this->cfg->filters as $prms) {
+						if (!is_array($prms)) {
+							$f = $prms;
+							$prms = array();
+						} else
+							$f = array_shift($prms);
+						switch(count($prms)) {
+							case 0:		imagefilter($this->imgAct, $f); break;
+							case 1:		imagefilter($this->imgAct, $f, $prms[0]); break;
+							case 2:		imagefilter($this->imgAct, $f, $prms[0], $prms[1]); break;
+							case 3:		imagefilter($this->imgAct, $f, $prms[0], $prms[1], $prms[2]); break;
+							default:	imagefilter($this->imgAct, $f, $prms[0], $prms[1], $prms[2], $prms[3]); break;
+						}
+					}
+				}
+
 				if (!empty($this->cfg->mask) && file::exists($this->cfg->mask)) {
 					$this->mask($this->cfg->mask);
 					$change = true;
