@@ -120,10 +120,10 @@ class form_fileUploaded extends object {
 					'webPath'=>$webPath
 				);
 				if ($this->cfg->deleteCurrent && ($current = $this->getCurrent())
-						&& str_replace('/', DS, $savePath) != str_replace('/', DS, FILESROOT.$current)
+						&& str_replace('/', DS, $savePath) != str_replace('/', DS, $this->cfg->dir.$current)
 						&& (!array_key_exists('webPath', $this->file) || $current != $this->file['webPath'])) {
 					$this->callHelper('delete', $current);
-					file::delete(FILESROOT.$current);
+					file::delete($this->cfg->dir.$current);
 					$this->setCurrent(null);
 				}
 				$this->saved = $webPath;
@@ -190,9 +190,12 @@ class form_fileUploaded extends object {
 	 */
 	public function delete() {
 		$ret = false;
-		if (($current = $this->getCurrent()) && file::exists($current)) {
+		$current = $this->getCurrent();
+		if ($current && strpos($current, $this->cfg->dir) === false)
+			$current = $this->cfg->dir.$current;
+		if ($current && file::exists($current)) {
 			$ret = $this->callHelper('delete', $current);
-			file::delete(FILESROOT.$current);
+			file::delete($current);
 			$this->setCurrent(null);
 		}
 		return $ret;
