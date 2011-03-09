@@ -17,9 +17,9 @@ class helper_file extends object {
 	 * @return bool|string True if valid or string representing the error
 	 */
 	public function valid(array $file, array $prm = array()) {
-		if (empty($file))
+		if (empty($file) || (isset($file['size']) && $file['size'] == 0))
 			return true;
-		return (!$this->cfg->maxsize || $file['size'] < $this->cfg->maxsize) && in_array($file['type'], $this->cfg->mime);
+		return (!$this->cfg->maxsize || $file['size'] < $this->cfg->maxsize) && (count($this->cfg->mime) > 0 && in_array($file['type'], $this->cfg->mime));
 	}
 
 }

@@ -33,7 +33,6 @@ abstract class module_abstract extends object {
 
 	/**
 	 * Every called action must pass by this function
-	 * @todo check rights with ACL
 	 *
 	 * @param null|string $prm Actopn Parameters
 	 * @throws nException if wrong parameter or other errors

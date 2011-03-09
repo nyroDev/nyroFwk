@@ -101,9 +101,6 @@ class module_scaffold_controller extends module_abstract {
 		);
 	}
 
-	/**
-	 * @todo See how it should work (security, etc...)
-	 */
 	protected function execIndex($prm=null) {
 		$this->setViewAction('list');
 		return $this->execScaffoldList($prm);
