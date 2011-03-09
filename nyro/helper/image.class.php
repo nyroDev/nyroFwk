@@ -176,7 +176,7 @@ class helper_image extends helper_file {
 					}
 				}
 
-				if (!empty($this->cfg->filters)) {
+				if (!empty($this->cfg->filters) && function_exists('imagefilter')) {
 					foreach($this->cfg->filters as $prms) {
 						if (!is_array($prms)) {
 							$f = $prms;
@@ -400,8 +400,42 @@ class helper_image extends helper_file {
 			imagefill($imgDst, 0, 0, $clR);
 		}
 
-		// Copy form $img to $imgDst With the parameter defined
-		imagecopyresampled($imgDst, $img, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH);
+		if ($this->cfg->grayFilter) {
+			// Copy form $img to $imgDst With the parameter defined, with grayscale
+			if (function_exists('imagefilter')) {
+				imagefilter($imgDst, IMG_FILTER_GRAYSCALE);
+			} else {
+				$imgTmp = imagecreatetruecolor($prm['w'], $prm['h']);
+
+				if (empty($prm['bgColor']) && ($this->info[2] == IMAGETYPE_GIF || $this->info[2] == IMAGETYPE_PNG)) {
+					$transparency = imagecolortransparent($img);
+					if ($transparency >= 0) {
+						$trnprtIndex = imagecolortransparent($img);
+						$transparentColor  = imagecolorsforindex($img, $trnprtIndex);
+						$transparency      = imagecolorallocate($imgTmp, $transparentColor['red'], $transparentColor['green'], $transparentColor['blue']);
+						imagefill($imgTmp, 0, 0, $transparency);
+						imagecolortransparent($imgTmp, $transparency);
+					} else if ($this->info[2] == IMAGETYPE_PNG) {
+						imagealphablending($imgTmp, false);
+						imagesavealpha($imgTmp, true);
+						$color = imagecolorallocatealpha($imgTmp, 255, 255, 255, 127);
+						imagefilledrectangle($imgTmp, 0,  0, $prm['w'], $prm['h'], $color);
+					}
+				} else if (!$prm['fit']) {
+					$cl = $this->hexa2dec($prm['bgColor']);
+					$clR = imagecolorallocate($imgTmp, $cl[0], $cl[1], $cl[2]);
+					imagefill($imgTmp, 0, 0, $clR);
+				}
+
+				imagecopyresampled($imgTmp, $img, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH);
+				imagecopymergegray($imgDst, $imgTmp, 0, 0, 0, 0, $prm['w'], $prm['h'], 100);
+				imagedestroy($imgTmp);
+			}
+		} else {
+			// Copy form $img to $imgDst With the parameter defined
+			imagecopyresampled($imgDst, $img, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH);
+		}
+
 
 		// Destroy the image ressource source
 		imagedestroy($img);

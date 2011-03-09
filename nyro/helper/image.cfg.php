@@ -11,6 +11,7 @@ $cfg = array(
 	'resizeSmaller'=>true,
 	'mask'=>null,
 	'rebuild'=>false,
+	'grayFilter'=>false,
 	'filters'=>array(),
 	'html'=>false,
 	'alt'=>'Image',
