@@ -16,7 +16,7 @@ $cfg = array(
 	'html'=>false,
 	'alt'=>'Image',
 	'htmlDefOptions'=>array(),
-	'autoExt'=>array('gif', 'jpg', 'png'),
+	'autoExt'=>array('gif', 'jpg', 'jpeg', 'png'),
 	'mime'=>array(
 		'image/jpeg',
         'image/png',
