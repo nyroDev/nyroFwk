@@ -19,7 +19,9 @@ class helper_file extends object {
 	public function valid(array $file, array $prm = array()) {
 		if (empty($file) || (isset($file['size']) && $file['size'] == 0))
 			return true;
-		return (!$this->cfg->maxsize || $file['size'] < $this->cfg->maxsize) && (count($this->cfg->mime) == 0 || in_array($file['type'], $this->cfg->mime));
+		
+		$type = $file['type'] != 'application/octet-stream' ? $file['type'] : file::getType($file['name']);
+		return (!$this->cfg->maxsize || $file['size'] < $this->cfg->maxsize) && (count($this->cfg->mime) == 0 || in_array($type, $this->cfg->mime));
 	}
 
 }
