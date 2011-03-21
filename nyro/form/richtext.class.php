@@ -22,7 +22,6 @@ class form_richtext extends form_multiline {
 			return $this->getValue();
 
 		$options = $this->tinyMce;
-		array_filter($options);
 
 		if (is_array($this->cfg->tinyBrowser)) {
 			$tinyBrowser = $this->cfg->tinyBrowser;
@@ -44,11 +43,11 @@ class form_richtext extends form_multiline {
 			}';
 		}
 
-		if (array_key_exists('content_css', $options)) {
+		if (array_key_exists('content_css', $options) && $options['content_css']) {
 			$contentCss = $options['content_css'];
-			unset($options['content_css']);
 			$options['setup'] = 'function(ed) {ed.onInit.add(function(ed) {setTimeout(function() {ed.dom.add(ed.dom.select("head"), "link", {rel : "stylesheet", href : "'.$contentCss.'"});}, 5);});}';
 		}
+		unset($options['content_css']);
 
 		$resp = response::getInstance()->getProxy();
 		$resp->addJs('jquery.tinymce');
