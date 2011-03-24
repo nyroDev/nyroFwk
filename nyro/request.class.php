@@ -724,8 +724,7 @@ final class request {
 					$test = array_map('strtolower', $test);
 					return in_array(self::$mobileStatus, $test);
 				} else {
-					$test = strtolower($test);
-					return self::$mobileStatus == $test;
+					return self::$mobileStatus == strtolower($test);
 				}
 			}
 			return true;
