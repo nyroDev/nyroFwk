@@ -11,4 +11,8 @@ $cfg = array(
 	'sepCom'=>'~',
 	'sepComVal'=>'¤',
 	'quoteValue'=>'"',
+	'cache'=>array(
+		'ttl'=>3600,
+		'request'=>array('uri'=>false, 'meth'=>array())
+	),
 );

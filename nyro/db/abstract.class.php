@@ -594,6 +594,15 @@ abstract class db_abstract extends object {
 	}
 
 	/**
+	 * Get a cache instance
+	 *
+	 * @return cache_abstract
+	 */
+	public function getCache() {
+		return cache::getInstance($this->cache);
+	}
+
+	/**
 	 * Abstract Methods
 	 */
 

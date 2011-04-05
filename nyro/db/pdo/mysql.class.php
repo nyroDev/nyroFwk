@@ -22,10 +22,7 @@ class db_pdo_mysql extends db_pdo_abstract {
 	 * @return array
 	 */
 	public function getTables() {
-		$cache = cache::getInstance(array(
-			'ttl'=>3600,
-			'request'=>array('uri'=>false, 'meth'=>array())
-		));
+		$cache = $this->getCache();
 		if (!$cache->get($this->tables, array('id'=>'tables'))) {
 			if (is_null($this->tables)) {
 				$stmt = $this->query('SHOW TABLES');
@@ -43,10 +40,7 @@ class db_pdo_mysql extends db_pdo_abstract {
 	 * @return array
 	 */
 	public function fields($table) {
-		$cache = cache::getInstance(array(
-			'ttl'=>3600,
-			'request'=>array('uri'=>false, 'meth'=>array())
-		));
+		$cache = $this->getCache();
 		$ret = array();
 		if (!$cache->get($ret, array('id'=>'fields-'.$table))) {
 			$stmt = $this->query('SHOW FULL FIELDS FROM '.$this->quoteIdentifier($table));

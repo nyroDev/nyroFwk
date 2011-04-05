@@ -667,7 +667,15 @@ class db_table extends object {
 	 */
 	public function select(array $prm = array()) {
 		$prm = $this->selectQuery($prm, $tmpTables);
-		$ret = $this->getDb()->select($prm);
+
+		$ret = array();
+		$cache = $this->getDb()->getCache();
+		$canCache = !isset($prm['order']) || !(stripos($prm['order'], 'rand(') !== false);
+		if (!$canCache || !$cache->get($ret, array('id'=>$this->getName().'-'.sha1(serialize($prm))))) {
+			$ret = $this->getDb()->select($prm);
+			if ($canCache)
+				$cache->save();
+		}
 
 		if (!empty($ret) && !empty($this->cfg->forceValues)) {
 			foreach($ret as $k=>$v)
