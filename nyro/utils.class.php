@@ -441,7 +441,7 @@ class utils {
 	 * @param array $checks
 	 * @return bool True if a line in $checks matches the $url
 	 */
-	protected static function isContained(array $url, array $checks) {
+	public static function isContained(array $url, array $checks) {
 		foreach($checks as $c) {
 			$tmp = array_intersect_key($url, $c);
 			$nbM = 0;
