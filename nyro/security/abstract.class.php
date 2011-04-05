@@ -119,17 +119,7 @@ abstract class security_abstract extends object {
 	 * @return bool True if a line in $checks matches the $url
 	 */
 	protected function isContained(array $url, array $checks) {
-		foreach($checks as $c) {
-			$tmp = array_intersect_key($url, $c);
-			$nbM = 0;
-			foreach($tmp as $k=>$v)
-				if (!is_array($v))
-					$nbM += (preg_match('/'.$c[$k].'/', $v)? 1 : 0);
-
-			if ($nbM == count($tmp))
-				return true;
-		}
-		return false;
+		return utils::isContained($url, $checks);
 	}
 
 }

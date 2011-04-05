@@ -11,5 +11,7 @@ $cfg = array(
 	'tplPrm'=>array(),
 	'cache'=>array(),
 	'cacheTags'=>array(),
+	'defaultCache'=>false,
 	'noCache'=>array(),
+	'forceCache'=>array(),
 );

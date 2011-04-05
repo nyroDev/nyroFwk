@@ -206,17 +206,12 @@ abstract class module_abstract extends object {
 	 * @return bool True if enabled
 	 */
 	protected function isCacheEnabled() {
-		foreach($this->cfg->noCache as $val) {
-			$prm = array_intersect_key($this->prmExec, $val);
-			$match = 0;
-			foreach($val as $k=>$v) {
-				if ($prm[$k] == $v)
-					$match++;
-			}
-			if ($match == count($prm))
-				return false;
-		}
-		return true;
+		$url = $this->prmExec;
+		if (utils::isContained($url, $this->cfg->noCache))
+			return false;
+		if (utils::isContained($url, $this->cfg->forceCache))
+			return true;
+		return $this->defaultCache;
 	}
 
 	/**
