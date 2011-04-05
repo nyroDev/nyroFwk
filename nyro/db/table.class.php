@@ -673,16 +673,17 @@ class db_table extends object {
 		$canCache = !isset($prm['order']) || !(stripos($prm['order'], 'rand(') !== false);
 		if (!$canCache || !$cache->get($ret, array('id'=>$this->getName().'-'.sha1(serialize($prm))))) {
 			$ret = $this->getDb()->select($prm);
+
+			if (!empty($ret) && !empty($this->cfg->forceValues)) {
+				foreach($ret as $k=>$v)
+					$ret[$k] = array_merge($v, $this->cfg->forceValues);
+			}
+			
+			self::parseLinked($ret, $tmpTables);
+
 			if ($canCache)
 				$cache->save();
 		}
-
-		if (!empty($ret) && !empty($this->cfg->forceValues)) {
-			foreach($ret as $k=>$v)
-				$ret[$k] = array_merge($v, $this->cfg->forceValues);
-		}
-
-		self::parseLinked($ret, $tmpTables);
 
 		if (array_key_exists('first', $prm) && $prm['first']) {
 			if (!empty($ret))
