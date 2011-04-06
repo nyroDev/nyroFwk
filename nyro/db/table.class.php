@@ -548,10 +548,13 @@ class db_table extends object {
 		unset($data[$this->getIdent()]);
 		$this->dateAutoData($data, 'inserted');
 		$this->dateAutoData($data, 'updated');
-		return $this->getDb()->insert(array(
+		$ret = $this->getDb()->insert(array(
 			'table'=>$this->cfg->name,
 			'values'=>$data
 		));
+		if ($ret)
+			$this->clearCache();
+		return $ret;
 	}
 
 	/**
@@ -565,10 +568,13 @@ class db_table extends object {
 		unset($data[$this->getIdent()]);
 		$this->dateAutoData($data, 'inserted');
 		$this->dateAutoData($data, 'updated');
-		return $this->getDb()->replace(array(
+		$ret = $this->getDb()->replace(array(
 			'table'=>$this->cfg->name,
 			'values'=>$data
 		));
+		if ($ret)
+			$this->clearCache();
+		return $ret;
 	}
 
 	/**
@@ -581,11 +587,14 @@ class db_table extends object {
 	 */
 	public function update(array $data, $where=null) {
 		$this->dateAutoData($data, 'updated');
-		return $this->getDb()->update(array(
+		$ret = $this->getDb()->update(array(
 			'table'=>$this->cfg->name,
 			'values'=>$data,
 			'where'=>$where
 		));
+		if ($ret)
+			$this->clearCache();
+		return $ret;
 	}
 
 	/**
@@ -596,6 +605,7 @@ class db_table extends object {
 	 * @see db_abstract::delete
 	 */
 	public function delete($where=null) {
+		$ret = 0;
 		$data = array();
 		$this->dateAutoData($data, 'deleted');
 		if (empty($data)) {
@@ -607,17 +617,20 @@ class db_table extends object {
 						$form->get($f)->getRawValue()->delete();
 				}
 			}
-			return $this->getDb()->delete(array(
+			$ret = $this->getDb()->delete(array(
 				'table'=>$this->cfg->name,
 				'where'=>$where
 			));
 		} else {
-			return $this->getDb()->update(array(
+			$ret = $this->getDb()->update(array(
 				'table'=>$this->cfg->name,
 				'values'=>$data,
 				'where'=>$where
 			));
 		}
+		if ($ret)
+			$this->clearCache();
+		return $ret;
 	}
 
 	/**
@@ -1124,6 +1137,20 @@ class db_table extends object {
 			'min'=>$min,
 			'max'=>array_key_exists(1, $tmp) ? $tmp[1] : $min,
 		);
+	}
+
+	/**
+	 * Clear the cache of selected queries for this table
+	 *
+	 * @return int|bool Number of cache deleted or false
+	 */
+	public function clearCache() {
+		return $this->getDb()->getCache()->delete(array(
+			'class'=>get_class($this),
+			'method'=>'select',
+			'type'=>'get',
+			'id'=>$this->getName().'-*'
+		));
 	}
 
 	/**
