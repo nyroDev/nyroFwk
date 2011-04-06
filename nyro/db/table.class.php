@@ -1146,8 +1146,7 @@ class db_table extends object {
 	 */
 	public function clearCache() {
 		return $this->getDb()->getCache()->delete(array(
-			'class'=>get_class($this),
-			'method'=>'select',
+			'callFrom'=>get_class($this).'-select',
 			'type'=>'get',
 			'id'=>$this->getName().'-*'
 		));
