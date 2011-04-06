@@ -13,6 +13,10 @@ $cfg = array(
 	'quoteValue'=>'"',
 	'cache'=>array(
 		'ttl'=>3600,
-		'request'=>array('uri'=>false, 'meth'=>array())
+		'request'=>array('uri'=>false, 'meth'=>array()),
+		'startFile'=>array(
+			NYRONAME,
+			REPLACECONF=>true
+		)
 	),
 );

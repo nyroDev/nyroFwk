@@ -599,7 +599,7 @@ abstract class db_abstract extends object {
 	 * @return cache_abstract
 	 */
 	public function getCache() {
-		return cache::getInstance($this->cache);
+		return cache::getInstance($this->cfg->cache);
 	}
 
 	/**

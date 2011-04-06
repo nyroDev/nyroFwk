@@ -4,4 +4,10 @@ $cfg = array(
 	'tags'=>array(),
 	'request'=>array(),
 	'serialize'=>true,
+	'startFile'=>array(
+		NYRONAME,
+		NYROENV,
+		request::get('lang'),
+		request::get('out'),
+	)
 );

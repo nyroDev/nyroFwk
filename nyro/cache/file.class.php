@@ -247,17 +247,13 @@ class cache_file extends cache_abstract {
 			sort($prm['tags']);
 			$prm['tagsS'] = ',_,'.implode(',_,', $prm['tags']).',_,';
 		}
-		$fileA = array(
-				NYRONAME,
-				NYROENV,
-				request::get('lang'),
-				request::get('out'),
+		$fileA = array_merge($this->cfg->startFile, array(
 				$prm['callFrom'],
 				$prm['type'],
 				$prm['id'],
 				$prm['tagsS'],
 				null, //cache::idRequest($prm['request'])
-			);
+			));
 		return $this->cfg->path.implode('^', $fileA).'.cache';
 	}
 
