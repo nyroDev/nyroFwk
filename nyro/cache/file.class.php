@@ -169,8 +169,7 @@ class cache_file extends cache_abstract {
 	 * If you define nothing, all the cache will be deleted.
 	 *
 	 * @param array $prm Parameter for the cached variable to deleted:
-	 *  - string class: ClassName which created the cache (optionnal)
-	 *  - string func: function which created the cache (optionnal)
+	 *  - string callFrom: Representing CLASS-FUNCTION name of the original calling cache
 	 *  - string type: Cache type, could be 'get' or 'start' (optionnal)
 	 *  - string id: Cache id (optionnal)
 	 *  - array tags: Tags for the id (optionnal)
@@ -179,14 +178,13 @@ class cache_file extends cache_abstract {
 	 */
 	public function delete(array $prm = array()) {
 		if (config::initTab($prm, array(
-				'class'=>'*',
-				'func'=>'*',
+				'callFrom'=>'*',
 				'type'=>'*',
 				'id'=>'*',
 				'tags'=>false,
 				'request'=>array('uri'=>false,'meth'=>array())
 			))) {
-			$file = $this->file(array_merge($prm, array('callFrom'=>$prm['class'].'-'.$prm['func'])));
+			$file = $this->file($prm);
 			$file{strlen($file)-1} = '*';
 			if (!empty($prm['tags'])) {
 				for($i = 0; $i<count($prm['tags']); $i++) {
