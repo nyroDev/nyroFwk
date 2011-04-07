@@ -383,7 +383,7 @@ class db_row extends object {
 			return $this->getI18n(db::unI18nName($key), $mode);
 
 		if ($this->keyExists($key)) {
-			if ($this->hasChange($key))
+			if ($mode == 'flat' && $this->hasChange($key))
 				$val = $this->changes[$key];
 			else
 				$val = $this->cfg->getInarray('data', $key);

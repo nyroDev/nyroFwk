@@ -214,6 +214,7 @@ class helper_dataTable extends object {
 				if (!$this->cfg->addIdentField)
 					array_unshift($headersT, $this->table->getIdent());
 				array_walk($headersT, create_function('&$h', '$h = "[".$h."]";'));
+				$dataK = null;
 				$i = 0;
 				foreach($data as $d) {
 					$tmp = $this->getActions($d);
@@ -223,8 +224,17 @@ class helper_dataTable extends object {
 						$v = substr($v, 1, -1);
 						$vals[$k] = array_key_exists($v, $tmpVals) ? $tmpVals[$v] : null;
 					}
+
+					$curData = $d->getValues('data');
+					unset($curData['related']);
+					unset($curData['linked']);
+					if (is_null($dataK)) {
+						$dataK = array_keys($curData);
+						array_walk($dataK, create_function('&$h', '$h = "[".$h."]";'));
+					}
 					foreach($tmp as &$t)
-						$t = str_replace($headersT, $vals, $t);
+						$t = str_replace($dataK, $curData, $t);
+
 					$actions[$i] = $tmp;
 					$i++;
 				}

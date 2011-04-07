@@ -601,6 +601,16 @@ abstract class db_abstract extends object {
 	public function getCache() {
 		return cache::getInstance($this->cfg->cache);
 	}
+	
+	/**
+	 * Magic function to allow serialisation.
+	 * NB : unserialization of this object won't work!
+	 *
+	 * @return array
+	 */
+	public function __sleep() {
+		return array('cfg');
+	}
 
 	/**
 	 * Abstract Methods
