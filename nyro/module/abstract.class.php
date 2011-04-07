@@ -211,7 +211,7 @@ abstract class module_abstract extends object {
 			return false;
 		if (utils::isContained($url, $this->cfg->forceCache))
 			return true;
-		return $this->defaultCache;
+		return $this->cfg->defaultCache;
 	}
 
 	/**
