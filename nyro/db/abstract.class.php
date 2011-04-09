@@ -603,8 +603,7 @@ abstract class db_abstract extends object {
 	}
 	
 	/**
-	 * Magic function to allow serialisation.
-	 * NB : unserialization of this object won't work!
+	 * Magic function to allow serialisation
 	 *
 	 * @return array
 	 */

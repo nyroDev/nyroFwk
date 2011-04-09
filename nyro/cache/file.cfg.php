@@ -7,7 +7,7 @@ $cfg = array(
 	'startFile'=>array(
 		NYRONAME,
 		NYROENV,
-		request::get('lang'),
-		request::get('out'),
+		'-REQUEST::LANG-',
+		'-REQUEST::OUT-',
 	)
 );

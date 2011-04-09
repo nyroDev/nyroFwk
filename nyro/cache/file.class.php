@@ -254,7 +254,10 @@ class cache_file extends cache_abstract {
 				$prm['tagsS'],
 				null, //cache::idRequest($prm['request'])
 			));
-		return $this->cfg->path.implode('^', $fileA).'.cache';
+		return str_replace(
+				array('-REQUEST::LANG-', '-REQUEST::OUT-'),
+				array(request::get('lang'), request::get('out')),
+				$this->cfg->path.implode('^', $fileA).'.cache');
 	}
 
 }

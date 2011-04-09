@@ -27,9 +27,30 @@ final class file {
 	private static $searchFiles = array();
 
 	/**
+	 * Indicate if the file path cache should be saved
+	 *
+	 * @var bool
+	 */
+	private static $saveCacheFiles = false;
+
+	/**
+	 * Cache object for nyroExists
+	 *
+	 * @var cache_abstract
+	 */
+	private static $cacheFiles = null;
+
+	/**
 	 * No instanciation for this class
 	 */
 	private function __construct() {}
+
+	/**
+	 * Init the file elements
+	 */
+	public static function init() {
+		self::initCache();
+	}
 
 	/**
 	 * Init the file configuration
@@ -37,6 +58,34 @@ final class file {
 	private static function initCfg() {
 		if (!self::$cfg)
 			self::$cfg = new config(factory::loadCfg(__CLASS__));
+	}
+
+	/**
+	 * Initialize the cache object
+	 */
+	private static function initCache() {
+		self::$saveCacheFiles = false;
+		self::$cacheFiles = cache::getInstance();
+		$tmp = self::$searchFiles;
+		self::$searchFiles = array();
+		self::$cacheFiles->get(self::$searchFiles, array(
+			'ttl'=>0,
+			'id'=>'nyroExists',
+			'request'=>array('uri'=>false,'meth'=>array()),
+			'serialize'=>true,
+		));
+		self::$searchFiles = array_merge($tmp, self::$searchFiles);
+		self::$saveCacheFiles = true;
+	}
+
+	/**
+	 * Save the cache
+	 */
+	public static function saveCache() {
+		if (!self::$saveCacheFiles) {
+			self::$cacheFiles->save();
+			self::$saveCacheFiles = true;
+		}
 	}
 
 	/**
@@ -96,68 +145,73 @@ final class file {
 				)))
 			throw new nException('File - nyroExists : name to search is empty.');
 
-		$dir = explode(',', SEARCHROOT);
+		$cacheKey = implode(':', $prm);
+		if (!isset(self::$searchFiles[$cacheKey])) {
+			$dir = explode(',', SEARCHROOT);
 
-		$nameTmp = $prm['realName'] ? $prm['name'] : str_replace('_', DS, $prm['name']);
+			$nameTmp = $prm['realName'] ? $prm['name'] : str_replace('_', DS, $prm['name']);
 
-		$name = array();
-		if ($prm['type'] == 'cfg') {
-			$ext = 'cfg';
-			$name[] = $nameTmp.'.'.$ext.'.'.EXTPHP;
-			$name[] = $nameTmp.'.'.request::get('lang').'.'.$ext.'.'.EXTPHP;
-			$name[] = $nameTmp.'.'.NYROENV.'.'.$ext.'.'.EXTPHP;
-			$name[] = $nameTmp.'.'.NYROENV.'.'.request::get('lang').'.'.$ext.'.'.EXTPHP;
-		} else if ($prm['type'] == 'tpl') {
-			$ext = $prm['tplExt']? $prm['tplExt'] : request::get('out');
-			$name[] = $nameTmp.'.'.NYROENV.'.'.request::get('lang').'.'.$ext;
-			$name[] = $nameTmp.'.'.NYROENV.'.'.request::get('lang').'.'.$ext.'.'.EXTPHP;
-			$name[] = $nameTmp.'.'.request::get('lang').'.'.$ext;
-			$name[] = $nameTmp.'.'.request::get('lang').'.'.$ext.'.'.EXTPHP;
-			$name[] = $nameTmp.'.'.NYROENV.'.'.$ext;
-			$name[] = $nameTmp.'.'.NYROENV.'.'.$ext.'.'.EXTPHP;
-			$name[] = $nameTmp.'.'.$ext;
-			$name[] = $nameTmp.'.'.$ext.'.'.EXTPHP;
-		} else if ($prm['type'] == 'other')
-			$name[] = $nameTmp;
-		else
-			$name[] = $nameTmp.'.'.$prm['type'].'.'.EXTPHP;
+			$name = array();
+			if ($prm['type'] == 'cfg') {
+				$ext = 'cfg';
+				$name[] = $nameTmp.'.'.$ext.'.'.EXTPHP;
+				$name[] = $nameTmp.'.'.request::get('lang').'.'.$ext.'.'.EXTPHP;
+				$name[] = $nameTmp.'.'.NYROENV.'.'.$ext.'.'.EXTPHP;
+				$name[] = $nameTmp.'.'.NYROENV.'.'.request::get('lang').'.'.$ext.'.'.EXTPHP;
+			} else if ($prm['type'] == 'tpl') {
+				$ext = $prm['tplExt']? $prm['tplExt'] : request::get('out');
+				$name[] = $nameTmp.'.'.NYROENV.'.'.request::get('lang').'.'.$ext;
+				$name[] = $nameTmp.'.'.NYROENV.'.'.request::get('lang').'.'.$ext.'.'.EXTPHP;
+				$name[] = $nameTmp.'.'.request::get('lang').'.'.$ext;
+				$name[] = $nameTmp.'.'.request::get('lang').'.'.$ext.'.'.EXTPHP;
+				$name[] = $nameTmp.'.'.NYROENV.'.'.$ext;
+				$name[] = $nameTmp.'.'.NYROENV.'.'.$ext.'.'.EXTPHP;
+				$name[] = $nameTmp.'.'.$ext;
+				$name[] = $nameTmp.'.'.$ext.'.'.EXTPHP;
+			} else if ($prm['type'] == 'other')
+				$name[] = $nameTmp;
+			else
+				$name[] = $nameTmp.'.'.$prm['type'].'.'.EXTPHP;
 
-		if (!$prm['rtl'])
-			$dir = array_reverse($dir);
+			if (!$prm['rtl'])
+				$dir = array_reverse($dir);
 
-		if ($prm['list'])
-			$ret = array();
-
-		/*
-		array_walk($dir, create_function('&$v', '$v = substr($v, strlen(ROOT));'));
-		$regex = str_replace('\\', '\\\\', '`('.implode('|', $dir).')('.implode('|', $name).')`');
-		foreach(new RegexFindFile(ROOT, $regex) as $file) {
 			if ($prm['list'])
-				$ret[] = $file->getPathname();
-			else {
-				stEnd();
-				return $file->getPathname();
-			}
-		}
-		// */
-		//*
-		foreach($dir as &$d) {
-			foreach($name as &$n) {
-				if (self::exists($file = $d.$n)) {
-					if ($prm['list'])
-						$ret[] = $file;
-					else
-						return $file;
+				$ret = array();
+
+			/*
+			array_walk($dir, create_function('&$v', '$v = substr($v, strlen(ROOT));'));
+			$regex = str_replace('\\', '\\\\', '`('.implode('|', $dir).')('.implode('|', $name).')`');
+			foreach(new RegexFindFile(ROOT, $regex) as $file) {
+				if ($prm['list'])
+					$ret[] = $file->getPathname();
+				else {
+					stEnd();
+					return $file->getPathname();
 				}
 			}
-			reset($name);
+			// */
+			//*
+			foreach($dir as &$d) {
+				foreach($name as &$n) {
+					if (self::exists($file = $d.$n)) {
+						if ($prm['list'])
+							$ret[] = $file;
+						else if (!isset(self::$searchFiles[$cacheKey]))
+							self::$searchFiles[$cacheKey] = $file;
+					}
+				}
+				reset($name);
+			}
+			// */
+
+			if ($prm['list'])
+				self::$searchFiles[$cacheKey] = $ret;
+			else if (!isset(self::$searchFiles[$cacheKey]))
+				self::$searchFiles[$cacheKey] = false;
+			self::$saveCacheFiles = false;
 		}
-		// */
-
-		if ($prm['list'])
-			return $ret;
-
-		return false;
+		return self::$searchFiles[$cacheKey];
 	}
 
 	/**

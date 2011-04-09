@@ -34,6 +34,7 @@ final class nyro {
 			}
 			request::init();
 			self::$cfg = new config(factory::loadCfg(__CLASS__));
+			file::init();
 			session::initFlash();
 		}
 	}

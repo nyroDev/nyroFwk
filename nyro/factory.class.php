@@ -92,6 +92,7 @@ final class factory {
 	public static function saveCache() {
 		if (self::$saveCacheLoad)
 			self::$cacheLoad->save();
+		file::saveCache();
 	}
 
 	/**
@@ -236,7 +237,7 @@ final class factory {
 	public static function load($className) {
 		if (!class_exists($className) && !in_array($className, self::$loadedClass)) {
 			if (!array_key_exists($className, self::$loadFiles)) {
-				if ($file = file::nyroExists(Array('name'=>$className))) {
+				if ($file = file::nyroExists(array('name'=>$className))) {
 					require($file);
 					self::$loadFiles[$className] = array($file);
 					self::$saveCacheLoad = true;
