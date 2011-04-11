@@ -1,4 +1,4 @@
 <?php
 $cfg = array(
-	'use'=>'none',
+	'use'=>'file',
 );

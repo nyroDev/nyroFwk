@@ -145,7 +145,7 @@ final class file {
 				)))
 			throw new nException('File - nyroExists : name to search is empty.');
 
-		$cacheKey = implode(':', $prm);
+		$cacheKey = implode(':', array_filter($prm, 'is_string'));
 		if (!isset(self::$searchFiles[$cacheKey])) {
 			$dir = explode(',', SEARCHROOT);
 

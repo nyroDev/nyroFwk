@@ -116,7 +116,9 @@ abstract class form_abstract extends object {
 		$valid = $this->cfg->valid;
 		if (is_array($valid)) {
 			foreach($valid as $type=>$prm)
-				if ($prm)
+				if (is_int($type))
+					$this->addRule($prm);
+				else if ($prm)
 					$this->addRule($type, $prm);
 		} else
 			$this->addRule($valid);

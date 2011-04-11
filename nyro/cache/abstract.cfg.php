@@ -1,6 +1,6 @@
 <?php
 $cfg = array(
-	'enabled'=> DEV ? false : false,
+	'enabled'=> DEV ? false : true,
 	'global'=>false,
 	'ttl'=>60,
 );
