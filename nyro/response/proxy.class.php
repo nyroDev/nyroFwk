@@ -75,9 +75,8 @@ class response_proxy extends object {
 	 * @return mixed The reponse function return
 	 */
 	public function __call($name, $prm) {
-		if (strstr($name, 'get') !== 0) {
+		if (substr($name, 0, 3) != 'get')
 			$this->call[] = array($name, $prm);
-		}
 		return call_user_func_array(array($this->response, $name), $prm);
 	}
 
