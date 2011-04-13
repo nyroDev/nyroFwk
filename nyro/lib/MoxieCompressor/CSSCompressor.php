@@ -115,7 +115,7 @@ class Moxiecode_CSSCompressor {
 			$remoteEtag = isset($_SERVER['HTTP_IF_NONE_MATCH']) ? trim($_SERVER['HTTP_IF_NONE_MATCH']) : false;
 
 			// Nothing has changed
-			if ($remoteEtag == $etag) {
+			if (false && $remoteEtag == $etag) { // Updated by Nyro
 				header('Not Modified', true, 304);
 				die();
 			}
