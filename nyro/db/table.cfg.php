@@ -19,6 +19,8 @@ $cfg = array(
 
 	'whereRange'=>'1',
 
+	'cacheEnabled'=>true,
+
 	'label'=>array(
 		'id'=>'#',
 	),

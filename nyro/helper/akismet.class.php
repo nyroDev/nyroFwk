@@ -18,7 +18,7 @@ class helper_akismet extends object {
 	 * @return bool True if it's spam, false if it's OK
 	 */
 	public function isSpam(array $vars = array()) {
-		foreach($vars as $k=>$v)
+		foreach ($vars as $k=>$v)
 			$this->setCommentVar($k, $v);
 
 		$response = $this->sendRequest(
@@ -26,8 +26,8 @@ class helper_akismet extends object {
 				'/'.$this->cfg->apiVersion.'/comment-check',
 				$this->getQueryString());
 
-		if($response[1] == 'invalid' && !$this->verifyKey())
-			throw new nException('The Wordpress API key passed to the Akismet constructor is invalid. Please obtain a valid one from http://wordpress.com/api-keys/');
+		if ($response[1] == 'invalid' && !$this->verifyKey())
+			throw new nException('The API key passed to the Akismet helper is invalid. Please obtain a valid one from https://akismet.com/signup/');
 
 		return ($response[1] == 'true');
 	}
@@ -38,7 +38,7 @@ class helper_akismet extends object {
 	 * @param array $vars Array for setting comment variables using the setCommentVar function
 	 */
 	public function submitSpam(array $vars = array()) {
-		foreach($vars as $k=>$v)
+		foreach ($vars as $k=>$v)
 			$this->setCommentVar($k, $v);
 
 		$this->sendRequest(
@@ -140,7 +140,7 @@ class helper_akismet extends object {
 		$httpRequest.= $request;
 
 		$response = '';
-		if(false !== ($fs = @fsockopen($host, $this->cfg->apiPort, $errno, $errstr, 3))) {
+		if (false !== ($fs = @fsockopen($host, $this->cfg->apiPort, $errno, $errstr, 3))) {
 			fwrite($fs, $httpRequest);
 			while (!feof($fs))
 				$response.= fgets($fs, 1160); // One TCP-IP packet
@@ -158,11 +158,11 @@ class helper_akismet extends object {
 	protected function getQueryString() {
 		$queryString = 'blog='.urlencode(stripslashes($this->cfg->url)).'&';
 		$queryString.= 'user_agent='.urlencode(stripslashes($this->cfg->userAgent)).'&';
-		foreach($this->cfg->comment as $k=>$v)
+		foreach ($this->cfg->comment as $k=>$v)
 			$queryString.= $k.'='.urlencode(stripslashes($v)).'&';
 
 		$vars = array_diff_key($_SERVER, array_flip($this->cfg->ignoreServerVars));
-		foreach($vars as $k=>$v)
+		foreach ($vars as $k=>$v)
 			$queryString.= $k.'='.urlencode(stripslashes($v)).'&';
 
 		return $queryString;

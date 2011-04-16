@@ -683,7 +683,7 @@ class db_table extends object {
 
 		$ret = array();
 		$cache = $this->getDb()->getCache();
-		$canCache = !isset($prm['order']) || !(stripos($prm['order'], 'rand(') !== false);
+		$canCache = $this->cfg->cacheEnabled && (!isset($prm['order']) || !(stripos($prm['order'], 'rand(') !== false));
 		if (!$canCache || !$cache->get($ret, array('id'=>$this->getName().'-'.sha1(serialize($prm))))) {
 			$ret = $this->getDb()->select($prm);
 
@@ -1145,6 +1145,8 @@ class db_table extends object {
 	 * @return int|bool Number of cache deleted or false
 	 */
 	public function clearCache() {
+		if (!$this->cfg->cacheEnabled)
+			return false;
 		return $this->getDb()->getCache()->delete(array(
 			'callFrom'=>get_class($this).'-select',
 			'type'=>'get',
