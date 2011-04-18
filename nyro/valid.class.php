@@ -35,7 +35,7 @@ class valid extends object {
 	}
 
 	/**
-	 * Add a rule to the validation
+	 * Add a rule from the valdiation
 	 *
 	 * @param string $type Validation type
 	 * @param array $prm Parameter for this rule
@@ -50,7 +50,7 @@ class valid extends object {
 	}
 
 	/**
-	 * delete a rule
+	 * Delete a rule from the valdiation
 	 *
 	 * @param string $type Validation type
 	 */

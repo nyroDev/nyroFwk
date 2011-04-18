@@ -187,13 +187,22 @@ abstract class form_abstract extends object {
 	}
 
 	/**
-	 * Add a rule to the validation
+	 * Add a rule from the valdiation
 	 *
 	 * @param string $type Validation type
 	 * @param array $prm Parameter for this rule
 	 */
 	public function addRule($type, $prm=null) {
 		$this->valid->addRule($type, $prm);
+	}
+
+	/**
+	 * Delete a rule from the valdiation
+	 *
+	 * @param string $type Validation type
+	 */
+	public function delRule($type) {
+		$this->valid->delRule($type);
 	}
 
 	/**
