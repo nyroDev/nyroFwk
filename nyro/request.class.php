@@ -95,7 +95,6 @@ final class request {
 
 		self::$cfg = new config(factory::loadCfg(__CLASS__));
 
-		// Update alias to allow translation
 		$alias = array();
 		$outs = '(\.('.implode('|', array_keys(self::$cfg->outCfg)).'))';
 		foreach(self::$cfg->alias as $k=>$v) {
@@ -109,7 +108,7 @@ final class request {
 				unset($tmp[0]);
 				$i = 2;
 				foreach($tmp as $tt) {
-					$t.='\\'.$i.substr($tt, 1);
+					$t.='\\'.(intval(substr($tt, 0, 1))+1).substr($tt, 1);
 					$i++;
 				}
 				if (!preg_match($outs, $k))
@@ -120,7 +119,7 @@ final class request {
 		$alias = array_reverse($alias, true);
 		self::$cfg->alias = $alias;
 
-		// Put the default lang at the top of avialable langs
+		// Put the default lang at the top of available langs
 		$avlLangsTmp = self::$cfg->avlLang;
 		$avlLangs = array();
 		foreach($avlLangsTmp as $k=>$v) {

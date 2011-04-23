@@ -663,8 +663,11 @@ class db_row extends object {
 	public function getLinked($field=null, $reload=false) {
 		if ($this->getTable()->isLinked($field)) {
 			if (!array_key_exists($field, $this->linked)) {
-				$data = null;
+				$data = array();
 				if ($val = $this->get($field, 'flatReal')) {
+					$tmp = $this->getTable()->getLinked($field);
+					$data[$tmp['ident']] = $val;
+				} else if ($val = $this->get($field, 'flat')) {
 					$tmp = $this->getTable()->getLinked($field);
 					$data[$tmp['ident']] = $val;
 				}
