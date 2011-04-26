@@ -684,7 +684,7 @@ class db_table extends object {
 		$ret = array();
 		$cache = $this->getDb()->getCache();
 		$canCache = $this->cfg->cacheEnabled && (!isset($prm['order']) || !(stripos($prm['order'], 'rand(') !== false));
-		if (!$canCache || !$cache->get($ret, array('id'=>$this->getName().'-'.sha1(serialize($prm))))) {
+		if (!$canCache || !$cache->get($ret, array('id'=>$this->getName().'-'.sha1(serialize($prm).'-'.serialize($tmpTables))))) {
 			$ret = $this->getDb()->select($prm);
 
 			if (!empty($ret) && !empty($this->cfg->forceValues)) {
