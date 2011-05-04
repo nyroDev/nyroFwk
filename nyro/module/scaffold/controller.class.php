@@ -106,11 +106,11 @@ class module_scaffold_controller extends module_abstract {
 		return $this->execScaffoldList($prm);
 	}
 
-	protected function execShow($prm=null) {
+	protected function execShow($prm = null) {
 		return $this->execScaffoldShow($prm);
 	}
 
-	protected function execScaffoldIndex($prm=null) {
+	protected function execScaffoldIndex($prm = null) {
 		if ($this->isScaffolded()) {
 			if (empty($this->cfg->name)) {
 				$db = db::getInstance();
@@ -132,8 +132,8 @@ class module_scaffold_controller extends module_abstract {
 		return strtolower($this->prmExec['prefix']) == 'scaffold';
 	}
 
-	protected function execScaffoldList($prm=null) {
-		$iconType = $this->cfg->iconType? $this->cfg->iconType : $this->cfg->name;
+	protected function execScaffoldList($prm = null) {
+		$iconType = $this->cfg->iconType ? $this->cfg->iconType : $this->cfg->name;
 
 		$this->filterTable = null;
 		$query = null;
@@ -191,7 +191,7 @@ class module_scaffold_controller extends module_abstract {
 	 */
 	protected function hook($action) {}
 
-	protected function execScaffoldShow($prm=null) {
+	protected function execScaffoldShow($prm = null) {
 		$id = $prm[0];
 
 		$this->row = $this->table->find($id);
@@ -211,18 +211,18 @@ class module_scaffold_controller extends module_abstract {
 		));
 	}
 
-	protected function execScaffoldAdd($prm=null) {
+	protected function execScaffoldAdd($prm = null) {
 		if (!$this->cfg->allowAdd) {
 			response::getInstance()->redirect($this->indexPage);
 		}
 		return $this->addEditForm('add');
 	}
 
-	protected function execScaffoldEdit($prm=null) {
+	protected function execScaffoldEdit($prm = null) {
 		return $this->addEditForm('edit', $prm[0]);
 	}
 
-	protected function addEditForm($action, $id=null) {
+	protected function addEditForm($action, $id = null) {
 		$uAction = ucfirst($action);
 		$this->row = $id? $this->table->find($id) : $this->table->getRow();
 		$this->hook($action);
@@ -254,7 +254,7 @@ class module_scaffold_controller extends module_abstract {
 		));
 	}
 
-	protected function execScaffoldDelete($prm=null) {
+	protected function execScaffoldDelete($prm = null) {
 		$id = $prm[0];
 		$this->row = $this->table->find($id);
 		$this->hook('delete');

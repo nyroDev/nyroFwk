@@ -14,7 +14,7 @@ final class http_vars {
 	 *
 	 * @var http_vars
 	 */
-	private static $instance = false;
+	private static $instance;
 
 	/**
 	 * No direct instanciation for this class
@@ -27,7 +27,7 @@ final class http_vars {
 	 * @return http_vars The instance
 	 */
 	public static function getInstance() {
-		if (self::$instance === false)
+		if (is_null(self::$instance))
 			self::$instance = new http_vars();
 		return self::$instance;
 	}
@@ -54,7 +54,7 @@ final class http_vars {
 		if (config::initTab($p, array(
 					'name'=>null,
 					'nameIn'=>'',
-					'method'=>array('post','get'),
+					'method'=>array('post', 'get'),
 					'trim'=>true
 				))) {
 			$matches = explode('|', str_replace(
@@ -72,22 +72,22 @@ final class http_vars {
 				$act = '_'.strtoupper($p['method']);
 				$ret = utils::getValInArray($GLOBALS[$act], $name);
 			}
-			if ($act == '_GET')
+			if ($act == '_GET' && !is_null($ret))
 				$ret = is_array($ret) ? array_map('urldecode', $ret) : urldecode($ret);
 			if ($p['trim'] && !is_null($ret) && !is_array($ret))
 				$ret = trim($ret);
 		}
 		$prm = array_merge(array('default'=>null), $p);
 		if (is_array($prm['default'])) {
-			if ($ret === null || !in_array($ret, $prm['default'])) {
+			if (is_null($ret) || !in_array($ret, $prm['default'])) {
 				$ret = $prm['default'][0];
 			}
-		} else if ($ret === null)
+		} else if (is_null($ret))
 			$ret = $prm['default'];
 
 		$ret = utils::htmlIn($ret);
 		if (is_array($ret) && !empty($p['nameIn']))
-			return array_key_exists($p['nameIn'], $ret)? $ret[$p['nameIn']] : null;
+			return array_key_exists($p['nameIn'], $ret) ? $ret[$p['nameIn']] : null;
 		else
 			return $ret;
 	}
