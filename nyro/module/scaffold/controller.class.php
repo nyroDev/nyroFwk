@@ -72,6 +72,13 @@ class module_scaffold_controller extends module_abstract {
 	 * @var string
 	 */
 	protected $indexPage;
+	
+	/**
+	 * Ids selected in multiple action
+	 *
+	 * @var array
+	 */
+	protected $ids;
 
 	protected function afterInit() {
 		parent::afterInit();
@@ -163,7 +170,18 @@ class module_scaffold_controller extends module_abstract {
 				'edit'=>tr::__('scaffold_goEdit'),
 				'delete'=>tr::__('scaffold_delete'),
 			),
+			'multiple'=>$this->cfg->multiple,
+			'multipleAction'=>$this->cfg->multipleAction,
 		);
+		
+		if ($this->cfg->multipleDelete) {
+			$conf['multiple'] = array_merge($conf['multiple'], array(
+				'delete'=>array(
+					'label'=>tr::__('scaffold_delete'),
+				)
+			));
+		}
+		
 		factory::mergeCfg($conf, $this->cfg->listPrm);
 		$this->dataTable = factory::getHelper('dataTable', $conf);
 
@@ -177,6 +195,40 @@ class module_scaffold_controller extends module_abstract {
 			'addPage'=>request::uriDef(array('action'=>'add', 'param'=>''))
 		));
 	}
+	
+	protected function execScaffoldMultiple() {
+		$action = http_vars::getInstance()->post('action');
+		if ($action) {
+			$fctName = 'multiple'.ucfirst($action);
+			$uAction = 'Multiple'.ucfirst($action);
+			$this->ids = http_vars::getInstance()->post($this->table->getIdent());
+			$this->hook('before'.$uAction);
+			$actionConf = $this->cfg->getInArray('multiple', $action);
+			$call = null;
+			if (is_array($actionConf) && isset($actionConf['callback']) && is_callable($actionConf['callback'])) {
+				$call = $actionConf['callback'];
+			} else if (is_callable(array($this, $fctName)))
+				$call = array($this, $fctName);
+			if (!is_null($call))
+				call_user_func($call, $this->ids);
+			$this->hook('after'.$uAction);
+		}
+		response::getInstance()->redirect($this->indexPage);
+	}
+	
+	/**
+	 * Multiple delete action
+	 *
+	 * @param array $ids 
+	 */
+	protected function multipleDelete(array $ids) {
+		$this->table->delete($this->table->getWhere(array(
+			'clauses'=>factory::get('db_whereClause', array(
+					'name'=>$this->table->getName().'.'.$this->table->getIdent(),
+					'in'=>$ids
+				))
+		)));
+	}
 
 	/**
 	 * Function to be rewritten in eventual child to change the way the scaffold works
@@ -186,6 +238,7 @@ class module_scaffold_controller extends module_abstract {
 	 * - add, formPostAdd, beforeAdd, afterAdd, formAdd
 	 * - edit, formPostEdit, beforeEdit, afterEdit, formEdit
 	 * - delete, beforeDelete, afterDelete
+	 * - beforeMultipleDelete, afterMultipleDelete, beforeMultiple*, afterMultiple*
 	 *
 	 * @param string $action
 	 */

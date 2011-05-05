@@ -1,7 +1,7 @@
 <?php
 $cfg = array(
 	'apiKey'=>REQUIRED,
-	'url'=>request::uri(array('absolute'=>true)),
+	'url'=>request::uri('///'),
 	'userAgent'=>'nyroFwk/'.NYROVERSION.' akismet/1.1',
 	'apiPort'=>80,
 	'apiServer'=>'rest.akismet.com',

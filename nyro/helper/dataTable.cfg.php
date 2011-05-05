@@ -36,5 +36,11 @@ $cfg = array(
 	'actionsAllowed'=>null,
 	'actionsAllowedDefault'=>null,
 	'actionsConfirmDelete'=>true,
+
+	'multiple'=>array(),
+	'multipleLabel'=>'Choose an action',
+	'multipleSubmit'=>'ok',
+	'multipleAction'=>request::uriDef(array('action'=>'multiple'), array('module')),
+
 	'cache'=>array(),
 );

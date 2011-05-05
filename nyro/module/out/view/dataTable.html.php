@@ -1,8 +1,11 @@
 <?php if(!empty($list)):?>
+	<?php echo $hasMultiple ? '<form action="'.$multipleAction.'" method="post">' : null ?>
 	<table>
 		<thead>
 			<tr>
 				<?php
+				if ($hasMultiple)
+					echo '<td><input type="checkbox" name="checkAll" id="checkAll" /></td>';
 				foreach($headers as $h) {
 					if ($h['url']) {
 						if ($h['name'] == $sortBy || $tblName.'.'.$h['name'] == $sortBy) {
@@ -30,6 +33,8 @@
 			$i = 0;
 			foreach($list as $l) {
 				echo '<tr>';
+				if ($hasMultiple)
+					echo '<td><input type="checkbox" name="'.$multipleIdent.'[]" value="'.$l->get($multipleIdent).'" /></td>';
 				foreach($headers as $h) {
 					$val = $l->get($h['name'], 'flatReal');
 					switch($h['type']) {
@@ -65,6 +70,16 @@
 		</tbody>
 	</table>
 	<?php
+	if ($hasMultiple) {
+		echo '<select name="action">
+			<option value="">'.$multipleLabel.'</option>';
+		foreach($multiple as $k=>$m)
+			echo '<option value="'.$k.'">'.$m['label'].'</option>';
+		echo '</select>
+			<input type="submit" value="'.$multipleSubmit.'" />
+		</form>';
+	}
+	
 	if ($nbPage > 1) {
 		/*
 		foreach($pageLinks as $i=>$l) {

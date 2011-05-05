@@ -28,6 +28,7 @@ $cfg = array(
 		'depend'=>array(
 			'debug'=>array('jquery'),
 			'actionsConfirmDelete'=>array('jquery'),
+			'checkAll'=>array('jquery'),
 			'nyroModal'=>array(
 				'jquery',
 				array('file'=>'nyroModal', 'type'=>'css'),

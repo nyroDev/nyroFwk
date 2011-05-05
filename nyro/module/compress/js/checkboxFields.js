@@ -1,4 +1,4 @@
-$(function() {
+jQuery(function($) {
 	$('.checkbox_fields > input').change(function() {
 		var me = $(this),
 			subFields = me.siblings('.subFields');
