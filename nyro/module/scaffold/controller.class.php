@@ -235,6 +235,7 @@ class module_scaffold_controller extends module_abstract {
 	 * Available actions:
 	 * - list, listFilter
 	 * - show, formShow
+	 * - formInit, formInitAdd, formInitEdit
 	 * - add, formPostAdd, beforeAdd, afterAdd, formAdd
 	 * - edit, formPostEdit, beforeEdit, afterEdit, formEdit
 	 * - delete, beforeDelete, afterDelete
@@ -281,6 +282,8 @@ class module_scaffold_controller extends module_abstract {
 		$this->hook($action);
 
 		$this->form = $this->row->getForm($this->getFields($action), array_merge(array('sectionName'=>tr::__('scaffold_'.$action)), $this->cfg->formOpts));
+		$this->hook('formInit');
+		$this->hook('formInit'.$uAction);
 
 		if (request::isPost()) {
 			$this->form->refill();
