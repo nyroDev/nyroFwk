@@ -278,7 +278,7 @@ class module_scaffold_controller extends module_abstract {
 
 	protected function addEditForm($action, $id = null) {
 		$uAction = ucfirst($action);
-		$this->row = $id? $this->table->find($id) : $this->table->getRow();
+		$this->row = $id ? $this->table->find($id) : $this->table->getRow();
 		$this->hook($action);
 
 		$this->form = $this->row->getForm($this->getFields($action), array_merge(array('sectionName'=>tr::__('scaffold_'.$action)), $this->cfg->formOpts));
@@ -315,11 +315,10 @@ class module_scaffold_controller extends module_abstract {
 		$this->row = $this->table->find($id);
 		$this->hook('delete');
 		$this->hook('beforeDelete');
-		$this->row->delete();
+		if ($this->row)
+			$this->row->delete();
 		$this->hook('afterDelete');
-		$resp = response::getInstance();
-		$resp->addHeader('Location', $this->indexPage);
-		$resp->send(true);
+		response::getInstance()->redirect($this->indexPage);
 	}
 
 	/**

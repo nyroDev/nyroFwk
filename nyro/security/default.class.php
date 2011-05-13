@@ -53,6 +53,7 @@ class security_default extends security_abstract {
 	protected $roles = array();
 
 	protected function afterInit() {
+		parent::afterInit();
 		$this->session = session::getInstance(array(
 			'nameSpace'=>$this->cfg->sessionNameSpace
 		));

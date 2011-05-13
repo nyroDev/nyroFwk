@@ -9,6 +9,11 @@
  */
 abstract class security_abstract extends object {
 
+	protected function afterInit() {
+		foreach($this->cfg->defaultRoles as $role)
+			$this->addRole($role);
+	}
+
 	/**
 	 * Check if the user is logged
 	 *

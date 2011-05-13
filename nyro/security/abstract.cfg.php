@@ -11,4 +11,5 @@ $cfg = array(
 		array('module'=>'pages', 'action'=>'logout'),
 		array('module'=>'pages', 'action'=>'login'),
 	),
+	'defaultRoles'=>array(),
 );
