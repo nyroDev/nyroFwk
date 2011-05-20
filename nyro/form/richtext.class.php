@@ -23,7 +23,7 @@ class form_richtext extends form_multiline {
 
 		$options = $this->tinyMce;
 
-		if (is_array($this->cfg->tinyBrowser)) {
+		if (is_array($this->cfg->tinyBrowser) && $this->cfg->getInArray('tinyBrowser', 'active')) {
 			$tinyBrowser = $this->cfg->tinyBrowser;
 			$options['file_browser_callback'] = 'function(field_name, url, type, win) {
 				tinyMCE.activeEditor.windowManager.open({

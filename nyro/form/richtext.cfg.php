@@ -1,7 +1,7 @@
 <?php
 $cfg = array(
 	'nyroBrowser'=>array(
-		'active'=>false,
+		'active'=>true,
 		'config'=>'default',
 		'url'=>request::uri('nyroBrowser'),
 		'width'=>770,
@@ -9,6 +9,7 @@ $cfg = array(
 		'title'=>'Browser',
 	),
 	'tinyBrowser'=>array(
+		'active'=>false,
 		'url'=>str_replace('.js', '.php', response::getInstance()->getUrlFile('js', 'tiny_mce/plugins/tinybrowser/tinybrowser', 'web')),
 		'subdir'=>null,
 		'width'=>770,
