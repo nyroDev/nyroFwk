@@ -319,6 +319,22 @@ final class file {
 			return filesize($file);
 		return 0;
 	}
+	
+	/**
+	 * Get a human file size
+	 *
+	 * @param string $file The file path
+	 * @return string The human size
+	 */
+	public static function humanSize($file) {
+		$size = self::size($file);
+		$mod = 1024;
+		$units = explode(' ', 'B KB MB GB TB PB');
+		for ($i = 0; $size > $mod; $i++) {
+			$size /= $mod;
+		}
+		return round($size, 2).' '.$units[$i];
+	}
 
 	/**
 	 * Delete a file

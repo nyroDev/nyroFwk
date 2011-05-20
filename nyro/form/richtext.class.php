@@ -41,6 +41,24 @@ class form_richtext extends form_multiline {
 				});
 				return false;
 			}';
+		} else if (is_array($this->cfg->nyroBrowser) && $this->cfg->getInArray('nyroBrowser', 'active')) {
+			$nyroBrowser = $this->cfg->nyroBrowser;
+			$options['file_browser_callback'] = 'function(field_name, url, type, win) {
+				tinyMCE.activeEditor.windowManager.open({
+					file : "'.$nyroBrowser['url'].'?'.session::getInstance()->getSessIdForce().'='.urlencode(session_id()).'&type="+type+"&config='.$nyroBrowser['config'].'&",
+					title : "'.$nyroBrowser['title'].'",
+					width : '.$nyroBrowser['width'].',
+					height : '.$nyroBrowser['height'].',
+					resizable : "yes",
+					scrollbars : "yes",
+					inline : "yes",  // This parameter only has an effect if you use the inlinepopups plugin!
+					close_previous : "no"
+				}, {
+					window : win,
+					input : field_name
+				});
+				return false;
+			}';
 		}
 
 		if (array_key_exists('content_css', $options) && $options['content_css']) {

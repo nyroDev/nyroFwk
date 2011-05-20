@@ -144,7 +144,7 @@ class db_row extends object {
 	 * @param bool $passConfirm Indicate if the confirmation password should ba automatically added
 	 * @return form_db
 	 */
-	public function getForm($showFields=null, array $formParam = array(), $passConfirm=true) {
+	public function getForm($showFields = null, array $formParam = array(), $passConfirm = true) {
 		$form = factory::get('form_db', array_merge($formParam, array(
 			'table'=>$this->getTable()
 		)));
@@ -272,6 +272,7 @@ class db_row extends object {
 
 		$this->saveRelated();
 		$this->saveI18n();
+		$this->getTable()->clearCache();
 
 		return true;
 	}

@@ -429,8 +429,13 @@ class db_table extends object {
 				unset($cfgLabel[$c]);
 			} else if($this->fields[$c]['type'] == 'file')
 				$labels[$c] = ucwords(str_replace('_', ' ', strtolower(substr($c, 0, -5))));
-			else
-				$labels[$c] = ucwords(str_replace('_', ' ', strtolower($c)));
+			else {
+				$use = $c;
+				$pos = strpos($c, '_');
+				if ($pos)
+					$use = substr($c, 0, $pos);
+				$labels[$c] = ucwords(strtolower($use));
+			}
 			$this->fields[$c]['label'] = $labels[$c];
 		}
 		foreach($this->relatedTables as $r) {

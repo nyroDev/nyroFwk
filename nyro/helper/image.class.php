@@ -65,7 +65,7 @@ class helper_image extends helper_file {
 	 * @return string The HTML image tag
 	 */
 	public function view($file, array $prm = array()) {
-		$this->cfg->file = FILESROOT.$file;
+		$this->cfg->file = $this->addFilesRootIfNeeded($file);
 		$this->cfg->setA($prm);
 		$this->cfg->html = true;
 		if ($this->cfg->originalView) {
@@ -90,8 +90,8 @@ class helper_image extends helper_file {
 	 * @param array $prm The parameter for the image
 	 */
 	public function delete($file, array $prm=null) {
-		file::delete(FILESROOT.$file);
-		file::multipleDelete(FILESROOT.$this->makePath($file, '*'));
+		file::delete($this->addFilesRootIfNeeded($file));
+		file::multipleDelete($this->addFilesRootIfNeeded($this->makePath($file, '*')));
 	}
 
 	/**
@@ -111,6 +111,18 @@ class helper_image extends helper_file {
 			'/\.('.implode('|', $this->cfg->autoExt).')$/i',
 			$more.'.'.file::getExt($file),
 			$file);
+	}
+	
+	/**
+	 * Add FILESROOT to a filename if not present in it
+	 *
+	 * @param string $file Filename
+	 * @return string Filename
+	 */
+	protected function addFilesRootIfNeeded($file) {
+		if (strpos($file, FILESROOT) === false)
+			$file = FILESROOT.$file;
+		return $file;
 	}
 
 	/**

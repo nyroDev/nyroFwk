@@ -33,11 +33,20 @@ class response_http_html extends response_http {
 
 	protected function afterInit() {
 		parent::afterInit();
+		$this->initIncFiles();
+	}
+	
+	/**
+	 * Init incFiles variables
+	 *
+	 * @param bool $addDefaults Indicate if the default should be added
+	 */
+	public function initIncFiles($addDefaults = true) {
 		$this->incFiles = array(
 			'js'=>array('nyro'=>array(), 'web'=>array(), 'nyroLast'=>array()),
 			'css'=>array('nyro'=>array(), 'web'=>array(), 'nyroLast'=>array())
 		);
-		if (!empty($this->cfg->incFiles) && is_array($this->cfg->incFiles)) {
+		if ($addDefaults && !empty($this->cfg->incFiles) && is_array($this->cfg->incFiles)) {
 			foreach($this->cfg->incFiles as $ic)
 				$this->add($ic);
 		}

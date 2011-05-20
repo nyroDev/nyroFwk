@@ -550,15 +550,16 @@ final class request {
 	 * Make a valid URI for an uploaded File
 	 *
 	 * @param string $file The filepath
+	 * @param array $prm Array to overwritte default uri construction
 	 * @return string The valid URI
 	 */
-	public static function uploadedUri($file) {
-		return self::uri(array(
+	public static function uploadedUri($file, array $prm = array()) {
+		return self::uri(array_merge(array(
 					'module'=>'nyroUtils',
 					'action'=>'uploadedFiles',
-					'param'=>str_replace('/', request::getCfg('sepParam'), $file),
+					'param'=>str_replace(array('/', '\\'), array(request::getCfg('sepParam'), request::getCfg('sepParam')), $file),
 					'out'=>null
-				));
+				)), $prm);
 	}
 
 	/**
@@ -754,9 +755,9 @@ final class request {
 		$get = array_key_exists(1, $req)? $req[1] : null;
 		$ret = array();
 		if ($get) {
-			$tmp = explode('&', $get);
+			$tmp = array_filter(explode('&', $get));
 			foreach($tmp as $elm) {
-				list($name,$val) = explode('=', $elm);
+				list($name, $val) = explode('=', $elm);
 				$ret[$name] = $val;
 				if ($affectGet)
 					$_GET[$name] = $val;

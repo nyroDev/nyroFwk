@@ -1,5 +1,13 @@
 <?php
 $cfg = array(
+	'nyroBrowser'=>array(
+		'active'=>false,
+		'config'=>'default',
+		'url'=>request::uri('nyroBrowser'),
+		'width'=>770,
+		'height'=>480,
+		'title'=>'Browser',
+	),
 	'tinyBrowser'=>array(
 		'url'=>str_replace('.js', '.php', response::getInstance()->getUrlFile('js', 'tiny_mce/plugins/tinybrowser/tinybrowser', 'web')),
 		'subdir'=>null,
