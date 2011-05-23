@@ -112,10 +112,10 @@ class module_nyroBrowser_controller extends module_abstract {
 				'config'=>$this->config,
 			)),
 		));
-		$form->get('file')->uploadify(array(
+		$form->get('file')->uploadify(array_merge($this->myCfg['uploadify'][$this->type], array(
 			'script'=>$this->uri,
 			'onAllComplete'=>'function() {window.location.href = "'.$this->uri.'";}'
-		));
+		)));
 		
 		return $form;
 	}

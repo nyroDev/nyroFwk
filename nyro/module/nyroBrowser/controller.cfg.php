@@ -30,6 +30,17 @@ $cfg = array(
 			'fileSaveAdd'=>'nyroBrowserThumb',
 		)),
 		'uploadedUri'=>array('controller'=>false),
+		'uploadify'=>array(
+			'image'=>array(),
+			'media'=>array(
+				'fileDesc'=>'Media',
+				'fileExt'=>null,
+			),
+			'file'=>array(
+				'fileDesc'=>'Files',
+				'fileExt'=>null,
+			),
+		),
 		'helper'=>array(
 			'image'=>array(
 				'name'=>'image',
