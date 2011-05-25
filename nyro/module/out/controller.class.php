@@ -7,7 +7,7 @@
 /**
  * Out Controller to handle layouts
  */
-class module_out_controller extends module_abstract_controller {
+class module_out_controller extends module_abstract {
 
 	protected $module;
 
