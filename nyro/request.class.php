@@ -559,7 +559,7 @@ final class request {
 					'action'=>'uploadedFiles',
 					'param'=>str_replace(array('/', '\\'), array(request::getCfg('sepParam'), request::getCfg('sepParam')), $file),
 					'out'=>null
-				)), $prm);
+				), $prm));
 	}
 
 	/**
