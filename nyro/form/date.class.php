@@ -43,10 +43,12 @@ class form_date extends form_abstract {
 		if ($this->cfg->mode == 'view')
 			return $this->date->format('date', 'short2');
 
-		$resp = response::getInstance();
-		$resp->addJs('jqueryui');
+		if ($this->cfg->useJs) {
+			$resp = response::getInstance();
+			$resp->addJs('jqueryui');
 
-		$resp->blockJquery('$("#'.$this->id.'").datepicker('.json_encode($this->jsPrm).');');
+			$resp->blockJquery('$("#'.$this->id.'").datepicker('.json_encode($this->jsPrm).');');
+		}
 
 		return utils::htmlTag($this->htmlTagName,
 			array_merge($this->html, array(

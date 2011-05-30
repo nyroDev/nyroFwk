@@ -7,7 +7,9 @@ $cfg = array(
 	'end'=>(date('Y')+1).'-01-01',
 	'disable'=>array(),
 
+	'useJs'=>true,
 	'html'=>array(
+		'type'=>'text',
 		'class'=>'text date',
 	),
 

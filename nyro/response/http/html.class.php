@@ -357,10 +357,12 @@ class response_http_html extends response_http {
 	 * Add a jQuery block
 	 *
 	 * @param string $block The javascript block
+	 * @param bool $addjQuery Indicate if jQuery should be automatically added
 	 * @see blockJs
 	 */
-	public function blockjQuery($block) {
-		$this->addJs('jquery');
+	public function blockjQuery($block, $addjQuery=true) {
+		if ($addjQuery)
+			$this->addJs('jquery');
 		$this->blocksJquery[] = $block;
 	}
 

@@ -16,6 +16,11 @@ final class response {
 	 */
 	private static $inst;
 
+	/**
+	 * The current response proxy instance
+	 *
+	 * @var response_proxy
+	 */
 	private static $proxy;
 
 	/**

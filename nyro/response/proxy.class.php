@@ -67,6 +67,16 @@ class response_proxy extends object {
 		}
 	}
 
+	public function getAttr($name) {
+		return $this->response->getAttr($name);
+	}
+
+	public function setAttr($name, $value) {
+		$this->call[] = array('setAttr', array($name, $value));
+		$this->response->setAttr($name, $value);
+		parent::setAttr($name, $value);
+	}
+
 	/**
 	 * Save the call if not a get method and make the call
 	 *

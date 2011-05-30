@@ -26,7 +26,7 @@ abstract class response_abstract extends object {
 	/**
 	 * Get the response proxy (used in the templates)
 	 *
-	 * @return responseProxy
+	 * @return response_proxy
 	 */
 	public function getProxy() {
 		return factory::get('response_proxy');
