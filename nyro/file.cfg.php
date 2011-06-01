@@ -89,5 +89,10 @@ $cfg = array(
 		'word'	=>	'application/msword',
 		'xl'	=>	'application/excel',
 		'eml'	=>	'message/rfc822',
+		
+		'oga'	=>	'audio/ogg',
+		'ogv'	=>	'video/ogg',
+		'webm'	=>	'video/webm',
+		'mp4'	=>	'video/mp4',
 	),
 );
