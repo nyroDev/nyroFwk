@@ -288,15 +288,87 @@ class response_http extends response_abstract {
 	 */
 	public function showFile($file) {
 		if (file::exists($file)) {
-			$this->cfg->compress = false;
-			$this->neverexpire();
-			$this->addHeader('Last-Modified', gmdate('D, j M Y H:i:s', filemtime($file)).' GMT', true);
-			$this->addHeader('Content-Type', file::getType($file), true);
-			//$this->addHeader('Content-length', file::size($file).'bytes', false);
-			$this->addHeader('Cache-Control', 'public', false);
-			$this->addHeader('Pragma', null, false);
-			$this->sendText(file::read($file));
+			$type = file::getType($file);
+			if ((request::isMobile() || (isset($_SERVER['HTTP_RANGE']) && $_SERVER['HTTP_RANGE'])) && (strpos($type, 'audio') === 0 || strpos($type, 'video') === 0)) {
+				$this->rangeDownload($file);
+			} else {
+				$this->cfg->compress = false;
+				$this->neverexpire();
+				$this->addHeader('Last-Modified', gmdate('D, j M Y H:i:s', filemtime($file)).' GMT', true);
+				$this->addHeader('Content-Type', $type, true);
+				$this->addHeader('Cache-Control', 'public', false);
+				$this->addHeader('Pragma', null, false);
+				$this->addHeader('Content-length', file::size($file), true);
+				$this->sendText(file::read($file));
+			}
 		}
+	}
+	
+	/**
+	 * Send a range download for mobile devices or supported browsers
+	 *
+	 * @param string $file File Path
+	 */
+	protected function rangeDownload($file) {
+		// From http://mobiforge.com/developing/story/content-delivery-mobile-devices
+		$fp = @fopen($file, 'rb');
+		header('Content-Type: '.file::getType($file));
+
+		$size   = file::size($file);
+		$length = $size;
+		$start  = 0;
+		$end    = $size - 1;
+		header('Accept-Ranges: 0-'.$length);
+
+		if (isset($_SERVER['HTTP_RANGE'])) {
+			$c_start = $start;
+			$c_end   = $end;
+			// Extract the range string
+			list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
+			// Make sure the client hasn't sent us a multibyte range
+			if (strpos($range, ',') !== false) {
+				header('HTTP/1.1 416 Requested Range Not Satisfiable');
+				header('Content-Range: bytes '.$start.'-'.$end.'/'.$size);
+				exit;
+			}
+
+			if ($range{0} == '-') {
+				$c_start = $size - substr($range, 1);
+			} else {
+				$range  = explode('-', $range);
+				$c_start = $range[0];
+				$c_end   = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $size;
+			}
+			// End bytes can not be larger than $end.
+			$c_end = ($c_end > $end) ? $end : $c_end;
+			// Validate the requested range and return an error if it's not correct.
+			if ($c_start > $c_end || $c_start > $size - 1 || $c_end >= $size) {
+				header('HTTP/1.1 416 Requested Range Not Satisfiable');
+				header('Content-Range: bytes '.$start.'-'.$end.'/'.$size);
+				exit;
+			}
+			$start  = $c_start;
+			$end    = $c_end;
+			$length = $end - $start + 1; // Calculate new content length
+			fseek($fp, $start);
+			header('HTTP/1.1 206 Partial Content');
+		}
+		// Notify the client the byte range we'll be outputting
+		header('Content-Range: bytes '.$start.'-'.$end.'/'.$size);
+		header('Content-Length: '.$length);
+
+		// Start buffered download
+		$buffer = 1024 * 8;
+		while(!feof($fp) && ($p = ftell($fp)) <= $end) {
+			if ($p + $buffer > $end) {
+				$buffer = $end - $p + 1;
+			}
+			set_time_limit(0); // Reset time limit for big files
+			echo fread($fp, $buffer);
+			flush();
+		}
+		fclose($fp);
+		exit;
 	}
 
 	/**

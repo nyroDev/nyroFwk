@@ -29,6 +29,10 @@ class module_nyroUtils_controller extends module_abstract {
 		if ($text)
 			$file.= DS.$text;
 
+		$out = request::get('out');
+		if ($out != 'html')
+			$file.= '.'.$out;
+
 		response::getInstance()->showFile($file);
 	}
 
