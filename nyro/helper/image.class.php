@@ -120,8 +120,8 @@ class helper_image extends helper_file {
 	 * @return string Filename
 	 */
 	protected function addFilesRootIfNeeded($file) {
-		if (strpos($file, FILESROOT) === false)
-			$file = FILESROOT.$file;
+		if (strpos($file, $this->cfg->filesRoot) === false)
+			$file = $this->cfg->filesRoot.$file;
 		return $file;
 	}
 
