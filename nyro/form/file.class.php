@@ -26,6 +26,8 @@ class form_file extends form_abstract {
 			'required'=>$required
 		);
 
+		if ($this->cfg->dir)
+			$prm['dir'] = $this->cfg->dir;
 		if ($this->cfg->subdir)
 			$prm['subdir'] = $this->cfg->subdir;
 

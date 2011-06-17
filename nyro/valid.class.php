@@ -126,7 +126,7 @@ class valid extends object {
 	 * @return bool True if valid
 	 */
 	public function isInt($val, $prm=null) {
-		if (!is_numeric($val) || round($val) != $val || strlen(round($val).'') != strlen($val)) {
+		if (!is_numeric($val) || $val != (int)$val) {
 			$this->errors[] = sprintf($this->getMessage('int'), $this->cfg->label);
 			return false;
 		}
