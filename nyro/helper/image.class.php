@@ -75,10 +75,10 @@ class helper_image extends helper_file {
 			$this->cfg->fileSave = $this->makePath($this->cfg->file, $this->cfg->fileSaveAdd);
 			$ret = $this->build();
 		}
-		$fileWeb = str_replace(FILESROOT, '', $this->cfg->fileSave);
+		$fileWeb = str_replace($this->cfg->filesRoot, '', $this->cfg->fileSave);
 		return str_replace(
 			$this->cfg->fileSave,
-			request::uploadedUri($fileWeb),
+			$this->cfg->webUri ? request::webUri($fileWeb) : request::uploadedUri($fileWeb),
 			$ret);
 	}
 

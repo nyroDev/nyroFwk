@@ -18,6 +18,7 @@ $cfg = array(
 	'htmlDefOptions'=>array(),
 	'autoExt'=>array('gif', 'jpg', 'jpeg', 'png'),
 	'filesRoot'=>FILESROOT,
+	'webUri'=>false,
 	'mime'=>array(
 		'image/jpeg',
         'image/png',
