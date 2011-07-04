@@ -60,20 +60,6 @@ class db_table extends object {
 		$this->_initLinkedTables();
 		$this->_initRelatedTables();
 		$this->_initLabels();
-
-		if ($this->cfg->check('fields') && is_array($this->cfg->fields) && !empty($this->cfg->fields)) {
-			factory::mergeCfg($this->fields, array_intersect_key($this->cfg->fields, $this->fields));
-			foreach($this->fields as &$f) {
-				if (is_array($f['default']))
-					$f['default'] = array_key_exists(1, $f['default']) ? $f['default'][1] : $f['default'][0];
-			}
-		}
-
-		if ($this->cfg->check('linked') && is_array($this->cfg->linked) && !empty($this->cfg->linked))
-			factory::mergeCfg($this->linkedTables, $this->cfg->linked);
-
-		if ($this->cfg->check('related') && is_array($this->relatedTables) && !empty($this->relatedTables))
-			factory::mergeCfg($this->relatedTables, $this->cfg->related);
 	}
 
 	/**
@@ -146,6 +132,14 @@ class db_table extends object {
 
 		if (array_key_exists($this->cfg->deleted, $this->fields))
 			$this->fields[$this->cfg->deleted]['auto'] = true;
+		
+		if ($this->cfg->check('fields') && is_array($this->cfg->fields) && !empty($this->cfg->fields)) {
+			factory::mergeCfg($this->fields, array_intersect_key($this->cfg->fields, $this->fields));
+			foreach($this->fields as &$f) {
+				if (is_array($f['default']))
+					$f['default'] = array_key_exists(1, $f['default']) ? $f['default'][1] : $f['default'][0];
+			}
+		}
 	}
 
 	/**
@@ -222,6 +216,9 @@ class db_table extends object {
 				}
 			}
 		}
+		
+		if ($this->cfg->check('linked') && is_array($this->cfg->linked) && !empty($this->cfg->linked))
+			factory::mergeCfg($this->linkedTables, $this->cfg->linked);
 	}
 
 	/**
@@ -348,6 +345,8 @@ class db_table extends object {
 				);
 			}
 		}
+		if ($this->cfg->check('related') && is_array($this->relatedTables) && !empty($this->relatedTables))
+			factory::mergeCfg($this->relatedTables, $this->cfg->related);
 	}
 
 	/**
@@ -432,8 +431,14 @@ class db_table extends object {
 			else {
 				$use = $c;
 				$pos = strpos($c, '_');
-				if ($pos)
-					$use = substr($c, 0, $pos);
+				if ($pos) {
+					$start = 0;
+					if ($pos == 1) {
+						$start = 2;
+						$pos = strpos($c, '_', $start) - $start;
+					}
+					$use = substr($c, $start, $pos);
+				}
 				$labels[$c] = ucwords(strtolower($use));
 			}
 			$this->fields[$c]['label'] = $labels[$c];
