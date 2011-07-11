@@ -39,7 +39,7 @@ class module_nyroBrowser_controller extends module_abstract {
 		$pattern = FILESROOT.$this->dir.DS.'*';
 		$search = http_vars::getInstance()->get('search');
 		if ($search) {
-			$pattern.= $search.'*';
+			$pattern.= strtolower($search).'*';
 			$this->uri.= 'search='.$search.'&';
 		}
 		
