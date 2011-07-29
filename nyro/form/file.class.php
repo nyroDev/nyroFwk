@@ -88,19 +88,22 @@ class form_file extends form_abstract {
 		if ($this->cfg->mode == 'view')
 			return $this->cfg->value->getView();
 
-		$delLink = null;
-		if ($this->cfg->value->getCurrent()) {
-			$delLink = '<span>
-				<a href="#" class="deleteFile" id="'.$this->id.'NyroDel">'.$this->cfg->deleteLabel.'</a>'
-					.$this->cfg->value->getView().'</span></p>';
-			response::getInstance()->blockJquery('
-			$("#'.$this->id.'NyroDel").click(function(e) {
-				e.preventDefault();
-				$(this).parent("span").replaceWith("<input type=\"hidden\" name=\"'.$this->name.'NyroDel\" value=\"1\" />");
-			});');
-		} else
-			$delLink = '</p>';
-		return '<p>'.utils::htmlTag($this->htmlTagName,
+		$start = $delLink = null;
+		if ($this->cfg->showPreviewDelete) {
+			$start = '<p>';
+			if ($this->cfg->value->getCurrent()) {
+				$delLink = '<span>
+					<a href="#" class="deleteFile" id="'.$this->id.'NyroDel">'.$this->cfg->deleteLabel.'</a>'
+						.$this->cfg->value->getView().'</span></p>';
+				response::getInstance()->blockJquery('
+				$("#'.$this->id.'NyroDel").click(function(e) {
+					e.preventDefault();
+					$(this).parent("span").replaceWith("<input type=\"hidden\" name=\"'.$this->name.'NyroDel\" value=\"1\" />");
+				});');
+			} else
+				$delLink = '</p>';
+		}
+		return $start.utils::htmlTag($this->htmlTagName,
 			array_merge($this->html, array(
 				'name'=>$this->name,
 				'id'=>$this->id,

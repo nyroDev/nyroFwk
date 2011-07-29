@@ -8,6 +8,8 @@ $cfg = array(
 
 	'deleteLabel'=>'delete',
 
+	'showPreviewDelete'=>true,
+
 	'uploadify'=>array(
 		'uploader'=>request::uri(array('lang'=>null, 'module'=>'css', 'action'=>'uploadify', 'param'=>'uploader.swf', 'out'=>null)),
 		'multi'=>true,
