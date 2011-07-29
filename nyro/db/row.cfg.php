@@ -4,4 +4,5 @@ $cfg = array(
 	'table'=>REQUIRED,
 	'findId'=>null,
 	'data'=>array(),
+	'needReload'=>false
 );

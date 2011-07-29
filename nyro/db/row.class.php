@@ -102,10 +102,14 @@ class db_row extends object {
 
 	/**
 	 * Reload the row data against the db
+	 * 
+	 * @param bool $force Force reload or do it only if needed
 	 */
-	public function reload() {
-		if (!$this->isNew() && $this->getId())
+	public function reload($force = true) {
+		if (!$this->isNew() && $this->getId() && ($force || $this->cfg->needReload)) {
 			$this->loadData($this->getTable()->find($this->getId())->getValues());
+			$this->cfg->needReload = false;
+		}
 	}
 
 	/**
@@ -379,7 +383,7 @@ class db_row extends object {
 	 * @param string $mode Mode to retrieve the value, only used for related (flat or flatReal)
 	 * @return mixed The value
 	 */
-	public function get($key, $mode='flat') {
+	public function get($key, $mode = 'flat') {
 		if (db::isI18nName($key))
 			return $this->getI18n(db::unI18nName($key), $mode);
 
@@ -416,7 +420,7 @@ class db_row extends object {
 	 * @param string $lang Lang needed (if null, the current will be used or a new row will be created)
 	 * @return db_row
 	 */
-	public function getI18nRow($lang=null) {
+	public function getI18nRow($lang = null) {
 		if (is_null($lang) || !$lang)
 			$lang = request::get('lang');
 		if (!array_key_exists($lang, $this->i18nRows)) {
@@ -445,7 +449,7 @@ class db_row extends object {
 	 * @param string $mode Return mode (data, flat, flatNoRelated, flatReal, flatRealNoRelated)
 	 * @return array
 	 */
-	public function getValues($mode='data') {
+	public function getValues($mode = 'data') {
 		switch ($mode) {
 			case 'flat':
 			case 'flatNoRelated':
@@ -526,7 +530,7 @@ class db_row extends object {
 	 * @return mixed|null The value found or null
 	 * @see getValues
 	 */
-	public function getInValues($name=null, $mode='flatReal') {
+	public function getInValues($name = null, $mode = 'flatReal') {
 		$tmp = $this->getValues($mode);
 		if(array_key_exists($name, $tmp))
 			return $tmp[$name];
@@ -541,7 +545,7 @@ class db_row extends object {
 	 * @param bool $force Indicates if the value should be replaced even if it's the same
 	 * @throws nException If the key doesn't exist
 	 */
-	public function set($key, $value, $force=false) {
+	public function set($key, $value, $force = false) {
 		if ($key == db::getCfg('i18n'))
 			return $this->setI18n($value, $force);
 
@@ -569,7 +573,7 @@ class db_row extends object {
 	 * @param bool $force Indicates if the value should be replaced even if it's the same
 	 * @param string|null $lg Lang
 	 */
-	public function setI18n(array $values, $force=false, $lg=null) {
+	public function setI18n(array $values, $force = false, $lg = null) {
 		if (!is_null($lg) && $lg) {
 			$values = array_filter($values);
 			if (count($values))
@@ -586,7 +590,7 @@ class db_row extends object {
 	 * @param array $values
 	 * @param bool $force Indicates if the value should be replaced even if it's the same
 	 */
-	public function setValues(array $values, $force=false) {
+	public function setValues(array $values, $force = false) {
 		foreach($values as $k=>$v)
 			$this->set($k, $v, $force);
 	}
@@ -597,7 +601,7 @@ class db_row extends object {
 	 * @param null|string $name Field Name or null
 	 * @return array|mixed|null
 	 */
-	public function getChanges($name=null) {
+	public function getChanges($name = null) {
 		if (is_null($name))
 			return $this->changes;
 
@@ -642,7 +646,7 @@ class db_row extends object {
 	 * @param null|string $name Field Name or null
 	 * @return bool
 	 */
-	public function hasChange($name=null) {
+	public function hasChange($name = null) {
 		if (is_null($name))
 			return !empty($this->changes) || $this->hasChange(db::getCfg('i18n'));
 		else if ($name == db::getCfg('i18n')) {
@@ -661,7 +665,7 @@ class db_row extends object {
 	 * @param bool $reload indicate if the row should be reloaded
 	 * @return db_row|null
 	 */
-	public function getLinked($field=null, $reload=false) {
+	public function getLinked($field = null, $reload = false) {
 		if ($this->getTable()->isLinked($field)) {
 			if (!array_key_exists($field, $this->linked)) {
 				$data = array();
@@ -675,7 +679,7 @@ class db_row extends object {
 				$this->linked[$field] = $this->getTable()->getLinkedTableRow($field, $data);
 			}
 			if ($reload && array_key_exists($field, $this->linked) && !is_null($this->linked[$field]))
-				$this->linked[$field]->reload();
+				$this->linked[$field]->reload(false);
 			return $this->linked[$field];
 		}
 		return null;
@@ -687,7 +691,7 @@ class db_row extends object {
 	 * @param array|db_row $linked array of db_row or values of array OR db_row or array of values should be provide $field
 	 * @param string|null $field Field Name (null if array set)
 	 */
-	public function setLinked($linked, $field=null) {
+	public function setLinked($linked, $field = null) {
 		if (!is_null($field)) {
 			if ($this->getTable()->isLinked($field)) {
 				if ($linked instanceof db_row)
@@ -732,7 +736,7 @@ class db_row extends object {
 	 * @param array|db_row $related array of db_row or values of array OR db_row or array of values should be provide $name
 	 * @param string|null $name Table Name (null if array set)
 	 */
-	public function setRelated($related, $name=null) {
+	public function setRelated($related, $name = null) {
 		if (!is_null($name)) {
 			if ($this->getTable()->getI18nTable() && $name == $this->getTable()->getI18nTable()->getName()) {
 				$primary = $this->getTable()->getI18nTable()->getPrimary();
@@ -831,9 +835,30 @@ class db_row extends object {
 	}
 
 	public function __call($name, $prm) {
+		if (strpos($name, 'get') === 0 || strpos($name, 'set') === 0) {
+			$tblName = strtolower(substr($name, 3, 1)).substr($name, 4);
+			$found = false;
+			foreach(array_keys($this->getTable()->getLinked()) as $v) {
+				if (strpos($v, $tblName.'_') === 0) {
+					$name = $v;
+					$found = true;
+					break;
+				}
+			}
+			if (!$found) {
+				$tblName = $this->getTable()->getName().'_'.substr($tblName, 0, -1);
+				foreach(array_keys($this->getTable()->getRelated()) as $v) {
+					if (strpos($v, $tblName.'_') === 0) {
+						$name = $v;
+						$found = true;
+						break;
+					}
+				}
+			}
+		}
 		if ($this->getTable()->isLinked($name)) {
-			if (empty($prm)) {
-				return $this->getLinked($name);
+			if (empty($prm) || is_bool($prm[0])) {
+				return $this->getLinked($name, isset($prm[0]) ? $prm[0] : false);
 			} else {
 				return $this->setLinked($prm[0], $name);
 			}
@@ -841,7 +866,7 @@ class db_row extends object {
 			if (empty($prm)) {
 				return $this->getRelated($name);
 			} else {
-				return $this->setLinked($prm[0], $name);
+				return $this->setRelated($prm[0], $name);
 			}
 		}
 	}

@@ -271,7 +271,7 @@ class db_table extends object {
 	 * @param string|null $field Field name. If null the whole table will be returned
 	 * @return array|null
 	 */
-	public function getLinked($field=null) {
+	public function getLinked($field = null) {
 		if (is_null($field))
 			return $this->linkedTables;
 
@@ -306,7 +306,7 @@ class db_table extends object {
 	 */
 	public function getLinkedTableRow($field, array $data = array()) {
 		if ($table = $this->getLinkedTable($field))
-			return $table->getRow($data);
+			return $table->getRow($data, false, array('needReload'=>true));
 		return null;
 	}
 
@@ -365,7 +365,7 @@ class db_table extends object {
 	 * @param string $name If need only 1 related information
 	 * @return array|null
 	 */
-	public function getRelated($name=null) {
+	public function getRelated($name = null) {
 		if (is_null($name))
 			return $this->relatedTables;
 
@@ -405,7 +405,7 @@ class db_table extends object {
 	 * @param bool $add if True, the prefix will be added if needed. If false, it will removed if needed
 	 * @return string
 	 */
-	public function getRelatedTableName($name, $add=true) {
+	public function getRelatedTableName($name, $add = true) {
 		$shouldStart = $this->getName().'_';
 		$pos = strpos($name, $shouldStart);
 		if ($pos !== 0 && $add)
@@ -459,7 +459,7 @@ class db_table extends object {
 	 * @param null|string $field Fieldname or null to retrieve an all of them as an array
 	 * @return array|string
 	 */
-	public function getLabel($field=null) {
+	public function getLabel($field = null) {
 		if (db::isI18nName($field))
 			return $this->getI18nLabel(db::unI18nName($field));
 
@@ -476,7 +476,7 @@ class db_table extends object {
 	 * @param null|string $field Fieldname or null to retrieve an all of them as an array
 	 * @return array|string
 	 */
-	public function getI18nLabel($field=null) {
+	public function getI18nLabel($field = null) {
 		return $this->i18nTable->getLabel($field);
 	}
 
@@ -487,7 +487,7 @@ class db_table extends object {
 	 * @param string|null $keyVal Value to retrieve directly
 	 * @return array|null
 	 */
-	public function getField($field=null, $keyVal=null) {
+	public function getField($field = null, $keyVal = null) {
 		if (is_null($field))
 			return $this->fields;
 
@@ -595,7 +595,7 @@ class db_table extends object {
 	 * @return int Affected rows
 	 * @see db_abstract::update
 	 */
-	public function update(array $data, $where=null) {
+	public function update(array $data, $where = null) {
 		$this->dateAutoData($data, 'updated');
 		$ret = $this->getDb()->update(array(
 			'table'=>$this->cfg->name,
@@ -614,7 +614,7 @@ class db_table extends object {
 	 * @return int Deleted rows
 	 * @see db_abstract::delete
 	 */
-	public function delete($where=null) {
+	public function delete($where = null) {
 		$ret = 0;
 		$data = array();
 		$this->dateAutoData($data, 'deleted');
@@ -1105,7 +1105,7 @@ class db_table extends object {
 	 * @return db_rowset
 	 * @see select
 	 */
-	public function findText($text, $filter=null) {
+	public function findText($text, $filter = null) {
 		if (!$filter) {
 			$filter = array();
 			foreach($this->fields as &$f)
@@ -1135,7 +1135,7 @@ class db_table extends object {
 	 * @param string $field Fieldname. If null, id is used
 	 * @return array With key min and max
 	 */
-	public function getRange($field=null) {
+	public function getRange($field = null) {
 		if (is_null($field))
 			$field = $this->getIdent();
 		$query = 'SELECT MIN('.$field.'),MAX('.$field.') FROM '.$this->getName()
@@ -1168,10 +1168,11 @@ class db_table extends object {
 	 * Get a row
 	 *
 	 * @param array $data The data for overwrite the default value
-	 * @param bool $withAuto Incude auto field
+	 * @param bool $withAuto Include auto field
+	 * @param array $morePrm Array of configuration for the row
 	 * @return db_row
 	 */
-	public function getRow(array $data=array(), $withAuto=false) {
+	public function getRow(array $data = array(), $withAuto = false, array $morePrm = array()) {
 		$cols = array_flip($this->cols);
 		$data = array_intersect_key($data, $cols);
 
@@ -1180,10 +1181,10 @@ class db_table extends object {
 				$data[$f['name']] = $f['default'];
 		}
 
-		$prm = array(
+		$prm = array_merge($morePrm, array(
 			'db'=>$this->getDb(),
 			'data'=>$data
-		);
+		));
 		if (array_key_exists($this->getIdent(), $data) && $data[$this->getIdent()])
 			$prm['findId'] = $data[$this->getIdent()];
 		return db::get('row', $this, $prm);
