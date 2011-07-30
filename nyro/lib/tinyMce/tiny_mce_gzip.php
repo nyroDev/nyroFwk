@@ -254,6 +254,16 @@ class TinyMCE_Compressor {
 	 * @return String File contents or empty string if it doesn't exist.
 	 */
 	private function getFileContents($file) {
+		/////////////////////////// Update for nyroFwk ///////////////////////////
+		if (!file_exists($file)) {
+			$file = file::nyroExists(array(
+				'realName'=>true,
+				'name'=>'lib/tinyMce/'.substr($file, strlen(TINYMCEPATH)+1),
+				'type'=>'other'
+			));
+			if (!$file)
+				return '';
+		}
 		if (file_exists($file)) {
 			$content = file_get_contents($file);
 

@@ -392,13 +392,13 @@ class db_row extends object {
 				$val = $this->changes[$key];
 			else
 				$val = $this->cfg->getInarray('data', $key);
-			return $this->getTable()->getField($key, 'htmlOut')? utils::htmlOut($val) : $val;
+			return $this->getTable()->getField($key, 'htmlOut') ? utils::htmlOut($val) : $val;
 		} else if ($val = $this->cfg->getInarray('data', $key)) {
 			return $val;
 		} else if ($this->getTable()->isRelated($key)) {
 			$key = $this->getTable()->getRelatedTableName($key);
 			$values = $this->getValues($mode);
-			return array_key_exists($key, $values)? $values[$key] : null;
+			return array_key_exists($key, $values) ? $values[$key] : null;
 		}
 		return null;
 	}
