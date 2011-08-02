@@ -39,7 +39,7 @@ final class lib {
 	 * @return bool
 	 */
 	public static function isLoaded($name) {
-		return in_array(self::initFile($name), get_included_files());
+		return in_array(str_replace(array('/', '\\'), array(DS, DS), self::initFile($name)), get_included_files());
 	}
 
 	/**
