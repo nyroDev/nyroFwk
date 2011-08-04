@@ -322,7 +322,7 @@ final class request {
 	 * @param array|string $param
 	 * @return string
 	 */
-	public static function createParam($param, $urlify=true) {
+	public static function createParam($param, $urlify = true) {
 		$ret = null;
 		if (is_array($param)) {
 			$tmp = array();
@@ -384,7 +384,7 @@ final class request {
 	 *  - out
 	 * @return array|mixed uriInfo if $get parameter is null, the whole array
 	 */
-	public static function get($get=null) {
+	public static function get($get = null) {
 		if ($get == 'uri')
 			return self::get('domain').self::getPathControllerUri().self::get('request');
 		if ($get == 'localUri')
@@ -406,7 +406,7 @@ final class request {
 	 * @return array|mixed
 	 * @see get
 	 */
-	public static function getRequested($get=null) {
+	public static function getRequested($get = null) {
 		if (is_null($get)) {
 			$uriInfo = self::$requestedUriInfo;
 			unset($uriInfo['paramA']);
@@ -423,7 +423,7 @@ final class request {
 	 * @param string|null $key Key to retrieve or null to retrieve the array
 	 * @return mixed
 	 */
-	public static function getCfg($key=null) {
+	public static function getCfg($key = null) {
 		if ($key === null)
 			return self::$cfg->getVars();
 		else
@@ -447,7 +447,7 @@ final class request {
 	 * @param mixed $default Default value if not defined
 	 * @return mixed
 	 */
-	public static function getPrm($key, $default=null) {
+	public static function getPrm($key, $default = null) {
 		$prmA = self::get('paramA');
 		return array_key_exists($key, $prmA)? $prmA[$key] : $default;
 	}
@@ -458,7 +458,7 @@ final class request {
 	 * @param bool $forceController Force the Controller script name on the return
 	 * @return string
 	 */
-	public static function getPathControllerUri($forceController=false) {
+	public static function getPathControllerUri($forceController = false) {
 		$controller = ($forceController || self::get('pathWithController'))? self::get('controller').'/': null;
 		return self::get('path').$controller;
 	}
@@ -480,7 +480,7 @@ final class request {
 	 *  - string out (if not valid it will be ignored)
 	 * @return string the URL
 	 */
-	public static function uri($prm=array()) {
+	public static function uri($prm = array()) {
 		if (!is_array($prm))
 			$prm = self::uriString($prm);
 
@@ -570,7 +570,7 @@ final class request {
 	 * @return string the uri
 	 * @see uri
 	 */
-	public static function uriDef(array $prm = array(), array $use=array('lang', 'module', 'action', 'param', 'out')) {
+	public static function uriDef(array $prm = array(), array $use = array('lang', 'module', 'action', 'param', 'out')) {
 		$tmp = array();
 
 		foreach($use as $u)
@@ -677,7 +677,7 @@ final class request {
 	 *  - array: mobileStatus has to be in this array
 	 * @return boolean
 	 */
-	public static function isMobile($test=null) {
+	public static function isMobile($test = null) {
 		if (self::$mobileStatus === false) {
 			// code from http://detectmobilebrowsers.mobi/
 			// Modified to be simpler and suite the nyroFwk need
@@ -749,7 +749,7 @@ final class request {
 	 * @param bool $affectGet Affect the information found to the $_GET array
 	 * @return array
 	 */
-	public static function extractGet(&$request, $affectGet=false) {
+	public static function extractGet(&$request, $affectGet = false) {
 		$req = explode('?', $request);
 		$request = $req[0];
 		$get = array_key_exists(1, $req)? $req[1] : null;
