@@ -3,6 +3,7 @@ $cfg = array(
 	'headers'=>array(),
 	'incFiles'=>array(),
 	'titleInDes'=>'. ',
+	'useTitleInMeta'=>true,
 	'meta'=>array(
 		'title'=>NYRONAME,
 		'robots'=>'index, follow',

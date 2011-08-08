@@ -76,7 +76,7 @@ class response_http_html extends response_http {
 	 * @param string $title
 	 * @param string $sep
 	 */
-	public function addTitleBefore($title, $sep=', ') {
+	public function addTitleBefore($title, $sep = ', ') {
 		$this->setMetaBefore('title', $title, $sep);
 	}
 
@@ -86,7 +86,7 @@ class response_http_html extends response_http {
 	 * @param string $title
 	 * @param string $sep
 	 */
-	public function addTitleAfter($title, $sep=', ') {
+	public function addTitleAfter($title, $sep = ', ') {
 		$this->setMetaAfter('title', $title, $sep);
 	}
 
@@ -146,7 +146,7 @@ class response_http_html extends response_http {
 	 * @param string $value Meta content
 	 * @param string $sep
 	 */
-	public function setMetaBefore($name, $value, $sep=', ') {
+	public function setMetaBefore($name, $value, $sep = ', ') {
 		$old = $this->getMeta($name);
 		$value.= $old? $sep.$old : null;
 		$this->setMeta($name, $value);
@@ -159,7 +159,7 @@ class response_http_html extends response_http {
 	 * @param string $value Meta content
 	 * @param string $sep
 	 */
-	public function setMetaAfter($name, $value, $sep=', ') {
+	public function setMetaAfter($name, $value, $sep = ', ') {
 		$old = $this->getMeta($name);
 		$value = $old? $old.$sep.$value : $value;
 		$this->setMeta($name, $value);
@@ -272,7 +272,7 @@ class response_http_html extends response_http {
 	 * @param string $type File type (js or css)
 	 * @return array
 	 */
-	public function getDepend($file, $type='js', $after=false) {
+	public function getDepend($file, $type = 'js', $after = false) {
 		$ret = array();
 
 		$depend = $this->cfg->getInArray($type, 'depend'.($after?'After' : null));
@@ -330,7 +330,7 @@ class response_http_html extends response_http {
 	 * @param bool $first True if needed to be placed on the first place
 	 * @return bool True if added
 	 */
-	public function block($block, $type='js', $first=false) {
+	public function block($block, $type = 'js', $first = false) {
 		$this->initBlocks($type);
 
 		if ($first)
@@ -349,7 +349,7 @@ class response_http_html extends response_http {
 	 * @return bool True if added
 	 * @see block
 	 */
-	public function blockJs($block, $first=false) {
+	public function blockJs($block, $first = false) {
 		return $this->block($block, 'js', $first);
 	}
 
@@ -360,7 +360,7 @@ class response_http_html extends response_http {
 	 * @param bool $addjQuery Indicate if jQuery should be automatically added
 	 * @see blockJs
 	 */
-	public function blockjQuery($block, $addjQuery=true) {
+	public function blockjQuery($block, $addjQuery = true) {
 		if ($addjQuery)
 			$this->addJs('jquery');
 		$this->blocksJquery[] = $block;
@@ -374,7 +374,7 @@ class response_http_html extends response_http {
 	 * @return bool True if added
 	 * @see block
 	 */
-	public function blockCss($block, $first=false) {
+	public function blockCss($block, $first = false) {
 		return $this->block($block, 'css', $first);
 	}
 
@@ -387,7 +387,7 @@ class response_http_html extends response_http {
 	 * @param string $ln New line character
 	 * @return string The requested HTML part
 	 */
-	public function getHtmlElt($prm='all', $ln="\n") {
+	public function getHtmlElt($prm = 'all', $ln = "\n") {
 		$ret = null;
 		switch($prm) {
 			case 'title':
@@ -439,7 +439,7 @@ class response_http_html extends response_http {
 	 * @param string $ln New line character
 	 * @return string
 	 */
-	protected function getHtmlMeta($ln="\n") {
+	protected function getHtmlMeta($ln = "\n") {
 		$ret = null;
 
 		if (array_key_exists('Content-Type', $this->headers))
@@ -450,8 +450,10 @@ class response_http_html extends response_http {
 					$this->cfg->getInarray('meta', 'title').
 					$this->cfg->titleInDes.
 					$this->cfg->getInarray('meta', 'description'));
-		foreach($this->cfg->meta as $k=>$v)
-			$ret.= '<meta name="'.$k.'" content="'.utils::htmlOut($v).'" />'.$ln;
+		foreach($this->cfg->meta as $k=>$v) {
+			if ($k != 'title' || $this->cfg->useTitleInMeta)
+				$ret.= '<meta name="'.$k.'" content="'.utils::htmlOut($v).'" />'.$ln;
+		}
 		foreach($this->cfg->link as $k=>$v)
 			$ret.= utils::htmlTag('link', array_merge(array('rel'=>$k), utils::htmlOut($v))).$ln;
 		return $ret;
@@ -464,7 +466,7 @@ class response_http_html extends response_http {
 	 * @param string $ln New line character
 	 * @return string
 	 */
-	protected function getHtmlIncFiles($type, $ln="\n") {
+	protected function getHtmlIncFiles($type, $ln = "\n") {
 		$ret = null;
 		if (array_key_exists($type, $this->incFiles)) {
 			$files = array_filter($this->incFiles[$type]);
@@ -518,7 +520,7 @@ class response_http_html extends response_http {
 	 * @param string $media Media info for css only
 	 * @return string
 	 */
-	public function getIncludeTagFile($type, $files, $dir='nyro', $media='screen') {
+	public function getIncludeTagFile($type, $files, $dir = 'nyro', $media = 'screen') {
 		$prm = $this->cfg->get($type);
 		$url = $this->getUrlFile($type, $files, $dir);
 		return sprintf($prm['include'], $url, $media);
@@ -532,7 +534,7 @@ class response_http_html extends response_http {
 	 * @param string $dir Where to get the file (nyro|web)
 	 * @return string
 	 */
-	public function getUrlFile($type, $files, $dir='nyro') {
+	public function getUrlFile($type, $files, $dir = 'nyro') {
 		$prm = $this->cfg->get($type);
 		$url = $dir == 'web'
 					? request::get('path').$prm['dirWeb']
@@ -549,7 +551,7 @@ class response_http_html extends response_http {
 	 * @param string $ln New line character
 	 * @return string
 	 */
-	public function getHtmlBlocks($type, $ln="\n") {
+	public function getHtmlBlocks($type, $ln = "\n") {
 		$ret = null;
 
 		if ($type == 'js' && !empty($this->blocksJquery))
@@ -563,7 +565,7 @@ class response_http_html extends response_http {
 		return $ret;
 	}
 
-	public function send($headerOnly=false) {
+	public function send($headerOnly = false) {
 		$ret = parent::send($headerOnly);
 		return $this->setHtmlEltIntern(DEV ? str_replace('</body>', debug::debugger().'</body>', $ret) : $ret);
 	}

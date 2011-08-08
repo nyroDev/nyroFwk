@@ -18,13 +18,13 @@ class form_file extends form_abstract {
 
 	protected function beforeInit() {
 		$required = array_key_exists('required', $this->cfg->valid) && $this->cfg->getInArray('valid', 'required');
-		$prm = array(
+		$prm = array_merge($this->cfg->fileUploadedPrm, array(
 			'name'=>$this->cfg->name,
 			'current'=>$this->cfg->value,
 			'helper'=>$this->cfg->helper,
 			'helperPrm'=>$this->cfg->helperPrm,
 			'required'=>$required
-		);
+		));
 
 		if ($this->cfg->dir)
 			$prm['dir'] = $this->cfg->dir;

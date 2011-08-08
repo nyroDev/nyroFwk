@@ -1,5 +1,6 @@
 <?php
 $cfg = array(
+	'fileUploadedPrm'=>array(),
 	'helper'=>null,
 	'helperPrm'=>array(),
 
