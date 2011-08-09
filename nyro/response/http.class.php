@@ -33,7 +33,7 @@ class response_http extends response_abstract {
 	 * @param bool $name True if the return should be the name instead of the code status
 	 * @return int|string
 	 */
-	public function getStatus($name=false) {
+	public function getStatus($name = false) {
 		if ($name)
 			return $this->cfg->statusCfg[$this->cfg->status];
 		else
@@ -116,7 +116,7 @@ class response_http extends response_abstract {
 	 * @param bool $replace True if replacement forced
 	 * @return bool True if header added
 	 */
-	public function addHeader($name, $value, $replace=true) {
+	public function addHeader($name, $value, $replace = true) {
 		if ($name == 'Content-Type')
 			return $this->setContentType($value, $replace);
 		if ($replace || !$this->hasHeader($name)) {
@@ -134,7 +134,7 @@ class response_http extends response_abstract {
 	 * @return bool True if the content-type was set
 	 * @see setHeader
 	 */
-	public function setContentType($value, $replace=true) {
+	public function setContentType($value, $replace = true) {
 		if ($replace || !$this->hasHeader('Content-Type')) {
 			if (array_key_exists($value, $this->cfg->contentTypeCfg))
 				$value = $this->cfg->getInArray('contentTypeCfg', $value);
@@ -159,7 +159,7 @@ class response_http extends response_abstract {
 	 * @param string|null $name Header name or null to get all of them
 	 * @return mixed|null The header value or null if not set
 	 */
-	public function getHeader($name=null) {
+	public function getHeader($name = null) {
 		if (is_null($name))
 			return $this->headers;
 		if ($this->hasHeader($name))
@@ -222,7 +222,7 @@ class response_http extends response_abstract {
 	 *
 	 * @param bool $headerOnly Send only the header and exit
 	 */
-	public function send($headerOnly=false) {
+	public function send($headerOnly = false) {
 		if (!headers_sent()) {
 			$this->sendHeaders();
 			$this->beforeOut();
@@ -264,11 +264,11 @@ class response_http extends response_abstract {
 	 * @param string $file File Path
 	 * @param null|string $name File name. If not provided, the real filname will be used
 	 */
-	public function sendFile($file, $name=null) {
+	public function sendFile($file, $name = null) {
 		$name = $name? $name : basename($file);
 		if (file::exists($file)) {
 			$this->cfg->compress = false;
-			$this->neverexpire();
+			$this->neverExpire();
 			$this->addHeader('Pragma', 'public, no-cache');
 			$this->addHeader('Last-Modified', gmdate('D, d M Y H:i:s').' GMT');
 			$this->addHeader('Cache-Control', 'no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0');
@@ -295,7 +295,7 @@ class response_http extends response_abstract {
 				$this->rangeDownload($file);
 			} else {
 				$this->cfg->compress = false;
-				$this->neverexpire();
+				$this->neverExpire();
 				$this->addHeader('Last-Modified', gmdate('D, j M Y H:i:s', filemtime($file)).' GMT', true);
 				$this->addHeader('Content-Type', $type, true);
 				$this->addHeader('Cache-Control', 'public', false);
@@ -545,7 +545,7 @@ class response_http extends response_abstract {
 	 * @param string $url
 	 * @param int $status
 	 */
-	public function redirect($url, $status=301) {
+	public function redirect($url, $status = 301) {
 		$this->clearHeaders();
 		$this->setStatus($status);
 		$this->addHeader('Location', $url);
@@ -560,7 +560,7 @@ class response_http extends response_abstract {
 	 * @param string $url The url where to redirect
 	 * @param int $number The HTTP error number
 	 */
-	public function error($url=null, $number=404) {
+	public function error($url = null, $number = 404) {
 		$this->redirect(request::uri($url? $url : '/'.$number), $number);
 	}
 

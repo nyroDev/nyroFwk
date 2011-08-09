@@ -94,5 +94,9 @@ $cfg = array(
 		'ogv'	=>	'video/ogg',
 		'webm'	=>	'video/webm',
 		'mp4'	=>	'video/mp4',
+		
+		'docx'	=>	'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+		'xlsx'	=>	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		'pptx'	=>	'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 	),
 );
