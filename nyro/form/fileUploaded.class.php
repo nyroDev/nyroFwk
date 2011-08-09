@@ -73,6 +73,15 @@ class form_fileUploaded extends object {
 	}
 
 	/**
+	 * Get the helper object
+	 *
+	 * @return null|helper_file
+	 */
+	public function getHelper() {
+		return $this->helper;
+	}
+	
+	/**
 	 * Get helper parameters to use with callHelper
 	 *
 	 * @param string $name Parameter name
