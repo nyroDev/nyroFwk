@@ -63,7 +63,7 @@ abstract class form_mulValue extends form_abstract {
 	 * @param bool $outside Indicate if it's coming from outside (ie if it should be htmlDeOut)
 	 * @return mixed
 	 */
-	public function getValue($outside=true) {
+	public function getValue($outside = true) {
 		$val = parent::getValue();
 		if (!is_null($this->cfg->valueNone) && $val == $this->cfg->valueNone)
 			return null;
@@ -76,7 +76,7 @@ abstract class form_mulValue extends form_abstract {
 		return $val;
 	}
 
-	public function setValue($value, $refill=false) {
+	public function setValue($value, $refill = false) {
 		if (is_array($value) && $this->cfg->uniqValue) {
 			parent::setValue(array_shift($value));
 		} else {
@@ -113,7 +113,7 @@ abstract class form_mulValue extends form_abstract {
 		unset($tmp['plus'], $tmp['global'], $tmp['globalInline'], $tmp['value'], $tmp['selected'], $tmp['group']);
 		$prm['plus'].= ' ';
 		foreach($tmp as $k=>$v)
-				$prm['plus'].= $k.'="'.$v.'" ';
+			$prm['plus'].= $k.'="'.$v.'" ';
 
 		$tmpGr = null;
 		$tmpVal = null;
