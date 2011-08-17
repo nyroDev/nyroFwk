@@ -45,6 +45,7 @@ tr:hover {background: #ccc;}
 	right: 0.5em;
 }
 #container #contentDiv {
+	overflow: auto;
 	min-height: 14em;
 	padding: 1.5em;
 	background: #F0F0F0;

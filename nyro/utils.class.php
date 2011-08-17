@@ -17,7 +17,7 @@ class utils {
 	 * @param bool $presKey True if the key must be preserved
 	 * @return array First element will be the first splitted part, Second the rest
 	 */
-	public static function cutArray(array $arr, $nb, $presKey=true) {
+	public static function cutArray(array $arr, $nb, $presKey = true) {
 		return array(
 			array_slice($arr, 0, $nb, $presKey),
 			array_slice($arr, $nb, count($arr), $presKey)
@@ -43,7 +43,7 @@ class utils {
 	 * @param null|string $content Eventual tag content
 	 * @return string
 	 */
-	public static function htmlTag($tag, array $attributes, $content=null) {
+	public static function htmlTag($tag, array $attributes, $content = null) {
 		$ret = '<'.$tag.' '.self::htmlAttribute($attributes);
 		if (!is_null($content))
 			$ret.= '>'.$content.'</'.$tag.'>';
@@ -60,7 +60,7 @@ class utils {
 	 * @param array $attributes Attributes to add to the html tag
 	 * @return string
 	 */
-	public static function mailTo($email, $name=null, array $attributes = array()) {
+	public static function mailTo($email, $name = null, array $attributes = array()) {
 		$emailObfs = self::htmlObfuscate($email);
 		if (is_null($name))
 			$name = $emailObfs;
@@ -102,7 +102,7 @@ class utils {
 	 * @param bool $key In case of an array, indicate if the keys should also be processed
 	 * @return array|string
 	 */
-	public static function htmlOut($val, $key=false) {
+	public static function htmlOut($val, $key = false) {
 		if (is_array($val)) {
 			if ($key) {
 				$tmp = $val;
@@ -125,7 +125,7 @@ class utils {
 	 * @param bool $key In case of an array, indicate if the keys should also be processed
 	 * @return array|string
 	 */
-	public static function htmlDeOut($val, $key=false) {
+	public static function htmlDeOut($val, $key = false) {
 		if (is_null($val))
 			return $val;
 		if (is_array($val)) {
@@ -224,7 +224,7 @@ class utils {
 	 * @param array $vars Variable array to transfer
 	 * @param string $finalName Name for the last key, if needed
 	 */
-	public static function initTabNumPair(array &$vars, $finalName='final') {
+	public static function initTabNumPair(array &$vars, $finalName = 'final') {
 		$ret = array();
 		if (!empty($vars)) {
 			for($i = 1; $i<count($vars); $i+=2) {
@@ -295,7 +295,7 @@ class utils {
 	 * @return string The date formatted
 	 * @see helper_date::format
 	 */
-	public static function formatDate($date, $type='date', $len='short2', $htmlOut=true) {
+	public static function formatDate($date, $type = 'date', $len = 'short2', $htmlOut = true) {
 		if (is_null(self::$date)) {
 			self::$date = factory::getHelper('date');
 		}
@@ -316,7 +316,7 @@ class utils {
 	 * @param string|array $prm Src string or array of attribute for the img tag
 	 * @return string The HTML img tag
 	 */
-	public static function img($prm, $absolute=false) {
+	public static function img($prm, $absolute = false) {
 		if (!is_array($prm))
 			$prm = array('src'=>$prm);
 		$alt = $prm['src'];
@@ -363,13 +363,13 @@ class utils {
 	 * @param string $ignore Ignore charater list
 	 * @return string
 	 */
-	public static function urlify($text, $ignore=null) {
+	public static function urlify($text, $ignore = null) {
 		$text = str_replace(
-			array('ß' , 'æ',  'Æ',  '¼',   '½',   '¾',   '‰',   '™'),
-			array('ss', 'ae', 'AE', '1/4', '1/2', '3/4', '0/00', 'TM'),
+			array('ß' , 'æ',  'Æ',  'Œ', 'œ', '¼',   '½',   '¾',   '‰',   '™'),
+			array('ss', 'ae', 'AE', 'OE', 'oe', '1/4', '1/2', '3/4', '0/00', 'TM'),
 			$text);
-		$from = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøðÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüÝÿÑñÐÞþ()[]~¤$&%*@ç§¶!¡†?¿;,.:/\\^¨€¢£¥{}|¦+÷×±<>\"' ’–«»…©®¹²³°";
-		$to   = 'AAAAAAaaaaaaOOOOOOoooooooEEEEeeeeCcIIIIiiiiUUUUuuuuYyNnDPp           cS       __     EcPY          ________CR123_';
+		$from = "ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøðÈÉÊËèéêëÇçÌÍÎÏìíîïÙÚÛÜùúûüŠšÝŸÿÑñÐÞþ()[]~¤$&%*@ç§¶!¡†‡?¿;,.:/\\^¨€¢£¥{}|¦+÷×±<>«»“”„\"‘’' ˜–—…©®¹²³°";
+		$to   = 'AAAAAAaaaaaaOOOOOOoooooooEEEEeeeeCcIIIIiiiiUUUUuuuuSsYYyNnDPp           cS        --     EcPY        ___________------CR123-';
 		if (!is_null($ignore)) {
 			$len = strlen($ignore);
 			for($i = 0; $i < $len; $i++) {
@@ -380,10 +380,11 @@ class utils {
 				}
 			}
 		}
+		$separator = nyro::getGlobalCfg('urlSeparator');
 		return trim(str_replace(
-			array(' ', '_____', '____', '___', '__'),
-			'_',
-			strtr(utf8_decode($text), utf8_decode($from), utf8_decode($to))), '_');
+			array(' ', '-----', '----', '---', '--'),
+			$separator,
+			strtr(utf8_decode($text), utf8_decode($from), utf8_decode($to))), $separator);
 	}
 
 	/**
@@ -418,7 +419,7 @@ class utils {
 	 * @param null|string $ignore Character to exclude from the random string
 	 * @return string
 	 */
-	public static function randomStr($len=10, $ignore=null) {
+	public static function randomStr($len = 10, $ignore = null) {
 		$source = 'abcdefghikjlmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
 		if (!is_null($ignore)) {
 			$tmp = array();
