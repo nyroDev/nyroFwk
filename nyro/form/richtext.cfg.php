@@ -45,7 +45,7 @@ $cfg = array(
 		'plugins'=>'safari,pagebreak,style,advimage,advlink,inlinepopups,media,searchreplace,contextmenu,paste,fullscreen,nonbreaking,xhtmlxtras',
 
 		'theme_advanced_buttons1'=>'bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,cut,copy,paste,pastetext,pasteword,|,formatselect',
-		'theme_advanced_buttons2'=>'search,replace,|,bullist,numlist,|,undo,redo,|,link,unlink,anchor,image,media,|,fullscreen,code',
+		'theme_advanced_buttons2'=>'search,replace,|,bullist,numlist,indent,outdent,|,undo,redo,|,link,unlink,anchor,image,media,|,fullscreen,code',
 		'theme_advanced_buttons3'=>'',
 		'theme_advanced_buttons4'=>'',
 

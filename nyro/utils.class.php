@@ -380,11 +380,10 @@ class utils {
 				}
 			}
 		}
-		$separator = nyro::getGlobalCfg('urlSeparator');
 		return trim(str_replace(
 			array(' ', '-----', '----', '---', '--'),
-			$separator,
-			strtr(utf8_decode($text), utf8_decode($from), utf8_decode($to))), $separator);
+			URLSEPARATOR,
+			strtr(utf8_decode($text), utf8_decode($from), utf8_decode($to))), URLSEPARATOR);
 	}
 
 	/**

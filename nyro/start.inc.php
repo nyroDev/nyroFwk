@@ -101,6 +101,11 @@ ini_set('include_path', MYROOT.PATH_SEPARATOR.NYROROOT);
 if (!defined('TMPROOT'))
 	define('TMPROOT', ROOT.'tmp'.DS);
 
+/**
+ * string Absolute path to the my directory
+ */
+if (!defined('URLSEPARATOR'))
+	define('URLSEPARATOR', '-');
 
 /**
  * Load first classes to increase performance
