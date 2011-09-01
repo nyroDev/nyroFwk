@@ -629,13 +629,15 @@ class db_table extends object {
 			}
 			$ret = $this->getDb()->delete(array(
 				'table'=>$this->cfg->name,
-				'where'=>$where
+				'where'=>$where,
+				'optim'=>$this->cfg->optimAfterDelete
 			));
 		} else {
 			$ret = $this->getDb()->update(array(
 				'table'=>$this->cfg->name,
 				'values'=>$data,
-				'where'=>$where
+				'where'=>$where,
+				'optim'=>$this->cfg->optimAfterDelete
 			));
 		}
 		if ($ret)
