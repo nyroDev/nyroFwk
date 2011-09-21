@@ -70,8 +70,10 @@ class module_compress_controller extends module_abstract {
 			
 			if ($conf['compress']) {
 				if ($type == 'js') {
+					lib::load('jsMin');
 					$content = JSMin::minify($content);
 				} else if ($type == 'css') {
+					lib::load('cssMin');
 					$content = CssMin::minify($content, $conf['filters'], $conf['plugins']);
 				}
 				if ($supportsGzip)
