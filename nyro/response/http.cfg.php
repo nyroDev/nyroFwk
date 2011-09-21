@@ -11,6 +11,7 @@ $cfg = array(
 	'headers'=>array(
 		'X-Powered-By'=>'nyroFwk '.NYROVERSION,
 		'Content-Language'=>request::get('lang'),
+		'Connection'=>'Keep-Alive'
 	),
 
 	'contentTypeCfg'=>array(

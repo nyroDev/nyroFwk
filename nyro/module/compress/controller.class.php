@@ -41,8 +41,19 @@ class module_compress_controller extends module_abstract {
 			$conf = array_merge_recursive($this->cfg->all, $this->cfg->css);
 		}
 
-		if (!$conf['compress']) {
-			$tmp = null;
+		$key = $type.'--'.md5(implode('---', $prm)).'--'.md5(implode('---', $conf));
+		$supportsGzip = false;
+		if ($conf['compress']) {
+			$encodings = isset($_SERVER['HTTP_ACCEPT_ENCODING']) ? explode(',', strtolower(preg_replace("/\s+/", "", $_SERVER['HTTP_ACCEPT_ENCODING']))) : array();
+			if ($conf['gzip_compress'] && (in_array('gzip', $encodings) || in_array('x-gzip', $encodings) || isset($_SERVER['---------------'])) && function_exists('gzencode') && !ini_get('zlib.output_compression')) {
+				$enc = in_array('x-gzip', $encodings) ? 'x-gzip' : 'gzip';
+				$supportsGzip = true;
+				$key = 'gzip-'.$key;
+			}
+		}
+		$content = null;
+		$cache = cache::getInstance($this->cfg->cache);
+		if (!$conf['disk_cache'] || !$cache->get($content, array('id'=>$key))) {
 			foreach($prm as $file) {
 				$f = file::nyroExists(array(
 								'name'=>'module_'.nyro::getCfg()->compressModule.'_'.$type.'_'.$file,
@@ -51,40 +62,81 @@ class module_compress_controller extends module_abstract {
 							));
 				if ($f) {
 					if ($conf['php'])
-						$tmp.= file::fetch($f);
+						$content.= file::fetch($f);
 					else
-						$tmp.= file::read($f);
+						$content.= file::read($f);
 				}
 			}
-			response::getInstance()->sendText($tmp);
-		}
-
-		lib::load('MoxieCompressor');
-
-		if ($type == 'js') {
-			$compressor = new Moxiecode_JSCompressor($conf);
-		} else if ($type == 'css') {
-			$compressor = new Moxiecode_CSSCompressor($conf);
-		}
-
-		foreach($prm as $file) {
-			$f = file::nyroExists(array(
-							'name'=>'module_'.nyro::getCfg()->compressModule.'_'.$type.'_'.$file,
-							'type'=>'tpl',
-							'tplExt'=>$type
-						));
-			if ($f) {
-				if ($conf['php'])
-					$compressor->addContent(file::fetch($f));
-				else
-					$compressor->addFile($f);
+			
+			if ($conf['compress']) {
+				if ($type == 'js') {
+					$content = JSMin::minify($content);
+				} else if ($type == 'css') {
+					$content = CssMin::minify($content, $conf['filters'], $conf['plugins']);
+				}
+				if ($supportsGzip)
+					$content = gzencode($content, 9, FORCE_GZIP);
 			}
+			$cache->save();
 		}
 
-		header('Cache-control: public');
-		header('Pragma: ');
-		echo $compressor->compress();
-		exit(0);
+		$resp = response::getInstance();
+		
+		/* @var $resp response_http */
+		if ($conf['compress']) {
+			$resp->setCompress(false);
+			$resp->addHeader('Vary', 'Accept-Encoding'); // Handle proxies
+			if ($conf['etags'] || preg_match('/MSIE/i', $_SERVER['HTTP_USER_AGENT'])) {
+				// We need to use etags on IE since it will otherwise always load the contents
+				$resp->addHeader('ETag', md5($content));
+			}
+			$parseTime = $this->_parseTime($conf['expires_offset']);
+			$resp->addHeader('Expires', gmdate('D, d M Y H:i:s', time() + $parseTime).' GMT');
+			$resp->addHeader('Cache-Control', 'public, max-age='.$parseTime);
+			
+			if ($type == 'js') {
+				// Output explorer workaround or compressed file
+				if (!isset($_GET['gz']) && $supportsGzip && $conf['patch_ie'] && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false) {
+					// Build request URL
+					$url = $_SERVER['REQUEST_URI'];
+
+					if (isset($_SERVER['QUERY_STRING']) && $_SERVER['QUERY_STRING'])
+						$url.= '?'.$_SERVER['QUERY_STRING'].'&gz=1';
+					else
+						$url.= '?gz=1';
+
+					// This script will ensure that the gzipped script gets loaded on IE versions with the Gzip request chunk bug
+					echo 'var gz;try {gz = new XMLHttpRequest();} catch(gz) { try {gz = new ActiveXObject("Microsoft.XMLHTTP");}';
+					echo 'catch (gz) {gz = new ActiveXObject("Msxml2.XMLHTTP");}}';
+					echo 'gz.open("GET", "'.$url.'", false);gz.send(null);eval(gz.responseText);';
+					die();
+				}
+			}
+			
+			if ($supportsGzip)
+				$resp->addHeader('Content-Encoding', $enc);	
+		}
+		
+		$resp->sendText($content);
+	}
+	
+	protected function _parseTime($time) {
+		$multipel = 1;
+
+		// Hours
+		if (strpos($time, "h") != false)
+		$multipel = 60 * 60;
+
+		// Days
+		if (strpos($time, "d") != false)
+		$multipel = 24 * 60 * 60;
+
+		// Months
+		if (strpos($time, "m") != false)
+		$multipel = 24 * 60 * 60 * 30;
+
+		// Trim string
+		return intval($time) * $multipel;
 	}
 
 }
