@@ -40,8 +40,8 @@ class module_compress_controller extends module_abstract {
 		} else if ($type == 'css') {
 			$conf = array_merge_recursive($this->cfg->all, $this->cfg->css);
 		}
-
-		$key = $type.'--'.md5(implode('---', $prm)).'--'.md5(implode('---', $conf));
+		
+		$key = $type.'--'.md5(serialize($prm)).'--'.md5(serialize($conf));
 		$supportsGzip = false;
 		if ($conf['compress']) {
 			$encodings = isset($_SERVER['HTTP_ACCEPT_ENCODING']) ? explode(',', strtolower(preg_replace("/\s+/", "", $_SERVER['HTTP_ACCEPT_ENCODING']))) : array();
