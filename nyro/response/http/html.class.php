@@ -231,7 +231,9 @@ class response_http_html extends response_http {
 				$fileExists = true;
 
 			if ($fileExists) {
-				$this->incFiles[$prm['type']][$locDir][$prm['file']] = $prm;
+				if (!isset($this->incFiles[$prm['type']][$locDir][$prm['media']]))
+					$this->incFiles[$prm['type']][$locDir][$prm['media']] = array();
+				$this->incFiles[$prm['type']][$locDir][$prm['media']][$prm['file']] = $prm;
 				if ($prm['type'] == 'css') {
 					$c = file::read($fileExists);
 					preg_match_all('`@import (url\()?"(.+).css"\)?;`', $c, $matches);
@@ -469,38 +471,22 @@ class response_http_html extends response_http {
 	protected function getHtmlIncFiles($type, $ln = "\n") {
 		$ret = null;
 		if (array_key_exists($type, $this->incFiles)) {
-			$files = array_filter($this->incFiles[$type]);
+			$all = array_filter($this->incFiles[$type]);
 			$prm = $this->cfg->get($type);
 
-			foreach($files as $dir=>$file) {
-				if ($type == 'css') {
+			foreach($all as $dir=>$medias) {
+				foreach($medias as $media=>$files) {
 					$tmp = array();
-					foreach($file as $f) {
-						$tmp[$f['condIE']][$f['media']][] = $f['file'];
+					foreach($files as $f) {
+						$tmp[$f['condIE']][] = $f['file'];
 					}
 					foreach($tmp as $ie=>$t) {
 						if ($ie)
 							$ret.= '<!--[if '.$ie.']>'.$ln;
-						foreach($t as $media=>$f)
-							$ret.= $this->getIncludeTagFile($type,
-											$f,
-											$dir,
-											$media
-											).$ln;
-						if ($ie)
-							$ret.= '<![endif]-->'.$ln;
-					}
-				} else {
-					$tmp = array();
-					foreach($file as $f) {
-						$tmp[$f['condIE']][] = $f['file'];
-					}
-					foreach($tmp as $ie=>$f) {
-						if ($ie)
-							$ret.= '<!--[if '.$ie.']>'.$ln;
 						$ret.= $this->getIncludeTagFile($type,
-										$f,
-										$dir
+										$t,
+										$dir,
+										$media
 										).$ln;
 						if ($ie)
 							$ret.= '<![endif]-->'.$ln;
