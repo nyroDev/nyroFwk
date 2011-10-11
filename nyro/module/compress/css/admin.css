@@ -59,3 +59,9 @@ tr:hover {background: #ccc;}
 	border: 1px solid #C0C0C0;
 	margin-bottom: 1em;
 }
+.filterTableToggle {
+    display: block;
+    margin: 5px 0;
+    padding-left: 20px;
+    background: url(../nyroUtils/icon/table,gear.png) no-repeat;
+}

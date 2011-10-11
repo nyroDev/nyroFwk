@@ -145,10 +145,14 @@ class module_scaffold_controller extends module_abstract {
 		$this->filterTable = null;
 		$query = null;
 		if (!empty($this->cfg->filter)) {
-			$this->filterTable = factory::getHelper('filterTable', array(
+			$this->filterTable = factory::getHelper('filterTable', array_merge($this->cfg->filterOpts, array(
 				'table'=>$this->table,
 				'fields'=>is_array($this->cfg->filter)? $this->cfg->filter : null,
-			));
+			)));
+			if ($this->cfg->addFilterTableJs)
+				response::getInstance()->addJs('filterTable');
+			if ($this->filterTable->hasValues())
+				$this->filterTable->getForm()->getCfg()->formPlus = str_replace('class="', 'class="filterTableActive ', $this->filterTable->getForm()->getCfg()->formPlus);
 			$this->hook('listFilter');
 			$query = array('where'=>$this->filterTable->getWhere());
 		}

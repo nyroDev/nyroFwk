@@ -10,6 +10,12 @@ $cfg = array(
 	'show'=>null,
 	'edit'=>null,
 
+	'addFilterTableJs'=>true,
+	'filterOpts'=>array(
+		'formOpts'=>array(
+			'formPlus'=>' class="filterTable"'
+		)
+	),
 	'formOpts'=>array(),
 
 	'allowAdd'=>true,
