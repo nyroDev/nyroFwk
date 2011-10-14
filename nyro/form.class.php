@@ -636,7 +636,7 @@ class form extends object {
 		} else
 			$find = $search;
 
-		if (is_int($find) && $find < count($this->elements))
+		if (is_int($find) && $find < count($this->section))
 			$this->curSection = $find;
 
 		return $find;
@@ -651,17 +651,18 @@ class form extends object {
 	 */
 	public function setSectionName($name, $search = null) {
 		$find = false;
-		if (!is_int($search)) {
+		if (is_null($search)) {
+			$find = $this->curSection;
+		} else if (is_int($search)) {
+			$find = $search;
+		} else {
 			foreach($this->section as $k=>&$s) {
 				if ($s == $search)
 					$find = $k;
 			}
-		} else if (is_int($search))
-			$find = $search;
-		else if (is_null($search))
-			$find = $this->curSection;
+		}
 		
-		if (is_int($find) && $find < count($this->elements)) {
+		if (is_int($find) && $find < count($this->section)) {
 			$this->section[$find] = $name;
 			return true;
 		}
