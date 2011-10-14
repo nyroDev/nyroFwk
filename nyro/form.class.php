@@ -641,6 +641,32 @@ class form extends object {
 
 		return $find;
 	}
+	
+	/**
+	 * Set a section name
+	 *
+	 * @param string $name Section name to set
+	 * @param null|int|string $search null to set to the current section, int or string to search a section
+	 * @return bool True if section name was correctly set
+	 */
+	public function setSectionName($name, $search = null) {
+		$find = false;
+		if (!is_int($search)) {
+			foreach($this->section as $k=>&$s) {
+				if ($s == $search)
+					$find = $k;
+			}
+		} else if (is_int($search))
+			$find = $search;
+		else if (is_null($search))
+			$find = $this->curSection;
+		
+		if (is_int($find) && $find < count($this->elements)) {
+			$this->section[$find] = $name;
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Move a field to another section
