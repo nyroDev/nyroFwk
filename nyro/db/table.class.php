@@ -621,10 +621,31 @@ class db_table extends object {
 		if (empty($data)) {
 			if ($files = $this->getFieldFile()) {
 				$rows = $this->select(array('autoJoin'=>false, 'where'=>$where));
-				foreach($rows as $r) {
-					$form = $r->getForm($files);
-					foreach($files as $f)
-						$form->get($f)->getRawValue()->delete();
+				if ($this->cfg->deleteCheckFile) {
+					$fields = array();
+					foreach($rows as $r) {
+						foreach($files as $f) {
+							if (!isset($fields[$f.'-'.$r->get($f)])) {
+								$form = $r->getForm(array($f));
+								$fields[$f.'-'.$r->get($f)] = array(
+									'formValue'=>$form->get($f)->getRawValue(),
+									'exist'=>$this->count(array('autoJoin'=>false, 'where'=>array($f=>$r->get($f)))),
+									'delete'=>0
+								);
+							}
+							$fields[$f.'-'.$r->get($f)]['delete']++;
+						}
+					}
+					foreach($fields as $f) {
+						if ($f['exist'] == $f['delete'])
+							$f['formValue']->delete();
+					}
+				} else {
+					foreach($rows as $r) {
+						$form = $r->getForm($files);
+						foreach($files as $f)
+							$form->get($f)->getRawValue()->delete();
+					}
 				}
 			}
 			$ret = $this->getDb()->delete(array(

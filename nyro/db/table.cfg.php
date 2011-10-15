@@ -11,6 +11,7 @@ $cfg = array(
 	'inserted'=>'inserted',
 	'updated'=>'updated',
 	'deleted'=>'deleted',
+	'deleteCheckFile'=>false,
 
 	'optimAfterDelete'=>true,
 
