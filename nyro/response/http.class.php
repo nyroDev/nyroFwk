@@ -323,6 +323,9 @@ class response_http extends response_abstract {
 			$seekEnd = $range[1] > 0 ? intval($range[1]) : -1;
 			$partialDownload = true;
 			$httpRangeDownload = true;
+		} else if ($audio && request::isMobile()) {
+			$partialDownload = true;
+			$httpRangeDownload = true;
 		}
 
 		if ($seekEnd < $seekStart)
@@ -351,7 +354,7 @@ class response_http extends response_abstract {
 		} else {
 			header('Cache-Control: public');
 			header('Content-type: '.$fileType);
-			header('Content-Disposition: inline; file_name='.$fileName.'');
+			header('Content-Disposition: inline; filename='.$fileName.'');
 		}
 		header('Last-Modified: '.date('D, d M Y H:i:s \G\M\T', $fileModified));
 		header("Content-Transfer-Encoding: binary\n");
