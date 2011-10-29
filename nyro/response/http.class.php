@@ -359,12 +359,12 @@ class response_http extends response_abstract {
 		header('Last-Modified: '.date('D, d M Y H:i:s \G\M\T', $fileModified));
 		header("Content-Transfer-Encoding: binary\n");
 		if ($httpRangeDownload) {
-		    header('HTTP/1.0 206 Partial Content');
-		    header('Status: 206 Partial Content');
-		    header('Accept-Ranges: bytes');
-		    header('Content-Range: bytes '.$seekStart.'-'.$seekEnd.'/'.$fileSize);
+			header('HTTP/1.0 206 Partial Content');
+			header('Status: 206 Partial Content');
+			header('Accept-Ranges: bytes');
+			header('Content-Range: bytes '.$seekStart.'-'.$seekEnd.'/'.$fileSize);
 		}
-	    header('Content-Length: '.$contentLength);
+		header('Content-Length: '.$contentLength);
 
 		if ($seekStart > 0) {
 			$partialDownload = true;
@@ -373,6 +373,7 @@ class response_http extends response_abstract {
 				echo 'FLV', pack('C', 1), pack('C', 1), pack('N', 9), pack('N', 9);
 		}
 
+		$this->setCompress(false);
 		$this->beforeOut();
 
 		$speed = 0;
