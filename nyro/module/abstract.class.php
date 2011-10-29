@@ -100,12 +100,13 @@ abstract class module_abstract extends object {
 		$this->tpl->getCfg()->module = $this->getName();
 		$this->tpl->getCfg()->action = $this->cfg->viewAction;
 		$this->tpl->getCfg()->default = $this->cfg->viewAction;
-
+		
 		$this->prmExec['callbackPrm'] = array(
 			'fctName'=>$fctName,
 			'fctNameParam'=>$param,
 			'prm'=>$prm
 		);
+		$this->middleExec($prm);
 	}
 
 	public function callbackTpl(array $prm) {
@@ -122,6 +123,11 @@ abstract class module_abstract extends object {
 	 *
 	 */
 	protected function beforeExec($realExec) {}
+
+	/**
+	 *
+	 */
+	protected function middleExec($realExec) {}
 
 	/**
 	 *
