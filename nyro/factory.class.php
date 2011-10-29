@@ -70,6 +70,7 @@ final class factory {
 	public static function init() {
 		self::$constants = get_defined_constants(true);
 		self::initCache();
+		self::$cfg = new config(factory::loadCfg(__CLASS__));
 	}
 
 	/**
@@ -218,7 +219,7 @@ final class factory {
 		$className = 'module_'.$name.'_controller';
 		if (!self::isCreable($className)) {
 			if ($allowScaffold && in_array($name, db::getInstance()->getTables())) {
-				$className = 'module_scaffold_controller';
+				$className = self::$cfg->scaffoldController;
 				$cfg['name'] = $name;
 				$scaffold = true;
 			} else

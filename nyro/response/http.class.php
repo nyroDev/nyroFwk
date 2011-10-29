@@ -190,7 +190,6 @@ class response_http extends response_abstract {
 	public function sendHeaders() {
 		if (!headers_sent()) {
 			header('HTTP/1.0 '.$this->getStatus().' '.$this->getStatus(true));
-
 			foreach($this->headers as $name=>$value) {
 				header($name.': '.$value);
 			}
@@ -266,19 +265,10 @@ class response_http extends response_abstract {
 	 */
 	public function sendFile($file, $name = null) {
 		$name = $name? $name : basename($file);
-		if (file::exists($file)) {
-			$this->cfg->compress = false;
-			$this->neverExpire();
-			$this->addHeader('Pragma', 'public, no-cache');
-			$this->addHeader('Last-Modified', gmdate('D, d M Y H:i:s').' GMT');
-			$this->addHeader('Cache-Control', 'no-store, no-cache, must-revalidate, pre-check=0, post-check=0, max-age=0');
-			$this->addHeader('Content-Transfer-Encoding', 'none');
-			$this->addHeader('Content-Type', 'application/download; name="'.$name.'"');
-			$this->addHeader('Content-Disposition', 'attachment; filename="'.$name.'"');
-			$this->addHeader('Content-Description', 'File Transfer');
-			$this->addHeader('Content-length', file::size($file).'bytes');
-			$this->sendText(file::read($file));
-		}
+		if (file::exists($file))
+			$this->mediaDownload($file, true);
+		else
+			$this->error();
 	}
 
 	/**
@@ -289,10 +279,8 @@ class response_http extends response_abstract {
 	public function showFile($file) {
 		if (file::exists($file)) {
 			$type = file::getType($file);
-			$audio = strpos($type, 'audio') === 0;
-			$video = strpos($type, 'video') === 0;
-			if ($audio || ($video && (isset($_SERVER['HTTP_RANGE']) || request::isMobile()))) {
-				$this->rangeDownload($file);
+			if (strpos($type, 'audio') === 0 || strpos($type, 'video') === 0) {
+				$this->mediaDownload($file);
 			} else {
 				$this->cfg->compress = false;
 				$this->neverExpire();
@@ -307,213 +295,113 @@ class response_http extends response_abstract {
 	}
 
 	/**
-	 * Send a range download for mobile devices or supported browsers
+	 * Send a media to download, using HTTP range or not, is possible
 	 *
 	 * @param string $file File Path
+	 * @param bool $forceDownload True if the media should be forced to download
 	 */
-	protected function rangeDownload($file) {
-		//*
-		//Gather relevent info about file
-		$size = filesize($file);
-		$fileinfo = pathinfo($file);
+	protected function mediaDownload($file, $forceDownload = false) {
+		$fileName = basename($file);
+		if(strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE'))
+			$fileName = preg_replace('/\./', '%2e', $fileName, substr_count($fileName, '.') - 1);
+		$fileModified = filemtime($file);
+		$fileSize = filesize($file);
+		$fileType = file::getType($file);
+		$audio = strpos($fileType, 'audio') === 0;
+		$video = strpos($fileType, 'video') === 0;
 
-		//workaround for IE filename bug with multiple periods / multiple dots in filename
-		//that adds square brackets to filename - eg. setup.abc.exe becomes setup[1].abc.exe
-		$filename = (strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE')) ?
-				preg_replace('/\./', '%2e', $fileinfo['basename'], substr_count($fileinfo['basename'], '.') - 1) :
-				$fileinfo['basename'];
-
-		$range = '';
-		//check if http_range is sent by browser (or download manager)
-		if(isset($_SERVER['HTTP_RANGE'])) {
-			list($size_unit, $range_orig) = explode('=', $_SERVER['HTTP_RANGE'], 2);
-			if ($size_unit == 'bytes') {
-				//multiple ranges could be specified at the same time, but for simplicity only serve the first range
-				//http://tools.ietf.org/id/draft-ietf-http-range-retrieval-00.txt
-				$tmp = explode(',', $range_orig, 2);
-				$range = $tmp[0];
-			}
-		}
-
-		//figure out download piece from range (if set)
-		$tmp = explode('-', $range, 2);
-		$seek_start = $tmp[0];
-		$seek_end = isset($tmp[1]) ? $tmp[1] : null;
-
-		//set start and end based on range (if set), else set defaults
-		//also check for invalid ranges.
-		$seek_end = (empty($seek_end)) ? ($size - 1) : min(abs(intval($seek_end)), ($size - 1));
-		$seek_start = (empty($seek_start) || $seek_end < abs(intval($seek_start))) ? 0 : max(abs(intval($seek_start)),0);
-
-		//Only send partial content header if downloading a piece of the file (IE workaround)
-		if ($seek_start > 0 || $seek_end < ($size - 1))
-		header('HTTP/1.1 206 Partial Content');
-
-		header('Accept-Ranges: bytes');
-		header('Content-Range: bytes '.$seek_start.'-'.$seek_end.'/'.$size);
-
-		//headers for IE Bugs (is this necessary?)
-		header("Cache-Control: cache, must-revalidate");
-		header("Pragma: public");
-		header('Expires', gmdate('D, j M Y H:i:s', strtotime('+32 days')).' GMT');
-		header('Last-Modified: '.gmdate('D, j M Y H:i:s', filemtime($file)).' GMT');
-		header('Content-Type: '.file::getType($file));
-		header('Content-Length: '.($seek_end - $seek_start + 1));
-
-		//open the file
-		$fp = fopen($file, 'rb');
-		//seek to start of missing part
-		fseek($fp, $seek_start);
-		//start buffered download
-		$buffer = 1024 * 8;
-		while(!feof($fp) && ($p = ftell($fp)) <= $seek_end) {
-			if ($p + $buffer > $seek_end) {
-				$buffer = $seek_end - $p + 1;
-			}
-			//reset time limit for big files
-			set_time_limit(0);
-			print(fread($fp, $buffer));
-			flush();
-		}
-		fclose($fp);
-		exit;
-		// */
-
-	
-	
-	
-		// From http://www.php.net/manual/en/function.fread.php#84115
-		//Gather relevent info about file
-		$size = file::size($file);;
-		$fileinfo = pathinfo($file);
-
-		//workaround for IE filename bug with multiple periods / multiple dots in filename
-		//that adds square brackets to filename - eg. setup.abc.exe becomes setup[1].abc.exe
-		$filename = (strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE')) ?
-					  preg_replace('/\./', '%2e', $fileinfo['basename'], substr_count($fileinfo['basename'], '.') - 1) :
-					  $fileinfo['basename'];
-
-		$range = '';
-		//check if http_range is sent by browser (or download manager)
-		if(isset($_SERVER['HTTP_RANGE'])) {
-			list($size_unit, $range_orig) = explode('=', $_SERVER['HTTP_RANGE'], 2);
-			if ($size_unit == 'bytes') {
-				//multiple ranges could be specified at the same time, but for simplicity only serve the first range
-				//http://tools.ietf.org/id/draft-ietf-http-range-retrieval-00.txt
-				list($range, $extra_ranges) = explode(',', $range_orig, 2);
-			}
-		}
-
-		//figure out download piece from range (if set)
-		list($seek_start, $seek_end) = explode('-', $range, 2);
-
-		//set start and end based on range (if set), else set defaults
-		//also check for invalid ranges.
-		$seek_end = (empty($seek_end)) ? ($size - 1) : min(abs(intval($seek_end)),($size - 1));
-		$seek_start = (empty($seek_start) || $seek_end < abs(intval($seek_start))) ? 0 : max(abs(intval($seek_start)),0);
-
-		//Only send partial content header if downloading a piece of the file (IE workaround)
-		if ($seek_start > 0 || $seek_end < ($size - 1))
-			header('HTTP/1.1 206 Partial Content');
-
-		header('Accept-Ranges: bytes');
-		header('Content-Range: bytes '.$seek_start.'-'.$seek_end.'/'.$size);
-		header('Cache-Control: cache, must-revalidate');
-		header('Pragma: public');
-		header('Last-Modified: '.gmdate('D, j M Y H:i:s', filemtime($file)).' GMT');
-		header('Content-Type: '.file::getType($file));
-		header('Content-Disposition: attachment; filename="' . $filename . '"');
-		header('Content-Length: '.($seek_end - $seek_start + 1));
-
-		//open the file
-		$fp = fopen($file, 'rb');
-		//seek to start of missing part
-		fseek($fp, $seek_start);
-
-		//start buffered download
-		while(!feof($fp)) {
-			//reset time limit for big files
-			set_time_limit(0);
-			print(fread($fp, 1024*8));
-			flush();
-			ob_flush();
-		}
-		fclose($fp);
-		exit;
-
-
-
-
-
-
-
-
-
-		// From http://mobiforge.com/developing/story/content-delivery-mobile-devices
-		$fp = @fopen($file, 'rb');
-
-		$size   = file::size($file);
-		$length = $size;
-		$start  = 0;
-		$end    = $size - 1;
-		//header('Accept-Ranges: bytes');
-		header('Accept-Ranges: bytes=0-'.$length);
+		$seekStart = 0;
+		$seekEnd = -1;
+		$bufferSize = 8*1024;
+		$partialDownload = false;
+		$httpRangeDownload = false;
 
 		if (isset($_SERVER['HTTP_RANGE'])) {
-			$c_start = $start;
-			$c_end   = $end;
-			// Extract the range string
-			list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
-			// Make sure the client hasn't sent us a multibyte range
-			if (strpos($range, ',') !== false) {
-				header('HTTP/1.1 416 Requested Range Not Satisfiable');
-				header('Content-Range: bytes '.$start.'-'.$end.'/'.$size);
-				exit;
-			}
-
-			if (substr($range, 0, 1) == '-') {
-				$n = intval(substr($range, 1));
-				if ($n >= $end) {
-					$c_start = 0;
-				} else {
-					$c_start = $size - $n;
-				}
-			} else {
-				$range  = explode('-', $range);
-				$c_start = $range[0];
-				$c_end   = (isset($range[1]) && is_numeric($range[1])) ? $range[1] : $size;
-			}
-			// End bytes can not be larger than $end.
-			$c_end = ($c_end > $end) ? $end : $c_end;
-			// Validate the requested range and return an error if it's not correct.
-			if ($c_start > $c_end || $c_start > $end || $c_end >= $size) {
-				header('HTTP/1.1 416 Requested Range Not Satisfiable');
-				header('Content-Range: bytes '.$start.'-'.$end.'/'.$size);
-				exit;
-			}
-			$start  = $c_start;
-			$end    = $c_end;
-			$length = $end - $start + 1; // Calculate new content length
-			fseek($fp, $start);
-			header('HTTP/1.1 206 Partial Content');
+			$range = explode('-', substr($_SERVER['HTTP_RANGE'], strlen('bytes=')));
+			if($range[0] > 0)
+				$seekStart = intval($range[0]);
+			$seekEnd = $range[1] > 0 ? intval($range[1]) : -1;
+			$partialDownload = true;
+			$httpRangeDownload = true;
 		}
-		// Notify the client the byte range we'll be outputting
-		header('Last-Modified: '.gmdate('D, j M Y H:i:s', filemtime($file)).' GMT');
-		header('Content-Range: bytes '.$start.'-'.$end.'/'.$size);
-		header('Content-Length: '.$length);
-		header('Content-Type: '.file::getType($file));
 
-		// Start buffered download
-		$buffer = 1024 * 8;
-		while(!feof($fp) && ($p = ftell($fp)) <= $end) {
-			if ($p + $buffer > $end) {
-				$buffer = $end - $p + 1;
-			}
-			set_time_limit(0); // Reset time limit for big files
-			echo fread($fp, $buffer);
+		if ($seekEnd < $seekStart)
+			$seekEnd = $fileSize - 1;
+
+		$contentLength = $seekEnd - $seekStart + 1;
+
+		if(!$fileHandle = fopen($file, 'rb'))
+			$this->error();
+
+		// headers
+		header('Pragma: public');
+		if ($forceDownload) {
+			if (ini_get('zlib.output_compression'))
+				ini_set('zlib.output_compression', 'Off');
+
+			header('Expires: 0');
+			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+			header('Cache-Control: private', false);
+
+			header('Content-Type: application/force-download');
+			header('Content-Type: application/octet-stream');
+			header('Content-Type: application/download');
+			header('Content-type: '.$fileType);
+			header('Content-Disposition: attachment; filename='.$fileName.'');
+		} else {
+			header('Cache-Control: public');
+			header('Content-type: '.$fileType);
+			header('Content-Disposition: inline; file_name='.$fileName.'');
+		}
+		header('Last-Modified: '.date('D, d M Y H:i:s \G\M\T', $fileModified));
+		header("Content-Transfer-Encoding: binary\n");
+		if ($httpRangeDownload) {
+		    header('HTTP/1.0 206 Partial Content');
+		    header('Status: 206 Partial Content');
+		    header('Accept-Ranges: bytes');
+		    header('Content-Range: bytes '.$seekStart.'-'.$seekEnd.'/'.$fileSize);
+		}
+	    header('Content-Length: '.$contentLength);
+
+		if ($seekStart > 0) {
+			$partialDownload = true;
+			fseek($fileHandle, $seekStart);
+			if ($fileType == 'video/x-flv')
+				echo 'FLV', pack('C', 1), pack('C', 1), pack('N', 9), pack('N', 9);
+		}
+
+		$this->beforeOut();
+
+		$speed = 0;
+		$bytesSent = 0;
+		$chunk = 1;
+		$throttle = $video ? 320 : ($audio ? 84 : 0);
+		$burst = 1024 * ($video ? 500 : ($audio ? 120 : 0));
+		while (!(connection_aborted() || connection_status() == 1) && $bytesSent < $contentLength) {
+			// 1st buffer size after the first burst has been sent
+			if ($bytesSent >= $burst)
+				$speed = $throttle;
+
+			// make sure we don't read past the total file size
+			if ($bytesSent + $bufferSize > $contentLength)
+				$bufferSize = $contentLength - $bytesSent;
+
+			// send data
+			echo fread($fileHandle, $bufferSize);
+			$bytesSent+= $bufferSize;
+
+			// clean up
 			flush();
+			ob_flush();
+
+			// throttle
+			if($speed && ($bytesSent - $burst > $speed * $chunk*1024)) {
+				sleep(1);
+				$chunk++;
+			}
 		}
-		fclose($fp);
+
+		fclose($fileHandle);
 		exit;
 	}
 

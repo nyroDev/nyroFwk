@@ -90,6 +90,7 @@ $cfg = array(
 		'xl'	=>	'application/excel',
 		'eml'	=>	'message/rfc822',
 		
+		'flv'	=>	'video/x-flv',
 		'oga'	=>	'audio/ogg',
 		'ogv'	=>	'video/ogg',
 		'webm'	=>	'video/webm',
