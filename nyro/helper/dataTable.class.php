@@ -309,6 +309,37 @@ class helper_dataTable extends object {
 			), $this->cfg->tplVars));
 		} else {
 			// No data
+			if ($this->cfg->page > 1) {
+				$newPage = $this->cfg->page-1;
+				$uri = null;
+				if ($newPage == 1 && $this->cfg->pageLinkTpl1)
+					$uri = $this->cfg->pageLinkTpl1;
+				if (!$uri) {
+					$prmReplace = $this->cfg->pageLinkReplace;
+					if (!$this->cfg->pageLinkTpl) {
+						$paramUrlA = request::get('paramA');
+						unset($paramUrlA['page'.$this->cfg->nameParam]);
+						$prmReplaceSortBy = '[sortBy]';
+						$prmReplaceSortDir = '[sortDir]';
+						$paramUrlA['sortBy'.$this->cfg->nameParam] = $prmReplaceSortBy;
+						$paramUrlA['sortDir'.$this->cfg->nameParam] = $prmReplaceSortDir;
+						$paramUrlA['page'.$this->cfg->nameParam] = 1;
+
+						if ($this->cfg->sortBy) {
+							$paramUrlA['sortBy'.$this->cfg->nameParam] = $this->cfg->sortBy;
+							$paramUrlA['sortDir'.$this->cfg->nameParam] = $this->cfg->sortDir;
+						} else {
+							unset($paramUrlA['sortBy'.$this->cfg->nameParam]);
+							unset($paramUrlA['sortDir'.$this->cfg->nameParam]);
+						}
+						$paramUrlA['page'.$this->cfg->nameParam] = $prmReplace;
+						$tmpPageLink = request::uriDef(array('paramA'=>$paramUrlA));
+					} else
+						$tmpPageLink = $this->cfg->pageLinkTpl;
+					$uri = str_replace($prmReplace, $newPage, $tmpPageLink);
+				}
+				response::getInstance()->redirect($uri);
+			}
 			$tpl->set('noData', utils::htmlOut($this->cfg->noData));
 			$tpl->set('list', null);
 			$tpl->setA($this->cfg->tplVars);

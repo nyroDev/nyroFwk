@@ -51,6 +51,10 @@
 						case 'tinyint':
 							$val = ucfirst(tr::__($val ? 'yes' : 'no'));
 							break;
+						case 'enum':
+							$tmp = $l->getTable()->getField($h['name']);
+							$val = isset($tmp['precision'][$val]) ? $tmp['precision'][$val] : $val;
+							break;
 					}
 					echo '<td>'.(is_array($val)? implode(', ', $val) : $val).'</td>';
 				}
