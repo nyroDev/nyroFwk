@@ -48,6 +48,16 @@ class valid extends object {
 		if (!is_null($msg))
 			$this->setMessage($type, $msg);
 	}
+	
+	/**
+	 * Indicates if a rule is set for the valid object;
+	 *
+	 * @param strong $type Validation type
+	 * @return bool
+	 */
+	public function hasRule($type) {
+		return $this->cfg->checkInArray('rules', $type);
+	}
 
 	/**
 	 * Delete a rule from the valdiation

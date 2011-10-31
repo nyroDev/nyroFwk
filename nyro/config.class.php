@@ -278,6 +278,17 @@ class config {
 	}
 
 	/**
+	 * check if a variable is set in an array
+	 *
+	 * @param string $name variable name to check
+	 * @param string $key Key on the array
+	 * @return bool
+	 */
+	public function checkInArray($name, $key) {
+		return array_key_exists($name, $this->vars) && is_array($this->vars[$name]) && array_key_exists($key, $this->vars[$name]);
+	}
+
+	/**
 	 * Check if a variable is set, with a convenient way isset($config->name)
 	 *
 	 * @param string $name variable name to check
