@@ -33,6 +33,8 @@ class form_db extends form {
 			'label'=>$related['label'],
 			'valid'=>array_key_exists('valid', $related)? $related['valid'] : false
 		);
+		if (isset($related['comment']) && is_array($related['comment']))
+			$prm = array_merge($prm, $related['comment']);
 		$prm['dbList']['fields'] = $related['fk2']['link']['ident'].
 				($prm['dbList']['fields']? ','.$prm['dbList']['fields'] : null);
 		$type = 'checkbox';
