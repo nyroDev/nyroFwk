@@ -112,7 +112,7 @@ class helper_image extends helper_file {
 			$more.'.'.file::getExt($file),
 			$file);
 	}
-	
+
 	/**
 	 * Add FILESROOT to a filename if not present in it
 	 *
@@ -204,7 +204,7 @@ class helper_image extends helper_file {
 						}
 					}
 				}
-				
+
 				if ($this->cfg->grayFilter) {
 					// Copy form $img to $imgDst With the parameter defined, with grayscale
 					if (function_exists('imagefilter')) {
@@ -299,6 +299,7 @@ class helper_image extends helper_file {
 	 */
 	public function save($file) {
 		$ret = false;
+
 		switch (strtolower(file::getExt($file))) {
 			case 'gif' :
 				$ret = imagegif($this->imgAct, $file);
@@ -319,7 +320,7 @@ class helper_image extends helper_file {
 	 * Create an image ressource and get the dimesnion of the
 	 *
 	 * @param string $file The image path
-	 * @return false|array False if not a valid image or an array with Image ressource, height, width
+	 * @return false|array False if not a valid image or an array with Image ressource, width and height
 	 */
 	private function createImage($file) {
 		if (!file::exists($file) || ! is_file($file))
@@ -327,16 +328,19 @@ class helper_image extends helper_file {
 		$this->info = getimagesize($file);
 
 		$img = null;
-
 		switch ($this->info[2]) {
-			case IMAGETYPE_GIF:
-				$img = imagecreatefromgif($file);
-				break;
 			case IMAGETYPE_JPEG:
 				$img = imagecreatefromjpeg($file);
 				break;
+			case IMAGETYPE_GIF:
+				$img = imagecreatefromgif($file);
+				imagealphablending($img, true);
+				imagesavealpha($img, true);
+				break;
 			case IMAGETYPE_PNG:
 				$img = imagecreatefrompng($file);
+				imagealphablending($img, true);
+				imagesavealpha($img, true);
 				break;
 			default:
 				return false;
@@ -416,6 +420,10 @@ class helper_image extends helper_file {
 		}
 
 		$imgDst = imagecreatetruecolor($prm['w'], $prm['h']);
+		if ($this->info[2] == IMAGETYPE_GIF || $this->info[2] == IMAGETYPE_PNG) {
+			imagealphablending($imgDst, true);
+			imagesavealpha($imgDst, true);
+		}
 
 		if (empty($prm['bgColor']) && ($this->info[2] == IMAGETYPE_GIF || $this->info[2] == IMAGETYPE_PNG)) {
 			$transparency = imagecolortransparent($img);

@@ -283,6 +283,8 @@ class module_scaffold_controller extends module_abstract {
 	protected function addEditForm($action, $id = null) {
 		$uAction = ucfirst($action);
 		$this->row = $id ? $this->table->find($id) : $this->table->getRow();
+		if (!$this->row)
+			response::getInstance()->redirect($this->indexPage);
 		$this->hook($action);
 
 		$this->form = $this->row->getForm($this->getFields($action), array_merge(array('sectionName'=>tr::__('scaffold_'.$action)), $this->cfg->formOpts));

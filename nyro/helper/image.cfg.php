@@ -6,7 +6,7 @@ $cfg = array(
 	'autoFileSave'=>true,
 	'w'=>0,
 	'h'=>0,
-	'bgColor'=>'ffffff',
+	'bgColor'=>null,
 	'fit'=>false,
 	'resizeSmaller'=>true,
 	'mask'=>null,
@@ -20,6 +20,7 @@ $cfg = array(
 	'filesRoot'=>FILESROOT,
 	'webUri'=>false,
 	'mime'=>array(
+		'image/gif',
 		'image/jpeg',
         'image/png',
         'image/x-png',

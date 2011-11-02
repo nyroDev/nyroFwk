@@ -1,22 +1,22 @@
 <?php if(!empty($list)):?>
 	<?php echo $hasMultiple ? '<form action="'.$multipleAction.'" method="post">' : null ?>
-	<table>
+	<table class="dataTable <?php echo $tblName ?>List">
 		<thead>
 			<tr>
 				<?php
 				if ($hasMultiple)
-					echo '<td><input type="checkbox" name="checkAll" id="checkAll" /></td>';
+					echo '<td class="checkCell checkHead"><input type="checkbox" name="checkAll" id="checkAll" /></td>';
 				foreach($headers as $h) {
 					if ($h['url']) {
 						if ($h['name'] == $sortBy || $tblName.'.'.$h['name'] == $sortBy) {
-							echo '<th>
+							echo '<th class="'.$h['name'].'Cell '.$h['name'].'Head">
 								<a href="'.$h['url'].'">'.$h['label'].'</a>
 								'.($sortDir == 'asc' ? $sortIndicatorAsc : $sortIndicatorDesc).'
 								</th>';
 						} else
-							echo '<th><a href="'.$h['url'].'">'.$h['label'].'</a></th>';
+							echo '<th class="'.$h['name'].'Cell '.$h['name'].'Head"><a href="'.$h['url'].'">'.$h['label'].'</a></th>';
 					} else
-						echo '<th>'.$h['label'].'</th>';
+						echo '<th class="'.$h['name'].'Cell '.$h['name'].'Head">'.$h['label'].'</th>';
 					if ($h['type'] == 'image')
 						$imgHelper = factory::getHelper('image', array(
 							'w'=>50,
@@ -24,7 +24,7 @@
 						));
 				}
 				if ($actions)
-					echo '<th>Actions</th>';
+					echo '<th class="actionsCell actionsHead">Actions</th>';
 				?>
 			</tr>
 		</thead>
@@ -34,7 +34,7 @@
 			foreach($list as $l) {
 				echo '<tr>';
 				if ($hasMultiple)
-					echo '<td><input type="checkbox" name="'.$multipleIdent.'[]" value="'.$l->get($multipleIdent).'" /></td>';
+					echo '<td class="checkCell"><input type="checkbox" name="'.$multipleIdent.'[]" value="'.$l->get($multipleIdent).'" /></td>';
 				foreach($headers as $h) {
 					$val = $l->get($h['name'], 'flatReal');
 					switch($h['type']) {
@@ -56,10 +56,10 @@
 							$val = isset($tmp['precision'][$val]) ? $tmp['precision'][$val] : $val;
 							break;
 					}
-					echo '<td>'.(is_array($val)? implode(', ', $val) : $val).'</td>';
+					echo '<td class="'.$h['name'].'Cell">'.(is_array($val)? implode(', ', $val) : $val).'</td>';
 				}
 				if ($actions) {
-					echo '<td>';
+					echo '<td class="actionsCell">';
 					if (array_key_exists($i, $actions))
 						foreach($actions[$i] as $a=>$v) {
 							$img = $actionsImg[$a];
