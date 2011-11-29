@@ -391,9 +391,9 @@ class db_row extends object {
 			if ($mode == 'flat' && $this->hasChange($key))
 				$val = $this->changes[$key];
 			else
-				$val = $this->cfg->getInarray('data', $key);
+				$val = $this->cfg->getInArray('data', $key);
 			return $this->getTable()->getField($key, 'htmlOut') ? utils::htmlOut($val) : $val;
-		} else if ($val = $this->cfg->getInarray('data', $key)) {
+		} else if ($val = $this->cfg->getInArray('data', $key)) {
 			return $val;
 		} else if ($this->getTable()->isRelated($key)) {
 			$key = $this->getTable()->getRelatedTableName($key);
@@ -848,7 +848,7 @@ class db_row extends object {
 			if (!$found) {
 				$tblName = $this->getTable()->getName().'_'.substr($tblName, 0, -1);
 				foreach(array_keys($this->getTable()->getRelated()) as $v) {
-					if (strpos($v, $tblName.'_') === 0) {
+					if ($v == $tblName) {
 						$name = $v;
 						$found = true;
 						break;

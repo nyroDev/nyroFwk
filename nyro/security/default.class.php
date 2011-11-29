@@ -125,7 +125,7 @@ class security_default extends security_abstract {
 		$this->logFromCryptic($cryptic);
 	}
 
-	public function login($prm = null, $page=null) {
+	public function login($prm = null, $page = null) {
 		$loginField = $this->cfg->getInArray('fields', 'login');
 		$passField = $this->cfg->getInArray('fields', 'pass');
 

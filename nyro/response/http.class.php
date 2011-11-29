@@ -266,7 +266,7 @@ class response_http extends response_abstract {
 	public function sendFile($file, $name = null) {
 		$name = $name? $name : basename($file);
 		if (file::exists($file))
-			$this->mediaDownload($file, true);
+			$this->mediaDownload($file, true, $name);
 		else
 			$this->error();
 	}
@@ -299,9 +299,10 @@ class response_http extends response_abstract {
 	 *
 	 * @param string $file File Path
 	 * @param bool $forceDownload True if the media should be forced to download
+	 * @param string $fileName Filename to send to the browser. If null, basename will be used
 	 */
-	protected function mediaDownload($file, $forceDownload = false) {
-		$fileName = basename($file);
+	protected function mediaDownload($file, $forceDownload = false, $fileName = null) {
+		$fileName = $fileName ? $fileName : basename($file);
 		if(strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE'))
 			$fileName = preg_replace('/\./', '%2e', $fileName, substr_count($fileName, '.') - 1);
 		$fileModified = filemtime($file);
