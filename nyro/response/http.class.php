@@ -270,6 +270,18 @@ class response_http extends response_abstract {
 		else
 			$this->error();
 	}
+	
+	public function sendFileAsString($file, $name) {
+		$this->cfg->compress = false;
+		$this->neverExpire();
+		$this->addHeader('Expires', '0');
+		$this->addHeader('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
+		$this->addHeader('Content-Type', 'application/force-download');
+		$this->addHeader('Content-Disposition', 'attachment; filename='.$name.'');
+		$this->addHeader('Last-Modified', gmdate('D, j M Y H:i:s').' GMT', true);
+		$this->addHeader('Pragma', null, false);
+		$this->sendText($file);
+	}
 
 	/**
 	 * Show a file to the client

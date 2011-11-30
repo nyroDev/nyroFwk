@@ -6,6 +6,7 @@ $cfg = array(
 	'sepViewSubValues'=>', ',
 	'sepLabelViewSubValues'=>': ',
 	'html'=>array(
+		'global'=>'<ol class="mulValue checkboxes hasSubFields">[values]</ol>',
 		'value'=>'<li class="checkbox_fields"><input type="checkbox" name="[name]" value="[value]" id="[id]-[value]" [plus]/><label for="[id]-[value]">[label]</label><div class="subFields">[fields]</div></li>',
 	),
 	'formOpts'=>array(
