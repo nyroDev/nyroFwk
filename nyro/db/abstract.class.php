@@ -214,6 +214,9 @@ abstract class db_abstract extends object {
 				$query = $where->toString();
 			else if (is_array($where)) {
 				$tmp = array();
+				$where = array_filter($where);
+				if (empty($where))
+					return $query;
 				foreach($where as $k=>$v) {
 					$tmp[] = is_numeric($k) ? $v : $this->quoteIdentifier($k).'="'.$v.'"';
 				}
