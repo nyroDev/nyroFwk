@@ -250,6 +250,10 @@ class form_db extends form {
 							$type = 'richtext';
 							unset($field['comment'][$key]);
 							$prm['html'] = $field['comment'];
+							if (array_key_exists('html', $prm['html'])) {
+								$prm['html'] = array_merge_recursive($prm['html'], $prm['html']['html']);
+								unset($prm['html']['html']);
+							}
 							if (array_key_exists('tinyMce', $field))
 								$prm['tinyMce'] = $field['tinyMce'];
 							unset($prm['html']['tinyMce']);

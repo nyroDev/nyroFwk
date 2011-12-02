@@ -752,15 +752,17 @@ final class request {
 	public static function extractGet(&$request, $affectGet = false) {
 		$req = explode('?', $request);
 		$request = $req[0];
-		$get = array_key_exists(1, $req)? $req[1] : null;
+		$get = array_key_exists(1, $req) ? $req[1] : null;
 		$ret = array();
 		if ($get) {
 			$tmp = array_filter(explode('&', $get));
 			foreach($tmp as $elm) {
-				list($name, $val) = explode('=', $elm);
-				$ret[$name] = $val;
-				if ($affectGet)
-					$_GET[$name] = $val;
+				if (strpos($elm, '=')) {
+					list($name, $val) = explode('=', $elm);
+					$ret[$name] = $val;
+					if ($affectGet)
+						$_GET[$name] = $val;
+				}
 			}
 		}
 		return $ret;
@@ -933,7 +935,7 @@ final class request {
 	 * @return string
 	 */
 	public static function getResponseName() {
-		return self::$cfg->outCfg[self::get('out')];
+		return self::get('out') ? self::$cfg->outCfg[self::get('out')] : 'http';
 	}
 
 }

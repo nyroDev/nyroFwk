@@ -47,7 +47,7 @@ jQuery(function($, undefined) {
 							terms = split(this.value);
 							$.merge(vals, curVals);
 							curVals = [];
-							inputs.attr('checked', '');
+							inputs.attr('checked', false);
 							vals = $.map(vals, function(elt) {
 								index = $.inArray(elt.label, terms);
 								if (index > -1) {

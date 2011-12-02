@@ -271,6 +271,12 @@ class response_http extends response_abstract {
 			$this->error();
 	}
 	
+	/**
+	 * Send a file for download using a string
+	 *
+	 * @param string $file File contents
+	 * @param string $name File name.
+	 */
 	public function sendFileAsString($file, $name) {
 		$this->cfg->compress = false;
 		$this->neverExpire();
