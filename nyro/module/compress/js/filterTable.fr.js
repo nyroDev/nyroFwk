@@ -3,12 +3,13 @@ $(function() {
 	if (filterTable.length) {
 		if (!filterTable.is('.filterTableActive'))
 			filterTable.hide();
-		$('<a href="#" class="filterTableToggle" />')
-			.text('afficher/montrer le filtre')
-			.insertBefore(filterTable)
-			.click(function(e) {
-				e.preventDefault();
-				filterTable.slideToggle();
-			});
+		var buttonList = $('#buttonList'),
+			link = $('<a href="#" class="filterTableToggle" />')
+				.text('afficher/montrer le filtre')
+				.click(function(e) {
+					e.preventDefault();
+					filterTable.slideToggle();
+				});
+		buttonList.length ? buttonList.prepend(link) : link.insertBefore(filterTable);
 	}
 });
