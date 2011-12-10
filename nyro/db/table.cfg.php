@@ -13,7 +13,7 @@ $cfg = array(
 	'deleted'=>'deleted',
 	'deleteCheckFile'=>false,
 
-	'i18nLoadDefaultLangIfNotExist'=>false,
+	'i18nGetDefaultLangIfNotExist'=>false,
 	'optimAfterDelete'=>true,
 
 	// used to add more info than extracted from the database

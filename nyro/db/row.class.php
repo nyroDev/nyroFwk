@@ -424,7 +424,7 @@ class db_row extends object {
 		if (is_null($lang) || !$lang)
 			$lang = request::get('lang');
 		if (!array_key_exists($lang, $this->i18nRows)) {
-			if ($this->getTable()->getCfg()->i18nLoadDefaultLangIfNotExist && $lang != request::getDefaultLang())
+			if ($this->getTable()->getCfg()->i18nGetDefaultLangIfNotExist && $lang != request::getDefaultLang())
 				return $this->getI18nRow(request::getDefaultLang());
 			$primary = $this->getTable()->getI18nTable()->getPrimary();
 			$this->i18nRows[$lang] = $this->getTable()->getI18nTable()->getRow();
