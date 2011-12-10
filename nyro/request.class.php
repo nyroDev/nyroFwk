@@ -918,6 +918,15 @@ final class request {
 			return self::$cfg->avlLang;
 		return array_keys(self::$cfg->avlLang);
 	}
+	
+	/**
+	 * Get the default lang defined
+	 *
+	 * @return string The default lang
+	 */
+	public static function getDefaultLang() {
+		return self::$cfg->lang;
+	}
 
 	/**
 	 * Check if it's an available out
