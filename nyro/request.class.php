@@ -778,6 +778,8 @@ final class request {
 	public static function analyseRequest($request, $alias = true) {
 		if ($alias)
 			$request = self::alias($request);
+		else 
+			$request = trim($request, self::$cfg->sep);
 
 		$ret = array();
 
