@@ -1050,9 +1050,9 @@ class db_table extends object {
 						}
 						if (!empty($label)) {
 							$tmp[substr($r['table']['ident'], strlen($r['tableName'])+1)] = $data[$i][$r['table']['ident']];
-							$idRelated[$id][$r['tableName']][] = $data[$i][$r['table']['ident']];
 							$tmp[$r['table']['field']] = implode($r['table']['sep'], $label);
 						}
+						$idRelated[$id][$r['tableName']][] = $data[$i][$r['table']['ident']];
 
 						foreach($r['tableLink'] as $tl) {
 							$tmp[substr($tl, strlen($t)+1)] = $data[$i][$tl];
