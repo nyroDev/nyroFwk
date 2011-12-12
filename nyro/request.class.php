@@ -772,10 +772,12 @@ final class request {
 	 * Analyse a request. If some element are empty, the default is replaced
 	 *
 	 * @param string $request The requested string
+	 * @param bool $alias Indicate if alias should be used
 	 * @return array Array with the key lang, module, action, param, text and out
 	 */
-	public static function analyseRequest($request) {
-		$request = self::alias($request);
+	public static function analyseRequest($request, $alias = true) {
+		if ($alias)
+			$request = self::alias($request);
 
 		$ret = array();
 
