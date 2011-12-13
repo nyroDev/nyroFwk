@@ -154,20 +154,29 @@ final class file {
 			$name = array();
 			if ($prm['type'] == 'cfg') {
 				$ext = 'cfg';
+				$out = request::get('out');
 				$name[] = $nameTmp.'.'.$ext.'.'.EXTPHP;
+				$name[] = $nameTmp.'.'.$out.'.'.$ext.'.'.EXTPHP;
 				$name[] = $nameTmp.'.'.request::get('lang').'.'.$ext.'.'.EXTPHP;
+				$name[] = $nameTmp.'.'.request::get('lang').'.'.$out.'.'.$ext.'.'.EXTPHP;
 				$name[] = $nameTmp.'.'.NYROENV.'.'.$ext.'.'.EXTPHP;
+				$name[] = $nameTmp.'.'.NYROENV.'.'.$out.'.'.$ext.'.'.EXTPHP;
 				$name[] = $nameTmp.'.'.NYROENV.'.'.request::get('lang').'.'.$ext.'.'.EXTPHP;
+				$name[] = $nameTmp.'.'.NYROENV.'.'.request::get('lang').'.'.$out.'.'.$ext.'.'.EXTPHP;
 			} else if ($prm['type'] == 'tpl') {
-				$ext = $prm['tplExt']? $prm['tplExt'] : request::get('out');
-				$name[] = $nameTmp.'.'.NYROENV.'.'.request::get('lang').'.'.$ext;
+				$ext = $prm['tplExt'] ? $prm['tplExt'] : request::get('out');
 				$name[] = $nameTmp.'.'.NYROENV.'.'.request::get('lang').'.'.$ext.'.'.EXTPHP;
-				$name[] = $nameTmp.'.'.request::get('lang').'.'.$ext;
+				$name[] = $nameTmp.'.'.NYROENV.'.'.request::get('lang').'.'.$ext;
+				$name[] = $nameTmp.'.'.NYROENV.'.'.request::get('lang').'.'.EXTPHP;
 				$name[] = $nameTmp.'.'.request::get('lang').'.'.$ext.'.'.EXTPHP;
-				$name[] = $nameTmp.'.'.NYROENV.'.'.$ext;
+				$name[] = $nameTmp.'.'.request::get('lang').'.'.$ext;
+				$name[] = $nameTmp.'.'.request::get('lang').'.'.EXTPHP;
 				$name[] = $nameTmp.'.'.NYROENV.'.'.$ext.'.'.EXTPHP;
-				$name[] = $nameTmp.'.'.$ext;
+				$name[] = $nameTmp.'.'.NYROENV.'.'.$ext;
+				$name[] = $nameTmp.'.'.NYROENV.'.'.EXTPHP;
 				$name[] = $nameTmp.'.'.$ext.'.'.EXTPHP;
+				$name[] = $nameTmp.'.'.$ext;
+				$name[] = $nameTmp.'.'.EXTPHP;
 			} else if ($prm['type'] == 'other')
 				$name[] = $nameTmp;
 			else

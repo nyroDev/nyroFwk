@@ -1,0 +1,1 @@
+<?php echo utils::jsEncode(array('content'=>$content)); ?>
