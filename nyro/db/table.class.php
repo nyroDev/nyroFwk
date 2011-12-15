@@ -45,6 +45,13 @@ class db_table extends object {
 	protected $relatedTables;
 
 	/**
+	 * Targeting tables
+	 *
+	 * @var array
+	 */
+	protected $targetingTables;
+
+	/**
 	 * i18n table
 	 *
 	 * @var db_table
@@ -414,6 +421,58 @@ class db_table extends object {
 			$name = substr($name, strlen($shouldStart));
 
 		return $name;
+	}
+	
+	/**
+	 * Get Targeting table names
+	 *
+	 * @return array Targeting table names
+	 */
+	public function getTargetingTables() {
+		if (is_null($this->targetingTables)) {
+			$tblName = $this->getName();
+			if ($this->cfg->cacheEnabled) {
+				$cache = $this->getDb()->getCache();
+				$cache->get($this->targetingTables, array('id'=>$tblName));
+			}
+			
+			if (is_null($this->targetingTables)) {
+				$this->targetingTables = array();
+				foreach($this->getDb()->getTables() as $tbl) {
+					if ($tbl != $tblName && db::get('table', $tbl)->isTargeting($tblName))
+						$this->targetingTables[] = $tbl;
+				}
+				if ($this->cfg->cacheEnabled)
+					$cache->save();
+			}
+		}
+		return $this->targetingTables;
+	}
+	
+	/**
+	 * Indicates if the table is targeting an other table
+	 *
+	 * @param strong $tableName Table name to check against
+	 * @return boolean 
+	 */
+	public function isTargeting($tableName) {
+		if (strpos($this->getName(), '_') !== false) {
+			$tmp = explode('_', $this->getName());
+			if ($tmp[0] == $tableName || $tmp[1] == $tableName)
+				return true;
+		}
+		
+		foreach($this->getLinked() as $linked) {
+			if ($linked['table'] == $tableName)
+				return true;
+		}
+		
+		foreach($this->getRelated() as $related) {
+			if ($related['tableObj']->isTargeting($tableName))
+				return true;
+		}
+		
+		return false;
 	}
 
 	/**
@@ -1175,9 +1234,17 @@ class db_table extends object {
 	/**
 	 * Clear the cache of selected queries for this table
 	 *
+	 * @param bool|null $clearTargeting Indifcate if cache of targeting tables should also be cleared. If null, default settings will be used
 	 * @return int|bool Number of cache deleted or false
 	 */
-	public function clearCache() {
+	public function clearCache($clearTargeting = null) {
+		if (is_null($clearTargeting))
+			$clearTargeting = $this->cfg->cacheClearTargeting;
+		if ($clearTargeting) {
+			foreach($this->getTargetingTables() as $tbl) {
+				db::get('table', $tbl)->clearCache(false);
+			}
+		}
 		if (!$this->cfg->cacheEnabled)
 			return false;
 		return $this->getDb()->getCache()->delete(array(

@@ -24,6 +24,7 @@ $cfg = array(
 	'whereRange'=>'1',
 
 	'cacheEnabled'=>true,
+	'cacheClearTargeting'=>true,
 
 	'label'=>array(
 		'id'=>'#',

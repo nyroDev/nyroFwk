@@ -318,8 +318,18 @@ class utils {
 	 */
 	public static function img($prm, $absolute = false) {
 		if (!is_array($prm))
-			$prm = array('src'=>$prm);
+			$prm = array('src'=>$prm, 'size'=>true);
 		$alt = $prm['src'];
+		if (isset($prm['size'])) {
+			unset($prm['size']);
+			if (!isset($prm['width']) && !isset($prm['height'])) {
+				$size = getimagesize(WEBROOT.'img/'.$prm['src']);
+				if (!isset($prm['width']))
+					$prm['width'] = $size[0];
+				if (!isset($prm['height']))
+					$prm['height'] = $size[1];
+			}
+		}
 		$prm['src'] = request::get('path').'img/'.$prm['src'];
 		if ($absolute)
 			$prm['src'] = request::get('domain').$prm['src'];
