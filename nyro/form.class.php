@@ -140,7 +140,7 @@ class form extends object {
 				$prm = array_merge($prm, $this->cfg->get($tmp));
 		}
 
-		$hiddenGlobal = (array_key_exists('noHidden', $prm) && $prm['noHidden']) || !(strpos($prm['global'], '[hidden]') === false);
+		$hiddenGlobal = is_array($prm) && (array_key_exists('noHidden', $prm) && $prm['noHidden']) || !(strpos($prm['global'], '[hidden]') === false);
 		$hiddens = null;
 
 		$errorPos = $prm['errorPos'];

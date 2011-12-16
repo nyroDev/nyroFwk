@@ -462,14 +462,18 @@ class db_table extends object {
 				return true;
 		}
 		
-		foreach($this->getLinked() as $linked) {
-			if ($linked['table'] == $tableName)
-				return true;
+		if (is_array($this->getLinked())) {
+			foreach($this->getLinked() as $linked) {
+				if ($linked['table'] == $tableName)
+					return true;
+			}
 		}
 		
-		foreach($this->getRelated() as $related) {
-			if ($related['tableObj']->isTargeting($tableName))
-				return true;
+		if (is_array($this->getRelated())) {
+			foreach($this->getRelated() as $related) {
+				if ($related['tableObj']->isTargeting($tableName))
+					return true;
+			}
 		}
 		
 		return false;
