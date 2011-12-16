@@ -577,7 +577,6 @@ class db_row extends object {
 	 */
 	public function setI18n(array $values, $force = false, $lg = null) {
 		if (!is_null($lg) && $lg) {
-			$values = array_filter($values);
 			if (count($values))
 				$this->getI18nRow($lg)->setValues($values, $force);
 		} else {
