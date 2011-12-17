@@ -142,7 +142,7 @@ final class request {
 		$domain = $protocol.'://'.$serverName.$port;
 
 		$scriptName = $_SERVER['SCRIPT_NAME'];
-		$requestUri = array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : ('/'.$scriptName.(array_key_exists(1, $_SERVER['argv']) ? $_SERVER['argv'][1] : ''));
+		$requestUri = urldecode(array_key_exists('REQUEST_URI', $_SERVER) ? $_SERVER['REQUEST_URI'] : ('/'.$scriptName.(array_key_exists(1, $_SERVER['argv']) ? $_SERVER['argv'][1] : '')));
 
 		$redir = null;
 		$forceServerName = null;
@@ -555,6 +555,7 @@ final class request {
 	 */
 	public static function uploadedUri($file, array $prm = array()) {
 		return self::uri(array_merge(array(
+					'lang'=>false,
 					'module'=>'nyroUtils',
 					'action'=>'uploadedFiles',
 					'param'=>str_replace(array('/', '\\'), array(request::getCfg('sepParam'), request::getCfg('sepParam')), $file),
