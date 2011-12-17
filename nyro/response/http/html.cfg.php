@@ -11,6 +11,7 @@ $cfg = array(
 		'keywords'=>'nyro, project',
 		'language'=>request::get('lang'),
 	),
+	'metaProperty'=>array(),
 	'link'=>array(),
 	'js'=>array(
 		'alias'=>array(

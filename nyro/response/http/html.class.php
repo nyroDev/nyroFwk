@@ -120,6 +120,26 @@ class response_http_html extends response_http {
 	}
 
 	/**
+	 * Get a meta property content
+	 *
+	 * @param string $name Meta name
+	 * @return string|null
+	 */
+	public function getMetaProperty($name) {
+		return $this->cfg->getInArray('metaProperty', $name);
+	}
+
+	/**
+	 * Set a meta property content
+	 *
+	 * @param string $name Meta name
+	 * @param string $value Meta content
+	 */
+	public function setMetaProperty($name, $value) {
+		$this->cfg->setInArray('metaProperty', $name, $value);
+	}
+
+	/**
 	 * Get a link content
 	 *
 	 * @param string $rel Rel name
@@ -439,7 +459,7 @@ class response_http_html extends response_http {
 	 * Get the HTML Meta
 	 *
 	 * @param string $ln New line character
-	 * @return string
+	 * @return strings
 	 */
 	protected function getHtmlMeta($ln = "\n") {
 		$ret = null;
@@ -455,6 +475,9 @@ class response_http_html extends response_http {
 		foreach($this->cfg->meta as $k=>$v) {
 			if ($k != 'title' || $this->cfg->useTitleInMeta)
 				$ret.= '<meta name="'.$k.'" content="'.utils::htmlOut($v).'" />'.$ln;
+		}
+		foreach($this->cfg->metaProperty as $k=>$v) {
+			$ret.= '<meta property="'.$k.'" content="'.utils::htmlOut($v).'" />'.$ln;
 		}
 		foreach($this->cfg->link as $k=>$v)
 			$ret.= utils::htmlTag('link', array_merge(array('rel'=>$k), utils::htmlOut($v))).$ln;
