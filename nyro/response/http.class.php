@@ -262,15 +262,16 @@ class response_http extends response_abstract {
 	 *
 	 * @param string $file File Path
 	 * @param null|string $name File name. If not provided, the real filname will be used
+	 * @param bool $delete Indicate if the file should be deleted after download
 	 */
-	public function sendFile($file, $name = null) {
+	public function sendFile($file, $name = null, $delete = false) {
 		$name = $name? $name : basename($file);
 		if (file::exists($file))
-			$this->mediaDownload($file, true, $name);
+			$this->mediaDownload($file, true, $name, $delete);
 		else
 			$this->error();
 	}
-	
+
 	/**
 	 * Send a file for download using a string
 	 *
@@ -318,8 +319,9 @@ class response_http extends response_abstract {
 	 * @param string $file File Path
 	 * @param bool $forceDownload True if the media should be forced to download
 	 * @param string $fileName Filename to send to the browser. If null, basename will be used
+	 * @param bool $delete Indicate if the file should be deleted after download
 	 */
-	protected function mediaDownload($file, $forceDownload = false, $fileName = null) {
+	protected function mediaDownload($file, $forceDownload = false, $fileName = null, $delete = false) {
 		$fileName = $fileName ? $fileName : basename($file);
 		if(strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE'))
 			$fileName = preg_replace('/\./', '%2e', $fileName, substr_count($fileName, '.') - 1);
@@ -425,6 +427,9 @@ class response_http extends response_abstract {
 		}
 
 		fclose($fileHandle);
+
+		if ($delete)
+			file::delete($file);
 		exit;
 	}
 
