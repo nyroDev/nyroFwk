@@ -27,4 +27,5 @@ $cfg = array(
         'image/x-png',
         'image/pjpeg',
 	),
+	'jpgQuality'=>100
 );

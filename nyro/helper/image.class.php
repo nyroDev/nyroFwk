@@ -308,7 +308,7 @@ class helper_image extends helper_file {
 				$ret = imagepng($this->imgAct, $file);
 				break;
 			default:
-				$ret = imagejpeg($this->imgAct, $file);
+				$ret = imagejpeg($this->imgAct, $file, $this->cfg->jpgQuality);
 				break;
 		}
 		if ($ret)
