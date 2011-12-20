@@ -154,12 +154,13 @@ class helper_image extends helper_file {
 	 */
 	private function build() {
 		$ret = null;
-		if (file::exists($this->cfg->file) && $this->setImg($this->cfg->file)) {
+		if (file::exists($this->cfg->file)) {
 
 			if ($this->cfg->autoFileSave && empty($this->cfg->fileSave))
 				$this->cfg->fileSave = $this->makePath($this->cfg->file, $this->cfg->fileSaveAdd);
 
 			if ($this->cfg->rebuild || !file::exists($this->cfg->fileSave)) {
+				$this->setImg($this->cfg->file);
 				$change = false;
 				if (is_array($this->cfg->crop)) {
 					if ($this->crop($this->cfg->crop)) {
