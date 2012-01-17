@@ -33,7 +33,7 @@ class form_file extends form_abstract {
 
 		$this->cfg->value = factory::get('form_fileUploaded', $prm);
 
-		if (!$this->cfg->value->isSaved() && http_vars::getInstance()->getVar($this->name.'NyroDel')) {
+		if ($this->cfg->autoDeleteOnGet && !$this->cfg->value->isSaved() && http_vars::getInstance()->getVar($this->name.'NyroDel')) {
 			$this->cfg->value->delete();
 			$this->deleted = true;
 		}

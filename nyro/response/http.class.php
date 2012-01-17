@@ -417,7 +417,6 @@ class response_http extends response_abstract {
 
 			// clean up
 			flush();
-			ob_flush();
 
 			// throttle
 			if($speed && ($bytesSent - $burst > $speed * $chunk*1024)) {
