@@ -10,7 +10,7 @@ $cfg = array(
 	),
 	'tinyBrowser'=>array(
 		'active'=>false,
-		'url'=>str_replace('.js', '.php', response::getInstance()->getUrlFile('js', 'tiny_mce/plugins/tinybrowser/tinybrowser', 'web')),
+		'url'=>str_replace('tinybrowser', 'tinybrowser/tinybrowser.php', request::uri('js/tiny_mce/plugins/tinybrowser')),
 		'subdir'=>null,
 		'width'=>770,
 		'height'=>480,

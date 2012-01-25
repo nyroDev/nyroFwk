@@ -10,11 +10,10 @@
 
 define('NYRONAME', 'nyroApp');
 if (array_key_exists('windir', $_SERVER) || $_SERVER['SERVER_NAME'] == 'localhost') {
-	define('NYROROOT', 'D:\www\nyroFwk\trunk\nyro\\');
+	define('NYROROOT', 'D:\www\nyroFwk\nyro\\');
 	define('DEV', true);
 } else {
-	define('NYROROOT', '/home/var/nyroFwk/nyro/');
-	define('DEV', false);
+	define('NYROROOT', '/home/nyrofwk/src/nyro/');
 }
 
 require((defined('NYROROOT') ? NYROROOT : 'nyro/').'start.inc.php');
