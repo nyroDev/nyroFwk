@@ -136,7 +136,7 @@ final class request {
 
 		$controller = basename($_SERVER['SCRIPT_FILENAME']);
 
-		$serverName = array_key_exists('SERVER_NAME', $_SERVER) ? $_SERVER['SERVER_NAME'] : self::$cfg->defaultServerName;
+		$serverName = array_key_exists('HTTP_HOST', $_SERVER) ? $_SERVER['HTTP_HOST'] : (array_key_exists('SERVER_NAME', $_SERVER) ? $_SERVER['SERVER_NAME'] : self::$cfg->defaultServerName);
 		$stdPort = $secure ? '443' : '80';
 		$port = (array_key_exists('SERVER_PORT', $_SERVER) && $_SERVER['SERVER_PORT'] != $stdPort && $_SERVER['SERVER_PORT'])? ':'.$_SERVER['SERVER_PORT'] : '';
 		$domain = $protocol.'://'.$serverName.$port;
