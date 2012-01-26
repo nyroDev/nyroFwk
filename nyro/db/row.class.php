@@ -839,20 +839,26 @@ class db_row extends object {
 		if (strpos($name, 'get') === 0 || strpos($name, 'set') === 0) {
 			$tblName = strtolower(substr($name, 3, 1)).substr($name, 4);
 			$found = false;
-			foreach(array_keys($this->getTable()->getLinked()) as $v) {
-				if (strpos($v, $tblName.'_') === 0) {
-					$name = $v;
-					$found = true;
-					break;
+			$linked = $this->getTable()->getLinked();
+			if (is_array($linked)) {
+				foreach(array_keys($linked) as $v) {
+					if (strpos($v, $tblName.'_') === 0) {
+						$name = $v;
+						$found = true;
+						break;
+					}
 				}
 			}
 			if (!$found) {
 				$tblName = $this->getTable()->getName().'_'.substr($tblName, 0, -1);
-				foreach(array_keys($this->getTable()->getRelated()) as $v) {
-					if ($v == $tblName) {
-						$name = $v;
-						$found = true;
-						break;
+				$related = $this->getTable()->getRelated();
+				if (is_array($related)) {
+					foreach(array_keys($related) as $v) {
+						if ($v == $tblName) {
+							$name = $v;
+							$found = true;
+							break;
+						}
 					}
 				}
 			}
