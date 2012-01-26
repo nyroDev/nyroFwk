@@ -9,7 +9,7 @@
  */
 
 define('NYRONAME', 'nyroApp');
-if (array_key_exists('windir', $_SERVER) || $_SERVER['SERVER_NAME'] == 'localhost') {
+if (array_key_exists('windir', $_SERVER) || (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'localhost')) {
 	define('NYROROOT', 'D:\www\nyroFwk\nyro\\');
 	define('DEV', true);
 } else {

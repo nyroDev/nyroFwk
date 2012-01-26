@@ -24,7 +24,7 @@ if (!defined('NYROENV'))
  * Enabling the dev mode
  */
 if (!defined('DEV'))
-	define('DEV', $_SERVER['SERVER_NAME'] == 'localhost');
+	define('DEV', isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'localhost');
 
 /**
  * string Directory Separator shortcut
