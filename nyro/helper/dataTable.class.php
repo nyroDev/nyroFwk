@@ -111,7 +111,7 @@ class helper_dataTable extends object {
 				array(
 					'start'=>($this->cfg->page-1)*$this->cfg->nbPerPage,
 					'nb'=>$this->cfg->nbPerPage,
-					'order'=>$this->sortBy? $this->sortBy.' '.$this->cfg->sortDir : ''
+					'order'=>$this->sortBy ? $this->sortBy.' '.$this->cfg->sortDir : ''
 				)));
 		return $this->data;
 	}

@@ -15,9 +15,22 @@ class form_file extends form_abstract {
 	 * @var bool
 	 */
 	protected $deleted = false;
+	
+	/**
+	 * Value keeped from a previous upload
+	 *
+	 * @var string
+	 */
+	protected $keep;
 
 	protected function beforeInit() {
 		$required = array_key_exists('required', $this->cfg->valid) && $this->cfg->getInArray('valid', 'required');
+		
+		$htVars = http_vars::getInstance();
+		$this->keep = $htVars->getVar($this->name.'NyroKeep');
+		if ($this->keep)
+			$this->cfg->value = $this->keep;
+		
 		$prm = array_merge($this->cfg->fileUploadedPrm, array(
 			'name'=>$this->cfg->name,
 			'current'=>$this->cfg->value,
@@ -33,7 +46,7 @@ class form_file extends form_abstract {
 
 		$this->cfg->value = factory::get('form_fileUploaded', $prm);
 
-		if ($this->cfg->autoDeleteOnGet && !$this->cfg->value->isSaved() && http_vars::getInstance()->getVar($this->name.'NyroDel')) {
+		if ($this->cfg->autoDeleteOnGet && !$this->cfg->value->isSaved() && $htVars->getVar($this->name.'NyroDel')) {
 			$this->cfg->value->delete();
 			$this->deleted = true;
 		}
@@ -53,9 +66,11 @@ class form_file extends form_abstract {
 		return $this->cfg->value->getCurrent();
 	}
 
-	public function setValue($value, $refill=false) {
-		if (!$this->deleted && !$refill)
-			$this->cfg->value->setCurrent($value, $refill);
+	public function setValue($value, $refill = false) {
+		if (!$this->deleted && !$refill) {
+			if ($value || !$this->keep)
+				$this->cfg->value->setCurrent($value, $refill);
+		}
 	}
 
 	/**
@@ -92,7 +107,8 @@ class form_file extends form_abstract {
 		if ($this->cfg->showPreviewDelete) {
 			$start = '<p>';
 			if ($this->cfg->value->getCurrent()) {
-				$delLink = '<span>
+				$delLink.= '<input type="hidden" name="'.$this->name.'NyroKeep" value="'.$this->cfg->value->getCurrent().'" />';
+				$delLink.= '<span>
 					<a href="#" class="deleteFile" id="'.$this->id.'NyroDel">'.$this->cfg->deleteLabel.'</a>'
 						.$this->cfg->value->getView().'</span></p>';
 				response::getInstance()->blockJquery('
