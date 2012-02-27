@@ -81,7 +81,11 @@ if (!defined('K_TCPDF_EXTERNAL_CONFIG')) {
 	/**
 	 * cache directory for temporary files (full path)
 	 */
-	define ('K_PATH_CACHE', K_PATH_MAIN.'cache/');
+	//define ('K_PATH_CACHE', K_PATH_MAIN.'cache/');
+	// Update for nyroFwk
+	define ('K_PATH_CACHE', TMPROOT.'tcpdf/');
+	if (!file::exists(K_PATH_CACHE))
+		file::createDir(K_PATH_CACHE);
 
 	/**
 	 * cache directory for temporary files (url path)
