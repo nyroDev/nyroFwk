@@ -7,6 +7,8 @@ $cfg = array(
 
 	'defId'=>'id',
 	'defSep'=>' ',
+	
+	'autoJoin'=>true,
 
 	'inserted'=>'inserted',
 	'updated'=>'updated',

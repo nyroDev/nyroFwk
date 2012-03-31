@@ -19,18 +19,40 @@ class db_pdo_mysql extends db_pdo_abstract {
 	/**
 	 * Returns a list of the tables in the database.
 	 *
+	 * @param boolean $unPrefix Indicate if the table name shold remove paramettred prefix
 	 * @return array
 	 */
-	public function getTables() {
+	public function getTables($unPrefix = true) {
 		$cache = $this->getCache();
 		if (!$cache->get($this->tables, array('id'=>'tables'))) {
 			if (is_null($this->tables)) {
+				$this->tables = array();
 				$stmt = $this->query('SHOW TABLES');
-				$this->tables = $stmt->fetchAll(db::FETCH_COLUMN);
+				$this->tables['raw'] = $stmt->fetchAll(db::FETCH_COLUMN);
+				$this->tables['unprefix'] = array();
+				foreach($this->tables['raw'] as $r) {
+					$this->tables['unprefix'][$r] = $this->cfg->prefix ? str_replace($this->cfg->prefix, '', $r) : $r;
+				}
 			}
 			$cache->save();
 		}
-		return $this->tables;
+		return $this->tables[$unPrefix ? 'raw' : 'unprefix'];
+	}
+	
+	/**
+	 * Add a prefix that was previsouly removed for a table name
+	 * 
+	 * @param string $table Table name
+	 * @return string Table name with it's prefix, if existing
+	 */
+	public function prefixTable($table) {
+		if ($this->cfg->prefix) {
+			$tables = $this->getTables(false);
+			$index = array_search($table, $tables);
+			if ($index)
+				$table = $index;
+		}
+		return $table;
 	}
 
 	/**
@@ -43,7 +65,7 @@ class db_pdo_mysql extends db_pdo_abstract {
 		$cache = $this->getCache();
 		$ret = array();
 		if (!$cache->get($ret, array('id'=>'fields-'.$table))) {
-			$stmt = $this->query('SHOW FULL FIELDS FROM '.$this->quoteIdentifier($table));
+			$stmt = $this->query('SHOW FULL FIELDS FROM '.$this->quoteIdentifier($this->prefixTable($table)));
 
 			$fField		= 'Field';
 			$fType		= 'Type';

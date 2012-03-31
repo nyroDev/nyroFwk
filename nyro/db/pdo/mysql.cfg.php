@@ -9,4 +9,5 @@ $cfg = array(
 	'user'=>'root',
 	'pass'=>null,
 	'base'=>'test',
+	'prefix'=>false
 );

@@ -327,6 +327,7 @@ class db_table extends object {
 			$tables = $this->getDb()->getTablesWith(array('start'=>$search));
 			foreach($tables as $t) {
 				$relatedTable = substr($t, strlen($search));
+				debug::trace($t, 2);
 				$table = db::get('table', $t, array(
 					'db'=>$this->getDb()
 				));
@@ -847,7 +848,7 @@ class db_table extends object {
 			'where'=>'',
 			'whereOp'=>'AND',
 			'order'=>'',
-			'autoJoin'=>true,
+			'autoJoin'=>$this->cfg->autoJoin,
 		));
 
 		if (is_array($prm['where'])) {
