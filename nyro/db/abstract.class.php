@@ -621,9 +621,18 @@ abstract class db_abstract extends object {
 	/**
 	 * Returns a list of the tables in the database.
 	 *
+	 * @param boolean $unPrefix Indicate if the table name shold remove paramettred prefix
 	 * @return array
 	 */
-	abstract public function getTables();
+	abstract public function getTables($unPrefix = true);
+
+	/**
+	 * Add a prefix that was previsouly removed for a table name
+	 * 
+	 * @param string $table Table name
+	 * @return string Table name with it's prefix, if existing
+	 */
+	abstract public function prefixTable($table);
 
 	/**
 	 * Returns the fields

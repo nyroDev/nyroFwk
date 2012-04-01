@@ -10,6 +10,13 @@
 class db_table extends object {
 
 	/**
+	 * Raw table name
+	 *
+	 * @var string
+	 */
+	protected $rawName;
+	
+	/**
 	 * Fields informations
 	 *
 	 * @var array
@@ -61,6 +68,7 @@ class db_table extends object {
 	protected function afterInit() {
 		if (get_class($this) == 'db_table')
 			$this->cfg->overload('db_table_'.$this->cfg->name);
+		$this->rawName = $this->cfg->db->prefixTable($this->cfg->name);
 		$this->_initi18n();
 		$this->_initFields();
 		$this->_initIdent();
@@ -323,18 +331,17 @@ class db_table extends object {
 	protected function _initRelatedTables() {
 		if (is_null($this->relatedTables)) {
 			$this->relatedTables = array();
-			$search = $this->cfg->name.'_';
+			$search = $this->rawName.'_';
 			$tables = $this->getDb()->getTablesWith(array('start'=>$search));
 			foreach($tables as $t) {
 				$relatedTable = substr($t, strlen($search));
-				debug::trace($t, 2);
 				$table = db::get('table', $t, array(
 					'db'=>$this->getDb()
 				));
 				$fields = $table->getField();
 				$fk1 = $fk2 = null;
 				foreach($fields as $k=>$v) {
-					if (is_null($fk1) && strpos($k, $this->cfg->name) !== false) {
+					if (is_null($fk1) && strpos($k, $this->rawName) !== false) {
 						$fk1 = array_merge($v, array('link'=>$table->getLinked($k)));
 						unset($fields[$k]);
 					} else if (strpos($k, $relatedTable) !== false) {
@@ -623,7 +630,7 @@ class db_table extends object {
 		$this->dateAutoData($data, 'inserted');
 		$this->dateAutoData($data, 'updated');
 		$ret = $this->getDb()->insert(array(
-			'table'=>$this->cfg->name,
+			'table'=>$this->rawName,
 			'values'=>$data
 		));
 		if ($ret)
@@ -643,7 +650,7 @@ class db_table extends object {
 		$this->dateAutoData($data, 'inserted');
 		$this->dateAutoData($data, 'updated');
 		$ret = $this->getDb()->replace(array(
-			'table'=>$this->cfg->name,
+			'table'=>$this->rawName,
 			'values'=>$data
 		));
 		if ($ret)
@@ -662,7 +669,7 @@ class db_table extends object {
 	public function update(array $data, $where = null) {
 		$this->dateAutoData($data, 'updated');
 		$ret = $this->getDb()->update(array(
-			'table'=>$this->cfg->name,
+			'table'=>$this->rawName,
 			'values'=>$data,
 			'where'=>$where
 		));
@@ -713,13 +720,13 @@ class db_table extends object {
 				}
 			}
 			$ret = $this->getDb()->delete(array(
-				'table'=>$this->cfg->name,
+				'table'=>$this->rawName,
 				'where'=>$where,
 				'optim'=>$this->cfg->optimAfterDelete
 			));
 		} else {
 			$ret = $this->getDb()->update(array(
-				'table'=>$this->cfg->name,
+				'table'=>$this->rawName,
 				'values'=>$data,
 				'where'=>$where,
 				'optim'=>$this->cfg->optimAfterDelete
@@ -819,9 +826,9 @@ class db_table extends object {
 	public function count(array $prm) {
 		$prm = $this->selectQuery($prm, $tmpTables);
 		if ($this->getIdent())
-			$prm['group'] = $prm['fields'] = $this->cfg->name.'.'.$this->getIdent();
+			$prm['group'] = $prm['fields'] = $this->rawName.'.'.$this->getIdent();
 		else
-			$prm['group'] = $prm['fields'] = $this->cfg->name.'.'.implode(','.$this->cfg->name.'.', $this->getPrimary());
+			$prm['group'] = $prm['fields'] = $this->rawName.'.'.implode(','.$this->rawName.'.', $this->getPrimary());
 
 		$prm['where'] = $this->getDb()->makeWhere($prm['where'], $prm['whereOp'], false);
 		$nb = array_key_exists('join', $prm) ? count($prm['join']) : 0;
@@ -854,7 +861,7 @@ class db_table extends object {
 		if (is_array($prm['where'])) {
 			foreach($prm['where'] as $k=>$v) {
 				if (!is_numeric($k) && strpos($k, '.') === false) {
-					$newK = $this->cfg->name.'.'.$k;
+					$newK = $this->rawName.'.'.$k;
 					if (!array_key_exists($newK, $prm['where'])) {
 						$prm['where'][$newK] = $v;
 						unset($prm['where'][$k]);
@@ -865,17 +872,17 @@ class db_table extends object {
 			&& (strpos($prm['where'], '=') === false && strpos($prm['where'], '<') === false
 					&& strpos($prm['where'], '>') === false && stripos($prm['where'], 'LIKE') === false
 					 && stripos($prm['where'], 'IN') === false)) {
-			$prm['where'] = $this->cfg->name.'.'.$this->cfg->ident.'='.$prm['where'];
+			$prm['where'] = $this->rawName.'.'.$this->cfg->ident.'='.$prm['where'];
 		}
 
 		$prm = array_merge(array(
-			'fields'=>$this->getDb()->quoteIdentifier($this->cfg->name).'.*',
-			'table'=>$this->cfg->name,
+			'fields'=>$this->getDb()->quoteIdentifier($this->rawName).'.*',
+			'table'=>$this->rawName,
 		), $prm);
 
 		if (is_array($prm['fields'])) {
 			array_walk($prm['fields'],
-				create_function('&$v', '$v = strpos($v, ".") === false? "'.$this->cfg->name.'.".$v: $v;'));
+				create_function('&$v', '$v = strpos($v, ".") === false? "'.$this->rawName.'.".$v: $v;'));
 			$prm['fields'] = implode(',', $prm['fields']);
 		}
 
@@ -889,7 +896,7 @@ class db_table extends object {
 					'table'=>$p['table'],
 					'alias'=>$alias,
 					'dir'=>'left outer',
-					'on'=>$this->cfg->name.'.'.$f.'='.$alias.'.'.$p['ident']
+					'on'=>$this->rawName.'.'.$f.'='.$alias.'.'.$p['ident']
 				);
 				$fields = explode(',', $p['fields']);
 				array_unshift($fields, $p['ident']);
@@ -956,7 +963,7 @@ class db_table extends object {
 				$prm['join'][] = array(
 					'table'=>$f,
 					'dir'=>'left outer',
-					'on'=>$this->cfg->name.'.'.$p['fk1']['link']['ident'].'='.$f.'.'.$p['fk1']['name']
+					'on'=>$this->rawName.'.'.$p['fk1']['link']['ident'].'='.$f.'.'.$p['fk1']['name']
 				);
 
 				// related Table fields
@@ -1022,7 +1029,7 @@ class db_table extends object {
 				$prm['join'][] = array(
 					'table'=>$i18nName,
 					'dir'=>'left outer',
-					'on'=>$this->cfg->name.'.'.$this->getIdent().'='.$i18nName.'.'.$primary[0]
+					'on'=>$this->rawName.'.'.$this->getIdent().'='.$i18nName.'.'.$primary[0]
 				);
 
 				// related Table fields
