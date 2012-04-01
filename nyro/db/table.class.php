@@ -81,7 +81,7 @@ class db_table extends object {
 	 * Init the i18n table
 	 */
 	protected function _initI18n() {
-		if ($i18ntable = $this->getDb()->getI18nTable($this->getName())) {
+		if ($i18ntable = $this->getDb()->getI18nTable($this->getRawName())) {
 			$this->i18nTable = db::get('table', $i18ntable, array(
 				'name'=>$i18ntable,
 				'db'=>$this->getDb()
@@ -598,6 +598,15 @@ class db_table extends object {
 	 */
 	public function getName() {
 		return $this->cfg->name;
+	}
+
+	/**
+	 * Get the raw table name
+	 *
+	 * @return string
+	 */
+	public function getRawName() {
+		return $this->rawName;
 	}
 
 	/**
@@ -1211,7 +1220,7 @@ class db_table extends object {
 		$where =  $this->getWhere(array('op'=>'OR'));
 		foreach($filter as $f)
 			$where->add(array(
-				'field'=>$this->getName().'.'.$f,
+				'field'=>$this->getRawName().'.'.$f,
 				'val'=>'%'.$text.'%',
 				'op'=>'LIKE'
 			));
@@ -1232,7 +1241,7 @@ class db_table extends object {
 	public function getRange($field = null) {
 		if (is_null($field))
 			$field = $this->getIdent();
-		$query = 'SELECT MIN('.$field.'),MAX('.$field.') FROM '.$this->getName()
+		$query = 'SELECT MIN('.$field.'),MAX('.$field.') FROM '.$this->getRawName()
 					.' WHERE '.$this->cfg->whereRange;
 		$tmp = $this->getDb()->query($query)->fetchAll(PDO::FETCH_NUM);
 		$tmp = $tmp[0];

@@ -228,7 +228,7 @@ class module_scaffold_controller extends module_abstract {
 	protected function multipleDelete(array $ids) {
 		$this->table->delete($this->table->getWhere(array(
 			'clauses'=>factory::get('db_whereClause', array(
-					'name'=>$this->table->getName().'.'.$this->table->getIdent(),
+					'name'=>$this->table->getRawName().'.'.$this->table->getIdent(),
 					'in'=>$ids
 				))
 		)));

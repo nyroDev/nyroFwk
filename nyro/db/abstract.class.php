@@ -301,10 +301,10 @@ abstract class db_abstract extends object {
 
 			if (!empty($prm['i18nFields'])) {
 				$i18nTable = db::get('table', $prm['table'].db::getCfg('i18n'));
-				$i18nTableName = $this->quoteIdentifier($i18nTable->getName());
+				$i18nTableName = $this->quoteIdentifier($i18nTable->getRawName());
 				$primary = $i18nTable->getPrimary();
 				$prm['join'][] = array(
-					'table'=>$i18nTable->getName(),
+					'table'=>$i18nTable->getRawName(),
 					'on'=>$tableName.'.'.$table->getIdent().'='.$i18nTableName.'.'.$primary[0].
 							' AND '.$i18nTableName.'.'.$primary[1].'="'.request::get('lang').'"'
 				);
@@ -328,7 +328,7 @@ abstract class db_abstract extends object {
 					$alias = null;
 					if (!empty($v['alias'])) {
 						$alias = ' AS '.$this->quoteIdentifier($v['alias']);
-						if ($v['table'] != $table->getName())
+						if ($v['table'] != $table->getRawName())
 							$tblAlias[$v['table']] = $v['alias'];
 					}
 					$join[] = strtoupper($v['dir']).' JOIN '.$this->quoteIdentifier($v['table']).$alias.' ON '.$v['on'];

@@ -779,7 +779,7 @@ class db_row extends object {
 		$values = $this->getValues('flat');
 		$where = array();
 		foreach($primary as $p) {
-			$where[] = $this->getTable()->getName().'.'.$p.='="'.$values[$p].'"';
+			$where[] = $this->getTable()->getRawName().'.'.$p.='="'.$values[$p].'"';
 		}
 		return implode(' AND ', $where);
 	}
@@ -811,9 +811,9 @@ class db_row extends object {
 			$field = $this->getTable()->getIdent();
 		$val = $this->get($field);
 
-		$query = '(SELECT '.$field.' FROM '.$this->getTable()->getName().' '.$where.$field.' < ? ORDER BY '.$field.' DESC LIMIT 1)
+		$query = '(SELECT '.$field.' FROM '.$this->getTable()->getRawName().' '.$where.$field.' < ? ORDER BY '.$field.' DESC LIMIT 1)
 					UNION
-				  (SELECT '.$field.' FROM '.$this->getTable()->getName().' '.$where.$field.' > ? ORDER BY '.$field.' ASC LIMIT 1)';
+				  (SELECT '.$field.' FROM '.$this->getTable()->getRawName().' '.$where.$field.' > ? ORDER BY '.$field.' ASC LIMIT 1)';
 		$vals = $this->getDb()->query($query, array($val, $val))->fetchAll(PDO::FETCH_NUM);
 		$ret = array(null, null);
 		if (array_key_exists(1, $vals)) {
