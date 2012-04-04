@@ -633,7 +633,7 @@ final class request {
 	}
 
 	public static function webUri($uri) {
-		return self::get('path').$uri;
+		return (self::$cfg->absolutizeAllUris ? self::get('domain') : null).self::get('path').$uri;
 	}
 
 	/**
