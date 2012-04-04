@@ -484,7 +484,7 @@ final class request {
 		if (!is_array($prm))
 			$prm = self::uriString($prm);
 
-		if (self::$cfg->absolutizeAllUris && !isset($prm['absolute']))
+		if (self::isAbsolutizeAllUris() && !isset($prm['absolute']))
 			$prm['absolute'] = true;
 
 		$sep = array_key_exists('sep', $prm)? $prm['sep'] : self::$cfg->sep;
@@ -632,8 +632,23 @@ final class request {
 		return $tmp;
 	}
 
+	/**
+	 * Create a Web uri from a string (starting at the www folder)
+	 *
+	 * @param string $uri
+	 * @return string
+	 */
 	public static function webUri($uri) {
-		return (self::$cfg->absolutizeAllUris ? self::get('domain') : null).self::get('path').$uri;
+		return (self::isAbsolutizeAllUris() ? self::get('domain') : null).self::get('path').$uri;
+	}
+	
+	/**
+	 * Indicates if it's configured to absolutiez all URIs
+	 *
+	 * @return boolean
+	 */
+	public static function isAbsolutizeAllUris() {
+		return self::$cfg->absolutizeAllUris;
 	}
 
 	/**

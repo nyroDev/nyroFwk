@@ -548,6 +548,8 @@ class response_http_html extends response_http {
 		$url = $dir == 'web'
 					? request::get('path').$prm['dirWeb']
 					: request::getPathControllerUri().$prm['dirUriNyro'];
+		if (request::isAbsolutizeAllUris())
+			$url = request::get('domain').$url;
 		$url.= '/'.(is_array($files)? implode(request::getCfg('sepParam'), $files) : $files);
 		$url.= '.'.$prm['ext'];
 		return $url;
