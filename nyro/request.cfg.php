@@ -25,6 +25,8 @@ $cfg = array(
 	'sep'=>'/',
 	'sepParam'=>',',
 	'sepParamSub'=>':',
+	
+	'absolutizeAllUris'=>false,
 
 	'avlLang'=>array(
 		'en'=>'English',

@@ -484,6 +484,9 @@ final class request {
 		if (!is_array($prm))
 			$prm = self::uriString($prm);
 
+		if (self::$cfg->absolutizeAllUris && !isset($prm['absolute']))
+			$prm['absolute'] = true;
+
 		$sep = array_key_exists('sep', $prm)? $prm['sep'] : self::$cfg->sep;
 
 		$tmp = array_fill(0, 4, self::$cfg->empty);
