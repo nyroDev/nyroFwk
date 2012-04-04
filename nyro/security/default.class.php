@@ -74,9 +74,7 @@ class security_default extends security_abstract {
 		}
 
 		if ($cryptic) {
-			$this->user = $this->table->find(array_merge(array(
-				$this->table->getRawName().'.'.$this->cfg->getInArray('fields', 'cryptic')=>$cryptic
-			), $this->cfg->where));
+			$this->user = $this->getUserFromCryptic($cryptic);
 			if ($this->user) {
 				$this->logged = true;
 				$this->hook('autoLogin'.($fromSession ? 'Session' : null));
@@ -84,6 +82,18 @@ class security_default extends security_abstract {
 			} else if (isset($cook))
 				$cook->del();
 		}
+	}
+	
+	/**
+	 * Get a DB user from it's cryptic
+	 *
+	 * @param string $cryptic Cryptic
+	 * @return db_row|null
+	 */
+	public function getUserFromCryptic($cryptic) {
+		 return $this->table->find(array_merge(array(
+				$this->table->getRawName().'.'.$this->cfg->getInArray('fields', 'cryptic')=>$cryptic
+			), $this->cfg->where));
 	}
 
 	public function isLogged() {
@@ -125,7 +135,15 @@ class security_default extends security_abstract {
 		$this->logFromCryptic($cryptic);
 	}
 
-	public function login($prm = null, $page = null) {
+	/**
+	 * Login the current user
+	 *
+	 * @param mixed $prm
+	 * @param null|string $page The page where to be redirected. If null, config will be used
+	 * @param boolean $redirectIfLogged Enable the redirect when login is successful
+	 * @return bool True if successful
+	 */
+	public function login($prm = null, $page = null, $redirectIfLogged = true) {
 		$loginField = $this->cfg->getInArray('fields', 'login');
 		$passField = $this->cfg->getInArray('fields', 'pass');
 
@@ -155,7 +173,7 @@ class security_default extends security_abstract {
 					$this->hook('login');
 				} else if ($form)
 					$form->addCustomError($loginField, $this->cfg->errorMsg);
-				if ($this->logged) {
+				if ($this->logged && $redirectIfLogged) {
 					if (is_null($page)) {
 						if ($this->session->pageFrom) {
 							$page = $this->session->pageFrom;
