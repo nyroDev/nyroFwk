@@ -45,9 +45,15 @@ final class tr {
 			$ret = self::$cfg->getInArray($keys[0], $keys[1]);
 		} else
 			$ret = self::$cfg->get($key);
+		
 		if ($out)
 			$ret = utils::htmlOut($ret);
-		$ret = nl2br($ret);
+		
+		if (is_array($ret))
+			$ret = array_map('nl2br', $ret);
+		else
+			$ret = nl2br($ret);
+		
 		if ($show)
 			echo $ret;
 		else
