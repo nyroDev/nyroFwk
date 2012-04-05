@@ -256,6 +256,7 @@ class db_row extends object {
 		$this->setNew(false);
 		$this->saveRelated();
 		$this->saveI18n();
+		$this->getTable()->clearCache();
 		return $id;
 	}
 
