@@ -87,14 +87,14 @@ class db_rowset extends object implements Iterator, Countable, ArrayAccess {
 	 * @return db_row Element from the collection
 	 */
 	public function get($number) {
-		if (!array_key_exists($number, $this->_rows)) {
+		if (!array_key_exists($number, $this->_rows) && $this->cfg->checkInArray('data', $number)) {
 			$this->_rows[$number] = db::get('row', $this->getTable(), array(
 				'db'=>$this->getDb(),
 				'table'=>$this->getTable(),
 				'data'=>$this->cfg->getInArray('data', $number),
 			));
 		}
-		return $this->_rows[$number];
+		return isset($this->_rows[$number]) ? $this->_rows[$number] : null;
 	}
 
 	/**
