@@ -14,21 +14,21 @@ class helper_image extends helper_file {
 	 *
 	 * @var imageRessource
 	 */
-	private $imgAct;
+	protected $imgAct;
 
 	/**
 	 * Image ressource for mask to work in
 	 *
 	 * @var imageRessource
 	 */
-	private $imgTmp;
+	protected $imgTmp;
 
 	/**
 	 * Image information
 	 *
 	 * @var array
 	 */
-	private $info;
+	protected $info;
 
 	/**
 	 * Destructor
@@ -152,7 +152,7 @@ class helper_image extends helper_file {
 	 *
 	 * @return bool|string True if success or HTML string if requested
 	 */
-	private function build() {
+	protected function build() {
 		$ret = null;
 		if (file::exists($this->cfg->file)) {
 
@@ -261,7 +261,7 @@ class helper_image extends helper_file {
 	 *
 	 * @return string|null The HTML string or null if the image doesn't exists
 	 */
-	private function html(array $options = array()) {
+	protected function html(array $options = array()) {
 		if (file::exists($this->cfg->fileSave)) {
 			return utils::htmlTag('img',
 				array_merge($options, $this->cfg->htmlDefOptions, array(
@@ -318,12 +318,12 @@ class helper_image extends helper_file {
 	}
 
 	/**
-	 * Create an image ressource and get the dimesnion of the
+	 * Create an image ressource and get the dimension of the
 	 *
 	 * @param string $file The image path
 	 * @return false|array False if not a valid image or an array with Image ressource, width and height
 	 */
-	private function createImage($file) {
+	protected function createImage($file) {
 		if (!file::exists($file) || ! is_file($file))
 			return false;
 		$this->info = getimagesize($file);
@@ -361,7 +361,7 @@ class helper_image extends helper_file {
 	 *  - hexa bgColor: The background color (default: ffffff)
 	 * @return bool True if success
 	 */
-	private function resize(array $prm = array()) {
+	protected function resize(array $prm = array()) {
 		config::initTab($prm, array(
 			'imgName'=>'Act',
 			'w'=>0,
@@ -495,7 +495,7 @@ class helper_image extends helper_file {
 	 *  - int h: The height result (default: 0 -> the source image height)
 	 * @return bool True if success
 	 */
-	private function crop(array $prm) {
+	protected function crop(array $prm) {
 		config::initTab($prm, array(
 			'x'=>-1,
 			'y'=>-1,
@@ -537,7 +537,7 @@ class helper_image extends helper_file {
 	 * @param string $col The hexadecimal color
 	 * @return array Numeric index (0: R, 1: V and 2: B)
 	 */
-	private function hexa2dec($col) {
+	protected function hexa2dec($col) {
 		return array(
 			base_convert(substr($col, 0, 2), 16, 10),
 			base_convert(substr($col, 2, 2), 16, 10),
