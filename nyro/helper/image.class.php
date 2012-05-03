@@ -240,9 +240,16 @@ class helper_image extends helper_file {
 				if (!$change)
 					$this->cfg->fileSave = $this->cfg->file;
 
-				if (!empty($this->cfg->fileSave))
-					if ($this->save($this->cfg->fileSave))
+				if (!empty($this->cfg->fileSave)) {
+					if ($change) {
+						if ($this->save($this->cfg->fileSave))
+							$ret = $this->cfg->fileSave;
+					} else {
+						if ($this->cfg->file != $this->cfg->fileSave)
+							file::move($this->cfg->file, $this->cfg->fileSave);
 						$ret = $this->cfg->fileSave;
+					}
+				}
 
 				if ($this->cfg->html)
 					$ret = $this->html();
