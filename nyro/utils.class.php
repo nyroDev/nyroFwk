@@ -436,10 +436,10 @@ class utils {
 				$tmp[] = $ignore[$i];
 			$source = str_replace($tmp, '', $source);
 		}
-		$$len = abs(intval($len));
+		$len = abs(intval($len));
 		$n = strlen($source)-1;
 		$r = '';
-		for($i = 0; $i < $$len; $i++)
+		for($i = 0; $i < $len; $i++)
 			$r.= $source{rand(0, $n)};
 		return $r;
 	}

@@ -31,7 +31,7 @@ class security_default extends security_abstract {
 	 */
 	protected $user;
 
-	/**
+	/**175
 	 * Login form
 	 *
 	 * @var form
@@ -147,8 +147,8 @@ class security_default extends security_abstract {
 		$loginField = $this->cfg->getInArray('fields', 'login');
 		$passField = $this->cfg->getInArray('fields', 'pass');
 
+		$form = $this->getLoginForm();
 		if (is_null($prm)) {
-			$form = $this->getLoginForm();
 			if (request::isPost()) {
 				$form->refill();
 				$prm = $form->getValues(true);
@@ -171,7 +171,7 @@ class security_default extends security_abstract {
 						$cook->save();
 					}
 					$this->hook('login');
-				} else if ($form)
+				} else
 					$form->addCustomError($loginField, $this->cfg->errorMsg);
 				if ($this->logged && $redirectIfLogged) {
 					if (is_null($page)) {
