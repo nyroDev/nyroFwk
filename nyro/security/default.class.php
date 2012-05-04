@@ -31,7 +31,7 @@ class security_default extends security_abstract {
 	 */
 	protected $user;
 
-	/**175
+	/**
 	 * Login form
 	 *
 	 * @var form
