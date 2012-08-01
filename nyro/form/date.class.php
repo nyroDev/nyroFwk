@@ -47,7 +47,7 @@ class form_date extends form_abstract {
 			$resp = response::getInstance();
 			$resp->addJs('jqueryui');
 
-			$resp->blockJquery('$("#'.$this->id.'").datepicker('.json_encode($this->jsPrm).');');
+			$resp->blockJquery('$("#'.$this->id.'").datepicker('.utils::jsEncode($this->jsPrm).');');
 		}
 
 		return utils::htmlTag($this->htmlTagName,

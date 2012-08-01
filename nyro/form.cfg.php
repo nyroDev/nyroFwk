@@ -7,6 +7,7 @@ $cfg = array(
 	'method'=>'post',
 	'sectionName'=>'Form',
 	'showSection'=>true,
+	'outSection'=>true,
 	'submitText'=>'Send',
 	'submitPlus'=>null,
 

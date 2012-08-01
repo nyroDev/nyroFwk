@@ -187,7 +187,7 @@ class form extends object {
 				}
 				$ret.= str_replace(
 					array('[errors]', '[fields]', '[label]'),
-					array($errors, $fields, utils::htmlOut($sectionName)),
+					array($errors, $fields, $this->cfg->outSection ? utils::htmlOut($sectionName) : $sectionName),
 					$prm[$section]);
 			}
 		}

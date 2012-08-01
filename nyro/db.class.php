@@ -123,7 +123,6 @@ final class db {
 	 * @return mixed
 	 */
 	public static function getCfg($key) {
-		self::$cfg;
 		return self::$cfg->get($key);
 	}
 

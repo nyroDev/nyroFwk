@@ -183,6 +183,8 @@ final class factory {
 	 * @return object The new object
 	 */
 	public static function get($className, array $cfg = array()) {
+		if (self::$cfg && $tmp = self::$cfg->getInArray('classAlias', $className))
+			$className = $tmp;
 		self::load($className);
 		$ref = new nReflection();
 		if ($ref->rebuild($className)) {

@@ -79,11 +79,8 @@ class form_range_date extends form_range_abstract {
 			$resp->addJs('jqueryui');
 			if (($lang = request::get('lang')) != 'en')
 				$resp->addJs('i18n_ui.datepicker-'.$lang);
-			$dateImg = utils::getIcon(array(
-				'name'=>'show_month',
-				'type'=>'calendar',
-				'imgTag'=>false
-			));
+			$jsPrmMin = $this->cfg->jsPrm;
+			$jsPrmMax = $this->cfg->jsPrm;
 
 			$minId = $this->makeId($this->name.'[0]');
 			$maxId = $this->makeId($this->name.'[1]');
@@ -91,14 +88,17 @@ class form_range_date extends form_range_abstract {
 			$minDate = $this->dates['min']->getJs(null);
 			$maxDate = $this->dates['max']->getJs(null);
 
-			$resp->blockJquery('$("#'.$minId.'").datepicker({
-				buttonImage: "'.$dateImg.'", buttonImageOnly: true, showOn: "both", '.($maxDate?'maxDate: '.$maxDate.',' : null).'
-				onSelect: function(dateText) {$("#'.$maxId.'").datepicker("option", "minDate", $("#'.$minId.'").datepicker("getDate"));}
-			});');
-			$resp->blockJquery('$("#'.$maxId.'").datepicker({
-				buttonImage: "'.$dateImg.'", buttonImageOnly: true, showOn: "both", '.($minDate?'minDate: '.$minDate.',' : null).'
-				onSelect: function(dateText) {$("#'.$minId.'").datepicker("option", "maxDate", $("#'.$maxId.'").datepicker("getDate"));}
-			});');
+			$jsPrmMin['onSelect'] = 'function(dateText) {$("#'.$maxId.'").datepicker("option", "minDate", $("#'.$minId.'").datepicker("getDate"));}';
+			if ($maxDate)
+				$jsPrmMin['maxDate'] = $maxDate;
+			$jsPrmMax['onSelect'] = 'function(dateText) {$("#'.$minId.'").datepicker("option", "maxDate", $("#'.$maxId.'").datepicker("getDate"));}';
+			if ($minDate)
+				$jsPrmMax['minDate'] = $minDate;
+			
+			$resp->blockJquery('
+				$("#'.$minId.'").datepicker('.utils::jsEncode($jsPrmMin).');
+				$("#'.$maxId.'").datepicker('.utils::jsEncode($jsPrmMax).');
+			');
 		}
 
 		return parent::toHtml();

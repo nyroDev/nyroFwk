@@ -11,4 +11,13 @@ $cfg = array(
 
 	'min'=>array(),
 	'max'=>array(),
+	'jsPrm'=>array(
+		'buttonImage'=>utils::getIcon(array(
+				'name'=>'show_month',
+				'type'=>'calendar',
+				'imgTag'=>false
+			)),
+		'buttonImageOnly'=>true,
+		'showOn'=>'both',
+	)
 );
