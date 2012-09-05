@@ -11,6 +11,11 @@ $cfg = array(
 
 	'htmlTagName'=>null,
 
+	'descriptions'=>array(),
+	'outDescriptions'=>true,
+	'html'=>array(
+		'des'=>'<span class="mulValueDes">[des]</span>',
+	),
 	'dbList'=>array(
 		'fields'=>null,
 		'table'=>null,

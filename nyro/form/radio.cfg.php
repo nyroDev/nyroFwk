@@ -4,7 +4,7 @@ $cfg = array(
 		'plus'=>null,
 		'global'=>'<ol class="mulValue checkboxes">[values]</ol>',
 		'globalInline'=>'<ol class="mulValue checkboxes inline">[values]</ol>',
-		'value'=>'<li><input type="radio" name="[name]" value="[value]" id="[id]-[value]" [plus]/><label for="[id]-[value]">[label]</label></li>',
+		'value'=>'<li><input type="radio" name="[name]" value="[value]" id="[id]-[value]" [plus]/><label for="[id]-[value]">[label]</label>[des]</li>',
 		'selected'=>' checked="checked"',
 		'group'=>'<li><em>[label]</em></li>[group]',
 	),

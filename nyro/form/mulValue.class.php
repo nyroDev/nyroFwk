@@ -110,13 +110,16 @@ abstract class form_mulValue extends form_abstract {
 		$ret = null;
 
 		$tmp = $prm;
-		unset($tmp['plus'], $tmp['global'], $tmp['globalInline'], $tmp['value'], $tmp['selected'], $tmp['group'], $tmp['name']);
+		unset($tmp['plus'], $tmp['global'], $tmp['globalInline'], $tmp['value'], $tmp['selected'], $tmp['group'], $tmp['name'], $tmp['des']);
 		$prm['plus'].= ' ';
 		foreach($tmp as $k=>$v)
 			$prm['plus'].= $k.'="'.$v.'" ';
 
 		$tmpGr = null;
 		$tmpVal = null;
+		$descriptions = $this->cfg->descriptions;
+		if ($this->cfg->outDescriptions)
+			$descriptions = utils::htmlOut($descriptions);
 		if (is_array($this->cfg->list)) {
 			foreach($this->cfg->list as $k=>$v) {
 				if (is_array($this->cfg->group) && array_key_exists($k, $this->cfg->group) && $tmpGr != $k) {
@@ -130,8 +133,8 @@ abstract class form_mulValue extends form_abstract {
 				$selected = $this->isInValue($k)? $prm['selected'] : null;
 
 				$tmpVal.= $this->updateLine($type, $k, str_replace(
-						array('[plus]', '[value]', '[label]'),
-						array($selected, $k, $v),
+						array('[plus]', '[value]', '[label]', '[des]'),
+						array($selected, $k, $v, isset($descriptions[$k]) ? $descriptions[$k] : null),
 						$prm['value']));
 			}
 		}

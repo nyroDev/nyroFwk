@@ -52,16 +52,37 @@ class form_fileUploaded extends object {
 		}
 		file::createDir($this->dir);
 
+		$uploaded = false;
 		if (strpos($this->cfg->name, '[')) {
 			$tmp = explode('[', str_replace(']', '', $this->cfg->name));
 			$tmpfile = utils::getValInArray($_FILES, $tmp);
 			if (!empty($tmpfile) && is_array($tmpfile)) {
 				$this->file = $tmpfile;
 				$this->file['saved'] = false;
+				$uploaded = $this->file['error'] == UPLOAD_ERR_OK;
 			}
 		} else if (array_key_exists($this->cfg->name, $_FILES)) {
 			$this->file = $_FILES[$this->cfg->name];
 			$this->file['saved'] = false;
+			$uploaded = $this->file['error'] == UPLOAD_ERR_OK;
+		}
+		if ($this->cfg->current && !$uploaded) {
+			$name = basename($this->cfg->current);
+			$savePath = $this->dir.$name;
+			$webPath = str_replace(DS, '/', $this->subdir.$name);
+			$this->file = array(
+				'name'=>$name,
+				'type'=>file::getType($savePath),
+				'tmp_name'=>'',
+				'error'=>UPLOAD_ERR_OK,
+				'size'=>file::size($savePath),
+				'saved'=>array(
+					'name'=>$name,
+					'savePath'=>$savePath,
+					'webPath'=>$webPath
+				),
+			);
+			$this->saved = $webPath;
 		}
 
 		$this->helper = factory::isCreable('helper_'.$this->cfg->helper)
