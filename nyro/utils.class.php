@@ -290,8 +290,8 @@ class utils {
 	 * Format a date, using helper_date
 	 *
 	 * @param int|string $date Int to directly set a timestamp or strong for a date to format (compatible with strtotime)
-	 * @param string $type Format needed
-	 * @param string $len Format length needed
+	 * @param string|true $type Format needed or true if you want to use formatDirect
+	 * @param string $len Format length needed or date format if using formatDirect
 	 * @return string The date formatted
 	 * @see helper_date::format
 	 */
@@ -299,15 +299,22 @@ class utils {
 		if (is_null(self::$date)) {
 			self::$date = factory::getHelper('date');
 		}
-		self::$date->getCfg()->setA(array(
-			'defaultFormat'=>array(
-				'type'=>$type,
-				'len'=>$type == 'datetime' && $len == 'short2' ? 'short' : $len
-			),
-			'htmlOut'=>$htmlOut
-		));
 		self::$date->set($date, is_int($date) ? 'timestamp' : 'date');
-		return self::$date->format();
+		if (is_bool($type)) {
+			self::$date->getCfg()->setA(array(
+				'htmlOut'=>$htmlOut
+			));
+			return self::$date->formatDirect($len);
+		} else {
+			self::$date->getCfg()->setA(array(
+				'defaultFormat'=>array(
+					'type'=>$type,
+					'len'=>$type == 'datetime' && $len == 'short2' ? 'short' : $len
+				),
+				'htmlOut'=>$htmlOut
+			));
+			return self::$date->format();
+		}
 	}
 
 	/**

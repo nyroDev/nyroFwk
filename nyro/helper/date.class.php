@@ -33,7 +33,7 @@ class helper_date extends object {
 	 * @param string|int $date The value to set
 	 * @param string $type The value type (timestamp, date, time or a key from getArray)
 	 */
-	public function set($date, $type='date', $len=null) {
+	public function set($date, $type = 'date', $len = null) {
 		$this->isNull = false;
 		if (is_null($date) || empty($date) || $date == '0000-00-00')
 			$this->isNull = true;
@@ -153,7 +153,7 @@ class helper_date extends object {
 	 * @param sting $part Date type, could be any string used in the date PHP function
 	 * @return string|int
 	 */
-	public function get($part=null) {
+	public function get($part = null) {
 		if (is_null($part))
 			return $this->timestamp;
 		switch($part) {
@@ -173,7 +173,7 @@ class helper_date extends object {
 	 * @param string $len Length needed (short, medium, long, full, fullMed or mysql)
 	 * @return string The date formated
 	 */
-	public function format($type=null, $len=null) {
+	public function format($type = null, $len = null) {
 		if ($this->isNull)
 			return null;
 		if (is_null($type))
@@ -181,8 +181,7 @@ class helper_date extends object {
 		if (is_null($len))
 			$len = $this->cfg->getInArray('defaultFormat', 'len');
 
-		$time = $this->getArray();
-        $form = $this->cfg->getInArray('format'.ucfirst($type), $len);
+		$form = $this->cfg->getInArray('format'.ucfirst($type), $len);
         if ($type == 'datetime') {
             $form = str_replace(
                 array('date', 'time'),
@@ -193,6 +192,17 @@ class helper_date extends object {
                 $form);
         }
 
+		return $this->formatDirect($form);
+	}
+	
+	/**
+	 * Format the date directly by a string format 
+	 *
+	 * @param string $format Date format
+	 * @return string The date formated
+	 */
+	public function formatDirect($format) {
+		$time = $this->getArray();
         $month = $this->cfg->getInArray('month', 'm'.intval($time['m']));
         $day = $this->cfg->getInArray('day', 'd'.intval($time['w']));
 		$places = array(
@@ -218,7 +228,7 @@ class helper_date extends object {
 			$i++;
 		}
 
-		$ret = str_replace($intermediate, $places, str_replace(array_keys($intermediate), $intermediate, $form));
+		$ret = str_replace($intermediate, $places, str_replace(array_keys($intermediate), $intermediate, $format));
 		if ($this->cfg->htmlOut)
 			$ret = utils::htmlOut($ret);
 		return $ret;
@@ -230,7 +240,7 @@ class helper_date extends object {
 	 * @param string $default Default string used in case of a non setted date
 	 * @return string the Javascript code
 	 */
-	public function getJs($default='""') {
+	public function getJs($default = '""') {
 		if ($this->isNull)
 			return $default;
 		return 'new Date('.($this->timestamp*1000).')';
@@ -242,7 +252,7 @@ class helper_date extends object {
 	 * @param helper_date|null $d Date to compare to or null to use the current time
 	 * @return string The timeago string
 	 */
-	public function timeago(helper_date $d=null) {
+	public function timeago(helper_date $d = null) {
 		$timestamp = $this->get() - (is_null($d)? time() : $d->get());
 		$timestampAbs = abs($timestamp);
 
