@@ -447,8 +447,12 @@ class db_table extends object {
 			if (is_null($this->targetingTables)) {
 				$this->targetingTables = array();
 				foreach($this->getDb()->getTables() as $tbl) {
-					if ($tbl != $tblName && db::get('table', $tbl)->isTargeting($tblName))
+					if ($tbl != $tblName && db::get('table', $tbl)->isTargeting($tblName)) {
 						$this->targetingTables[] = $tbl;
+						$tmpPos = strpos($tbl, $tblName.'_');
+						if ($tmpPos === 0)
+							$this->targetingTables[] = substr($tbl, strlen($tblName)+1);
+					}
 				}
 				if ($this->cfg->cacheEnabled)
 					$cache->save();
