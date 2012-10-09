@@ -110,7 +110,7 @@ abstract class form_mulValue extends form_abstract {
 		$ret = null;
 
 		$tmp = $prm;
-		unset($tmp['plus'], $tmp['global'], $tmp['globalInline'], $tmp['value'], $tmp['selected'], $tmp['group'], $tmp['name'], $tmp['des']);
+		unset($tmp['plus'], $tmp['global'], $tmp['globalInline'], $tmp['value'], $tmp['selected'], $tmp['disabled'], $tmp['group'], $tmp['name'], $tmp['des']);
 		$prm['plus'].= ' ';
 		foreach($tmp as $k=>$v)
 			$prm['plus'].= $k.'="'.$v.'" ';
