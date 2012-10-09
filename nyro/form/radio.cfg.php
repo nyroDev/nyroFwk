@@ -6,6 +6,7 @@ $cfg = array(
 		'globalInline'=>'<ol class="mulValue checkboxes inline">[values]</ol>',
 		'value'=>'<li><input type="radio" name="[name]" value="[value]" id="[id]-[value]" [plus]/><label for="[id]-[value]">[label]</label>[des]</li>',
 		'selected'=>' checked="checked"',
+		'disabled'=>' disabled="disabled"',
 		'group'=>'<li><em>[label]</em></li>[group]',
 	),
 	'xul'=>array(

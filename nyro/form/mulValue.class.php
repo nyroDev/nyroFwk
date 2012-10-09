@@ -130,11 +130,12 @@ abstract class form_mulValue extends form_abstract {
 						$prm['group']);
 					$tmpVal = null;
 				}
-				$selected = $this->isInValue($k)? $prm['selected'] : null;
+				$plus = $this->isInValue($k) ? $prm['selected'] : null;
+				$plus.= $this->isDisabled($k) ? $prm['disabled'] : null;
 
 				$tmpVal.= $this->updateLine($type, $k, str_replace(
 						array('[plus]', '[value]', '[label]', '[des]'),
-						array($selected, $k, $v, isset($descriptions[$k]) ? $descriptions[$k] : null),
+						array($plus, $k, $v, isset($descriptions[$k]) ? $descriptions[$k] : null),
 						$prm['value']));
 			}
 		}
@@ -185,6 +186,16 @@ abstract class form_mulValue extends form_abstract {
 			return (in_array($val, $this->cfg->value));
 		else
 			return ($val == $this->cfg->value);
+	}
+	
+	/**
+	 * Check if an option is disabled in configuration
+	 *
+	 * @param mixed $val
+	 * @retrun bool
+	 */
+	public function isDisabled($val) {
+		return in_array($val, $this->cfg->disabled);
 	}
 
 }

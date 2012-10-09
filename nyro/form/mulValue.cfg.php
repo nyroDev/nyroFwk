@@ -8,6 +8,7 @@ $cfg = array(
 	'needOut'=>false,
 	'list'=>null,
 	'group'=>null,
+	'disabled'=>array(),
 
 	'htmlTagName'=>null,
 

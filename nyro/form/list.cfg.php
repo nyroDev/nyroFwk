@@ -7,6 +7,7 @@ $cfg = array(
 		'global'=>'<select name="[name]" [plus]>[values]</select>',
 		'value'=>'<option value="[value]" [plus]>[label]</option>',
 		'selected'=>' selected="selected"',
+		'disabled'=>' disabled="disabled"',
 		'group'=>'<optgroup label="[label]">[group]</optgroup>',
 	),
 	'xul'=>array(
