@@ -90,6 +90,12 @@ class helper_dataTable extends object {
 				foreach($fields as $f)
 					$tmp[] = $tableName.'.'.$f;
 				$this->sortBy = implode(', ', $tmp);
+			} else if ($this->table->isLinked($this->cfg->sortBy)) {
+				$linked = $this->table->getLinked($this->cfg->sortBy);
+				$tmpSort = array();
+				foreach(explode(',', $linked['fields']) as $tmp)
+					$tmpSort[] = $linked['field'].'.'.$tmp;
+				$this->sortBy = implode(', ', $tmpSort);
 			} else if ($this->cfg->sortBy) {
 				if (strpos($this->cfg->sortBy, $this->table->getName()) !== false || strpos($this->cfg->sortBy, ".") !== false)
 					$this->sortBy = $this->cfg->sortBy;
