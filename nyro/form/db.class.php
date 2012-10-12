@@ -94,6 +94,8 @@ class form_db extends form {
 				break;
 			case 'list':
 				$prm['list'] += array('-1'=>$this->cfg->all);
+				if (isset($prm['list'][0]))
+					unset($prm['list'][0]);
 				$prm['valueNone'] = -1;
 				$prm['value'] = -1;
 				break;
