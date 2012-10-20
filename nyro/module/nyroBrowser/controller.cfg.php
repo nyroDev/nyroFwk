@@ -15,7 +15,7 @@ $cfg = array(
 		'date'=>'Date',
 		'delete'=>'delete',
 		'incFiles'=>array(
-			array('type'=>'css', 'file'=>'uploadify'),
+			array('type'=>'css', 'file'=>'plupload'),
 			array('type'=>'css', 'file'=>'nyroBrowser'),
 			
 			array('type'=>'js', 'file'=>'jquery'),
@@ -30,15 +30,13 @@ $cfg = array(
 			'fileSaveAdd'=>'nyroBrowserThumb',
 		)),
 		'uploadedUri'=>array('controller'=>false),
-		'uploadify'=>array(
+		'plupload'=>array(
 			'image'=>array(),
 			'media'=>array(
-				'fileDesc'=>'Media',
-				'fileExt'=>null,
+				'filters'=>array(REPLACECONF=>true),
 			),
 			'file'=>array(
-				'fileDesc'=>'Files',
-				'fileExt'=>null,
+				'filters'=>array(REPLACECONF=>true),
 			),
 		),
 		'helper'=>array(

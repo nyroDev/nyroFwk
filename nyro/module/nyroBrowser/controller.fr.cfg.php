@@ -10,14 +10,5 @@ $cfg = array(
 		'size'=>'Taille',
 		'date'=>'Date',
 		'delete'=>'supprimer',
-		'uploadify'=>array(
-			'image'=>array(),
-			'media'=>array(
-				'fileDesc'=>'Media',
-			),
-			'file'=>array(
-				'fileDesc'=>'Fichiers',
-			),
-		),
 	),
 );

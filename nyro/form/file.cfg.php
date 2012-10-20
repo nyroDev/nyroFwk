@@ -23,6 +23,22 @@ $cfg = array(
 		'cancelImg'=>request::uri(array('lang'=>null, 'module'=>'css', 'action'=>'uploadify', 'param'=>'cancel.png', 'out'=>null)),
 		'scriptData'=>array(session::getInstance()->getSessIdForce()=>session_id()),
 	),
+	'plupload'=>array(
+		'runtimes'=>'html5,gears,flash,silverlight,html4',
+		'hideDelay'=>750,
+		'texts'=>array(
+			'browse'=>'Browse...',
+			'waiting'=>'Waiting',
+			'error'=>'Error',
+			'cancel'=>'Cancelled',
+			'complete'=>'Complete',
+		),
+		'filters'=>array(
+			array('title'=>'Images', 'extensions'=>'jpg,gif,png')
+		),
+		'flash_swf_url'=>request::uri(array('lang'=>null, 'module'=>'css', 'action'=>'plupload', 'param'=>'plupload.flash.swf', 'out'=>null)),
+		'silverlight_xap_url'=>request::uri(array('lang'=>null, 'module'=>'css', 'action'=>'plupload', 'param'=>'plupload.silverlight.xap', 'out'=>null)),
+	),
 	'html'=>array(
 		'type'=>'file',
 		'class'=>'file',

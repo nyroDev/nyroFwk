@@ -1,0 +1,52 @@
+.pluploadCont .pluploadBrowse {
+	display: inline-block;
+	width: auto;
+	background: #515151;
+	color: #fff;
+	padding: 2px 10px;
+	text-decoration: none;
+	-webkit-border-radius: 4px;
+	border-radius: 4px; 
+}
+.pluploadCont .pluploadBrowse:hover {
+	background: #757575;
+}
+.pluploadList div {
+	background-color: #F5F5F5;
+	border: 2px solid #E5E5E5;
+	font: 11px Verdana, Geneva, sans-serif;
+	margin-top: 5px;
+	padding: 10px;
+	width: 400px;
+    position: relative;
+}
+.pluploadList .pluploadError {
+	background-color: #FDE5DD;
+	border: 2px solid #FBCBBC;
+}
+.pluploadCancel {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 16px;
+    height: 16px;
+    background: url(plupload/cancel.png);
+    text-indent: -999em;
+}
+.pluploadList .pluploadProgress {
+	background-color: #E5E5E5;
+	margin-top: 10px;
+	width: 100%;
+    border: none;
+    margin: 0;
+    margin-top: 5px;
+    padding: 0;
+}
+.pluploadList .pluploadProgressBar {
+	background-color: #0099FF;
+	height: 3px;
+	width: 1px;
+    border: none;
+    margin: 0;
+    padding: 0;
+}

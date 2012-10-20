@@ -107,13 +107,12 @@ class module_nyroBrowser_controller extends module_abstract {
 			'subdir'=>$this->dir,
 			'helper'=>$this->myCfg['helper'][$this->type]['name'],
 			'helperPrm'=>$this->myCfg['helper'][$this->type]['prm'],
-			'uploadify'=>array('scriptData'=>array(
+		));
+		$form->get('file')->plupload(array_merge($this->myCfg['plupload'][$this->type], array(
+			'multipart_params'=>array(
 				'type'=>$this->type,
 				'config'=>$this->config,
-			)),
-		));
-		$form->get('file')->uploadify(array_merge($this->myCfg['uploadify'][$this->type], array(
-			'script'=>$this->uri,
+			),
 			'onAllComplete'=>'function() {window.location.href = "'.$this->uri.'";}'
 		)));
 		

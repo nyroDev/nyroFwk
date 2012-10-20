@@ -98,6 +98,30 @@ class form_file extends form_abstract {
 		if ($hideSubmit)
 			$resp->blockjQuery('$("#'.$this->id.'").closest("form").find("fieldset.submit").hide();');
 	}
+	
+
+	/**
+	 * Make the field plupload for asynchronous upload.
+	 *
+	 * @param array $opts Plupload options
+	 * @param boolean $hideSubmit Indicate if the submit button should be hide by JavaScript
+	 */
+	public function plupload(array $opts = array(), $hideSubmit = true) {
+		$resp = response::getInstance();
+		$resp->addJs('jquery');
+		$resp->addJs('plupload');
+		$resp->addJs('nyroPlupload');
+		$resp->addCss('plupload');
+
+		$pluploadOpts = $this->cfg->plupload;
+		if (count($opts))
+			factory::mergeCfg($pluploadOpts, $opts);
+		$pluploadOpts['file_data_name'] = $this->name;
+
+		$resp->blockjQuery('$("#'.$this->id.'").nyroPlupload('.utils::jsEncode($pluploadOpts).');');
+		if ($hideSubmit)
+			$resp->blockjQuery('$("#'.$this->id.'").closest("form").find("fieldset.submit").hide();');
+	}
 
 	public function toHtml() {
 		if ($this->cfg->mode == 'view')
