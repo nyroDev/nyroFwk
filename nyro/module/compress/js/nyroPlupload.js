@@ -12,6 +12,7 @@ $(function() {
 					list = $('<div id="pluploadList'+myPluploadNb+'" class="pluploadList" />').appendTo(cont);
 				
 				curOpts.container = 'pluploadCont'+myPluploadNb;
+				curOpts.drop_element = 'pluploadCont'+myPluploadNb;
 				curOpts.browse_button = 'pluploadBrowse'+myPluploadNb;
 				if (!curOpts.url)
 					curOpts.url = me.closest('form').attr('action');
