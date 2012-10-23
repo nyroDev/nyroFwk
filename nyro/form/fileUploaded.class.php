@@ -81,6 +81,7 @@ class form_fileUploaded extends object {
 					'savePath'=>$savePath,
 					'webPath'=>$webPath
 				),
+				'savedFromValue'=>true
 			);
 			$this->saved = $webPath;
 		}
@@ -209,8 +210,11 @@ class form_fileUploaded extends object {
 	 *
 	 * @return boolean
 	 */
-	public function isSaved() {
-		return array_key_exists('saved', $this->file) && $this->file['saved'];
+	public function isSaved($fromRequest = false) {
+		$ret = array_key_exists('saved', $this->file) && $this->file['saved'];
+		if ($ret && $fromRequest)
+			$ret = !(isset($this->file['savedFromValue']) && $this->file['savedFromValue']);
+		return $ret;
 	}
 
 	/**
@@ -226,8 +230,9 @@ class form_fileUploaded extends object {
 		if ($current && file::exists($current)) {
 			$ret = $this->callHelper('delete', $current);
 			file::delete($current);
-			$this->setCurrent(null);
 		}
+		$this->setCurrent(null);
+		$this->saved = false;
 		return $ret;
 	}
 

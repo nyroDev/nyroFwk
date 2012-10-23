@@ -10,7 +10,8 @@ $cfg = array(
 	'autoDeleteOnGet'=>true,
 	'deleteLabel'=>'delete',
 
-	'showPreviewDelete'=>true,
+	'showPreview'=>true,
+	'showDelete'=>true,
 
 	'uploadify'=>array(
 		'uploader'=>request::uri(array('lang'=>null, 'module'=>'css', 'action'=>'uploadify', 'param'=>'uploader.swf', 'out'=>null)),
