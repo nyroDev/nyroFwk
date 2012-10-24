@@ -93,11 +93,11 @@ class tpl extends object {
 		if ($this->cfg->cache['auto']) {
 			$cache = cache::getInstance(array_merge(array('serialize'=>false), $this->cfg->cache));
 			$cache->get($content, array(
-				'id'=>$this->cfg->module.'-'.$this->cfg->action.'-'.$this->cfg->param
+				'id'=>$this->cfg->module.'-'.$this->cfg->action.'-'.str_replace(':', '..', $this->cfg->param)
 			));
 			$cacheResp = cache::getInstance($this->cfg->cache);
 			$cacheResp->get($callResp, array(
-				'id'=>$this->cfg->module.'-'.$this->cfg->action.'-'.$this->cfg->param.'-callResp'
+				'id'=>$this->cfg->module.'-'.$this->cfg->action.'-'.str_replace(':', '..', $this->cfg->param).'-callResp'
 			));
 			if (!empty($content)) {
 				$cachedContent = true;

@@ -115,7 +115,7 @@ abstract class module_abstract extends object {
 		return $this->getViewAction();
 	}
 
-	public function getReponse() {
+	public function getResponse() {
 		return $this->tpl->getResponseProxy();
 	}
 

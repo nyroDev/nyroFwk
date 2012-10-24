@@ -22,13 +22,17 @@ class response_proxy extends object {
 	 * @var response_abstract
 	 */
 	private $response;
+	
+	/**
+	 * Indicates if the response is also a proxy
+	 *
+	 * @var boolean
+	 */
+	protected $isResponseProxy;
 
 	protected function afterInit() {
 		$this->response = response::getInstance();
-	}
-
-	public function getProxy() {
-		return $this;
+		$this->isResponseProxy = ($this->response instanceof response_proxy);
 	}
 
 	/**
@@ -85,7 +89,7 @@ class response_proxy extends object {
 	 * @return mixed The reponse function return
 	 */
 	public function __call($name, $prm) {
-		if (substr($name, 0, 3) != 'get')
+		if (!$this->isResponseProxy && substr($name, 0, 3) != 'get')
 			$this->call[] = array($name, $prm);
 		return call_user_func_array(array($this->response, $name), $prm);
 	}
