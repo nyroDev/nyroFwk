@@ -170,6 +170,7 @@ class helper_email extends object {
 				$body = $this->textLine('--'.$boundaryMix);
 				$body.= $this->getBody();
 
+				$body.= $this->textLine(null);
 				// Attachement Part
 				foreach($this->attachment as $at) {
 					$body.= $this->textLine('--'.$boundaryMix);
