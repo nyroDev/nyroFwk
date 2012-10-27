@@ -28,6 +28,8 @@ $cfg = array(
 	'html'=>null,
 
 	'htmlInlineImage'=>true,
+	'wrapLength'=>950,
 
+	'addParamSender'=>'-f ',
 	'addParam'=>null,
 );

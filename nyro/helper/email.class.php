@@ -26,7 +26,7 @@ class helper_email extends object {
 	 * @param string|array $addr Email address
 	 * @param bool $add True to add instead of replacing
 	 */
-	public function to($addr, $add=false) {
+	public function to($addr, $add = false) {
 		$this->addr($addr, 'to', $add);
 	}
 
@@ -36,7 +36,7 @@ class helper_email extends object {
 	 * @param string|array $addr Email address
 	 * @param bool $add True to add instead of replacing
 	 */
-	public function cc($addr, $add=false) {
+	public function cc($addr, $add = false) {
 		$this->addr($addr, 'cc', $add);
 	}
 
@@ -46,7 +46,7 @@ class helper_email extends object {
 	 * @param string|array $addr Email address
 	 * @param bool $add True to add instead of replacing
 	 */
-	public function bcc($addr, $add=false) {
+	public function bcc($addr, $add = false) {
 		$this->addr($addr, 'bcc', $add);
 	}
 
@@ -57,7 +57,7 @@ class helper_email extends object {
 	 * @param string $type Type (to, cc or bcc)
 	 * @param bool $add True to add instead of replacing
 	 */
-	public function addr($addr, $type, $add=false) {
+	public function addr($addr, $type, $add = false) {
 		$tmp = $this->cfg->get($type);
 		if ($add) {
 			if (!is_array($tmp))
@@ -114,19 +114,20 @@ class helper_email extends object {
 
 		$headers = '';
 
-		$headers.= $this->headerLine('Return-Path', $this->cfg->from);
-		$headers.= $this->headerLine('Date', date("D, d M Y G:i:s O"));
-		$headers.= $this->headerLine('X-Sender', $this->cfg->from);
 		$headers.= $this->headerLine('Message-ID', '<'.uniqid().'@'.$this->cfg->serverName.'>');
-		$headers.= $this->headerLine('X-Priority', $this->cfg->priority);
-		$headers.= $this->headerLine('X-Mailer', $this->cfg->xMailer);
+		$headers.= $this->headerLine('Date', date("D, d M Y G:i:s O"));
 		$headers.= $this->headerLine('From', $this->formatAddr(array($this->cfg->from, $this->cfg->fromName)));
 
 		if (empty($this->cfg->replyTo))
 			$this->cfg->replyTo = $this->cfg->from;
 		$headers.= $this->headerLine('Reply-To', $this->formatAddr($this->cfg->replyTo));
-
-		if(!empty($this->cfg->confirmReading))
+		
+		$headers.= $this->headerLine('Return-Path', $this->cfg->from);
+		$headers.= $this->headerLine('X-Sender', $this->cfg->from);
+		$headers.= $this->headerLine('X-Priority', $this->cfg->priority);
+		$headers.= $this->headerLine('X-Mailer', $this->cfg->xMailer);
+		
+		if (!empty($this->cfg->confirmReading))
 			$headers.= $this->headerLine('Disposition-Notification-To', $this->formatAddr($this->cfg->confirmReading));
 
 		if (!empty($this->cfg->cc))
@@ -138,16 +139,16 @@ class helper_email extends object {
 		if (is_array($this->cfg->customHeader))
 			foreach($this->cfg->customHeader as $k=>$v)
 				$headers.= $this->headerLine($k, $this->encodeHeader($v));
-
+		
 		$headers.= $this->headerLine('MIME-Version', '1.0');
 
-		if(empty($this->attachment) && strlen($this->cfg->html) == 0)
+		if (empty($this->attachment) && strlen($this->cfg->html) == 0)
 			$message_type = 'simpleText';
 		else {
-			if(strlen($this->cfg->text) > 0 && strlen($this->cfg->html) > 0
+			if (strlen($this->cfg->text) > 0 && strlen($this->cfg->html) > 0
 					&& !empty($this->attachment))
 				$message_type = 'altAttach';
-			else if(!empty($this->attachment) > 0)
+			else if (!empty($this->attachment) > 0)
 				$message_type = 'attach';
 			else
 				$message_type = 'alt';
@@ -157,12 +158,13 @@ class helper_email extends object {
 			case 'simpleText':
 				$headers.= $this->headerLine('Content-Type', 'text/plain; charset='.$this->cfg->charset);
 				$headers.= $this->headerLine('Content-Transfer-Encoding', $this->cfg->encoding);
-				$body = $this->encode($this->cfg->text);
+				
+				$body = $this->encode($this->wrapText($this->cfg->text));
 				break;
 			case 'attach':
 			case 'altAttach':
 				$boundaryMix = $this->getBoundary();
-				$headers.= $this->headerLine('Content-Type', 'multipart/mixed; boundary="'.$boundaryMix.'"');
+				$headers.= $this->headerLine('Content-Type', 'multipart/mixed;'.$this->cfg->crlf.' boundary="'.$boundaryMix.'"');
 
 				// Content Part
 				$body = $this->textLine('--'.$boundaryMix);
@@ -190,7 +192,10 @@ class helper_email extends object {
 			$addr[] = $this->formatAddr($v);
 		$to = implode(', ', $addr);
 
-		return mail($to, $this->encodeHeader($this->cfg->subject), $body, $headers, $this->cfg->addParam);
+		$param = $this->cfg->addParam;
+		if ($this->cfg->addParamSender)
+			$param.= $this->cfg->addParamSender.$this->cfg->from.' '.$param;
+		return mail($to, $this->encodeHeader($this->cfg->subject), $body, $headers, $param);
 	}
 
 	/**
@@ -198,8 +203,11 @@ class helper_email extends object {
 	 *
 	 * @return string
 	 */
-	protected function getBoundary() {
-		return '_Part_'.md5(uniqid (rand())).'_';
+	protected function getBoundary($ln = 24) {
+		$tmp = '';
+		for($i = 0; $i < $ln; $i++)
+			$tmp.= rand(0, 9);
+		return $tmp;
 	}
 
 	/**
@@ -222,8 +230,8 @@ class helper_email extends object {
 					break;
 				case 10:
 				case 13:
-					if(strlen($w)) {
-						if($l+3>75) {
+					if (strlen($w)) {
+						if ($l+3>75) {
 							$e.= '='.$this->cfg->crlf;
 							$l = 0;
 						}
@@ -244,8 +252,8 @@ class helper_email extends object {
 						$en = 1;
 					break;
 			}
-			if(strlen($w)) {
-				if($l+1>75) {
+			if (strlen($w)) {
+				if ($l+1>75) {
 					$e.= '='.$this->cfg->crlf;
 					$l = 0;
 				}
@@ -253,8 +261,8 @@ class helper_email extends object {
 				$l++;
 				$w = '';
 			}
-			if(strlen($c)) {
-				if($en) {
+			if (strlen($c)) {
+				if ($en) {
 					$c = sprintf('=%02X', $o);
 					$el = 3;
 					$n = 1;
@@ -262,7 +270,7 @@ class helper_email extends object {
 				}
 				else
 					$el=1;
-				if($l+$el>75) {
+				if ($l+$el>75) {
 					$e.= '='.$this->cfg->crlf;
 					$l = 0;
 				}
@@ -270,26 +278,12 @@ class helper_email extends object {
 				$l+= $el;
 			}
 		}
-		if(strlen($w)) {
-			if($l+3>75)
+		if (strlen($w)) {
+			if ($l+3>75)
 				$e.= '='.$this->cfg->crlf;
 			$e.= sprintf('=%02X', ord($w));
 		}
 		return $e;
-
-
-
-		$return = '';
-		$iL = strlen($str);
-		for($i=0; $i<$iL; $i++) {
-			$char = $str[$i];
-			if(ctype_print($char) && !ctype_punct($char))
-				$return .= $char;
-			else
-				$return .= sprintf('=%02X', ord($char));
-		}
-		return $return;
-		return str_replace('%', '=', rawurlencode($str));
 	}
 
 
@@ -310,26 +304,27 @@ class helper_email extends object {
 				//$text = $this->quotePrintable(utils::html2Text($this->cfg->html));
 				$text = utils::html2Text($this->cfg->html);
 
-			$boundary = $this->getBoundary();
+			$boundary = '------------'.$this->getBoundary();
 
 			if ($headers) {
-				$headers.= $this->headerLine('Content-Type', 'multipart/alternative; boundary="'.$boundary.'"');
+				$headers.= $this->headerLine('Content-Type', 'multipart/alternative;'.$this->cfg->crlf.' boundary="'.$boundary.'"');
 				//$headers.= $this->textLine(' boundary="'.$boundary.'"');
 			} else {
-				$body.= $this->headerLine('Content-Type', 'multipart/alternative; boundary="'.$boundary.'"');
+				$body.= $this->headerLine('Content-Type', 'multipart/alternative;'.$this->cfg->crlf.' boundary="'.$boundary.'"');
 				//$body.= $this->textLine(' boundary="'.$boundary.'"');
 				$body.= $this->textLine('');
 			}
 
 			// Text part
+			$body.= $this->textLine('This is a multi-part message in MIME format.');
 			$body.= $this->textLine('--'.$boundary);
 		}
-		$body.= $this->headerLine('Content-Type', 'text/plain; charset='.$this->cfg->charset.'');
+		$body.= $this->headerLine('Content-Type', 'text/plain; charset='.$this->cfg->charset);
 		//$body.= $this->textLine(' charset="'.$this->cfg->charset.'"');
 		$body.= $this->headerLine('Content-Transfer-Encoding', $this->cfg->encoding);
-		$body.= $this->headerLine('Content-Disposition', 'inline');
+		//$body.= $this->headerLine('Content-Disposition', 'inline');
 		$body.= $this->textLine(null);
-		$body.= $this->textLine($this->encode($text));
+		$body.= $this->textLine($this->encode($this->wrapText($text)));
 
 		if ($this->cfg->html) {
 			// HTML part
@@ -348,7 +343,7 @@ class helper_email extends object {
 					foreach($images as $img) {
 						if (file::webExists($img)) {
 							$file = WEBROOT.str_replace('/', DS, $img);
-							$cid = 'part'.$i.'.'.$this->getBoundary();
+							$cid = 'part'.$i.'.'.$this->getBoundary(16).'@'.$this->cfg->serverName;
 							$inlineImages[] = array(
 								'cid'=>$cid,
 								'file'=>$file,
@@ -363,9 +358,10 @@ class helper_email extends object {
 			}
 
 			if (!empty($inlineImages)) {
-				$boundaryRel = $this->getBoundary();
-				$body.= $this->headerLine('Content-Type', 'multipart/related; boundary="'.$boundaryRel.'"');
+				$boundaryRel = '------------'.$this->getBoundary();
+				$body.= $this->headerLine('Content-Type', 'multipart/related;'.$this->cfg->crlf.' boundary="'.$boundaryRel.'"');
 				//$body.= $this->textLine(' boundary="'.$boundaryRel.'"');
+				$body.= $this->textLine(null);
 				$body.= $this->textLine(null);
 				$body.= $this->textLine('--'.$boundaryRel);
 			}
@@ -373,27 +369,26 @@ class helper_email extends object {
 			$body.= $this->headerLine('Content-Type', 'text/html; charset='.$this->cfg->charset.'');
 			//$body.= $this->textLine(' charset="'.$this->cfg->charset.'"');
 			$body.= $this->headerLine('Content-Transfer-Encoding', $this->cfg->encoding);
-			$body.= $this->headerLine('Content-Disposition', 'inline');
+			//$body.= $this->headerLine('Content-Disposition', 'inline');
 			$body.= $this->textLine(null);
 			//$body.= $this->textLine($this->quotePrintable($html));
-			$body.= $this->textLine($this->encode($html));
+			$body.= $this->textLine($this->encode($this->wrapText($html)));
 
 			if (!empty($inlineImages)) {
 				foreach($inlineImages as $img) {
 					$body.= $this->textLine('--'.$boundaryRel);
-					$body.= $this->headerLine('Content-Type', $img['type'].'; name="'.$img['name'].'"');
+					$body.= $this->headerLine('Content-Type', $img['type']); //.'; name="'.$img['name'].'"');
 					$body.= $this->headerLine('Content-Transfer-Encoding', $this->cfg->fileEncoding);
 					$body.= $this->headerLine('Content-ID', '<'.$img['cid'].'>');
-					$body.= $this->headerLine('Content-Disposition', 'inline; filename="'.$img['name'].'"');
+					//$body.= $this->headerLine('Content-Disposition', 'inline; filename="'.$img['name'].'"');
 					$body.= $this->textLine(null);
-					$body.= $this->textLine($this->encode(file::read($img['file']), $this->cfg->fileEncoding));
+					$body.= $this->encode(file::read($img['file']), $this->cfg->fileEncoding);
 				}
 				$body.= $this->textLine('--'.$boundaryRel.'--');
 				$body.= $this->textLine(null);
 			}
 
-			$body.= $this->textLine('--'.$boundary.'--');
-			$body.= $this->textLine(null);
+			$body.= '--'.$boundary.'--';
 		}
 
 		return $body;
@@ -409,10 +404,151 @@ class helper_email extends object {
 	protected function encode($val, $encoding=null) {
 		$encoding = is_null($encoding) ? $this->cfg->encoding : $encoding;
 		switch ($encoding) {
-			case 'base64';
-				return chunk_split(base64_encode($val));
+			case 'base64':
+				return chunk_split(base64_encode($val), 72, $this->cfg->crlf);
+			case '8bit':
+				$val = $this->fixEOL($val);
+				if (substr($val, -(strlen($this->cfg->crlf))) != $this->cfg->crlf)
+				  $val.= $this->cfg->crlf;
+				break;
 		}
 		return $val;
+	}
+
+
+	/**
+	 * Wraps message for use with mailers that do not
+	 * automatically perform wrapping and for quoted-printable.
+	 * 
+	 * @param string $message The message to wrap
+	 * @param boolean $qp_mode Whether to run in Quoted-Printable mode
+	 * @return string
+	*/
+	public function wrapText($message, $qp_mode = false) {
+		$length = $this->cfg->wrapLength;
+		$soft_break = ($qp_mode) ? sprintf(" =%s", $this->cfg->crlf) : $this->cfg->crlf;
+		// If utf-8 encoding is used, we will need to make sure we don't
+		// split multibyte characters when we wrap
+		$is_utf8 = (strtolower($this->cfg->charset) == "utf-8");
+
+		$message = $this->fixEOL($message);
+		if (substr($message, -1) == $this->cfg->crlf)
+			$message = substr($message, 0, -1);
+
+		$line = explode($this->cfg->crlf, $message);
+		$cpt = count($line);
+		$message = '';
+		for ($i = 0 ;$i < $cpt; $i++) {
+			$line_part = explode(' ', $line[$i]);
+			$cptLine = count($line_part);
+			$buf = '';
+			for ($e = 0; $e<$cptLine; $e++) {
+				$word = $line_part[$e];
+				if ($qp_mode and (strlen($word) > $length)) {
+					$space_left = $length - strlen($buf) - 1;
+					if ($e != 0) {
+						if ($space_left > 20) {
+							$len = $space_left;
+							if ($is_utf8) {
+								$len = $this->UTF8CharBoundary($word, $len);
+							} elseif (substr($word, $len - 1, 1) == "=") {
+								$len--;
+							} elseif (substr($word, $len - 2, 1) == "=") {
+								$len -= 2;
+							}
+							$part = substr($word, 0, $len);
+							$word = substr($word, $len);
+							$buf .= ' ' . $part;
+							$message .= $buf . sprintf("=%s", $this->cfg->crlf);
+						} else {
+							$message .= $buf . $soft_break;
+						}
+						$buf = '';
+					}
+					while (strlen($word) > 0) {
+						$len = $length;
+						if ($is_utf8) {
+							$len = $this->UTF8CharBoundary($word, $len);
+						} elseif (substr($word, $len - 1, 1) == "=") {
+							$len--;
+						} elseif (substr($word, $len - 2, 1) == "=") {
+							$len -= 2;
+						}
+						$part = substr($word, 0, $len);
+						$word = substr($word, $len);
+
+						if (strlen($word) > 0) {
+							$message .= $part . sprintf("=%s", $this->cfg->crlf);
+						} else {
+							$buf = $part;
+						}
+					}
+				} else {
+					$buf_o = $buf;
+					$buf .= ($e == 0) ? $word : (' ' . $word);
+
+					if (strlen($buf) > $length and $buf_o != '') {
+						$message .= $buf_o . $soft_break;
+						$buf = $word;
+					}
+				}
+			}
+			$message .= $buf . $this->cfg->crlf;
+		}
+
+		return $message;
+	}
+
+	/**
+	 * Changes every end of line from CR or LF to CRLF
+	 *
+	 * @return string
+	 */
+	public function fixEOL($str) {
+		$str = str_replace("\r\n", "\n", $str);
+		$str = str_replace("\r", "\n", $str);
+		$str = str_replace("\n", $this->cfg->crlf, $str);
+		return $str;
+	}
+
+	/**
+	 * Finds last character boundary prior to maxLength in a utf-8
+	 * quoted (printable) encoded string
+	 *
+	 * @param string $encodedText Utf-8 QP text
+	 * @param int $maxLength Find last character boundary prior to this length
+	 * @return int
+	 */
+	public function UTF8CharBoundary($encodedText, $maxLength) {
+		$foundSplitPos = false;
+		$lookBack = 3;
+		while (!$foundSplitPos) {
+			$lastChunk = substr($encodedText, $maxLength - $lookBack, $lookBack);
+			$encodedCharPos = strpos($lastChunk, "=");
+			if ($encodedCharPos !== false) {
+				// Found start of encoded character byte within $lookBack block.
+				// Check the encoded byte value (the 2 chars after the '=')
+				$hex = substr($encodedText, $maxLength - $lookBack + $encodedCharPos + 1, 2);
+				$dec = hexdec($hex);
+				if ($dec < 128) { // Single byte character.
+					// If the encoded char was found at pos 0, it will fit
+					// otherwise reduce maxLength to start of the encoded char
+					$maxLength = ($encodedCharPos == 0) ? $maxLength :
+					$maxLength - ($lookBack - $encodedCharPos);
+					$foundSplitPos = true;
+				} elseif ($dec >= 192) { // First byte of a multi byte character
+					// Reduce maxLength to split at start of character
+					$maxLength = $maxLength - ($lookBack - $encodedCharPos);
+					$foundSplitPos = true;
+				} elseif ($dec < 192) { // Middle byte of a multi byte character, look further back
+					$lookBack += 3;
+				}
+			} else {
+				// No encoded character found
+				$foundSplitPos = true;
+			}
+		}
+		return $maxLength;
 	}
 
 	/**
