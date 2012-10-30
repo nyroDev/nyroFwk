@@ -8,6 +8,10 @@ $cfg = array(
 	'status'=>'200',
 	'compress'=>true,
 
+	'attributes'=>array(
+		'globalCache'=>true
+	),
+	
 	'headers'=>array(
 		'X-Powered-By'=>'nyroFwk '.NYROVERSION,
 		'Content-Language'=>request::get('lang'),

@@ -45,21 +45,38 @@ final class nyro {
 	public static function main() {
 
 		define('NYROVERSION', '0.2');
+		
+		$globalContent = null;
+		$globalVars = null;
+		$cacheInst = null;
+		$cacheInstVars = null;
 
 		try {
 			self::init();
 
 			$resp = response::getInstance();
 			self::$cfg->overload(__CLASS__.'Response');
-
-			request::execModule();
-
-			if (DEV) {
-				debug::timer('nyroProcess');
-				debug::timer('nyroRender');
+			
+			if (self::$cfg->globalCache && !request::isPost() && count($_GET) == 0 && $resp->canGlobalCache()) {
+				$prm = is_array(self::$cfg->globalCache) ? self::$cfg->globalCache : array();
+				$cacheInst = cache::getInstance(array_merge(array('serialize'=>false), $prm));
+				$id = str_replace('/', '._.', '/'.request::get('request')).(request::isAjax() ? '-ajax' : '');
+				$cacheInst->get($globalContent, array(
+					'id'=>$id
+				));
+				$cacheInstVars = cache::getInstance(array_merge(array('serialize'=>true), $prm));
+				$cacheInstVars->get($globalVars, array(
+					'id'=>$id.'-vars'
+				));
 			}
-
-			$resp->setContent(request::publishModule());
+			if (is_null($globalContent)) {
+				request::execModule();
+				if (DEV) {
+					debug::timer('nyroProcess');
+					debug::timer('nyroRender');
+				}
+				$resp->setContent(request::publishModule());
+			}
 		} catch (module_exception $e) {
 			session::setFlash('nyroError', 'MODULE or ACTION NOT FOUND<br />'.self::handleError($e));
 			$resp->error(null, 404);
@@ -77,7 +94,20 @@ final class nyro {
 		try {
 			factory::saveCache();
 
-			echo $resp->send();
+			if ($cacheInst) {
+				if ($globalContent) {
+					$resp->setVarsFromGlobalCache($globalVars);
+					echo $globalContent;
+				} else {
+					$globalVars = $resp->getVarsForGlobalCache();
+					$globalContent = $resp->send();
+					$cacheInst->save();
+					$cacheInstVars->save();
+					echo $globalContent;
+				}
+			} else {
+				echo $resp->send();
+			}
 		} catch (Exception $e) {
 			echo debug::trace($e);
 		}

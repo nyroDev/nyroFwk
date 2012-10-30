@@ -59,6 +59,32 @@ abstract class response_abstract extends object {
 	public function comment($comment) {
 		return '';
 	}
+	
+	/**
+	 * Indicates if the global Cache is possible for the response
+	 *
+	 * @return boolean True if enabled
+	 */
+	public function canGlobalCache() {
+		return true;
+	}
+	
+	/**
+	 * Get vars needed for globalCache this response
+	 *
+	 * @return mixed
+	 */
+	public function getVarsForGlobalCache() {
+		return null;
+	}
+	
+	/**
+	 * Set vars saved from a globalCache response.
+	 * This function should also apply the vars
+	 *
+	 * @param mixed $vars
+	 */
+	public function setVarsFromGlobalCache($vars) {}
 
 	/**
 	 * Send The response

@@ -244,6 +244,33 @@ class response_http extends response_abstract {
 			return $tpl->fetch();
 		}
 	}
+	
+	public function canGlobalCache() {
+		return $this->getAttr('globalCache');
+	}
+	
+	public function getVarsForGlobalCache() {
+		return array(
+			'status'=>$this->getStatus(),
+			'headers'=>$this->getHeader()
+		);
+	}
+	
+	public function setVarsFromGlobalCache($vars) {
+		if (!is_array($vars) || !isset($vars['status']) || ! is_array($vars['headers']))
+			throw new Exception('Error while retrieving from cache');
+		$this->setStatus($vars['status']);
+		
+		if (isset($vars['headers']['Content-Type'])) {
+			$this->headers['Content-Type'] = $vars['headers']['Content-Type'];
+			unset($vars['headers']['Content-Type']);
+		}
+		
+		foreach($vars['headers'] as $k=>$v)
+			$this->addHeader($k, $v, true);
+		$this->sendHeaders();
+		$this->beforeOut();
+	}
 
 	/**
 	 * Send a text response (exit the programm)
