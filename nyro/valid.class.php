@@ -263,7 +263,7 @@ class valid extends object {
 		if ($tmp !== true) {
 			$tmp = is_string($tmp) ? $tmp : 'callback';
 			$msg = $this->getMessage($tmp);
-			$this->errors[] = $msg ? sprintf($msg, $this->cfg->label) : $tmp;
+			$this->errors[] = sprintf($msg ? $msg : $tmp, $this->cfg->label);
 			return false;
 		}
 		return true;
