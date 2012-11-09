@@ -27,5 +27,8 @@ $cfg = array(
         'image/x-png',
         'image/pjpeg',
 	),
-	'jpgQuality'=>100
+	'jpgQuality'=>100,
+	'validErros'=>array(
+		'notValidImg'=>'The file "%s" does not allow this type of image.'
+	)
 );

@@ -333,10 +333,11 @@ final class file {
 	 * Get a human file size
 	 *
 	 * @param string $file The file path
+	 * @param boolean $sizeGiven Indicates if the size is given in firt param
 	 * @return string The human size
 	 */
-	public static function humanSize($file) {
-		$size = self::size($file);
+	public static function humanSize($file, $sizeGiven = false) {
+		$size = $sizeGiven ? $file : self::size($file);
 		$mod = 1024;
 		$units = explode(' ', 'B KB MB GB TB PB');
 		for ($i = 0; $size > $mod; $i++) {

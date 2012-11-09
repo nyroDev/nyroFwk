@@ -14,4 +14,8 @@ $cfg = array(
 			'fileSaveAdd'=>'admin',
 		),
 	),
+	'previewPrm'=>array(
+		'target'=>'_blank'
+	),
+	'previewText'=>false
 );

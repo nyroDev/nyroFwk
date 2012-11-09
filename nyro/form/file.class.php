@@ -37,7 +37,7 @@ class form_file extends form_abstract {
 			'helper'=>$this->cfg->helper,
 			'helperPrm'=>$this->cfg->helperPrm,
 			'required'=>$required
-		));
+		));	
 
 		if ($this->cfg->dir)
 			$prm['dir'] = $this->cfg->dir;
@@ -129,7 +129,7 @@ class form_file extends form_abstract {
 
 		$start = $end = null;
 		if ($this->cfg->showPreview || $this->cfg->showDelete) {
-			$start = '<p>';
+			$start = '<'.$this->cfg->htmlWrap.'>';
 			if ($this->cfg->value->getCurrent()) {
 				$end.= '<input type="hidden" name="'.$this->name.'NyroKeep" value="'.$this->cfg->value->getCurrent().'" />';
 				$end.= '<span>';
@@ -146,7 +146,7 @@ class form_file extends form_abstract {
 					$end.= $this->cfg->value->getView();
 				$end.= '</span>';
 			}
-			$end.= '</p>';
+			$end.= '</'.$this->cfg->htmlWrap.'>';
 		}
 		return $start.utils::htmlTag($this->htmlTagName,
 			array_merge($this->html, array(

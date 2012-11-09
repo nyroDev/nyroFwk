@@ -223,5 +223,12 @@ class db_rowset extends object implements Iterator, Countable, ArrayAccess {
 	public function offsetUnset($offset) {
 		unset($this->_rows[$offset]);
 	}
+	
+	public function __toString() {
+		$tmp = array();
+		foreach($this as $row)
+			$tmp[] = $row.'';
+		return 'rowSet_'.implode('_', $tmp);
+	}
 
 }

@@ -72,7 +72,12 @@ abstract class module_abstract extends object {
 		$replace = array('', '', '');
 		if (is_array($this->prmExec['paramA']))
 			foreach($this->prmExec['paramA'] as $k=>$v) {
-				if (!is_numeric($k))
+				if (is_object($v)) {
+					if (is_callable(array($v, '__toString')))
+						$tags[] = $k.'='.$v;
+					else
+						$tags[] = $k.'='.get_class($v);
+				} elseif (!is_numeric($k))
 					$tags[] = $k.'='.str_replace($search, $replace, $v);
 				else
 					$tags[] = str_replace($search, $replace, $v);
@@ -80,7 +85,13 @@ abstract class module_abstract extends object {
 
 		$paramTpl = array();
 		foreach($param as $k=>$v) {
-			$paramTpl[] = $k.':'.$v;
+			if (is_object($v)) {
+				if (is_callable(array($v, '__toString')))
+					$paramTpl[] = $k.'='.$v;
+				else
+					$paramTpl[] = $k.'='.get_class($v);
+			} else
+				$paramTpl[] = $k.':'.$v;
 		}
 
 		$conf = array(

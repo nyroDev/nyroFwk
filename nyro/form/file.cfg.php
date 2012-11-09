@@ -6,6 +6,8 @@ $cfg = array(
 
 	'htmlTagName'=>'input',
 	'xulTagName'=>'textbox',
+	
+	'htmlWrap'=>'p',
 
 	'autoDeleteOnGet'=>true,
 	'deleteLabel'=>'delete',
