@@ -155,6 +155,8 @@ class helper_image extends helper_file {
 	protected function build() {
 		$ret = null;
 		if (file::exists($this->cfg->file)) {
+			$this->cfg->wAct = null;
+			$this->cfg->hAct = null;
 
 			if ($this->cfg->autoFileSave && empty($this->cfg->fileSave))
 				$this->cfg->fileSave = $this->makePath($this->cfg->file, $this->cfg->fileSaveAdd);
