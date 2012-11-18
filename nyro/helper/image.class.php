@@ -107,9 +107,12 @@ class helper_image extends helper_file {
 		if ($more)
 			$more = '_'.$more;
 
+		if (!$this->cfg->forceExt)
+			$this->cfg->forceExt = file::getExt($file);
+
 		return preg_replace(
 			'/\.('.implode('|', $this->cfg->autoExt).')$/i',
-			$more.'.'.file::getExt($file),
+			$more.'.'.$this->cfg->forceExt,
 			$file);
 	}
 
@@ -310,7 +313,7 @@ class helper_image extends helper_file {
 	public function save($file) {
 		$ret = false;
 
-		switch (strtolower(file::getExt($file))) {
+		switch ($this->cfg->forceExt) {
 			case 'gif' :
 				$ret = imagegif($this->imgAct, $file);
 				break;
@@ -435,7 +438,7 @@ class helper_image extends helper_file {
 			imagesavealpha($imgDst, true);
 		}
 
-		if (empty($prm['bgColor']) && ($this->info[2] == IMAGETYPE_GIF || $this->info[2] == IMAGETYPE_PNG)) {
+		if (empty($prm['bgColor']) && ($this->cfg->forceExt == 'png' || $this->cfg->forceExt == 'gif' || $this->info[2] == IMAGETYPE_GIF || $this->info[2] == IMAGETYPE_PNG)) {
 			$transparency = imagecolortransparent($img);
 			if ($transparency >= 0) {
 				$trnprtIndex = imagecolortransparent($img);
@@ -489,8 +492,24 @@ class helper_image extends helper_file {
 				$this->cfg->wTmp = imagesx($this->imgTmp);
 				$this->cfg->hTmp = imagesy($this->imgTmp);
 			}
+			
+			$newPicture = imagecreatetruecolor($this->cfg->wTmp, $this->cfg->hTmp);
+			imagesavealpha($newPicture, true);
+			imagealphablending($newPicture, true);
+			imagefill($newPicture, 0, 0, imagecolorallocatealpha($newPicture, 0, 0, 0, 127));
 
-			imagecopymerge($this->imgAct, $this->imgTmp, 0, 0, 0, 0, $this->cfg->wAct, $this->cfg->hAct, 100);
+			// Perform pixel-based alpha map application
+			for( $x = 0; $x < $this->cfg->wTmp; $x++ ) {
+				for( $y = 0; $y < $this->cfg->hTmp; $y++ ) {
+					$alpha = imagecolorsforindex($this->imgTmp, imagecolorat($this->imgTmp, $x, $y));
+					$alpha = 127 - floor($alpha[ 'red' ] / 2);
+					$color = imagecolorsforindex($this->imgAct, imagecolorat($this->imgAct, $x, $y));
+					imagesetpixel($newPicture, $x, $y, imagecolorallocatealpha($newPicture, $color['red'], $color['green'], $color['blue'], $alpha));
+				}
+			}
+			
+			imagedestroy($this->imgAct);
+			$this->imgAct = $newPicture;
 		}
 	}
 
