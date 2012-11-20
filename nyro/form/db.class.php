@@ -217,7 +217,7 @@ class form_db extends form {
 					'join'=>$join,
 					'sep'=>$field['link']['sep'],
 					'where'=>$field['link']['where'],
-					'order'=>$order,
+					'order'=>isset($field['link']['order']) ? $field['link']['order'] : $order,
 					'sepGr'=>$field['link']['sepGr'],
 					'nbFieldGr'=>$field['link']['nbFieldGr']
 				);
