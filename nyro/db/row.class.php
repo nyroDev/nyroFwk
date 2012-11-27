@@ -820,7 +820,7 @@ class db_row extends object {
 		$query = '(SELECT '.$field.','.$this->getTable()->getIdent().' FROM '.$this->getTable()->getRawName().' '.$where.$field.' < ? ORDER BY '.$field.' DESC LIMIT 1)
 					UNION
 				  (SELECT '.$field.','.$this->getTable()->getIdent().' FROM '.$this->getTable()->getRawName().' '.$where.$field.' > ? ORDER BY '.$field.' ASC LIMIT 1)';
-		$vals = $this->getDb()->query($query, array($val, $val))->fetchAll(PDO::FETCH_NUM);
+		$vals = $this->getDb()->query($query, utils::htmlDeOut(array($val, $val)))->fetchAll(PDO::FETCH_NUM);
 		$ret = array(null, null);
 		$useIndex = $prm['returnId'] ? 1 : 0;
 		if (array_key_exists(1, $vals)) {
