@@ -789,7 +789,8 @@ class db_row extends object {
 	 * Get the value of a field around the row
 	 *
 	 * @param array $prm Parameter with key:
-	 * - string field: Fieldname on which the comparison should be done and which will be retrived
+	 * - string field: Fieldname on which the comparison should be done
+	 * - string returnId: True to return id instead of field
 	 * - string where: Where clause to filter results
 	 * - boolean asRow: Indicates if the result should be retrieved as db_row object or simple value. Should be set to true only when using ident
 	 * @return array With 2 indexes; 0 -> field value of the previous row (or null), 1 for the next one
@@ -797,9 +798,13 @@ class db_row extends object {
 	public function getAround(array $prm = array()) {
 		config::initTab($prm, array(
 			'field'=>null,
+			'returnId'=>false,
 			'where'=>null,
 			'asRow'=>false
 		));
+		
+		if ($prm['asRow'])
+			$prm['returnId'] = true;
 
 		$field = $prm['field'];
 		$where = $this->getDb()->makeWhere($prm['where']);
@@ -811,21 +816,22 @@ class db_row extends object {
 		if (is_null($field))
 			$field = $this->getTable()->getIdent();
 		$val = $this->get($field);
-
-		$query = '(SELECT '.$field.' FROM '.$this->getTable()->getRawName().' '.$where.$field.' < ? ORDER BY '.$field.' DESC LIMIT 1)
+		
+		$query = '(SELECT '.$field.','.$this->getTable()->getIdent().' FROM '.$this->getTable()->getRawName().' '.$where.$field.' < ? ORDER BY '.$field.' DESC LIMIT 1)
 					UNION
-				  (SELECT '.$field.' FROM '.$this->getTable()->getRawName().' '.$where.$field.' > ? ORDER BY '.$field.' ASC LIMIT 1)';
+				  (SELECT '.$field.','.$this->getTable()->getIdent().' FROM '.$this->getTable()->getRawName().' '.$where.$field.' > ? ORDER BY '.$field.' ASC LIMIT 1)';
 		$vals = $this->getDb()->query($query, array($val, $val))->fetchAll(PDO::FETCH_NUM);
 		$ret = array(null, null);
+		$useIndex = $prm['returnId'] ? 1 : 0;
 		if (array_key_exists(1, $vals)) {
-			$ret[0] = $vals[0][0];
-			$ret[1] = $vals[1][0];
+			$ret[0] = $vals[0][$useIndex];
+			$ret[1] = $vals[1][$useIndex];
 		} else if (array_key_exists(0, $vals)) {
 			$tmp = $vals[0][0];
 			if ($tmp > $val)
-				$ret[1] = $tmp;
+				$ret[1] = $vals[0][$useIndex];
 			else
-				$ret[0] = $tmp;
+				$ret[0] = $vals[0][$useIndex];
 		}
 		if ($prm['asRow']) {
 			if ($ret[0])
