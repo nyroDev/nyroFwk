@@ -513,6 +513,8 @@ final class request {
 		$out = (array_key_exists('out', $prm) ?
 				(self::isOut($prm['out'])? $prm['out'] : null)
 				: self::getRequested('out'));
+		if (is_null($out) && (!isset($prm['out']) || is_null($prm['out'])))
+			$out = self::$cfg->defaultOut;
 		if ($out) {
 			if (false && empty($tmp))
 				$tmp[] = self::$cfg->empty.'.'.$out;
@@ -562,7 +564,7 @@ final class request {
 					'module'=>'nyroUtils',
 					'action'=>'uploadedFiles',
 					'param'=>str_replace(array('/', '\\'), array(request::getCfg('sepParam'), request::getCfg('sepParam')), $file),
-					'out'=>null
+					'out'=>false
 				), $prm));
 	}
 

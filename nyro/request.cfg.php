@@ -13,6 +13,7 @@ $cfg = array(
 	'out'=>'html',
 	'noOut'=>false,
 	'forceNoOut'=>true,
+	'defaultOut'=>false,
 	'noController'=>'index.php',
 	
 	'allowScaffold'=>false,
