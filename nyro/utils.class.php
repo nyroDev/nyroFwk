@@ -397,10 +397,12 @@ class utils {
 				}
 			}
 		}
-		return trim(str_replace(
+		$ret = trim(str_replace(
 			array(' ', '-----', '----', '---', '--'),
 			URLSEPARATOR,
 			strtr(utf8_decode($text), utf8_decode($from), utf8_decode($to))), URLSEPARATOR);
+		
+		return URLLOWER ? mb_strtolower($ret) : $ret;
 	}
 
 	/**

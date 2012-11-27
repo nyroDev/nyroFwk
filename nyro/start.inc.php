@@ -108,6 +108,12 @@ if (!defined('URLSEPARATOR'))
 	define('URLSEPARATOR', '-');
 
 /**
+ * boolean Indicates if the URLs should be lowered (used in utils::urlify)
+ */
+if (!defined('URLLOWER'))
+	define('URLLOWER', false);
+
+/**
  * Load first classes to increase performance
  */
 require(NYROROOT.'file.class.'.EXTPHP);
