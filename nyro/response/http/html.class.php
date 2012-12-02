@@ -186,6 +186,32 @@ class response_http_html extends response_http {
 	}
 
 	/**
+	 * Add a string before the acual meta property, with a spearator if needed
+	 *
+	 * @param string $name Meta Property Name
+	 * @param string $value Meta content
+	 * @param string $sep
+	 */
+	public function setMetaPropertyBefore($name, $value, $sep = ', ') {
+		$old = $this->getMetaProperty($name);
+		$value.= $old? $sep.$old : null;
+		$this->setMetaProperty($name, $value);
+	}
+
+	/**
+	 * Add a string after the acual meta property, with a spearator if needed
+	 *
+	 * @param string $name Meta Property Name
+	 * @param string $value Meta content
+	 * @param string $sep
+	 */
+	public function setMetaPropertyAfter($name, $value, $sep = ', ') {
+		$old = $this->getMetaProperty($name);
+		$value = $old? $old.$sep.$value : $value;
+		$this->setMetaProperty($name, $value);
+	}
+
+	/**
 	 * Initialize the blocks array for the requested type
 	 *
 	 * @param string $type
