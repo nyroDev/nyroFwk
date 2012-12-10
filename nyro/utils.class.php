@@ -413,21 +413,36 @@ class utils {
 	 */
 	public static function jsEncode($vars) {
 		$func = array();
-		if (is_array($vars)) {
-			foreach($vars as $k=>$v) {
-				if (is_string($v) && strpos($v, 'function(') === 0) {
-					$func['"'.$k.'Func"'] = $v;
-					$vars[$k] = $k.'Func';
-				}
-			}
-		}
-		
+		if (is_array($vars))
+			$func = self::jsEncodeSearchFunc($vars);
+
 		$encoded = json_encode($vars);
 		if (!empty($func))
 			$encoded = str_replace(array_keys($func), $func, $encoded);
 
-		
 		return $encoded;
+	}
+	
+	/**
+	 * Internal function used from jsEndcode to deeply search for function
+	 *
+	 * @param array $vars
+	 * @param int $startFunc
+	 * @return array
+	 */
+	protected static function jsEncodeSearchFunc(array &$vars, &$startFunc = 1) {
+		$func = array();
+		foreach($vars as $k=>$v) {
+			if (is_string($v) && strpos($v, 'function(') === 0) {
+				$func['"'.$startFunc.'Func"'] = $v;
+				$vars[$k] = $startFunc.'Func';
+				$startFunc++;
+			} else if (is_array($v)) {
+				$func = array_merge($func, self::jsEncodeSearchFunc($v, $startFunc));
+				$vars[$k] = $v;
+			}
+		}
+		return $func;
 	}
 
 	/**

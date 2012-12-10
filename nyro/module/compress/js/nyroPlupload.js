@@ -72,6 +72,13 @@ $(function() {
 				if (curOpts.onAllComplete && $.isFunction(curOpts.onAllComplete)) {
 					uploader.bind('UploadComplete', function() {setTimeout(curOpts.onAllComplete, 20);});
 				}
+				
+				if (curOpts.events) {
+					$.each(curOpts.events, function(k, v) {
+						uploader.bind(k, v);
+					});
+				}
+				
 				uploader.init();
 			});
 		}
