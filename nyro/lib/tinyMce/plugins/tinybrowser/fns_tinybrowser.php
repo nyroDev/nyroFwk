@@ -230,6 +230,7 @@ function bytestostring($size, $precision = 0) {
 
 //function to clean a filename string so it is a valid filename
 function clean_filename($filename){
+	return utils::urlify($filename, '.');
     $filename = preg_replace('/^\W+|\W+$/', '', $filename); // remove all non-alphanumeric chars at begin & end of string
     $filename = preg_replace('/\s+/', '_', $filename); // compress internal whitespace and replace with _
     return strtolower(preg_replace('/\W-/', '', $filename)); // remove all non-alphanumeric chars except _ and -
