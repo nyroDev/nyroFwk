@@ -200,7 +200,7 @@ class form_fileUploaded extends object {
 		$ret = null;
 		if ($current = $this->getCurrent()) {
 			if (!$ret = $this->callHelper('view', $current, null))
-				$ret = utils::htmlTag('a', array_merge($this->cfg->previewPrm, array('href'=>request::uploadedUri($current))), $this->cfg->previewText ? $this->cfg->previewText : $current);
+				$ret = utils::htmlTag('a', array_merge($this->cfg->previewPrm, array('href'=>request::uploadedUri($current))), $this->cfg->previewText ? $this->cfg->previewText : basename($current));
 		}
 		return $ret;
 	}
