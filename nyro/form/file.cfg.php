@@ -37,7 +37,7 @@ $cfg = array(
 			'complete'=>'Complete',
 		),
 		'filters'=>array(
-			array('title'=>'Images', 'extensions'=>'jpg,gif,png')
+			array('title'=>'Images', 'extensions'=>'jpg,jpeg,gif,png')
 		),
 		'flash_swf_url'=>request::uri(array('lang'=>null, 'module'=>'css', 'action'=>'plupload', 'param'=>'plupload.flash.swf', 'out'=>false)),
 		'silverlight_xap_url'=>request::uri(array('lang'=>null, 'module'=>'css', 'action'=>'plupload', 'param'=>'plupload.silverlight.xap', 'out'=>false)),
