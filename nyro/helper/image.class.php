@@ -275,12 +275,21 @@ class helper_image extends helper_file {
 	 */
 	protected function html(array $options = array()) {
 		if (file::exists($this->cfg->fileSave)) {
+			$w = $this->cfg->wAct ? $this->cfg->wAct : null;
+			$h = $this->cfg->hAct ? $this->cfg->hAct : null;
+			if ($this->cfg->forceHtmlSize && (!$w || !$h)) {
+				$size = getimagesize($this->cfg->fileSave);
+				if (!$w)
+					$w = $size[0];
+				if (!$h)
+					$h = $size[1];
+			}
 			return utils::htmlTag('img',
 				array_merge($options, $this->cfg->htmlDefOptions, array(
 					'src'=>$this->cfg->fileSave,
 					'alt'=>$this->cfg->alt,
-					'width'=>$this->cfg->wAct ? $this->cfg->wAct : null,
-					'height'=>$this->cfg->hAct ? $this->cfg->hAct : null,
+					'width'=>$w,
+					'height'=>$h,
 				)));
 		}
 		return null;

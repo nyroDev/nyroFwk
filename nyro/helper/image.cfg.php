@@ -15,6 +15,7 @@ $cfg = array(
 	'grayFilter'=>false,
 	'filters'=>array(),
 	'html'=>false,
+	'forceHtmlSize'=>false,
 	'alt'=>'Image',
 	'htmlDefOptions'=>array(),
 	'autoExt'=>array('gif', 'jpg', 'jpeg', 'png'),

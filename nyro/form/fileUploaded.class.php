@@ -90,7 +90,7 @@ class form_fileUploaded extends object {
 			? factory::getHelper($this->cfg->helper, $this->getHelperPrm('factory'))
 			: null;
 
-		if ($this->cfg->autoSave && !empty($this->file) && $this->isvalid() === true)
+		if ($this->cfg->autoSave && !empty($this->file) && $this->isValid() === true)
 			$this->save();
 	}
 

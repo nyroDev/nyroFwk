@@ -268,7 +268,7 @@ class form_db extends form {
 					case 'boolean':
 					case 'tinyint':
 						$type = 'radio';
-						$prm['list'] = $this->cfg->listBool;
+						$prm['list'] = isset($field['precision']) ? $field['precision'] : $this->cfg->listBool;
 						$prm['inline'] = true;
 						if ($field['type'] != 'tinyint' || ($field['type'] == 'tinyint' && $field['length'] == 1)) {
 							$prm['valid']['required'] = false;

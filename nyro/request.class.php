@@ -638,10 +638,11 @@ final class request {
 	 * Create a Web uri from a string (starting at the www folder)
 	 *
 	 * @param string $uri
+	 * @param boolean $absolute
 	 * @return string
 	 */
-	public static function webUri($uri) {
-		return (self::isAbsolutizeAllUris() ? self::get('domain') : null).self::get('path').$uri;
+	public static function webUri($uri, $absolute = false) {
+		return ($absolute || self::isAbsolutizeAllUris() ? self::get('domain') : null).self::get('path').$uri;
 	}
 	
 	/**
