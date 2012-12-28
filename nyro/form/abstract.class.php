@@ -271,7 +271,10 @@ abstract class form_abstract extends object {
 	 * @param mixed $value Value to set
 	 */
 	public function __set($name, $val) {
-		return $this->cfg->set($name, $val);
+		$ret = $this->cfg->set($name, $val);
+		if ($name == 'label' && $this->getValid())
+			$this->getValid()->getCfg()->label = $val;
+		return $ret;
 	}
 
 }
