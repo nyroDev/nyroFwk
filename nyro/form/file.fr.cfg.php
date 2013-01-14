@@ -12,6 +12,7 @@ $cfg = array(
 			'error'=>'Erreur',
 			'cancel'=>'Annulé',
 			'complete'=>'Terminé',
+			'cancelAll'=>'Tout annuler',
 		),
 	),
 );

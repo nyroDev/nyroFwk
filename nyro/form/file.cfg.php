@@ -27,6 +27,7 @@ $cfg = array(
 		'scriptData'=>array(session::getInstance()->getSessIdForce()=>session_id()),
 	),
 	'plupload'=>array(
+		'showCancelAll'=>false,
 		'runtimes'=>'html5,gears,flash,silverlight,html4',
 		'hideDelay'=>750,
 		'texts'=>array(
@@ -35,6 +36,7 @@ $cfg = array(
 			'error'=>'Error',
 			'cancel'=>'Cancelled',
 			'complete'=>'Complete',
+			'cancelAll'=>'Cancel all',
 		),
 		'filters'=>array(
 			array('title'=>'Images', 'extensions'=>'jpg,jpeg,gif,png')

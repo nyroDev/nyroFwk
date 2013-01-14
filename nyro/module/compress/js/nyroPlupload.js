@@ -8,8 +8,12 @@ $(function() {
 					curOpts = opts,
 					cont = $('<div id="pluploadCont'+myPluploadNb+'" class="pluploadCont" />').insertAfter(me),
 					curFiles = {},
-					browse = $('<a href="#" id="pluploadBrowse'+myPluploadNb+'" class="pluploadBrowse">'+curOpts.texts.browse+'</a>').appendTo(cont),
-					list = $('<div id="pluploadList'+myPluploadNb+'" class="pluploadList" />').appendTo(cont);
+					browse = $('<a href="#" id="pluploadBrowse'+myPluploadNb+'" class="pluploadBrowse">'+curOpts.texts.browse+'</a>').appendTo(cont);
+				
+				if (opts.showCancelAll)
+					var cancelAll = $('<a href="#" id="pluploadCancelAll'+myPluploadNb+'" class="pluploadCancelAll">'+curOpts.texts.cancelAll+'</a>').appendTo(cont);
+					
+				var list = $('<div id="pluploadList'+myPluploadNb+'" class="pluploadList" />').appendTo(cont);
 				
 				curOpts.container = 'pluploadCont'+myPluploadNb;
 				curOpts.drop_element = 'pluploadCont'+myPluploadNb;
@@ -32,6 +36,12 @@ $(function() {
 					}
 					setTimeout(function() {uploader.start();}, 1);
 				});
+				if (opts.showCancelAll) {
+					cancelAll.on('click', function(e) {
+						e.preventDefault();
+						cont.find('.pluploadCancel').trigger('click');
+					});
+				}
 				uploader.bind('UploadProgress', function(up, file) {
 					if (curFiles[file.id]) {
 						curFiles[file.id]
