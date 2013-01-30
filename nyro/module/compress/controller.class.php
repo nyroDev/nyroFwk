@@ -36,9 +36,11 @@ class module_compress_controller extends module_abstract {
 	 */
 	protected function compress($type, $prm) {
 		if ($type == 'js') {
-			$conf = array_merge_recursive($this->cfg->all, $this->cfg->js);
+			$conf = $this->cfg->all;
+			factory::mergeCfg($conf, $this->cfg->js);
 		} else if ($type == 'css') {
-			$conf = array_merge_recursive($this->cfg->all, $this->cfg->css);
+			$conf = $this->cfg->all;
+			factory::mergeCfg($conf, $this->cfg->css);
 		}
 		
 		$key = $type.'--'.md5(serialize($prm)).'--'.md5(serialize($conf));
