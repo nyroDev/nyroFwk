@@ -28,6 +28,7 @@ $cfg = array(
 	),
 	'plupload'=>array(
 		'showCancelAll'=>false,
+		'addFormVars'=>false,
 		'runtimes'=>'html5,gears,flash,silverlight,html4',
 		'hideDelay'=>750,
 		'texts'=>array(

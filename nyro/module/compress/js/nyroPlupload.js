@@ -42,6 +42,16 @@ $(function() {
 						cont.find('.pluploadCancel').trigger('click');
 					});
 				}
+				if (opts.addFormVars) {
+					var form = me.closest('form');
+					uploader.bind('BeforeUpload', function(up, file) {
+						var tmp = {};
+						$.each(form.serializeArray(), function(index, val) {
+							tmp[val.name] = val.value;
+						});
+						up.settings.multipart_params = tmp;
+					});
+				}
 				uploader.bind('UploadProgress', function(up, file) {
 					if (curFiles[file.id]) {
 						curFiles[file.id]
