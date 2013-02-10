@@ -276,6 +276,10 @@ class module_scaffold_controller extends module_abstract {
 		return $this->addEditForm('add');
 	}
 
+	protected function execScaffoldDuplic($prm = null) {
+		return $this->addEditForm('duplic', $prm[0]);
+	}
+
 	protected function execScaffoldEdit($prm = null) {
 		return $this->addEditForm('edit', $prm[0]);
 	}
@@ -285,6 +289,14 @@ class module_scaffold_controller extends module_abstract {
 		$this->row = $id ? $this->table->find($id) : $this->table->getRow();
 		if (!$this->row)
 			response::getInstance()->redirect($this->indexPage);
+		
+		if ($action == 'duplic') {
+			$tmp = $this->row;
+			$this->row = $this->table->getRow();
+			$this->row->setValues($tmp->getValues());
+			$action = 'add';
+		}	
+		
 		$this->hook($action);
 
 		$this->form = $this->row->getForm($this->getFields($action), array_merge(array('sectionName'=>tr::__('scaffold_'.$action)), $this->cfg->formOpts));
