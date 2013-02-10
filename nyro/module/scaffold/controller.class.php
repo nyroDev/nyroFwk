@@ -277,6 +277,7 @@ class module_scaffold_controller extends module_abstract {
 	}
 
 	protected function execScaffoldDuplic($prm = null) {
+		$this->setViewAction('add');
 		return $this->addEditForm('duplic', $prm[0]);
 	}
 
