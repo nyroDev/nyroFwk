@@ -356,12 +356,12 @@ class helper_image extends helper_file {
 				break;
 			case IMAGETYPE_GIF:
 				$img = imagecreatefromgif($file);
-				imagealphablending($img, true);
+				imagealphablending($img, false);
 				imagesavealpha($img, true);
 				break;
 			case IMAGETYPE_PNG:
 				$img = imagecreatefrompng($file);
-				imagealphablending($img, true);
+				imagealphablending($img, false);
 				imagesavealpha($img, true);
 				break;
 			default:
@@ -443,7 +443,7 @@ class helper_image extends helper_file {
 
 		$imgDst = imagecreatetruecolor($prm['w'], $prm['h']);
 		if ($this->info[2] == IMAGETYPE_GIF || $this->info[2] == IMAGETYPE_PNG) {
-			imagealphablending($imgDst, true);
+			imagealphablending($imgDst, false);
 			imagesavealpha($imgDst, true);
 		}
 
@@ -458,8 +458,7 @@ class helper_image extends helper_file {
 			} else if ($this->info[2] == IMAGETYPE_PNG) {
 				imagealphablending($imgDst, false);
 				imagesavealpha($imgDst, true);
-				$color = imagecolorallocatealpha($imgDst, 255, 255, 255, 127);
-				imagefilledrectangle($imgDst, 0,  0, $prm['w'], $prm['h'], $color);
+				imagefill($imgDst, 0, 0, imagecolorallocatealpha($imgDst, 0, 0, 0, 127));
 			}
 		} else if (!$prm['fit']) {
 			$cl = $this->hexa2dec($prm['bgColor']);
@@ -503,8 +502,8 @@ class helper_image extends helper_file {
 			}
 			
 			$newPicture = imagecreatetruecolor($this->cfg->wTmp, $this->cfg->hTmp);
+			imagealphablending($newPicture, false);
 			imagesavealpha($newPicture, true);
-			imagealphablending($newPicture, true);
 			imagefill($newPicture, 0, 0, imagecolorallocatealpha($newPicture, 0, 0, 0, 127));
 
 			// Perform pixel-based alpha map application
