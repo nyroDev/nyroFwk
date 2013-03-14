@@ -230,8 +230,9 @@ class response_http extends response_abstract {
 		}
 
 		$layout = request::isAjax()? $this->cfg->ajaxLayout : $this->cfg->layout;
+		$ret = null;
 		if (!$layout) {
-			return $this->content;
+			$ret = $this->content;
 		} else {
 			$tpl = factory::get('tpl', array(
 				'module'=>'out',
@@ -241,8 +242,11 @@ class response_http extends response_abstract {
 				'cache'=>array('auto'=>false)
 			));
 			$tpl->set('content', $this->content);
-			return $tpl->fetch();
+			$ret = $tpl->fetch();
 		}
+		if ($ret)
+			$this->addHeader('Content-Length', strlen($ret), true);
+		return $ret;
 	}
 	
 	public function canGlobalCache() {
@@ -278,6 +282,7 @@ class response_http extends response_abstract {
 	 * @param string $text
 	 */
 	public function sendText($text) {
+		$this->addHeader('Content-Length', strlen($text), true);
 		$this->sendHeaders();
 		$this->beforeOut();
 		echo $text;
@@ -292,7 +297,7 @@ class response_http extends response_abstract {
 	 * @param bool $delete Indicate if the file should be deleted after download
 	 */
 	public function sendFile($file, $name = null, $delete = false) {
-		$name = $name? $name : basename($file);
+		$name = $name ? $name : basename($file);
 		if (file::exists($file))
 			$this->mediaDownload($file, true, $name, $delete);
 		else

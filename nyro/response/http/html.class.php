@@ -604,7 +604,10 @@ class response_http_html extends response_http {
 
 	public function send($headerOnly = false) {
 		$ret = parent::send($headerOnly);
-		return $this->setHtmlEltIntern(DEV ? str_replace('</body>', debug::debugger().'</body>', $ret) : $ret);
+		$ret = $this->setHtmlEltIntern(DEV ? str_replace('</body>', debug::debugger().'</body>', $ret) : $ret);
+		if ($ret)
+			$this->addHeader('Content-Length', strlen($ret), true);
+		return $ret;
 	}
 
 }
