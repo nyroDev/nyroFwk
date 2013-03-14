@@ -35,6 +35,8 @@ class module_compress_controller extends module_abstract {
 	 * @param array $prm Files to compress
 	 */
 	protected function compress($type, $prm) {
+		$resp = response::getInstance();
+		
 		if ($type == 'js') {
 			$conf = $this->cfg->all;
 			factory::mergeCfg($conf, $this->cfg->js);
@@ -55,7 +57,9 @@ class module_compress_controller extends module_abstract {
 		}
 		$content = null;
 		$cache = cache::getInstance($this->cfg->cache);
-		if (!$conf['disk_cache'] || !$cache->get($content, array('id'=>$key))) {
+		$cacheDate = $cache->get($content, array('id'=>$key));
+		
+		if (!$conf['disk_cache'] || !$cacheDate) {
 			foreach($prm as $file) {
 				$f = file::nyroExists(array(
 								'name'=>'module_'.nyro::getCfg()->compressModule.'_'.$type.'_'.$file,
@@ -82,9 +86,9 @@ class module_compress_controller extends module_abstract {
 					$content = gzencode($content, 9, FORCE_GZIP);
 			}
 			$cache->save();
+		} else if ($cacheDate) {
+			$resp->addHeader('Age', time() - $cacheDate);
 		}
-
-		$resp = response::getInstance();
 		
 		/* @var $resp response_http */
 		if ($conf['compress']) {

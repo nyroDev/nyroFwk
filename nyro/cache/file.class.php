@@ -47,7 +47,7 @@ class cache_file extends cache_abstract {
 	 *  - array tags: Optionnal tags for the id
 	 *  - array request: Array for build the request ID (@see cache::idRequest)
 	 *  - bool serialize: True if need to serialize the content (default: true)
-	 * @return bool True if cache found and content in $value
+	 * @return false|int Cache date if found and content in $value or false
 	 * @see save
 	 */
 	public function get(&$value, array $prm) {
@@ -63,13 +63,15 @@ class cache_file extends cache_abstract {
 			$prm['file'] = $this->file(array_merge($prm,
 							array('callFrom'=>debug::callFrom(1),'type'=>'get')));
 			$this->prmVar = $prm;
-			if (file::exists($prm['file']) &&
-					($prm['ttl'] == 0 || file::date($prm['file']) + $prm['ttl'] * 60 > time())) {
-				if ($prm['serialize'])
-					$value = unserialize(file::read($prm['file']));
-				else
-					eval('$value = '.file::read($prm['file']).';');
-				return true;
+			if (file::exists($prm['file'])) {
+				$date = file::date($prm['file']);
+				if ($prm['ttl'] == 0 || $date + $prm['ttl'] * 60 > time()) {
+					if ($prm['serialize'])
+						$value = unserialize(file::read($prm['file']));
+					else
+						eval('$value = '.file::read($prm['file']).';');
+					return $date;
+				}
 			}
 		}
 		return false;

@@ -44,7 +44,7 @@ abstract class cache_abstract extends object {
 	 *  - array tags: Optionnal tags for the id
 	 *  - array request: Array for build the request ID (@see cache::idRequest)
 	 *  - bool serialize: True if need to serialize the content
-	 * @return bool True if cache found and content in $value
+	 * @return false|int Cache date if found and content in $value or false
 	 * @see save
 	 */
 	abstract public function get(&$value, array $prm);
