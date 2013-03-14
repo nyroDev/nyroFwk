@@ -120,6 +120,7 @@ class module_compress_controller extends module_abstract {
 			if ($supportsGzip)
 				$resp->addHeader('Content-Encoding', $enc);	
 		}
+		$resp->addHeader('Content-Length', strlen($content));
 		
 		$resp->sendText($content);
 	}
