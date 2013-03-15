@@ -7,7 +7,7 @@
 /**
  * Interface for db classes
  */
-class db_row extends object {
+class db_row extends object implements ArrayAccess {
 
 	/**
 	 * Changes done
@@ -183,14 +183,25 @@ class db_row extends object {
 			}
 		}
 
+		$relatedUpdated = false;
+		$related = $this->cfg->getInArray('data', 'related');
 		foreach($this->getTable()->getRelated() as $t=>$r) {
 			if (empty($showFields) || in_array($r['tableLink'], $showFields)) {
 				$r['name'] = $r['tableLink'];
 				$r['label'] = $this->getTable()->getLabel($r['table']);
 				$r['valid'] = false;
 				$form->addFromRelated($r);
+				
+				if (!$this->getTable()->getCfg()->autoJoin) {
+					$relatedUpdated = true;
+					$tmp = $this->getRelated($t);
+					$related[$r['table']] = $tmp;
+				}
 			}
 		}
+		
+		if ($relatedUpdated)
+			$this->cfg->setInArray('data', 'related', $related);
 
 		$form->setValues($this->getValues('flat'));
 
@@ -883,6 +894,49 @@ class db_row extends object {
 				return $this->setRelated($prm[0], $name);
 			}
 		}
+	}
+
+	/**
+	 * Check if an index exists.
+	 * Required by interface ArrayAccess
+	 *
+	 * @param string $offset
+	 * @return bool
+	 */
+	public function offsetExists($offset) {
+		return !is_null($this->getTable()->getField($offset));
+	}
+
+	/**
+	 * Get a value.
+	 * Required by interface ArrayAccess
+	 *
+	 * @param string $offset
+	 * @return mixed
+	 */
+	public function offsetGet($offset) {
+		return $this->get($offset);
+	}
+
+	/**
+	 * Set a value.
+	 * Required by interface ArrayAccess
+	 *
+	 * @param string $offset
+	 * @param db_row $value
+	 */
+	public function offsetSet($offset, $value) {
+		$this->set($offset, $value);
+	}
+	
+	/**
+	 * Remove an element.
+	 * Required by interface ArrayAccess
+	 *
+	 * @param string $offset
+	 */
+	public function offsetUnset($offset) {
+		$this->set($offset, null);
 	}
 
 	public function __get($name) {
