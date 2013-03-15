@@ -244,8 +244,7 @@ class response_http extends response_abstract {
 			$tpl->set('content', $this->content);
 			$ret = $tpl->fetch();
 		}
-		if ($ret)
-			$this->addHeader('Content-Length', strlen($ret), true);
+		//if ($ret) $this->addHeader('Content-Length', strlen($ret), true);
 		return $ret;
 	}
 	
@@ -282,7 +281,7 @@ class response_http extends response_abstract {
 	 * @param string $text
 	 */
 	public function sendText($text) {
-		$this->addHeader('Content-Length', strlen($text), true);
+		//$this->addHeader('Content-Length', strlen($text), true);
 		$this->sendHeaders();
 		$this->beforeOut();
 		echo $text;
