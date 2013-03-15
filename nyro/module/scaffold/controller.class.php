@@ -295,6 +295,7 @@ class module_scaffold_controller extends module_abstract {
 			$tmp = $this->row;
 			$this->row = $this->table->getRow();
 			$this->row->setValues($tmp->getValues());
+			$this->row->setValues($tmp->getValues('flat'));
 			$action = 'add';
 		}	
 		

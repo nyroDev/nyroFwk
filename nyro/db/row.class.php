@@ -260,7 +260,7 @@ class db_row extends object implements ArrayAccess {
 	 * @return mixed The last inserted id
 	 */
 	public function insert() {
-		$values = array_merge($this->getValues('flat'), $this->getChangesTable());
+		$values = array_intersect_key(array_merge($this->getValues('flat'), $this->getChangesTable()), $this->getTable()->getField());
 		unset($values[$this->getTable()->getIdent()]);
 		$id = $this->getTable()->insert($values);
 		$this->set($this->getTable()->getIdent(), $id);
