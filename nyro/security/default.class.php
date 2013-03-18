@@ -134,6 +134,24 @@ class security_default extends security_abstract {
 		$this->user->save();
 		$this->logFromCryptic($cryptic);
 	}
+	
+	/**
+	 * Return the SQL Clause against login and password
+	 *
+	 * @param string $login Login
+	 * @param string $pass Clear password
+	 * @return string
+	 */
+	protected function getWhereLogin($login, $pass) {
+		$tableName = $this->table->getRawName();
+		$loginField = $this->cfg->getInArray('fields', 'login');
+		$passField = $this->cfg->getInArray('fields', 'pass');
+		
+		return array(
+			$tableName.'.'.$loginField=>$login,
+			$tableName.'.'.$passField=>$this->cryptPass($pass),
+		);
+	}
 
 	/**
 	 * Login the current user
@@ -158,11 +176,11 @@ class security_default extends security_abstract {
 		if (is_array($prm)
 			&& array_key_exists($loginField, $prm)
 			&& array_key_exists($passField, $prm)) {
-				$tableName = $this->table->getRawName();
-				$this->user = $this->table->find(array_merge(array(
-					$tableName.'.'.$loginField=>$prm[$loginField],
-					$tableName.'.'.$passField=>$this->cryptPass($prm[$passField])
-				), $this->cfg->where));
+				$this->user = $this->table->find(array_merge(
+						$this->cfg->where,
+						$this->getWhereLogin($prm[$loginField], $prm[$passField])
+				));
+				
 				if ($this->user) {
 					$this->saveLogin();
 					if (array_key_exists('stayConnected', $prm) && $prm['stayConnected']) {
