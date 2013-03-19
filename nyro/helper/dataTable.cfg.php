@@ -37,6 +37,7 @@ $cfg = array(
 	'actionsAllowedDefault'=>null,
 	'actionsConfirmDelete'=>true,
 
+	'addCheckAllJs'=>true,
 	'multiple'=>array(),
 	'multipleLabel'=>'Choose an action',
 	'multipleSubmit'=>'ok',

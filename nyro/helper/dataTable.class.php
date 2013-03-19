@@ -290,7 +290,7 @@ class helper_dataTable extends object {
 				$pageLinks[1] = $this->cfg->pageLinkTpl1;
 
 			$hasMultiple = count($this->cfg->multiple) > 0;
-			if ($hasMultiple)
+			if ($hasMultiple && $this->cfg->addCheckAllJs)
 				response::getInstance()->addJs('checkAll');
 			
 			$tpl->setA(array_merge(array(

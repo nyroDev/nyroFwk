@@ -169,6 +169,7 @@ class security_default extends security_abstract {
 		if (is_null($prm)) {
 			if (request::isPost()) {
 				$form->refill();
+				$form->isValid();
 				$prm = $form->getValues(true);
 			}
 		}

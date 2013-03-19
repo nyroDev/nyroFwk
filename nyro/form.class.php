@@ -737,7 +737,7 @@ class form extends object {
 	/**
 	 * Add a captcha if parametred and not already added
 	 */
-	protected function addCaptcha() {
+	public function addCaptcha() {
 		if (!$this->captchaAdded) {
 			if (($typeCpt = $this->cfg->getInarray('captcha', 'type')) && ($nameCpt = $this->cfg->getInarray('captcha', 'name'))) {
 				$this->add($typeCpt, $this->cfg->captcha);

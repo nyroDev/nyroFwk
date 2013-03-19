@@ -106,7 +106,7 @@ abstract class form_mulValue extends form_abstract {
 		}
 
 		$prm = $this->cfg->get($type);
-		$inline = $this->cfg->inline? 'Inline' : null;
+		$inline = $this->cfg->inline ? 'Inline' : null;
 		$ret = null;
 
 		$tmp = $prm;
@@ -136,7 +136,7 @@ abstract class form_mulValue extends form_abstract {
 				$tmpVal.= $this->updateLine($type, $k, str_replace(
 						array('[plus]', '[value]', '[label]', '[des]'),
 						array($plus, $k, $v, isset($descriptions[$k]) ? $descriptions[$k] : null),
-						$prm['value']));
+						isset($prm['value'.$inline]) ? $prm['value'.$inline] : $prm['value']));
 			}
 		}
 
