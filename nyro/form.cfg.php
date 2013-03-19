@@ -71,7 +71,7 @@ $cfg = array(
 [hidden]
 <table>
 	[content]
-<tr><td></td><td>[submit]</td></tr>
+	[submit]
 </table>
 </form>',
 		'line'=>'<tr>
@@ -81,6 +81,7 @@ $cfg = array(
 		'lineHidden'=>'[field]',
 		'des'=>'<br />[des]',
 		'section'=>'[fields]',
+		'submit'=>'<tr><td></td><td><input type="submit" value="[submitText]" />[submitPlus]</td></tr>',
 	),
 	'htmlNoSectionView'=>array(
 		'noHidden'=>true,
