@@ -410,7 +410,47 @@ class db_row extends object implements ArrayAccess {
 		} else if ($this->getTable()->isRelated($key)) {
 			$key = $this->getTable()->getRelatedTableName($key);
 			$values = $this->getValues($mode);
-			return array_key_exists($key, $values) ? $values[$key] : null;
+			if (isset($values[$key]))
+				return $values[$key];
+			
+			if (!$this->getTable()->getCfg()->autoJoin && ($mode == 'flat' || $mode == 'flatReal')) {
+				$tmp = $this->getRelated($key);
+				if (count($tmp)) {
+					$v = $this->getTable()->getRelated($key);
+					$ret = array();
+					$fields = explode(',', $v['fk2']['link']['fields']);
+					$i18nFields = explode(',', $v['fk2']['link']['i18nFields']);
+					array_walk($i18nFields, create_function('&$v', '$v = "'.db::getCfg('i18n').'".$v;'));
+					$fields = array_filter(array_merge($fields, $i18nFields));
+					
+					$hasFields = isset($v['fields']) && count($v['fields']);
+					
+					foreach($tmp as $vv) {
+						if ($mode == 'flat') {
+							if ($hasFields) {
+								$curVal = array(
+									db::getCfg('relatedValue')=>$vv->get($v['fk2']['link']['ident'])
+								);
+								foreach($v['fields'] as $kF=>$vF) {
+									$curVal[$kF] = $vv->get($kF);
+								}
+								$ret[] = $curVal;
+							} else {
+								$ret[] = $vv->get($v['fk2']['link']['ident']);
+							}
+						} else {
+							$tmp2 = array();
+							foreach($fields as $f) {
+								if ($vv->get($f))
+									$tmp2[] = $vv->get($f);
+							}
+							$ret[] = utils::htmlOut(implode($v['fk2']['link']['sep'], $tmp2));
+						}
+					}
+					if (count($ret))
+						return $ret;
+				}
+			}
 		}
 		return null;
 	}
