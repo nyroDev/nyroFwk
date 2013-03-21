@@ -100,6 +100,7 @@ $(function() {
 				}
 				
 				uploader.init();
+				me.data('nyroPluploader', uploader);
 			});
 		}
 	});
