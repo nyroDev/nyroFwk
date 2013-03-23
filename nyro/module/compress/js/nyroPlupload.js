@@ -11,7 +11,7 @@ $(function() {
 					browse = $('<a href="#" id="pluploadBrowse'+myPluploadNb+'" class="pluploadBrowse">'+curOpts.texts.browse+'</a>').appendTo(cont);
 				
 				if (opts.showCancelAll)
-					var cancelAll = $('<a href="#" id="pluploadCancelAll'+myPluploadNb+'" class="pluploadCancelAll">'+curOpts.texts.cancelAll+'</a>').appendTo(cont);
+					var cancelAll = $('<a href="#" id="pluploadCancelAll'+myPluploadNb+'" class="pluploadCancelAll">'+curOpts.texts.cancelAll+'</a>').appendTo(cont).hide();
 					
 				var list = $('<div id="pluploadList'+myPluploadNb+'" class="pluploadList" />').appendTo(cont);
 				
@@ -34,6 +34,8 @@ $(function() {
 						});
 						list.append(curFiles[curFile.id]);
 					}
+					if (opts.showCancelAll)
+						cancelAll.show();
 					setTimeout(function() {uploader.start();}, 1);
 				});
 				if (opts.showCancelAll) {
@@ -89,6 +91,8 @@ $(function() {
 							.children('strong').html(curOpts.texts.error+'<br />'+obj.message+(obj.status ? ' ('+obj.status+')' : ''));
 					}
 				});
+				if (opts.showCancelAll)
+					uploader.bind('UploadComplete', function() {cancelAll.hide();});
 				if (curOpts.onAllComplete && $.isFunction(curOpts.onAllComplete)) {
 					uploader.bind('UploadComplete', function() {setTimeout(curOpts.onAllComplete, 20);});
 				}
