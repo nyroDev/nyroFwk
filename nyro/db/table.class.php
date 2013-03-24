@@ -1273,7 +1273,7 @@ class db_table extends object {
 		if (!$this->cfg->cacheEnabled)
 			return false;
 		return $this->getDb()->getCache()->delete(array(
-			'callFrom'=>get_class($this).'-select',
+			'callFrom'=>'db_table-select',
 			'type'=>'get',
 			'id'=>$this->getName().'-*'
 		));
