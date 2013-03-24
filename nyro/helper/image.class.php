@@ -183,7 +183,8 @@ class helper_image extends helper_file {
 								'w'=>$this->cfg->w,
 								'h'=>$this->cfg->h,
 								'bgColor'=>$this->cfg->bgColor,
-								'fit'=>$this->cfg->fit
+								'fit'=>$this->cfg->fit,
+								'useMaxResize'=>$this->cfg->useMaxResize
 							))) {
 							// Save the new size
 							$this->cfg->wAct = imagesx($this->imgAct);
@@ -378,7 +379,8 @@ class helper_image extends helper_file {
 	 *  - string imgName: The image ressource to use (default: Act);
 	 *  - int w: The width (default: 0 -> proportionnal resize with the height)
 	 *  - int h: The height (default: 0 -> proportionnal resize width the width)
-	 *  - bool fit: Indicate if the image will be fit to the size (default: true)
+	 *  - bool fit: Indicates if the image will be fit to the size (default: true)
+	 *  - bool useMaxResize: Indicates if the image will be resized to only one dimension (default: false)
 	 *  - hexa bgColor: The background color (default: ffffff)
 	 * @return bool True if success
 	 */
@@ -388,6 +390,7 @@ class helper_image extends helper_file {
 			'w'=>0,
 			'h'=>0,
 			'fit'=>false,
+			'useMaxResize'=>false,
 			'bgColor'=>'ffffff'
 		));
 
@@ -403,6 +406,14 @@ class helper_image extends helper_file {
 		$scaleH = $prm['h'] / $srcH;
 		$dstW = $prm['w'];
 		$dstH = $prm['h'];
+		
+		if ($prm['useMaxResize'] && $prm['w'] && $prm['h']) {
+			if ($scaleW > $scaleH) {
+				$prm['w'] = 0;
+			} else {
+				$prm['h'] = 0;
+			}
+		}
 
 		if ($prm['w'] && $prm['h']) {
 			// Dimensions are fixed

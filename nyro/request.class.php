@@ -497,7 +497,7 @@ final class request {
 			$tmp[0] = utils::urlify($prm['module']);
 
 		if (array_key_exists('action', $prm) && !empty($prm['action']))
-			$tmp[1] = utils::urlify($prm['action']);
+			$tmp[1] = $prm['action'];
 
 		if (array_key_exists('paramA', $prm) && is_array($prm['paramA']))
 			$tmp[2] = self::createParam($prm['paramA'], false);

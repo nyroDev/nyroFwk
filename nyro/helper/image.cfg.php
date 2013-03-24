@@ -8,6 +8,7 @@ $cfg = array(
 	'h'=>0,
 	'bgColor'=>null,
 	'fit'=>false,
+	'useMaxResize'=>false,
 	'crop'=>false,
 	'resizeSmaller'=>true,
 	'mask'=>null,
