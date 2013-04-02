@@ -12,6 +12,7 @@ $cfg = array(
 	'crop'=>false,
 	'resizeSmaller'=>true,
 	'mask'=>null,
+	'watermarks'=>null,
 	'rebuild'=>false,
 	'grayFilter'=>false,
 	'filters'=>array(),

@@ -241,6 +241,13 @@ class helper_image extends helper_file {
 					$this->mask($this->cfg->mask);
 					$change = true;
 				}
+				
+				if (!empty($this->cfg->watermarks) && is_array($this->cfg->watermarks)) {
+					foreach($this->cfg->watermarks as $watermark) {
+						$tmp = $this->watermark($watermark);
+						$change = $change || $tmp;
+					}
+				}
 
 				$ret = null;
 				if (!$change)
@@ -530,6 +537,72 @@ class helper_image extends helper_file {
 			imagedestroy($this->imgAct);
 			$this->imgAct = $newPicture;
 		}
+	}
+
+	/**
+	 * Add a watermark to the actual image
+	 *
+	 * @param array $prm The watermark configuration with:
+	 *  - string file: The image file path (required)
+	 *  - boolean fit: Indicates if the watermark should fit the image size (default: false)
+	 *  - boolean center: Indicates if the watermark is center (if not fitted) (default: true)
+	 *  - int margin: Margin to place the watermark (default: 0)
+	 */
+	public function watermark($prm) {
+		$ret = false;
+		if (config::initTab($prm, array(
+			'file'=>null,
+			'fit'=>false,
+			'center'=>true,
+			'margin'=>0
+		))) {
+			// Create the mask image ressource
+			$tmp = $this->createImage($prm['file']);
+			if ($tmp) {
+				$this->imgTmp = $tmp[0];
+				$this->cfg->wTmp = $tmp[1];
+				$this->cfg->hTmp = $tmp[2];
+				if (strpos($prm['margin'], '%') !== false) {
+					$val = intval(substr($prm['margin'], 0, -1)) / 100;
+					$marginW = $val * $this->cfg->wAct;
+					$marginH = $val * $this->cfg->hAct;
+				} else {
+					$marginW = $marginH = $prm['margin'];
+				}
+				
+				$dstX = $marginW;
+				$dstY = $marginH;
+				$srcX = $srcY = 0;
+				$srcW = $this->cfg->wTmp;
+				$srcH = $this->cfg->hTmp;
+				$dstW = $this->cfg->wAct - ($marginW * 2);
+				$dstH = $this->cfg->hAct - ($marginH * 2);
+
+				if (!$prm['fit'] && $prm['center']) {
+					$scaleW = $dstW / $srcW;
+					$scaleH = $dstH / $srcH;
+					if ($scaleW > $scaleH) {
+						$dstW = round($srcW * $scaleH);
+						$dstX = round(($this->cfg->wAct - $dstW) / 2);
+					} else {
+						$dstH = round($srcH * $scaleW);
+						$dstY = round(($this->cfg->hAct - $dstH) / 2);
+					}
+					/*
+					if ($scaleW > $scaleH) {
+						$dstW = round($srcW * $scaleH);
+						$dstX = round(($srcW - $dstW) / 2);
+					} else {
+						$dstH = round($srcH * $scaleW);
+						$dstY = round(($srcH - $dstH) / 2);
+					}
+					 */
+				}
+				imagecopyresampled($this->imgAct, $this->imgTmp, $dstX, $dstY, $srcX, $srcY, $dstW, $dstH, $srcW, $srcH);
+				$ret = true;
+			}
+		}
+		return $ret;
 	}
 
 	/**
