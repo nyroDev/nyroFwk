@@ -116,23 +116,26 @@ class security_default extends security_abstract {
 	 *
 	 * @param db_row $user
 	 * @param boolean $saveLogin Indicates if the session should be saved
+	 * @param boolean $cookieStayConnected Indicats if the stay connected cookie should be set
 	 */
-	public function setUser(db_row $user, $saveLogin=true) {
+	public function setUser(db_row $user, $saveLogin = true, $cookieStayConnected = false) {
 		$this->user = $user;
 		if ($saveLogin)
-			$this->saveLogin();
+			$this->saveLogin($cookieStayConnected);
 	}
 
 	/**
 	 * Save the login.
 	 * Set a new cryptic, save the DB user and save it in session.
+	 *
+	 * @param boolean $cookieStayConnected Indicats if the stay connected cookie should be set
 	 */
-	protected function saveLogin() {
+	protected function saveLogin($cookieStayConnected = false) {
 		$crypticKey = $this->cfg->getInArray('fields', 'cryptic');
 		$cryptic = $this->cryptPass(uniqid(), 'Cryptic');
 		$this->user->set($crypticKey, $cryptic);
 		$this->user->save();
-		$this->logFromCryptic($cryptic);
+		$this->logFromCryptic($cryptic, $cookieStayConnected);
 	}
 	
 	/**
@@ -178,17 +181,12 @@ class security_default extends security_abstract {
 			&& array_key_exists($loginField, $prm)
 			&& array_key_exists($passField, $prm)) {
 				$this->user = $this->table->find(array_merge(
-						$this->cfg->where,
-						$this->getWhereLogin($prm[$loginField], $prm[$passField])
+					$this->cfg->where,
+					$this->getWhereLogin($prm[$loginField], $prm[$passField])
 				));
 				
 				if ($this->user) {
-					$this->saveLogin();
-					if (array_key_exists('stayConnected', $prm) && $prm['stayConnected']) {
-						$cook = factory::get('http_cookie', $this->cfg->cookie);
-						$cook->set($this->user->get($this->cfg->getInArray('fields', 'cryptic')));
-						$cook->save();
-					}
+					$this->saveLogin(array_key_exists('stayConnected', $prm) && $prm['stayConnected']);
 					$this->hook('login');
 				} else
 					$form->addCustomError($loginField, $this->cfg->errorMsg);
@@ -211,10 +209,22 @@ class security_default extends security_abstract {
 	 * Log a session user using his cryptic
 	 *
 	 * @param string $cryptic
+	 * @param boolean $cookieStayConnected Indicats if the stay connected cookie should be set
 	 */
-	public function logFromCryptic($cryptic) {
+	public function logFromCryptic($cryptic, $cookieStayConnected = false) {
 		$this->session->cryptic = $cryptic;
 		$this->logged = true;
+		if ($cookieStayConnected)
+			$this->saveCookieStayConnected();
+	}
+	
+	/**
+	 * Save the connection on the parametred cookie
+	 */
+	public function saveCookieStayConnected() {
+		$cook = factory::get('http_cookie', $this->cfg->cookie);
+		$cook->set($this->user->get($this->cfg->getInArray('fields', 'cryptic')));
+		$cook->save();
 	}
 
 	/**
@@ -224,7 +234,7 @@ class security_default extends security_abstract {
 	 * @param null|string $plus If need to used the second crypt function (or other configured)
 	 * @return string The crypted string
 	 */
-	public function cryptPass($str, $plus='Password') {
+	public function cryptPass($str, $plus = 'Password') {
 		$crypt = $this->cfg->get('crypt'.$plus);
 		if ($crypt && function_exists($crypt))
 			$str = $crypt($str);
@@ -248,14 +258,14 @@ class security_default extends security_abstract {
 		return true;
 	}
 
-	public function hasRole($role=null) {
+	public function hasRole($role = null) {
 		if (is_null($role))
 			return $this->roles;
 
 		return array_key_exists($role, $this->roles);
 	}
 
-	public function delRole($role=null) {
+	public function delRole($role = null) {
 		if (is_null($role)) {
 			$this->roles = array();
 			return true;
@@ -264,7 +274,7 @@ class security_default extends security_abstract {
 		return true;
 	}
 
-	public function check(array $url = null, $redirect=true) {
+	public function check(array $url = null, $redirect = true) {
 		if (is_null($url))
 			$url = request::get();
 
