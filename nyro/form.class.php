@@ -161,7 +161,7 @@ class form extends object {
 						$errorsSection[] = str_replace('[error]', $err, $prm['sectionErrorLine']);
 						$errorsGlobal[] = str_replace('[error]', $err, $prm['globalErrorLine']);
 					}
-					$errors = $errorPos == 'field'?str_replace('[errors]', implode('', $tmp), $prm['lineErrorWrap']) : null;
+					$errors = $errorPos == 'field' ? str_replace('[errors]', implode('', $tmp), $prm['lineErrorWrap']) : null;
 					$line = 'lineError';
 				}
 
