@@ -951,7 +951,7 @@ final class request {
 	 * @return string The default lang
 	 */
 	public static function getDefaultLang() {
-		return self::$cfg->lang;
+		return self::$cfg->defaultLang ? self::$cfg->defaultLang : self::$cfg->lang;
 	}
 
 	/**

@@ -1,6 +1,7 @@
 <?php
 $cfg = array(
 	'lang'=>'en',
+	'defaultLang'=>null,
 	'forceLang'=>false,
 	'forceNoLang'=>false,
 	'noForceLang'=>array(
