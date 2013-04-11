@@ -252,6 +252,7 @@ abstract class db_abstract extends object {
 	 * @param array $prm The parameter for the select query :
 	 *  - array|string fields : The fields to select (default: *)
 	 *  - string table (required) : The table to work in
+	 *  - string moreTables : More table to select (string or array, if array, keys will be used as alias if non numeric)
 	 *  - array join : tables to join. Keys are:
 	 *   - string table (required) : table to join
 	 *   - string dir: how to join (default: 'left')
@@ -275,6 +276,7 @@ abstract class db_abstract extends object {
 					'fields'=>'*',
 					'i18nFields'=>'',
 					'table'=>null,
+					'moreTables'=>false,
 					'join'=>'',
 					'bind'=>array(),
 					'bindData'=>false,
@@ -319,6 +321,20 @@ abstract class db_abstract extends object {
 			}
 
 			$query = 'SELECT '.$f.' FROM '.$tableName;
+			
+			if ($prm['moreTables']) {
+				if (is_array($prm['moreTables'])) {
+					foreach($prm['moreTables'] as $k=>$v) {
+						if (is_numeric($k)) {
+							$query.= ', '.$this->quoteIdentifier($v);
+						} else {
+							$query.= ', '.$this->quoteIdentifier($v).' '.$this->quoteIdentifier($k);
+						}
+					}
+				} else {
+					$query.= ', '.$prm['moreTables'];
+				}
+			}
 
 			$tblAlias = array();
 			if (is_array($prm['join'])) {
