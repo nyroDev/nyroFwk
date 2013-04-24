@@ -52,8 +52,9 @@ class db_row extends object implements ArrayAccess {
 	protected $i18nRows = array();
 
 	protected function afterInit() {
-		if (get_class($this) == 'db_row')
-			$this->cfg->overload('db_row_'.$this->cfg->table->getName());
+		$defaultClass = 'db_row_'.$this->cfg->table->getName();
+		if (get_class($this) != $defaultClass)
+			$this->cfg->overload($defaultClass);
 
 		$this->table = $this->cfg->table;
 

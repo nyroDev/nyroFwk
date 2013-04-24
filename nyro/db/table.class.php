@@ -66,8 +66,9 @@ class db_table extends object {
 	protected $i18nTable;
 
 	protected function afterInit() {
-		if (get_class($this) == 'db_table')
-			$this->cfg->overload('db_table_'.$this->cfg->name);
+		$defaultClass = 'db_table_'.$this->cfg->name;
+		if (get_class($this) != $defaultClass)
+			$this->cfg->overload($defaultClass);
 		$this->rawName = $this->cfg->db->prefixTable($this->cfg->name);
 		$this->_initi18n();
 		$this->_initFields();
