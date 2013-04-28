@@ -107,12 +107,14 @@ class db_pdo_row extends db_row {
 	 */
 	public function getI18nValues() {
 		$ret = array();
-		$primary = $this->getTable()->getI18nTable()->getPrimary();
-		foreach ($this->getI18nRows() as $r) {
-			$lang = $r->get($primary[1]);
-			$ret[$lang] = array();
-			foreach($r->getValues() as $k=>$v) {
-				$ret[$lang][$k] = $v;
+		if ($this->getTable()->hasI18n()) {
+			$primary = $this->getTable()->getI18nTable()->getPrimary();
+			foreach ($this->getI18nRows() as $r) {
+				$lang = $r->get($primary[1]);
+				$ret[$lang] = array();
+				foreach($r->getValues() as $k=>$v)
+					$ret[$lang][$k] = $v;
+			}
 		}
 		return $ret;
 	}

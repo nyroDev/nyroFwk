@@ -17,7 +17,7 @@ class db_pdo_rowset extends db_rowset implements Iterator, Countable, ArrayAcces
 	 */
 	public function get($number) {
 		if (!array_key_exists($number, $this->_rows) && $this->cfg->checkInArray('data', $number)) {
-			$this->_rows[$number] = $this->getDb->getRow($this->getTable(), array(
+			$this->_rows[$number] = $this->getDb()->getRow($this->getTable(), array(
 				'data'=>$this->cfg->getInArray('data', $number),
 			));
 		}

@@ -50,6 +50,15 @@ class db_pdo_table extends db_table {
 	public function getI18nTable() {
 		return $this->i18nTable;
 	}
+	
+	/**
+	 * Indicate if the thable has a i18n table
+	 *
+	 * @return bool
+	 */
+	public function hasI18n() {
+		return !is_null($this->i18nTable);
+	}
 
 	/**
 	 * Get the i18n fields information

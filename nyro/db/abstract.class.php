@@ -10,13 +10,6 @@
 abstract class db_abstract extends object {
 
 	/**
-	 * Tables object cache
-	 *
-	 * @var array
-	 */
-	protected static $tables = array();
-
-	/**
 	 * Get the configuration parameter used to create this object
 	 *
 	 * @return string|array
@@ -35,7 +28,7 @@ abstract class db_abstract extends object {
 	 * @param array $prm Array parameter for the factory
 	 * @return db_table|db_rowset|db_row
 	 */
-	public static function get($type, $table, array $prm = array()) {
+	public function get($type, $table, array $prm = array()) {
 		if ($type == 'table' && isset($this->tables[$table]))
 			return $this->tables[$table];
 

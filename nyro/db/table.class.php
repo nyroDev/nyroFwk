@@ -254,7 +254,7 @@ abstract class db_table extends object {
 	public function getLinkedTable($field) {
 		if ($link = $this->getLinked($field)) {
 			if (!array_key_exists('tableObj', $link))
-				$link['tableObject'] = $this->getDb->getTable($link['table']);
+				$link['tableObject'] = $this->getDb()->getTable($link['table']);
 			return $link['tableObject'];
 		}
 		return null;
@@ -283,7 +283,7 @@ abstract class db_table extends object {
 			$tables = $this->getDb()->getTablesWith(array('start'=>$search));
 			foreach($tables as $t) {
 				$relatedTable = substr($t, strlen($search));
-				$table = $this->getDb->getTable($t);
+				$table = $this->getDb()->getTable($t);
 				$fields = $table->getField();
 				$fk1 = $fk2 = null;
 				foreach($fields as $k=>$v) {
@@ -393,7 +393,7 @@ abstract class db_table extends object {
 			if (is_null($this->targetingTables)) {
 				$this->targetingTables = array();
 				foreach($this->getDb()->getTables() as $tbl) {
-					if ($tbl != $tblName && $this->getDb->getTable($tbl)->isTargeting($tblName)) {
+					if ($tbl != $tblName && $this->getDb()->getTable($tbl)->isTargeting($tblName)) {
 						$this->targetingTables[] = $tbl;
 						$tmpPos = strpos($tbl, $tblName.'_');
 						if ($tmpPos === 0)
@@ -793,7 +793,7 @@ abstract class db_table extends object {
 			$clearTargeting = $this->cfg->cacheClearTargeting;
 		if ($clearTargeting) {
 			foreach($this->getTargetingTables() as $tbl) {
-				$this->getDb->getTable($tbl)->clearCache(false);
+				$this->getDb()->getTable($tbl)->clearCache(false);
 			}
 		}
 		if (!$this->cfg->cacheEnabled)
@@ -823,12 +823,11 @@ abstract class db_table extends object {
 		}
 
 		$prm = array_merge($morePrm, array(
-			'db'=>$this->getDb(),
 			'data'=>$data
 		));
 		if (array_key_exists($this->getIdent(), $data) && $data[$this->getIdent()])
 			$prm['findId'] = $data[$this->getIdent()];
-		return $this->getDb->getRow($this, $prm);
+		return $this->getDb()->getRow($this, $prm);
 	}
 
 }

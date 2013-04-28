@@ -346,7 +346,7 @@ abstract class db_pdo_abstract extends db_abstract {
 					'having'=>''
 				))) {
 
-			$table = $this->getDb()->getTable($prm['table']);
+			$table = $this->getTable($prm['table']);
 			$tableName = $this->quoteIdentifier($prm['table']);
 			if (is_array($prm['fields'])) {
 				$f = implode(',', array_map(array($this, 'quoteIdentifier'), $prm['fields']));
@@ -358,7 +358,7 @@ abstract class db_pdo_abstract extends db_abstract {
 			}
 
 			if (!empty($prm['i18nFields'])) {
-				$i18nTable = $this->getDb()->getTable($prm['table'].db::getCfg('i18n'));
+				$i18nTable = $this->getTable($prm['table'].db::getCfg('i18n'));
 				$i18nTableName = $this->quoteIdentifier($i18nTable->getRawName());
 				$primary = $i18nTable->getPrimary();
 				$prm['join'][] = array(
