@@ -28,8 +28,7 @@ abstract class form_mulValue extends form_abstract {
 			if (!$group)
 				$group = array();
 
-			$db = db::getInstance();
-
+			$db = db::getInstance(); // @todo checkit
 			$values = $db->select(array_merge($dbList, array('result'=>MYSQL_NUM)));
 
 			$tmp = null;

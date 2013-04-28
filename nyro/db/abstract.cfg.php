@@ -1,16 +1,18 @@
 <?php
 $cfg = array(
-	'host'=>REQUIRED,
-	'port'=>REQUIRED,
-	'user'=>REQUIRED,
-	'pass'=>REQUIRED,
-	'base'=>REQUIRED,
+	'tableClass'=>REQUIRED,
+	'rowsetClass'=>REQUIRED,
+	'rowClass'=>REQUIRED,
+	'whereClass'=>REQUIRED,
+	'whereClauseClass'=>REQUIRED,
+
+	'table'=>array(),
+	'rowset'=>array(),
+	'row'=>array(),
+
 	'getInstanceCfg'=>REQUIRED,
-	'fetchMode'=>db::FETCH_ASSOC,
-	'quoteIdentifier'=>'`',
 	'sepCom'=>'~',
 	'sepComVal'=>'¤',
-	'quoteValue'=>'"',
 	'cache'=>array(
 		'ttl'=>3600,
 		'request'=>array('uri'=>false, 'meth'=>array()),

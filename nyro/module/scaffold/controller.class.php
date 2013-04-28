@@ -89,7 +89,7 @@ class module_scaffold_controller extends module_abstract {
 		if (!empty($this->cfg->name)) {
 			$this->cfg->overload('module_scaffold_'.$this->cfg->name);
 
-			$this->table = db::get('table', $this->cfg->name, array(
+			$this->table = $this->getDb()->getTable($this->cfg->name, array(
 				'name'=>$this->cfg->name
 			));
 			$this->cols = $this->table->getCols();
@@ -107,6 +107,15 @@ class module_scaffold_controller extends module_abstract {
 			'cache'=>$this->cfg->cache
 		);
 	}
+	
+	/**
+	 * Get the configured DB instance
+	 *
+	 * @return db_abstract
+	 */
+	protected function getDb() {
+		return $this->cfg->db;
+	}
 
 	protected function execIndex($prm=null) {
 		$this->setViewAction('list');
@@ -120,8 +129,7 @@ class module_scaffold_controller extends module_abstract {
 	protected function execScaffoldIndex($prm = null) {
 		if ($this->isScaffolded()) {
 			if (empty($this->cfg->name)) {
-				$db = db::getInstance();
-				$tables = $db->getTables();
+				$tables = $this->getDb()->getTables();
 				$links = array();
 				foreach($tables as $t) {
 					if (!strpos($t, '_') && !strpos($t, db::getCfg('i18n')))
@@ -227,7 +235,7 @@ class module_scaffold_controller extends module_abstract {
 	 */
 	protected function multipleDelete(array $ids) {
 		$this->table->delete($this->table->getWhere(array(
-			'clauses'=>factory::get('db_whereClause', array(
+			'clauses'=>$this->table->getWhereClause(array(
 					'name'=>$this->table->getRawName().'.'.$this->table->getIdent(),
 					'in'=>$ids
 				))

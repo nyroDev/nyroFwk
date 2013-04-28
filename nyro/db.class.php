@@ -9,12 +9,6 @@
  */
 final class db {
 
-	const FETCH_ASSOC = PDO::FETCH_ASSOC;
-	const FETCH_BOTH = PDO::FETCH_BOTH;
-	const FETCH_NUM = PDO::FETCH_NUM;
-	const FETCH_ROWSET = PDO::FETCH_CLASS;
-	const FETCH_COLUMN = PDO::FETCH_COLUMN;
-
 	/**
 	 * db insrances
 	 *
@@ -28,13 +22,6 @@ final class db {
 	 * @var config
 	 */
 	private static $cfg = null;
-
-	/**
-	 * Tables object cache
-	 *
-	 * @var array
-	 */
-	private static $tables = array();
 
 	/**
 	 * Queries log
@@ -55,7 +42,7 @@ final class db {
 	 * or array to have an unique connection. Array must contain key use to specify the type to use
 	 * @return db_abstract The instance requested
 	 */
-	public static function getInstance($cfg=null) {
+	public static function getInstance($cfg = null) {
 		if (is_array($cfg)) {
 			$cfg['getInstanceCfg'] = $cfg;
 			return factory::get('db_'.$cfg['use'], $cfg);
@@ -85,35 +72,7 @@ final class db {
 	 * @return db_table|db_rowset|db_row
 	 */
 	public static function get($type, $table, array $prm = array()) {
-		if ($type == 'table' && array_key_exists($table, self::$tables))
-			return self::$tables[$table];
-
-		self::init();
-
-		if ($table instanceof db_table) {
-			$tableName = $table->getName();
-			if (!array_key_exists('table', $prm))
-				$prm['table'] = $table;
-		} else {
-			$tableName = $table;
-			if ($type == 'table' && !array_key_exists('name', $prm))
-				$prm['name'] = $table;
-			else if ($type == 'row' && !array_key_exists('table', $prm)) {
-				$db = array_key_exists('db', $prm)? $prm['db'] : self::getInstance();
-				$prm['table'] = self::get('table', $tableName, array('db'=>$db));
-			}
-		}
-
-		if (!($className = self::$cfg->getInArray($type, $tableName)) &&
-			(!factory::isCreable($className = 'db_'.$type.'_'.$tableName)))
-			$className = self::$cfg->get($type.'Class');
-
-		if ($type == 'table') {
-			self::$tables[$table] = factory::get($className, $prm);
-			return self::$tables[$table];
-		}
-
-		return factory::get($className, $prm);
+		return db::getInstance()->get($type, $table, $prm);
 	}
 
 	/**
@@ -123,6 +82,7 @@ final class db {
 	 * @return mixed
 	 */
 	public static function getCfg($key) {
+		self::init();
 		return self::$cfg->get($key);
 	}
 
@@ -149,17 +109,17 @@ final class db {
 	/**
 	 * Add a new query log or get the whole array of log
 	 *
-	 * @param string|null $sql The query or null to get the whole log
+	 * @param string|null $line The query or null to get the whole log
 	 * @param array|null $bind Values Binded or null
 	 * @return void|array Array if $sql is null
 	 */
-	public static function log($sql=null, $bind=null) {
-		if (is_null($sql))
+	public static function log($line = null, $bind = null) {
+		if (is_null($line))
 			return self::$log;
 		else if (empty($bind))
-			self::$log[] = $sql;
+			self::$log[] = $line;
 		else
-			self::$log[] = array($sql, $bind);
+			self::$log[] = array($line, $bind);
 	}
 
 	/**

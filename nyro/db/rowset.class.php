@@ -74,7 +74,7 @@ class db_rowset extends object implements Iterator, Countable, ArrayAccess {
 	 *
 	 * @return array
 	 */
-	public function getFields($mode='flat') {
+	public function getFields($mode = 'flat') {
 		if (!$this->fields[$mode])
 			$this->fields[$mode] = array_keys($this->get(0)->getValues($mode));
 		return $this->fields[$mode];
@@ -86,16 +86,7 @@ class db_rowset extends object implements Iterator, Countable, ArrayAccess {
 	 * @param int $number Index of the ement
 	 * @return db_row Element from the collection
 	 */
-	public function get($number) {
-		if (!array_key_exists($number, $this->_rows) && $this->cfg->checkInArray('data', $number)) {
-			$this->_rows[$number] = db::get('row', $this->getTable(), array(
-				'db'=>$this->getDb(),
-				'table'=>$this->getTable(),
-				'data'=>$this->cfg->getInArray('data', $number),
-			));
-		}
-		return isset($this->_rows[$number]) ? $this->_rows[$number] : null;
-	}
+	abstract public function get($number);
 
 	/**
 	 * Add a row with a db_row or an array

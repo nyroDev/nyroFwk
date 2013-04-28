@@ -77,11 +77,11 @@ class helper_filterTable extends object {
 					$r['label'] = $this->getLabel($r['table']);
 					$r['name'] = $r['tableLink'];
 					$this->form->addFromRelatedFilter($r);
-				} else if ($this->table->hasI18n() && db::isI18nName($field) && ($f = $this->table->getI18nTable()->getField(db::unI18nName($field)))) {
+				} else if ($this->table->hasI18n() && db::isI18nName($field) && ($f = $this->table->getI18nField(db::unI18nName($field)))) {
 					$name = db::unI18nName($field);
 					$f['name'] = $field;
 					$f['label'] = $this->getLabel($field);
-					$f['link'] = $this->table->getI18nTable()->getLinked($name);
+					$f['link'] = $this->table->getI18nTable()->getLinked($name); // @todo checkit
 					$this->form->addFromFieldFilter($f);
 				}
 			}
@@ -189,13 +189,13 @@ class helper_filterTable extends object {
 								'op'=>'LIKE'
 							));
 						}
-					} else if ($this->table->hasI18n() && db::isI18nName($name) && ($f = $this->table->getI18nTable()->getField(db::unI18nName($name)))) {
-						$tblName = $this->table->getI18nTable()->getName();
-						$prim = $this->table->getI18nTable()->getPrimary();
+					} else if ($this->table->hasI18n() && db::isI18nName($name) && ($f = $this->table->getI18nField(db::unI18nName($name)))) {
+						$tblName = $this->table->getI18nTable()->getName(); // @todo checkit
+						$prim = $this->table->getI18nTable()->getPrimary(); // @todo checkit
 						$field = $tblName.'.'.db::unI18nName($name);
 						$clause = '('.$this->table->getName().'.'.$this->table->getIdent().' IN (SELECT '.$tblName.'.'.$prim[0].' FROM '.$tblName.' WHERE ';
 
-						$tmpWhere = $this->table->getI18nTable()->getWhere(array('op'=>'OR'));
+						$tmpWhere = $this->table->getI18nTable()->getWhere(array('op'=>'OR')); // @todo checkit
 
 						if (!array_key_exists('text', $f) || $f['text']) {
 							$tmp = explode(' ', $val);

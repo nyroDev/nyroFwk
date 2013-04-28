@@ -305,7 +305,7 @@ class valid extends object {
 	 * @param mixed $val The value to test against
 	 * @param array $prm The parameter for the test with keys:
 	 *  - mixed value: a value to ignore the test
-	 *  - db_table|string: Table object or tablename (required)
+	 *  - db_table: Table object (required)
 	 *  - string field: Fieldname to test against
 	 * @return bool True if valid
 	 */
@@ -313,8 +313,7 @@ class valid extends object {
 		if (array_key_exists('value', $prm) && $val == $prm['value'])
 			return true;
 
-		$table = $prm['table'] instanceof db_table? $prm['table'] : db::get('table', $prm['table']);
-		$nb = $table->count(array(
+		$nb = $prm['table']->count(array(
 			'where'=>array($prm['field']=>$val),
 			'whereOp'=>'LIKE'
 		));
@@ -330,13 +329,12 @@ class valid extends object {
 	 *
 	 * @param mixed $val The value to test against
 	 * @param array $prm The parameter for the test with keys:
-	 *  - db_table|string: Table object or tablename (required)
+	 *  - db_table: Table object or tablename (required)
 	 *  - string field: Fieldname to test against
 	 * @return bool True if valid
 	 */
 	public function isDbExists($val, array $prm) {
-		$table = $prm['table'] instanceof db_table? $prm['table'] : db::get('table', $prm['table']);
-		$nb = $table->count(array(
+		$nb = $prm['table']->count(array(
 			'where'=>array($prm['field']=>$val),
 			'whereOp'=>'LIKE'
 		));

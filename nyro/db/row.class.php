@@ -1,13 +1,5 @@
 <?php
-/**
- * @author Cédric Nirousset <cedric@nyrodev.com>
- * @version 0.2
- * @package nyroFwk
- */
-/**
- * Interface for db classes
- */
-class db_row extends object implements ArrayAccess {
+abstract class db_row extends object implements ArrayAccess {
 
 	/**
 	 * Changes done
@@ -43,14 +35,7 @@ class db_row extends object implements ArrayAccess {
 	 * @var array
 	 */
 	protected $related = array();
-
-	/**
-	 * i18n rows parsed
-	 *
-	 * @var array
-	 */
-	protected $i18nRows = array();
-
+	
 	protected function afterInit() {
 		$defaultClass = 'db_row_'.$this->cfg->table->getName();
 		if (get_class($this) != $defaultClass)
@@ -212,24 +197,22 @@ class db_row extends object implements ArrayAccess {
 		foreach($i18nFields as $f) {
 			if ((empty($showFields) || in_array(db::getCfg('i18n').$f['name'], $showFields))) {
 				$i18nFieldsT[] = $f['name'];
-				$f['label'] = $this->getTable()->getI18nTable()->getLabel($f['name']);
+				$f['label'] = $this->getTable()->getI18nLabel($f['name']);
 				$form->addFromField($f, true);
 			}
 		}
 
 		$form->finalize();
 
-		if ($i18nRows = $this->getI18nRows()) {
+		if ($i18nValues = $this->getI18nValues()) {
 			$tmp = array();
-			$primary = $this->getTable()->getI18nTable()->getPrimary();
-			foreach($i18nRows as $r) {
-				$lang = $r->get($primary[1]);
-				foreach($r->getValues() as $k=>$v) {
+			foreach($i18nValues as $lang=>$values) {
+				foreach($values as $k=>$v)
 					$tmp[db::getCfg('i18n').'['.$lang.']['.$k.']'] = $v;
-				}
 			}
 			$form->setValues($tmp);
 		}
+
 		$form->setBound(false);
 		if (is_array($showFields) && !empty($showFields))
 			$form->reOrder($showFields);
@@ -267,7 +250,6 @@ class db_row extends object implements ArrayAccess {
 		$this->set($this->getTable()->getIdent(), $id);
 		$this->setNew(false);
 		$this->saveRelated();
-		$this->saveI18n();
 		$this->getTable()->clearCache();
 		return $id;
 	}
@@ -288,7 +270,6 @@ class db_row extends object implements ArrayAccess {
 			$this->getTable()->update($changesTable, $this->whereClause());
 
 		$this->saveRelated();
-		$this->saveI18n();
 		$this->getTable()->clearCache();
 
 		return true;
@@ -316,7 +297,7 @@ class db_row extends object implements ArrayAccess {
 						$curValues = $values;
 						if ($hasFields) {
 							foreach($t as $k=>$v) {
-								if ($k == db::getCfg('relatedValue'))
+								if ($k == $this->getDb()->getKeyConfig('relatedValue'))
 									$curValues[$r['fk2']['name']] = $v;
 								else
 									$curValues[$k] = $v;
@@ -326,25 +307,6 @@ class db_row extends object implements ArrayAccess {
 						$r['tableObj']->insert($curValues);
 					}
 				}
-			}
-		}
-	}
-
-	/**
-	 * Save the i18n values
-	 *
-	 * @throws nException if is new
-	 */
-	public function saveI18n() {
-		if ($this->isNew())
-			throw new nException('db_row::saveI18n: try to save i18n for a new row');
-
-		if (!empty($this->i18nRows)) {
-			list($fkId, $lang) = ($this->getTable()->getI18nTable()->getPrimary());
-			foreach($this->i18nRows as $r) {
-				if ($r->isNew())
-					$r->set($fkId, $this->getId());
-				$r->save();
 			}
 		}
 	}
@@ -463,40 +425,14 @@ class db_row extends object implements ArrayAccess {
 	 * @param string $mode Mode to retrieve the value, only used for related (flat or flatReal)
 	 * @return mixed The value
 	 */
-	public function getI18n($key, $mode='flat', $lang=null) {
-		return $this->getI18nRow($lang)->get($key, $mode);
-	}
+	abstract public function getI18n($key, $mode='flat', $lang=null);
 
 	/**
-	 * Get a i18nRow
-	 *
-	 * @param string $lang Lang needed (if null, the current will be used or a new row will be created)
-	 * @return db_row
-	 */
-	public function getI18nRow($lang = null) {
-		if (is_null($lang) || !$lang)
-			$lang = request::get('lang');
-		if (!array_key_exists($lang, $this->i18nRows)) {
-			if ($this->getTable()->getCfg()->i18nGetDefaultLangIfNotExist && $lang != request::getDefaultLang())
-				return $this->getI18nRow(request::getDefaultLang());
-			$primary = $this->getTable()->getI18nTable()->getPrimary();
-			$this->i18nRows[$lang] = $this->getTable()->getI18nTable()->getRow();
-			$this->i18nRows[$lang]->setValues(array(
-				$primary[0]=>$this->getId(),
-				$primary[1]=>$lang
-			));
-		}
-		return $this->i18nRows[$lang];
-	}
-
-	/**
-	 * Get the instancied i18n rows
-	 *
+	 * Get the i18n values, indexed by lang
+	 * 
 	 * @return array
 	 */
-	public function getI18nRows() {
-		return $this->i18nRows;
-	}
+	abstract public function getI18nValues();
 
 	/**
 	 * Get the values in an array
@@ -628,15 +564,7 @@ class db_row extends object implements ArrayAccess {
 	 * @param bool $force Indicates if the value should be replaced even if it's the same
 	 * @param string|null $lg Lang
 	 */
-	public function setI18n(array $values, $force = false, $lg = null) {
-		if (!is_null($lg) && $lg) {
-			if (count($values))
-				$this->getI18nRow($lg)->setValues($values, $force);
-		} else {
-			foreach($values as $lg=>$val)
-				$this->setI18n($val, $force, $lg);
-		}
-	}
+	abstract public function setI18n(array $values, $force = false, $lg = null);
 
 	/**
 	 * Set a values array
@@ -680,18 +608,6 @@ class db_row extends object implements ArrayAccess {
 	 */
 	public function getChangesOther() {
 		return array_diff_key($this->getChanges(), array_merge($this->getTable()->getField(), array(db::getCfg('i18n')=>true)));
-	}
-
-	/**
-	 * Get the i18n changes
-	 *
-	 * @return array
-	 */
-	public function getChangesI18n() {
-		$tmp = $this->getChanges();
-		if (array_key_exists(db::getCfg('i18n'), $tmp))
-			return $tmp[db::getCfg('i18n')];
-		return array();
 	}
 
 	/**
@@ -765,24 +681,7 @@ class db_row extends object implements ArrayAccess {
 	 * @param string Related Name
 	 * @return db_rowset
 	 */
-	public function getRelated($name) {
-		$related = $this->getTable()->getRelated($this->getTable()->getRelatedTableName($name));
-		$id = $this->getId();
-		if (!$id)
-			return array();
-		return $related['tableObj']->getLinkedTable($related['fk2']['name'])->select(array(
-			'where'=>$this->getWhere(array(
-				'clauses'=>factory::get('db_whereClause', array(
-					'name'=>$related['fk2']['link']['table'].'.'.$related['fk2']['link']['ident'],
-					'in'=>$this->getDb()->selectQuery(array(
-						'fields'=>$related['fk2']['name'],
-						'table'=>$related['tableLink'],
-						'where'=>$related['fk1']['name'].'='.$id
-					))
-				))
-			))
-		));
-	}
+	abstract public function getRelated($name);
 
 	/**
 	 * Set new linked values
@@ -790,52 +689,14 @@ class db_row extends object implements ArrayAccess {
 	 * @param array|db_row $related array of db_row or values of array OR db_row or array of values should be provide $name
 	 * @param string|null $name Table Name (null if array set)
 	 */
-	public function setRelated($related, $name = null) {
-		if (!is_null($name)) {
-			if ($this->getTable()->getI18nTable() && $name == $this->getTable()->getI18nTable()->getName()) {
-				$primary = $this->getTable()->getI18nTable()->getPrimary();
-				foreach($related as $r) {
-					$this->i18nRows[$r[$primary[1]]] = $this->getTable()->getI18nTable()->getRow(
-						array_merge($r, array($primary[0]=>$this->getId())));
-				}
-			} else {
-				$name = $this->getTable()->getRelatedTableName($name);
-				if ($this->getTable()->isRelated($name)) {
-					if (!array_key_exists($name, $this->related))
-						$this->related[$name] = array();
-
-					if ($related instanceof db_row)
-						$this->related[$name][] = $related;
-					else {
-						foreach($related as $v) {
-							if ($v instanceof db_row)
-								$this->related[$name][] = $v;
-							else
-								$this->related[$name][] = $this->getTable()->getRelatedTableRow($name, $v);
-						}
-					}
-				}
-			}
-		} else {
-			foreach($related as $t=>$v)
-				$this->setRelated($v, $t);
-		}
-	}
-
+	abstract public function setRelated($related, $name = null);
+	
 	/**
 	 * Construct Where clause regarding the id
 	 *
-	 * @return string
+	 * @return mixed
 	 */
-	public function whereClause() {
-		$primary = $this->getTable()->getPrimary();
-		$values = $this->getValues('flat');
-		$where = array();
-		foreach($primary as $p) {
-			$where[] = $this->getTable()->getRawName().'.'.$p.='="'.$values[$p].'"';
-		}
-		return implode(' AND ', $where);
-	}
+	abstract public function whereClause();
 
 	/**
 	 * Get the value of a field around the row
@@ -847,52 +708,7 @@ class db_row extends object implements ArrayAccess {
 	 * - boolean asRow: Indicates if the result should be retrieved as db_row object or simple value. Should be set to true only when using ident
 	 * @return array With 2 indexes; 0 -> field value of the previous row (or null), 1 for the next one
 	 */
-	public function getAround(array $prm = array()) {
-		config::initTab($prm, array(
-			'field'=>null,
-			'returnId'=>false,
-			'where'=>null,
-			'asRow'=>false
-		));
-		
-		if ($prm['asRow'])
-			$prm['returnId'] = true;
-
-		$field = $prm['field'];
-		$where = $this->getDb()->makeWhere($prm['where']);
-		if (empty($where))
-			$where = 'WHERE 1';
-
-		if (!is_null($where))
-			$where.= ' AND ';
-		if (is_null($field))
-			$field = $this->getTable()->getIdent();
-		$val = $this->get($field);
-		
-		$query = '(SELECT '.$field.','.$this->getTable()->getIdent().' FROM '.$this->getTable()->getRawName().' '.$where.$field.' < ? ORDER BY '.$field.' DESC LIMIT 1)
-					UNION
-				  (SELECT '.$field.','.$this->getTable()->getIdent().' FROM '.$this->getTable()->getRawName().' '.$where.$field.' > ? ORDER BY '.$field.' ASC LIMIT 1)';
-		$vals = $this->getDb()->query($query, utils::htmlDeOut(array($val, $val)))->fetchAll(PDO::FETCH_NUM);
-		$ret = array(null, null);
-		$useIndex = $prm['returnId'] ? 1 : 0;
-		if (array_key_exists(1, $vals)) {
-			$ret[0] = $vals[0][$useIndex];
-			$ret[1] = $vals[1][$useIndex];
-		} else if (array_key_exists(0, $vals)) {
-			$tmp = $vals[0][0];
-			if ($tmp > $val)
-				$ret[1] = $vals[0][$useIndex];
-			else
-				$ret[0] = $vals[0][$useIndex];
-		}
-		if ($prm['asRow']) {
-			if ($ret[0])
-				$ret[0] = $this->getTable()->find($ret[0]);
-			if ($ret[1])
-				$ret[1] = $this->getTable()->find($ret[1]);
-		}
-		return $ret;
-	}
+	abstract public function getAround(array $prm = array());
 
 	public function __call($name, $prm) {
 		if (strpos($name, 'get') === 0 || strpos($name, 'set') === 0) {
@@ -936,7 +752,7 @@ class db_row extends object implements ArrayAccess {
 			}
 		}
 	}
-
+	
 	/**
 	 * Check if an index exists.
 	 * Required by interface ArrayAccess

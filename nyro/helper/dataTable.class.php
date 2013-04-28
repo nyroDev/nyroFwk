@@ -108,7 +108,7 @@ class helper_dataTable extends object {
 					
 					if ($related['fk2']['link']['i18nFields']) {
 						$i18nTableName = $related['table'].db::getCfg('i18n');
-						$i18nTable = db::get('table', $i18nTableName, array('db'=>$this->table->getDb()));
+						$i18nTable = db::get('table', $i18nTableName, array('db'=>$this->table->getDb())); // @todo checkit
 						$primary = $i18nTable->getPrimary();
 						$query['join'][] = array(
 							'table'=>$i18nTableName,
@@ -141,7 +141,7 @@ class helper_dataTable extends object {
 							'on'=>$this->table->getRawName().'.'.$linked['field'].'='.$alias1.'.'.$linked['ident']
 						);
 						$i18nTableName = $linked['table'].db::getCfg('i18n');
-						$i18nTable = db::get('table', $i18nTableName, array('db'=>$this->table->getDb()));
+						$i18nTable = db::get('table', $i18nTableName, array('db'=>$this->table->getDb())); // @todo checkit
 						$primary = $i18nTable->getPrimary();
 						$query['join'][] = array(
 							'table'=>$i18nTableName,
@@ -268,7 +268,7 @@ class helper_dataTable extends object {
 					'url'=>str_replace(
 						array($prmReplaceSortBy, $prmReplaceSortDir),
 						array(
-							db::isI18nName($h)? $this->table->getI18nTable()->getName().'_'.db::unI18nName($h): $h,
+							db::isI18nName($h) ? $this->table->getI18nTable()->getName().'_'.db::unI18nName($h): $h, // @todo checkit
 							$this->cfg->sortBy == $h && $this->cfg->sortDir == 'asc'? 'desc' : 'asc'
 						),
 						$tmpSortLink),

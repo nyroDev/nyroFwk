@@ -23,7 +23,7 @@ class form_autocomplete extends form_checkbox {
 		if ($this->cfg->allowAdd && count($new) && is_array($new)) {
 			$dbList = $this->cfg->dbList;
 			if (is_array($dbList) && $dbList['table']) {
-				$tbl = db::get('table', $dbList['table']);
+				$tbl = db::get('table', $dbList['table']); // @todo checkit
 				$list = utils::htmlDeOut($this->cfg->list);
 
 				$i18n = isset($dbList['i18nFields']) && $dbList['i18nFields'];

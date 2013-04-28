@@ -28,7 +28,7 @@ class db_pdo_mysql extends db_pdo_abstract {
 			if (is_null($this->tables)) {
 				$this->tables = array();
 				$stmt = $this->query('SHOW TABLES');
-				$this->tables['raw'] = $stmt->fetchAll(db::FETCH_COLUMN);
+				$this->tables['raw'] = $stmt->fetchAll(db_pdo_abstract::FETCH_COLUMN);
 				$this->tables['unprefix'] = array();
 				foreach($this->tables['raw'] as $r) {
 					$this->tables['unprefix'][$r] = $this->cfg->prefix ? str_replace($this->cfg->prefix, '', $r) : $r;
@@ -37,22 +37,6 @@ class db_pdo_mysql extends db_pdo_abstract {
 			$cache->save();
 		}
 		return $this->tables[$unPrefix ? 'raw' : 'unprefix'];
-	}
-	
-	/**
-	 * Add a prefix that was previsouly removed for a table name
-	 * 
-	 * @param string $table Table name
-	 * @return string Table name with it's prefix, if existing
-	 */
-	public function prefixTable($table) {
-		if ($this->cfg->prefix) {
-			$tables = $this->getTables(false);
-			$index = array_search($table, $tables);
-			if ($index)
-				$table = $index;
-		}
-		return $table;
 	}
 
 	/**
@@ -77,7 +61,7 @@ class db_pdo_mysql extends db_pdo_abstract {
 
 			$i = 0;
 			$p = 0;
-			while($row = $stmt->fetch(db::FETCH_ASSOC)) {
+			while($row = $stmt->fetch(db_pdo_abstract::FETCH_ASSOC)) {
 				$length = null;
 				$precision = null;
 				$unsigned = preg_match('/unsigned/', $row[$fType]);

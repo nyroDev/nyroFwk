@@ -57,7 +57,8 @@ class security_default extends security_abstract {
 		$this->session = session::getInstance(array(
 			'nameSpace'=>$this->cfg->sessionNameSpace
 		));
-		$this->table = db::get('table', $this->cfg->table);
+		if (!$this->cfg->table instanceof db_table)
+			$this->table = $this->cfg->db->getTable($this->cfg->table);
 		$this->autoLogin();
 	}
 

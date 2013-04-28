@@ -183,9 +183,7 @@ class form_db extends form {
 				$order = null;
 				$join = null;
 				if ($field['link']['fields']) {
-					$linkedTable = db::get('table', $field['link']['table'], array(
-						'db'=>$this->cfg->table->getDb()
-					));
+					$linkedTable = $this->cfg->table->getTable($field['link']['table']);
 					$tmp = array();
 					foreach(explode(',', $field['link']['fields']) as $t) {
 						if ($linkedInfo = $linkedTable->getLinkedTableName($t)) {

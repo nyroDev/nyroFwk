@@ -1,5 +1,6 @@
 <?php
 $cfg = array(
+	'db'=>db::getInstance(),
 	'name'=>null,
 
 	'prefixExec'=>'scaffold',

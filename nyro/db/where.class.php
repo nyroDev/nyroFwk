@@ -5,9 +5,9 @@
  * @package nyroFwk
  */
 /**
- * Where clause  to be used in queries
+ * Where clause to be used in queries
  */
-class db_where extends object implements Countable {
+abstract class db_pdo extends object implements Countable {
 
 	/**
 	 * The wher clauses
@@ -65,15 +65,7 @@ class db_where extends object implements Countable {
 	 *  - op string The operator for testing (default: =)
 	 *  - val string The value to test against (required)
 	 */
-	public function add($prm) {
-		if (is_array($prm) && !config::initTab($prm, array(
-				'field'=>null,
-				'op'=>'=',
-				'val'=>null
-			)))
-			return;
-		$this->clauses[] = $prm;
-	}
+	abstract public function add($prm);
 
 	/**
 	 * Get the clauses as an array
@@ -82,31 +74,7 @@ class db_where extends object implements Countable {
 	 *  - bind array value to bind
 	 *  - where string Full Where clause to use
 	 */
-	public function toArray() {
-		$bind = array();
-		$where = array();
-
-		foreach($this->clauses as $c) {
-			if ($c instanceof db_where) {
-				$tmp = $c->toArray();
-				$where[] = $tmp['where'];
-				$bind = array_merge($bind, $tmp['bind']);
-			} else if ($c instanceof db_whereClause) {
-				$where[] = ''.$c;
-			} else if (is_array($c)) {
-				$where[] = $this->getDb()->quoteIdentifier($c['field']).' '.$c['op'].' ?';
-				$bind[] = is_array($c['val']) ? '('.implode(',', $c['val']).')' : $this->getDb()->quoteValue($c['val']);
-			} else {
-				// Should be a raw string
-				$where[] = $c;
-			}
-		}
-
-		return array(
-			'bind'=>$bind,
-			'where'=>'('.implode(') '.$this->cfg->op.' (', $where).')',
-		);
-	}
+	abstract public function toArray();
 
 	/**
 	 * Get the number of clauses
@@ -122,18 +90,7 @@ class db_where extends object implements Countable {
 	 *
 	 * @return string
 	 */
-	public function toString() {
-		$prm = $this->toArray();
-
-		$tmp = explode('?', $prm['where'], count($prm['bind'])+1);
-		array_splice($prm['bind'], count($tmp));
-
-		$where = '';
-		while($tmp2 = array_shift($tmp)) {
-			$where.= $tmp2.array_shift($prm['bind']);
-		}
-		return $where;
-	}
+	abstract public function toString();
 
 	public function __toString() {
 		return $this->toString();
