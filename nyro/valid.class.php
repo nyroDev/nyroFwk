@@ -41,7 +41,7 @@ class valid extends object {
 	 * @param array $prm Parameter for this rule
 	 * @param string $msg The error message
 	 */
-	public function addRule($type, $prm=null, $msg=null) {
+	public function addRule($type, $prm = null, $msg = null) {
 		if (!is_array($prm) && !is_callable($prm))
 			$prm = array($prm);
 		$this->cfg->setInArray('rules', $type, $prm);
@@ -105,7 +105,7 @@ class valid extends object {
 	 * @param null $prm The parameter for the test (not used here)
 	 * @return bool True if valid
 	 */
-	public function isRequired($val, $prm=null) {
+	public function isRequired($val, $prm = null) {
 		if (empty($val)) {
 			$this->errors[] = sprintf($this->getMessage('required'), $this->cfg->label);
 			return false;
@@ -120,7 +120,7 @@ class valid extends object {
 	 * @param null $prm The parameter for the test (not used here)
 	 * @return bool True if valid
 	 */
-	public function isNumeric($val, $prm=null) {
+	public function isNumeric($val, $prm = null) {
 		if (!is_numeric($val)) {
 			$this->errors[] = sprintf($this->getMessage('numeric'), $this->cfg->label);
 			return false;
@@ -135,7 +135,7 @@ class valid extends object {
 	 * @param null $prm The parameter for the test (not used here)
 	 * @return bool True if valid
 	 */
-	public function isInt($val, $prm=null) {
+	public function isInt($val, $prm = null) {
 		if (!is_numeric($val) || $val != (int)$val) {
 			$this->errors[] = sprintf($this->getMessage('int'), $this->cfg->label);
 			return false;
@@ -150,7 +150,7 @@ class valid extends object {
 	 * @param mixed $prm The parameter for the test. Key 0 should be here and is the value to test against
 	 * @return bool True if valid
 	 */
-	public function isDifferent($val, $prm=null) {
+	public function isDifferent($val, $prm = null) {
 		if ($val == $prm[0]) {
 			$this->errors[] = sprintf($this->getMessage('different'), $this->cfg->label, $prm[0]);
 			return false;
@@ -165,7 +165,7 @@ class valid extends object {
 	 * @param array|string $prm The parameter for the test Array to search in or string to test directly against
 	 * @return bool True if valid
 	 */
-	public function isIn($val, $prm=null) {
+	public function isIn($val, $prm = null) {
 		$ret = true;
 		$val = is_array($val)? $val : array($val);
 		$val = array_filter($val);
@@ -186,7 +186,7 @@ class valid extends object {
 	 * @param form_abstract|string $prm The parameter for the test. If form_abstract is provided, the rawValue will be used for the test
 	 * @return bool True if valid
 	 */
-	public function isEqual($val, $prm=null) {
+	public function isEqual($val, $prm = null) {
 		$ret = true;
 		if ($prm[0] instanceof form_abstract) {
 			if ($val != $prm[0]->getRawValue()) {
@@ -211,7 +211,7 @@ class valid extends object {
 	 * - array fields: The grouped fields names
 	 * @return bool True if valid
 	 */
-	public function isGroupedFields($val, $prm=null) {
+	public function isGroupedFields($val, $prm = null) {
 		$nbFilled = 0;
 		foreach($prm['fields'] as $f) {
 			$val = $prm['form']->getValue($f);
@@ -236,7 +236,7 @@ class valid extends object {
 	 * - array fields: The fields names
 	 * @return bool True if valid
 	 */
-	public function isAtLeastOneField($val, $prm=null) {
+	public function isAtLeastOneField($val, $prm = null) {
 		$nbFilled = 0;
 		foreach($prm['fields'] as $f) {
 			$val = $prm['form']->getValue($f);
@@ -258,7 +258,7 @@ class valid extends object {
 	 * @param mixed $prm A valid PHP callback. This callback should true if valid or false if not or a string if a specific message should be used
 	 * @return bool True if valid
 	 */
-	public function isCallback($val, $prm=null) {
+	public function isCallback($val, $prm = null) {
 		$tmp = call_user_func($prm, $val);
 		if ($tmp !== true) {
 			$tmp = is_string($tmp) ? $tmp : 'callback';
@@ -276,7 +276,7 @@ class valid extends object {
 	 * @param null $prm The parameter for the test (not used here)
 	 * @return bool True if valid
 	 */
-	public function isUrl($val, $prm=null) {
+	public function isUrl($val, $prm = null) {
 		if (!filter_var($val, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED)) {
 			$this->errors[] = sprintf($this->getMessage('url'), $this->cfg->label);
 			return false;
@@ -291,7 +291,7 @@ class valid extends object {
 	 * @param null $prm The parameter for the test (not used here)
 	 * @return bool True if valid
 	 */
-	public function isEmail($val, $prm=null) {
+	public function isEmail($val, $prm = null) {
 		if (!filter_var($val, FILTER_VALIDATE_EMAIL)) {
 			$this->errors[] = sprintf($this->getMessage('email'), $this->cfg->label);
 			return false;
@@ -315,7 +315,7 @@ class valid extends object {
 
 		$nb = $prm['table']->count(array(
 			'where'=>array($prm['field']=>$val),
-			'whereOp'=>'LIKE'
+			'whereOp'=>db_where::OP_LIKE
 		));
 		if ($nb > 0) {
 			$this->errors[] = sprintf($this->getMessage('dbUnique'), $val, $this->cfg->label);
@@ -336,7 +336,7 @@ class valid extends object {
 	public function isDbExists($val, array $prm) {
 		$nb = $prm['table']->count(array(
 			'where'=>array($prm['field']=>$val),
-			'whereOp'=>'LIKE'
+			'whereOp'=>db_where::OP_LIKE
 		));
 		if ($nb == 0) {
 			$this->errors[] = sprintf($this->getMessage('dbExists'), $val, $this->cfg->label);
