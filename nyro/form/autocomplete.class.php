@@ -1,7 +1,7 @@
 <?php
 class form_autocomplete extends form_checkbox {
 
-	public function setValue($value, $refill=false) {
+	public function setValue($value, $refill = false) {
 		if (is_array($value) && $this->cfg->uniqValue) {
 			parent::setValue(array_shift($value));
 		} else {
@@ -22,8 +22,8 @@ class form_autocomplete extends form_checkbox {
 		unset($values['new']);
 		if ($this->cfg->allowAdd && count($new) && is_array($new)) {
 			$dbList = $this->cfg->dbList;
-			if (is_array($dbList) && $dbList['table']) {
-				$tbl = db::get('table', $dbList['table']); // @todo checkit
+			if (is_array($dbList) && $dbList['table'] && $dbList['db']) {
+				$tbl = $dbList['db']->getTable($dbList['table']);
 				$list = utils::htmlDeOut($this->cfg->list);
 
 				$i18n = isset($dbList['i18nFields']) && $dbList['i18nFields'];
@@ -35,8 +35,7 @@ class form_autocomplete extends form_checkbox {
 					if ($exists === false) {
 						$row = $tbl->getRow();
 						if ($i18n) {
-							$i18nRow = $row->getI18nRow(); // @todo checkit
-							$i18nRow->set($dbList['i18nFields'], $v);
+							$row->setI18n(array($dbList['i18nFields']=>$v));
 						} else {
 							$row->set($field, $v);
 						}

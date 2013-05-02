@@ -487,7 +487,6 @@ abstract class db_pdo_abstract extends db_abstract {
 			$stmt = $this->query($prm);
 			$fetchMode = $this->cfg->fetchMode;
 		}
-
 		if ($fetchMode == PDO::FETCH_CLASS) {
 			$tmp = $stmt->fetchAll(PDO::FETCH_ASSOC);
 			return $tmp;

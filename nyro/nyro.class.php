@@ -141,7 +141,7 @@ final class nyro {
 	 * @return string The debug to be shown
 	 */
 	private static function handleError(Exception $err) {
-		return debug::trace($err, DEV? 2 : 0);
+		return debug::trace($err, DEV ? 2 : 0);
 	}
 
 }

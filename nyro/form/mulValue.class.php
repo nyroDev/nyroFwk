@@ -19,7 +19,7 @@ abstract class form_mulValue extends form_abstract {
 			$this->cfg->name.= '[]';
 
 		$dbList = $this->cfg->dbList;
-		if (is_array($dbList) && $dbList['table']) {
+		if (is_array($dbList) && $dbList['table'] && $dbList['db']) {
 			$list = $this->cfg->list;
 			if (!$list)
 				$list = array();
@@ -28,7 +28,7 @@ abstract class form_mulValue extends form_abstract {
 			if (!$group)
 				$group = array();
 
-			$db = db::getInstance(); // @todo checkit
+			$db = $dbList['db'];
 			$values = $db->select(array_merge($dbList, array('result'=>MYSQL_NUM)));
 
 			$tmp = null;

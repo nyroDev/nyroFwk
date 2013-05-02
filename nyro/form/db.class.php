@@ -16,7 +16,7 @@ class form_db extends form {
 	 * @param bool $isI18n
 	 * @return form_abstract Reference to the new element
 	 */
-	public function addFromField(array $field, $isI18n=false) {
+	public function addFromField(array $field, $isI18n = false) {
 		$prm = $this->getFromFieldPrm($field);
 		return $this->add($prm['type'], $prm, $isI18n);
 	}
@@ -33,6 +33,7 @@ class form_db extends form {
 			'label'=>$related['label'],
 			'valid'=>array_key_exists('valid', $related)? $related['valid'] : false
 		);
+		$prm['dbList']['db'] = $this->cfg->table->getDb();
 		if (isset($related['comment']) && is_array($related['comment']))
 			$prm = array_merge($prm, $related['comment']);
 		$prm['dbList']['fields'] = $related['fk2']['link']['ident'].
@@ -127,6 +128,7 @@ class form_db extends form {
 			'label'=>$related['label'],
 			'valid'=>array_key_exists('valid', $related)? $related['valid'] : false
 		);
+		$prm['dbList']['db'] = $this->cfg->table->getDb();
 		$prm['dbList']['fields'] = $related['fk2']['link']['ident'].
 				($prm['dbList']['fields']? ','.$prm['dbList']['fields'] : null);
 		$type = 'checkbox';
@@ -183,7 +185,7 @@ class form_db extends form {
 				$order = null;
 				$join = null;
 				if ($field['link']['fields']) {
-					$linkedTable = $this->cfg->table->getTable($field['link']['table']);
+					$linkedTable = $this->cfg->table->getDb()->getTable($field['link']['table']);
 					$tmp = array();
 					foreach(explode(',', $field['link']['fields']) as $t) {
 						if ($linkedInfo = $linkedTable->getLinkedTableName($t)) {
@@ -208,6 +210,7 @@ class form_db extends form {
 					$order = implode(' ASC, ', $tmp).' ASC';
 				}
 				$prm['dbList'] = array(
+					'db'=>$this->cfg->table->getDb(),
 					'fields'=>$field['link']['table'].'.'.$field['link']['ident'].$fields,
 					'i18nFields'=>$field['link']['i18nFields'],
 					'ident'=>$field['link']['ident'],
