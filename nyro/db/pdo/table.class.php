@@ -157,6 +157,15 @@ class db_pdo_table extends db_table {
 		}
 		return $ret;
 	}
+	
+	/**
+	 * Retrieve the fields for this table
+	 *
+	 * @return array
+	 */
+	protected function getConfiguredFields() {
+		return $this->getDb()->fields($this->cfg->name);
+	}
 
 	/**
 	 * Get the label for the i18n fields

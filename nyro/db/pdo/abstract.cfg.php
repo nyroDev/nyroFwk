@@ -19,4 +19,6 @@ $cfg = array(
 	'fetchMode'=>db_pdo_abstract::FETCH_ASSOC,
 	'quoteIdentifier'=>'`',
 	'quoteValue'=>'"',
+	'sepCom'=>'~',
+	'sepComVal'=>'¤',
 );

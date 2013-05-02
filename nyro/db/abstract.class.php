@@ -18,7 +18,6 @@ abstract class db_abstract extends object {
 		return $this->cfg->getInstanceCfg;
 	}
 	
-	
 
 	/**
 	 * Get a db object
@@ -251,13 +250,5 @@ abstract class db_abstract extends object {
 		}
 		return $table;
 	}
-
-	/**
-	 * Returns the fields
-	 *
-	 * @param string $table TableName
-	 * @return array
-	 */
-	abstract public function fields($table);
 
 }

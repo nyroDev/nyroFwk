@@ -58,13 +58,14 @@ abstract class db_table extends object {
 	 */
 	protected $targetingTables;
 
-	protected function afterInit() {
+	protected function beforeInit() {
 		$defaultClass = 'db_table_'.$this->cfg->name;
 		if (get_class($this) != $defaultClass)
 			$this->cfg->overload($defaultClass);
-
+	}
+	
+	protected function afterInit() {
 		$this->rawName = $this->getDb()->prefixTable($this->cfg->name);
-		
 		$this->_initFields();
 		$this->_initIdent();
 		$this->_initLinkedTables();
@@ -113,10 +114,17 @@ abstract class db_table extends object {
 	abstract public function getI18nWhereClause($field, $val);
 
 	/**
+	 * Get the configured fields for this table
+	 *
+	 * @return array
+	 */
+	abstract protected function getConfiguredFields();
+	
+	/**
 	 * Initialize the fields
 	 */
 	protected function _initFields() {
-		$this->fields = $this->getDb()->fields($this->cfg->name);
+		$this->fields = $this->getConfiguredFields();
 		$this->cols = array_keys($this->fields);
 
 		if (array_key_exists($this->cfg->inserted, $this->fields))

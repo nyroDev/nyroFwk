@@ -628,4 +628,12 @@ abstract class db_pdo_abstract extends db_abstract {
 		return null;
 	}
 
+	/**
+	 * Returns the fields
+	 *
+	 * @param string $table TableName
+	 * @return array
+	 */
+	abstract public function fields($table);
+
 }

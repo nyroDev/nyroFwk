@@ -11,8 +11,6 @@ $cfg = array(
 	'row'=>array(),
 
 	'getInstanceCfg'=>REQUIRED,
-	'sepCom'=>'~',
-	'sepComVal'=>'¤',
 	'cache'=>array(
 		'ttl'=>3600,
 		'request'=>array('uri'=>false, 'meth'=>array()),
