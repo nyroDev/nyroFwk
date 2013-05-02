@@ -7,7 +7,7 @@
 /**
  * Where clause to be used in queries
  */
-abstract class db_pdo extends object implements Countable {
+abstract class db_where extends object implements Countable {
 
 	/**
 	 * The wher clauses
