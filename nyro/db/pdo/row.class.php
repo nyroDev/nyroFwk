@@ -65,7 +65,7 @@ class db_pdo_row extends db_row {
 	 * @param string $mode Mode to retrieve the value, only used for related (flat or flatReal)
 	 * @return mixed The value
 	 */
-	public function getI18n($key, $mode='flat', $lang=null) {
+	public function getI18n($key, $mode = 'flat', $lang = null) {
 		return $this->getI18nRow($lang)->get($key, $mode);
 	}
 

@@ -213,7 +213,7 @@ abstract class db_abstract extends object {
 	/**
 	 * Create a Select Query
 	 *
-	 * @param array|string $prm Query as string or array: The parameter for the select query (@see selectQuery) and plus:
+	 * @param array|string $prm Query as string or array: The parameter for the select query and plus:
 	 *  - int result : The result type MYSQL_ASSOC, MYSQL_NUM or MYSQL_BOTH (default: MYSQL_BOTH)
 	 * @return array Numeric array. Each line is one result
 	 */
@@ -222,9 +222,9 @@ abstract class db_abstract extends object {
 	/**
 	 * Count the number of result
 	 *
-	 * @param array $prm Same option than selectQuery
+	 * @param array $prm Same option than select
 	 * @return int
-	 * @see selectQuery
+	 * @see select
 	 */
 	abstract public function count(array $prm);
 

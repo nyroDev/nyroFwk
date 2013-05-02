@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Cédric Nirousset <cedric@nyrodev.com>
+ * @author CÃ©dric Nirousset <cedric@nyrodev.com>
  * @version 0.2
  * @package nyroFwk
  */
@@ -22,14 +22,37 @@ class db_pdo_table extends db_table {
 	}
 
 	/**
+	 * Initialize the primary and ident information, if needed
+	 */
+	protected function _initIdent() {
+		if (empty($this->cfg->primary)) {
+			$primary = array();
+			foreach($this->fields as $n=>&$f)
+				if ($f['primary']) {
+					$primary[$f['primaryPos']] = $n;
+					if ($f['identity']) {
+						$this->cfg->ident = $n;
+					}
+				}
+			$this->cfg->primary = $primary;
+		} else if(is_string($this->cfg->primary))
+			$this->cfg->primary = array($this->cfg->primary);
+	}
+	
+		/**
+	 * Initialize the linked tables, if needed
+	 */
+	protected function _initLinkedTables() {
+		if (!$this->isI18n())
+			return parent::_initLinkedTables();
+	}
+
+	/**
 	 * Init the i18n table
 	 */
 	protected function _initI18n() {
 		if ($i18ntable = $this->getDb()->getI18nTable($this->getRawName())) {
-			$this->i18nTable = db::get('table', $i18ntable, array(
-				'name'=>$i18ntable,
-				'db'=>$this->getDb()
-			));
+			$this->i18nTable = $this->getDb()->getTable($i18ntable);
 		}
 	}
 
@@ -68,7 +91,7 @@ class db_pdo_table extends db_table {
 	 * @return array|null
 	 */
 	public function geti18nField($field = null, $keyVal = null) {
-		return $this->getI18nTable()->getField($field, $keyVal);
+		return $this->hasI18n() ? $this->getI18nTable()->getField(db::unI18nName($field), $keyVal) : null;
 	}
 	
 	/**
@@ -86,23 +109,53 @@ class db_pdo_table extends db_table {
 		}
 		return $tmp;
 	}
-
+	
 	/**
-	 * Initialize the primary and ident information, if needed
+	 * Get linked information about a i18n field
+	 * 
+	 * @param string $field Field name
+	 * @return array|null
 	 */
-	protected function _initIdent() {
-		if (empty($this->cfg->primary)) {
-			$primary = array();
-			foreach($this->fields as $n=>&$f)
-				if ($f['primary']) {
-					$primary[$f['primaryPos']] = $n;
-					if ($f['identity']) {
-						$this->cfg->ident = $n;
-					}
+	public function getI18nLinked($field) {
+		return $this->hasI18n() ? $this->getI18nTable()->getLinked($field) : null;
+	}
+	
+	/**
+	 * Get a where clause for a i18n field
+	 *
+	 * @param string $field
+	 * @param mixed $val
+	 * @return string
+	 */
+	public function getI18nWhereClause($field, $val) {
+		$ret = null;
+		if ($this->hasI18n()) {
+			$f = $this->geti18nField(db::unI18nName($field));
+			$tblName = $this->getI18nTable()->getName();
+			$prim = $this->getI18nTable()->getPrimary();
+			$field = $tblName.'.'.db::unI18nName($field);
+			
+			$ret = '('.$this->getName().'.'.$this->getIdent().' IN (SELECT '.$tblName.'.'.$prim[0].' FROM '.$tblName.' WHERE ';
+
+			$tmpWhere = $this->getI18nTable()->getWhere(array('op'=>db_where::OPLINK_OR));
+			if (isset($f['text']) && $f['text']) {
+				$tmp = array_filter(array_map('trim', explode(' ', $val)));
+				foreach($tmp as $t) {
+					$tmpWhere->add(array(
+						'field'=>$field,
+						'val'=>$t,
+						'op'=>db_where::OP_LIKEALMOST
+					));
 				}
-			$this->cfg->primary = $primary;
-		} else if(is_string($this->cfg->primary))
-			$this->cfg->primary = array($this->cfg->primary);
+			} else {
+				$tmpWhere->add(array(
+					'field'=>$field,
+					'val'=>$val
+				));
+			}
+			$ret.= $tmpWhere.'))';
+		}
+		return $ret;
 	}
 
 	/**
@@ -114,11 +167,122 @@ class db_pdo_table extends db_table {
 	public function getI18nLabel($field = null) {
 		return $this->i18nTable->getLabel($field);
 	}
+	
+	/**
+	 * Get a field name to be used in query (like order)
+	 *
+	 * @param string $field
+	 * @return string
+	 */
+	public function getFieldQuery($field) {
+		return db::isI18nName($field) ? $this->getI18nTable()->getName().'_'.db::unI18nName($field) : $field;
+	}
+	
+	/**
+	 * prepare a query for a specific sortBy field
+	 *
+	 * @param string $sortBy
+	 * @param array $query
+	 * @return array
+	 */
+	public function getSortBy($sortBy, $query) {
+		$sortByRet = $sortBy;
+		if ($this->isRelated($sortBy)) {
+			$related = $this->getRelated($sortBy);
+			$tmp = array();
+
+			$fields = array_filter(explode(',', $related['fk2']['link']['fields']));
+			$tableName = $related['fk2']['link']['table'];
+			foreach($fields as $f)
+				$tmp[] = $tableName.'.'.$f;
+
+			$fields = array_filter(explode(',', $related['fk2']['link']['i18nFields']));
+			$tableName.= db::getCfg('i18n');
+			foreach($fields as $f)
+				$tmp[] = $tableName.'.'.$f;
+			$sortByRet = implode(', ', $tmp);
+			if (!$this->getCfg()->autoJoin) {
+				$f = $related['tableObj']->getRawName();
+				if (!isset($query['join']))
+					$query['join'] = array();
+				$query['join'][] = array(
+					'table'=>$f,
+					'dir'=>'left outer',
+					'on'=>$this->getRawName().'.'.$related['fk1']['link']['ident'].'='.$f.'.'.$related['fk1']['name']
+				);
+				$query['join'][] = array(
+					'table'=>$related['table'],
+					'dir'=>'left outer',
+					'on'=>$f.'.'.$related['fk2']['name'].'='.$related['table'].'.'.$related['fk2']['link']['ident']
+				);
+
+				if ($related['fk2']['link']['i18nFields']) {
+					$i18nTableName = $related['table'].db::getCfg('i18n');
+					$i18nTable = $this->getDb()->getTable($i18nTableName);
+					$primary = $i18nTable->getPrimary();
+					$query['join'][] = array(
+						'table'=>$i18nTableName,
+						'dir'=>'left outer',
+						'on'=>$f.'.'.$related['fk2']['name'].'='.$i18nTableName.'.'.$primary[0].
+							' AND '.$i18nTableName.'.'.$primary[1].'="'.request::get('lang').'"'
+					);
+				}
+
+				$query['group'] = $this->getRawName().'.'.$this->getIdent();
+			}
+		} else if ($this->isLinked($sortBy)) {
+			$linked = $this->getLinked($sortBy);
+			$tmpSort = array();
+			foreach(explode(',', trim($linked['fields'].','.$linked['i18nFields'], ',')) as $tmp)
+				$tmpSort[] = $linked['field'].'.'.$tmp;
+			$sortByRet = implode(', ', $tmpSort);
+			if (!$this->getCfg()->autoJoin) {
+				if (!isset($query['join']))
+					$query['join'] = array();
+				$alias = $linked['field'];
+				if ($linked['i18nFields']) {
+					$alias1 = $alias.'1';
+					$query['join'][] = array(
+						'table'=>$linked['table'],
+						'alias'=>$alias1,
+						'dir'=>'left outer',
+						'on'=>$this->getRawName().'.'.$linked['field'].'='.$alias1.'.'.$linked['ident']
+					);
+					$i18nTableName = $linked['table'].db::getCfg('i18n');
+					$i18nTable = $this->getDb()->getTable($i18nTableName);
+					$primary = $i18nTable->getPrimary();
+					$query['join'][] = array(
+						'table'=>$i18nTableName,
+						'alias'=>$alias,
+						'dir'=>'left outer',
+						'on'=>$alias1.'.'.$linked['ident'].'='.$alias.'.'.$primary[0].
+							' AND '.$alias.'.'.$primary[1].'="'.request::get('lang').'"'
+					);
+				} else {
+					$query['join'][] = array(
+						'table'=>$linked['table'],
+						'alias'=>$alias,
+						'dir'=>'left outer',
+						'on'=>$this->getRawName().'.'.$linked['field'].'='.$alias.'.'.$linked['ident']
+					);
+				}
+			}
+		} else if ($sortBy) {
+			if (strpos($sortBy, $this->getName()) !== false || strpos($sortBy, '.') !== false)
+				$sortByRet = $sortBy;
+			else
+				$sortByRet = $this->getName().'.'.$sortBy;
+		}
+		return array(
+			'sortBy'=>$sortByRet,
+			'query'=>$query
+		);
+	}
 
 	/**
 	 * Search on the table
 	 *
-	 * @param array $prm Select query configuration. Same parameter than db::select, with more:
+	 * @param array $prm Select query configuration. Same parameter than db_abstract::select, with more:
 	 *  - db_where|string|null filter: Where clause to filter the result. If string, serach to be equal to the identity
 	 *  - bool first: Return onlt the first result as a db_row
 	 * @return db_rowset|db_row
@@ -274,7 +438,7 @@ class db_pdo_table extends db_table {
 				if ($p['i18nFields']) {
 					$fieldsI18n = array();
 					$i18nTableName = $p['table'].db::getCfg('i18n');
-					$i18nTable = db::get('table', $i18nTableName, array('db'=>$this->getDb())); // @todo checkit
+					$i18nTable = $this->getDb()->getTable($i18nTableName);
 					$primary = $i18nTable->getPrimary();
 					$i18nAlias = $alias.db::getCfg('i18n');
 					$prm['join'][] = array(
@@ -333,7 +497,7 @@ class db_pdo_table extends db_table {
 				if ($p['fk2']['link']['i18nFields']) {
 					$fieldsI18n = array();
 					$i18nTableName = $p['table'].db::getCfg('i18n');
-					$i18nTable = db::get('table', $i18nTableName, array('db'=>$this->getDb())); // @todo checkit
+					$i18nTable = $this->getDb()->getTable($i18nTableName);
 					$primary = $i18nTable->getPrimary();
 					$prm['join'][] = array(
 						'table'=>$i18nTableName,

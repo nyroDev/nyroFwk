@@ -1,6 +1,6 @@
 <?php
 $cfg = array(
 	'db'=>db::getInstance(),
-	'op'=>'AND',
+	'op'=>db_where::OPLINK_AND,
 	'clauses'=>array(),
 );

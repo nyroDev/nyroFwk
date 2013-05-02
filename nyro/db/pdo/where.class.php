@@ -20,7 +20,7 @@ class db_pdo_where extends db_where {
 	public function add($prm) {
 		if (is_array($prm) && !config::initTab($prm, array(
 				'field'=>null,
-				'op'=>'=',
+				'op'=>db_where::OP_EQUAL,
 				'val'=>null
 			)))
 			return;
@@ -46,8 +46,21 @@ class db_pdo_where extends db_where {
 			} else if ($c instanceof db_whereClause) {
 				$where[] = ''.$c;
 			} else if (is_array($c)) {
-				$where[] = $this->getDb()->quoteIdentifier($c['field']).' '.$c['op'].' ?';
-				$bind[] = is_array($c['val']) ? '('.implode(',', $c['val']).')' : $this->getDb()->quoteValue($c['val']);
+				$val = $c['val'];
+				$op = $c['op'];
+				
+				if ($op == db_where::OP_LIKEALMOST) {
+					$val = '%'.$val.'%';
+					$op = 'LIKE';
+				}
+				
+				$where[] = $this->getDb()->quoteIdentifier($c['field']).' '.$op.' ?';
+				
+				if (is_array($val))
+					$val = '('.implode(',', array_map(array($this->getDb(), 'quoteValue'), $val)).')';
+				else
+					$val = $this->getDb()->quoteValue($val);
+				$bind[] = $val;
 			} else {
 				// Should be a raw string
 				$where[] = $c;

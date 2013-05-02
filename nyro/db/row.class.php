@@ -425,7 +425,7 @@ abstract class db_row extends object implements ArrayAccess {
 	 * @param string $mode Mode to retrieve the value, only used for related (flat or flatReal)
 	 * @return mixed The value
 	 */
-	abstract public function getI18n($key, $mode='flat', $lang=null);
+	abstract public function getI18n($key, $mode = 'flat', $lang = null);
 
 	/**
 	 * Get the i18n values, indexed by lang

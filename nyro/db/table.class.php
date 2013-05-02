@@ -94,6 +94,23 @@ abstract class db_table extends object {
 	 * @return array
 	 */
 	abstract public function getI18nFields();
+	
+	/**
+	 * Get linked information about a i18n field
+	 * 
+	 * @param string $field Field name
+	 * @return array|null
+	 */
+	abstract public function getI18nLinked($field);
+	
+	/**
+	 * Get a where clause for a i18n field
+	 *
+	 * @param string $field
+	 * @param mixed $val
+	 * @return string
+	 */
+	abstract public function getI18nWhereClause($field, $val);
 
 	/**
 	 * Initialize the fields
@@ -129,7 +146,7 @@ abstract class db_table extends object {
 	 * Initialize the linked tables, if needed
 	 */
 	protected function _initLinkedTables() {
-		if ($this->linkedTables === null && !$this->isI18n()) {
+		if ($this->linkedTables === null) {
 			$this->linkedTables = array();
 			$this->linkedTableNames = array();
 			foreach($this->cols as $c) {
@@ -518,6 +535,16 @@ abstract class db_table extends object {
 			return $ret[$keyVal];
 		return $ret ? $ret : $this->cfg->getInArray('label', $field);
 	}
+	
+	/**
+	 * Get a field name to be used in query (like order)
+	 *
+	 * @param string $field
+	 * @return string
+	 */
+	public function getFieldQuery($field) {
+		return $field;
+	}
 
 	/**
 	 * Get the fields which are file
@@ -731,15 +758,24 @@ abstract class db_table extends object {
 		}
 		return $ret;
 	}
+	
+	/**
+	 * prepare a query for a specific sortBy field
+	 *
+	 * @param string $sortBy
+	 * @param array $query
+	 * @return array
+	 */
+	abstract public function getSortBy($sortBy, $query);
 
 	/**
 	 * Search on the table
 	 *
-	 * @param array $prm Select query configuration. Same parameter than db::select, with more:
+	 * @param array $prm Select query configuration. Same parameter than db_abstract::select, with more:
 	 *  - db_where|string|null filter: Where clause to filter the result. If string, serach to be equal to the identity
 	 *  - bool first: Return onlt the first result as a db_row
 	 * @return db_rowset|db_row
-	 * @see selectQuery, db_abstract::select
+	 * @see db_abstract::select
 	 */
 	abstract public function select(array $prm = array());
 

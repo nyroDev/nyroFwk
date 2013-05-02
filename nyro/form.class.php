@@ -340,7 +340,7 @@ class form extends object {
 	 * @param bool $isI18n
 	 * @return form_abstract|null Reference to the added element or null if not added or i18n (name exist yet)
 	 */
-	public function add($type, array $prm=array(), $isI18n=false) {
+	public function add($type, array $prm = array(), $isI18n = false) {
 		if ($isI18n) {
 			$this->i18nElements[] = array('type'=>$type, 'prm'=>$prm);
 			return null;
@@ -480,7 +480,7 @@ class form extends object {
 	 * @param bool $ignoreWhitePassword
 	 * @return array
 	 */
-	public function getValues($onlyFilled=false, $ignoreWhitePassword=true) {
+	public function getValues($onlyFilled = false, $ignoreWhitePassword = true) {
 		$ret = array();
 
 		foreach($this->elementsSection as $name=>$section) {
@@ -543,7 +543,7 @@ class form extends object {
 	 * @param boolean $refill Indicate if the value is a refill one
 	 * @return bool True if successful
 	 */
-	public function setValue($name, $value, $refill=false) {
+	public function setValue($name, $value, $refill = false) {
 		if ($elm = $this->get($name)) {
 			$elm->setValue($value, $refill);
 			$this->isBound = true;
@@ -559,7 +559,7 @@ class form extends object {
 	 * @param boolean $refill Indicate if the value is a refill one
 	 * @return int Element values updated count
 	 */
-	public function setValues(array $data, $refill=false) {
+	public function setValues(array $data, $refill = false) {
 		$i = 0;
 		foreach($data as $name=>$value) {
 			if ($this->setValue($name, $value, $refill))
@@ -683,7 +683,7 @@ class form extends object {
 	 * @param int $section Section Number. If null, current section will be used
 	 * @return bool True if the field was found and moved
 	 */
-	public function moveToSection($name, $section=null) {
+	public function moveToSection($name, $section = null) {
 		$f = $this->get($name);
 		if ($f) {
 			$curSection = $this->elementsSection[$name];
@@ -702,7 +702,7 @@ class form extends object {
 	 * @param string $mode edit or view
 	 * @param bool $force True to reaffect all the field
 	 */
-	public function setMode($mode, $force=true) {
+	public function setMode($mode, $force = true) {
 		$this->cfg->mode = $mode;
 		if ($force) {
 			foreach($this->section as $kSection=>$sectionName)

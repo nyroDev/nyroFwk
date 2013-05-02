@@ -76,96 +76,9 @@ class helper_dataTable extends object {
 		}
 
 		if ($this->cfg->check('sortBy')) {
-			if ($this->table->isRelated($this->cfg->sortBy)) {
-				$related = $this->table->getRelated($this->cfg->sortBy);
-				$tmp = array();
-
-				$fields = array_filter(explode(',', $related['fk2']['link']['fields']));
-				$tableName = $related['fk2']['link']['table'];
-				foreach($fields as $f)
-					$tmp[] = $tableName.'.'.$f;
-
-				$fields = array_filter(explode(',', $related['fk2']['link']['i18nFields']));
-				$tableName.= db::getCfg('i18n');
-				foreach($fields as $f)
-					$tmp[] = $tableName.'.'.$f;
-				$this->sortBy = implode(', ', $tmp);
-				if (!$this->table->getCfg()->autoJoin) {
-					$f = $related['tableObj']->getRawName();
-					$query = $this->cfg->query;
-					if (!isset($query['join']))
-						$query['join'] = array();
-					$query['join'][] = array(
-						'table'=>$f,
-						'dir'=>'left outer',
-						'on'=>$this->table->getRawName().'.'.$related['fk1']['link']['ident'].'='.$f.'.'.$related['fk1']['name']
-					);
-					$query['join'][] = array(
-						'table'=>$related['table'],
-						'dir'=>'left outer',
-						'on'=>$f.'.'.$related['fk2']['name'].'='.$related['table'].'.'.$related['fk2']['link']['ident']
-					);
-					
-					if ($related['fk2']['link']['i18nFields']) {
-						$i18nTableName = $related['table'].db::getCfg('i18n');
-						$i18nTable = db::get('table', $i18nTableName, array('db'=>$this->table->getDb())); // @todo checkit
-						$primary = $i18nTable->getPrimary();
-						$query['join'][] = array(
-							'table'=>$i18nTableName,
-							'dir'=>'left outer',
-							'on'=>$f.'.'.$related['fk2']['name'].'='.$i18nTableName.'.'.$primary[0].
-								' AND '.$i18nTableName.'.'.$primary[1].'="'.request::get('lang').'"'
-						);
-					}
-					
-					$query['group'] = $this->table->getRawName().'.'.$this->table->getIdent();
-					$this->cfg->query = $query;
-				}
-			} else if ($this->table->isLinked($this->cfg->sortBy)) {
-				$linked = $this->table->getLinked($this->cfg->sortBy);
-				$tmpSort = array();
-				foreach(explode(',', trim($linked['fields'].','.$linked['i18nFields'], ',')) as $tmp)
-					$tmpSort[] = $linked['field'].'.'.$tmp;
-				$this->sortBy = implode(', ', $tmpSort);
-				if (!$this->table->getCfg()->autoJoin) {
-					$query = $this->cfg->query;
-					if (!isset($query['join']))
-						$query['join'] = array();
-					$alias = $linked['field'];
-					if ($linked['i18nFields']) {
-						$alias1 = $alias.'1';
-						$query['join'][] = array(
-							'table'=>$linked['table'],
-							'alias'=>$alias1,
-							'dir'=>'left outer',
-							'on'=>$this->table->getRawName().'.'.$linked['field'].'='.$alias1.'.'.$linked['ident']
-						);
-						$i18nTableName = $linked['table'].db::getCfg('i18n');
-						$i18nTable = db::get('table', $i18nTableName, array('db'=>$this->table->getDb())); // @todo checkit
-						$primary = $i18nTable->getPrimary();
-						$query['join'][] = array(
-							'table'=>$i18nTableName,
-							'alias'=>$alias,
-							'dir'=>'left outer',
-							'on'=>$alias1.'.'.$linked['ident'].'='.$alias.'.'.$primary[0].
-								' AND '.$alias.'.'.$primary[1].'="'.request::get('lang').'"'
-						);
-					} else {
-						$query['join'][] = array(
-							'table'=>$linked['table'],
-							'alias'=>$alias,
-							'dir'=>'left outer',
-							'on'=>$this->table->getRawName().'.'.$linked['field'].'='.$alias.'.'.$linked['ident']
-						);
-					}
-					$this->cfg->query = $query;
-				}
-			} else if ($this->cfg->sortBy) {
-				if (strpos($this->cfg->sortBy, $this->table->getName()) !== false || strpos($this->cfg->sortBy, ".") !== false)
-					$this->sortBy = $this->cfg->sortBy;
-				else
-					$this->sortBy = $this->table->getName().'.'.$this->cfg->sortBy;
-			}
+			$tmp = $this->table->getSortBy($this->cfg->sortBy, $this->cfg->query);
+			$this->sortBy = $tmp['sortBy'];
+			$this->cfg->query = $tmp['query'];
 		}
 	}
 
@@ -262,14 +175,15 @@ class helper_dataTable extends object {
 				$typeField = $this->table->getField($h, 'type');
 				if ($typeField == 'file' && is_array($tmp = $this->table->getField($h, 'comment')) && array_key_exists(0, $tmp))
 					$typeField = $tmp[0];
+				$fieldQuery = $this->table->getFieldQuery($h);
 				$headers[$k] = array(
-					'label' => $this->table->getLabel($h),
-					'name' => $h,
+					'label'=>$this->table->getLabel($h),
+					'name'=>$h,
 					'url'=>str_replace(
 						array($prmReplaceSortBy, $prmReplaceSortDir),
 						array(
-							db::isI18nName($h) ? $this->table->getI18nTable()->getName().'_'.db::unI18nName($h): $h, // @todo checkit
-							$this->cfg->sortBy == $h && $this->cfg->sortDir == 'asc'? 'desc' : 'asc'
+							$fieldQuery,
+							$this->cfg->sortBy == $fieldQuery && $this->cfg->sortDir == 'asc'? 'desc' : 'asc'
 						),
 						$tmpSortLink),
 					'type'=>$typeField

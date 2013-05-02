@@ -1,7 +1,7 @@
 <?php
 $cfg = array(
 	'table'=>REQUIRED,
-	'query'=>null,
+	'query'=>array(),
 
 	'name'=>REQUIRED,
 	'sessionName'=>null,

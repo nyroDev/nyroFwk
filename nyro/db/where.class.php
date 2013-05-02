@@ -9,6 +9,17 @@
  */
 abstract class db_where extends object implements Countable {
 
+	const OPLINK_AND = 'AND';
+	const OPLINK_OR = 'OR';
+	
+	const OP_EQUAL = '=';
+	const OP_GTE = '>=';
+	const OP_LTE = '<=';
+	const OP_IN = 'IN';
+	const OP_DIFF = '<>';
+	const OP_LIKE = 'LIKE';
+	const OP_LIKEALMOST = 'LIKE_ALMOST';
+	
 	/**
 	 * The wher clauses
 	 *

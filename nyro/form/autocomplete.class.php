@@ -35,7 +35,7 @@ class form_autocomplete extends form_checkbox {
 					if ($exists === false) {
 						$row = $tbl->getRow();
 						if ($i18n) {
-							$i18nRow = $row->getI18nRow();
+							$i18nRow = $row->getI18nRow(); // @todo checkit
 							$i18nRow->set($dbList['i18nFields'], $v);
 						} else {
 							$row->set($field, $v);

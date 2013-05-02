@@ -511,9 +511,9 @@ abstract class db_pdo_abstract extends db_abstract {
 	/**
 	 * Count the number of result
 	 *
-	 * @param array $prm Same option than selectQuery
+	 * @param array $prm Same option than select
 	 * @return int
-	 * @see selectQuery
+	 * @see select
 	 */
 	public function count(array $prm) {
 		$subQuery = $this->selectQuery(array_merge($prm, array('bindData'=>true)));

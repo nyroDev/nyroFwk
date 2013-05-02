@@ -81,7 +81,7 @@ class helper_filterTable extends object {
 					$name = db::unI18nName($field);
 					$f['name'] = $field;
 					$f['label'] = $this->getLabel($field);
-					$f['link'] = $this->table->getI18nTable()->getLinked($name); // @todo checkit
+					$f['link'] = $this->table->getI18nLinked($name);
 					$this->form->addFromFieldFilter($f);
 				}
 			}
@@ -154,68 +154,41 @@ class helper_filterTable extends object {
 							$where->add(array(
 								'field'=>$field,
 								'val'=>$min,
-								'op'=>'>='
+								'op'=>db_where::OP_GTE
 							));
 						if ($max)
 							$where->add(array(
 								'field'=>$field,
 								'val'=>$max,
-								'op'=>'<='
+								'op'=>db_where::OP_LTE
 							));
 					} else {
 						$fieldRel = $this->table->getRelated($name);
 						$where->add(array(
 							'field'=>$fieldRel ? $fieldRel['tableLink'].'.'.$fieldRel['fk2']['name'] : $field,
-							'val'=>array_map(array($this->table->getDb(), 'quoteValue'), $val),
-							'op'=>'IN'
+							'val'=>$val,
+							'op'=>db_where::OP_IN
 						));
 					}
 				} else if(strpos($name, '_file')) {
 					$where->add(array(
 						'field'=>$field,
 						'val'=>'',
-						'op'=>'<>'
+						'op'=>db_where::OP_DIFF
 					));
 				} else {
 					$f = $this->table->getField($name);
 					if (is_array($f) && (!array_key_exists('text', $f) || $f['text'])) {
-						$tmp = explode(' ', $val);
-						array_walk($tmp, create_function('&$v', '$v = trim($v);'));
-						$tmp = array_filter($tmp);
+						$tmp = array_filter(array_map('trim', explode(' ', $val)));
 						foreach($tmp as $t) {
 							$where->add(array(
 								'field'=>$field,
-								'val'=>'%'.$t.'%',
-								'op'=>'LIKE'
+								'val'=>$t,
+								'op'=>db_where::OP_LIKEALMOST
 							));
 						}
-					} else if ($this->table->hasI18n() && db::isI18nName($name) && ($f = $this->table->getI18nField(db::unI18nName($name)))) {
-						$tblName = $this->table->getI18nTable()->getName(); // @todo checkit
-						$prim = $this->table->getI18nTable()->getPrimary(); // @todo checkit
-						$field = $tblName.'.'.db::unI18nName($name);
-						$clause = '('.$this->table->getName().'.'.$this->table->getIdent().' IN (SELECT '.$tblName.'.'.$prim[0].' FROM '.$tblName.' WHERE ';
-
-						$tmpWhere = $this->table->getI18nTable()->getWhere(array('op'=>'OR')); // @todo checkit
-
-						if (!array_key_exists('text', $f) || $f['text']) {
-							$tmp = explode(' ', $val);
-							array_walk($tmp, create_function('&$v', '$v = trim($v);'));
-							$tmp = array_filter($tmp);
-							foreach($tmp as $t) {
-								$tmpWhere->add(array(
-									'field'=>$field,
-									'val'=>'%'.$t.'%',
-									'op'=>'LIKE'
-								));
-							}
-						} else {
-							$tmpWhere->add(array(
-								'field'=>$field,
-								'val'=>$val
-							));
-						}
-						$clause.= $tmpWhere.'))';
-						$where->add($clause);
+					} else if ($this->table->hasI18n() && db::isI18nName($name) && ($this->table->getI18nField(db::unI18nName($name)))) {
+						$where->add($this->table->getI18nWhereClause($name, $val));
 					} else {
 						$where->add(array(
 							'field'=>$field,
