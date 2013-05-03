@@ -357,7 +357,7 @@ class form extends object {
 			$this->elements[$this->curSection][$name] = $inst;
 			$this->elementsSection[$name] = $this->curSection;
 
-			if ($inst instanceof form_file)
+			if ($inst->hasFile())
 				$this->hasFiles++;
 
 			return $inst;

@@ -91,7 +91,7 @@ abstract class form_abstract extends object {
 	 * @param mixed $value The value
 	 * @param boolean $refill Indicate if the value is a refill one
 	 */
-	public function setValue($value, $refill=false) {
+	public function setValue($value, $refill = false) {
 		if ($this->cfg->disabled)
 			return;
 		$this->cfg->set('value', utils::htmlOut($value));
@@ -143,7 +143,7 @@ abstract class form_abstract extends object {
 	}
 
 	/**
-	 * Get a valide rule config
+	 * Get a valid rule config
 	 *
 	 * @param string $name Rule name
 	 * @return null|mixed Null if not set or configuration if existing
@@ -211,6 +211,15 @@ abstract class form_abstract extends object {
 	 * @return bool
 	 */
 	public function isHidden() {
+		return false;
+	}
+	
+	/**
+	 * Indicates if the field has a file and need enctype
+	 *
+	 * @return boolean
+	 */
+	public function hasFile() {
 		return false;
 	}
 

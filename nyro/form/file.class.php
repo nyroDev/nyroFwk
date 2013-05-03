@@ -22,12 +22,32 @@ class form_file extends form_abstract {
 	 * @var string
 	 */
 	protected $keep;
+	
+	/**
+	 * Name template used for field information
+	 *
+	 * @var string
+	 */
+	protected $nameAct;
 
+	/**
+	 * Get a field name to be used for field information
+	 *
+	 * @param string $name information name
+	 * @return string
+	 */
+	protected function getNameAct($name) {
+		if (is_null($this->nameAct))
+			$this->nameAct = strpos($this->name, ']') !== false ? $this->name.'[[NAME]]' : $this->name.'[NAME]';
+		return str_replace('[NAME]', $name, $this->nameAct);
+	}
+	
 	protected function beforeInit() {
 		$required = array_key_exists('required', $this->cfg->valid) && $this->cfg->getInArray('valid', 'required');
 		
 		$htVars = http_vars::getInstance();
-		$this->keep = $htVars->getVar($this->name.'NyroKeep');
+		
+		$this->keep = $htVars->getVar($this->getNameAct('NyroKeep'));
 		if ($this->keep)
 			$this->cfg->value = $this->keep;
 		
@@ -46,7 +66,7 @@ class form_file extends form_abstract {
 
 		$this->cfg->value = factory::get('form_fileUploaded', $prm);
 
-		if ($this->cfg->autoDeleteOnGet && !$this->cfg->value->isSaved(true) && $htVars->getVar($this->name.'NyroDel')) {
+		if ($this->cfg->autoDeleteOnGet && !$this->cfg->value->isSaved(true) && $htVars->getVar($this->getNameAct('NyroDel'))) {
 			$this->cfg->value->delete();
 			$this->deleted = true;
 		}
@@ -71,6 +91,10 @@ class form_file extends form_abstract {
 			if ($value || !$this->keep)
 				$this->cfg->value->setCurrent($value, $refill);
 		}
+	}
+	
+	public function hasFile() {
+		return true;
 	}
 
 	/**
@@ -131,14 +155,14 @@ class form_file extends form_abstract {
 		if ($this->cfg->showPreview || $this->cfg->showDelete) {
 			$start = '<'.$this->cfg->htmlWrap.'>';
 			if ($this->cfg->value->getCurrent()) {
-				$end.= '<input type="hidden" name="'.$this->name.'NyroKeep" value="'.$this->cfg->value->getCurrent().'" />';
+				$end.= '<input type="hidden" name="'.$this->getNameAct('NyroKeep').'" value="'.$this->cfg->value->getCurrent().'" />';
 				$end.= '<span>';
 				if ($this->cfg->showDelete) {
 					$end.= '<a href="#" class="deleteFile" id="'.$this->id.'NyroDel">'.$this->cfg->deleteLabel.'</a>';
 					response::getInstance()->blockJquery('
 					$("#'.$this->id.'NyroDel").click(function(e) {
 						e.preventDefault();
-						$(this).parent("span").replaceWith("<input type=\"hidden\" name=\"'.$this->name.'NyroDel\" value=\"1\" />");
+						$(this).parent("span").replaceWith("<input type=\"hidden\" name=\"'.$this->getNameAct('NyroDel').'\" value=\"1\" />");
 					});');
 				} else
 					$end.= '<br />';

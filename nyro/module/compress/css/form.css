@@ -176,6 +176,28 @@ fieldset ol div.range img.ui-datepicker-trigger {
 	float: left;
 }
 
+/* subs */
+fieldset .formSubs {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+fieldset .formSubs li {
+    margin-top: 5px;
+}
+fieldset .formSubs .formSubsLabel {
+    display: inline-block;
+    width: 100px;
+    float: left;
+}
+fieldset .formSubs p span {
+    display: block;
+    margin-left: 100px;
+}
+fieldset .formSubs p span a {
+    display: block;
+}
+
 
 /* Errors */
 ol.globalErrors, ol.sectionErrors, ol.lineErrors {
