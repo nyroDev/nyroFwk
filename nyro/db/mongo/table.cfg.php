@@ -6,6 +6,7 @@ $cfg = array(
 		'defaultField'=>array(
 			'auto'=>false,
 			'default'=>'',
+			'comment'=>array()
 		)
 	)
 );

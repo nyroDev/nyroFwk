@@ -2,7 +2,11 @@
 class db_mongo_table extends db_table {
 
 	protected function _initIdent() {
-		
+		$this->cfg->ident = $this->cfg->defId;
+		if (empty($this->cfg->primary))
+			$this->cfg->primary = array($this->getIdent());
+		else if(is_string($this->cfg->primary))
+			$this->cfg->primary = array($this->cfg->primary);
 	}
 
 	public function count(array $prm) {
@@ -14,7 +18,7 @@ class db_mongo_table extends db_table {
 	}
 
 	public function getI18nFields() {
-		
+		return array();
 	}
 
 	public function getI18nLabel($field = null) {
@@ -61,7 +65,58 @@ class db_mongo_table extends db_table {
 	}
 
 	public function select(array $prm = array()) {
+		$prm = $this->selectQuery($prm);
+
+		$ret = array();
+		$cache = $this->getDb()->getCache();
+		$canCache = $this->cfg->cacheEnabled;
+		if (!$canCache || !$cache->get($ret, array('id'=>$this->getName().'-'.sha1(serialize($prm))))) {
+			$ret = $this->getDb()->select($prm);
+			if ($canCache)
+				$cache->save();
+		}
+
+		if (isset($prm['first']) && $prm['first']) {
+			if (!empty($ret))
+				return  $this->getDb()->getRow($this, array(
+					'data'=>$ret->getNext(),
+				));
+			else
+				return null;
+		} else
+			return $this->getDb()->getRowset($this, array(
+				'data'=>$ret,
+			));
+	}
+	
+	public function selectQuery(array $prm) {
+		config::initTab($prm, array(
+			'where'=>'',
+			'whereOp'=>db_where::OPLINK_AND,
+			'order'=>'',
+		));
+
+		if (is_array($prm['where'])) {
+			foreach($prm['where'] as $k=>$v) {
+				$posP = strpos($k, '.');
+				if (!is_numeric($k) &&  $posP!== false) {
+					$newK = substr($k, $posP + 1);
+					if (!array_key_exists($newK, $prm['where'])) {
+						$prm['where'][$newK] = $v;
+						unset($prm['where'][$k]);
+					}
+				}
+			}
+		} else if (!empty($prm['where']) && !is_array($prm['where']) && !is_object($prm['where'])
+			&& (strpos($prm['where'], '=') === false && strpos($prm['where'], '<') === false
+					&& strpos($prm['where'], '>') === false && stripos($prm['where'], 'LIKE') === false
+					 && stripos($prm['where'], 'IN') === false)) {
+			$prm['where'] = array($this->getIdent()=>new MongoId($prm['where']));
+		}
 		
+		$prm['table'] = $this->rawName;
+		
+		return $prm;
 	}
 
 }

@@ -62,9 +62,9 @@ abstract class db_row extends object implements ArrayAccess {
 	 */
 	public function loadData(array $data) {
 		$this->cfg->data = $data;
-		if (array_key_exists($this->getTable()->getIdent(), $data) && $data[$this->getTable()->getIdent()])
+		if (array_key_exists($this->getTable()->getIdent(), $data) && $data[$this->getTable()->getIdent()]) {
 			$this->setNew(false);
-		else {
+		} else {
 			$primary = $this->getTable()->getPrimary();
 			$p = 0;
 			foreach($primary as $pp) {

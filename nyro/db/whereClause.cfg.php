@@ -1,7 +1,7 @@
 <?php
 $cfg = array(
 	'name'=>REQUIRED,
-	'op'=>'AND',
+	'op'=>db_where::OPLINK_AND,
 	'eq'=>null,
 	'contains'=>null,
 	'start'=>null,

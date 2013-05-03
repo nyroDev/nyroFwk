@@ -78,7 +78,15 @@ class security_default extends security_abstract {
 			$this->user = $this->getUserFromCryptic($cryptic);
 			if ($this->user) {
 				$this->logged = true;
+				
+				$saveUser = false;
+				if ($this->cfg->timeLastConnected && ($lastConnectedField = $this->cfg->getInArray('fields', 'lastConnected'))) {
+					$this->user->set($lastConnectedField, date('Y-m-d H:i:s'));
+					$saveUser = true;
+				}
 				$this->hook('autoLogin'.($fromSession ? 'Session' : null));
+				if ($saveUser)
+					$this->user->save();
 				$this->session->cryptic = $cryptic;
 			} else if (isset($cook))
 				$cook->del();
@@ -133,9 +141,22 @@ class security_default extends security_abstract {
 	 */
 	protected function saveLogin($cookieStayConnected = false) {
 		$crypticKey = $this->cfg->getInArray('fields', 'cryptic');
-		$cryptic = $this->cryptPass(uniqid(), 'Cryptic');
-		$this->user->set($crypticKey, $cryptic);
-		$this->user->save();
+		$newCryptic = true;
+		if ($this->cfg->timeLastConnected && ($lastConnectedField = $this->cfg->getInArray('fields', 'lastConnected'))) {
+			$timeLast = strtotime($this->user->get($lastConnectedField));
+			if (time() - $timeLast <= $this->cfg->timeLastConnected * 60) {
+				$cryptic = $this->user->get($crypticKey);
+				if (strpos($cryptic, $this->cfg->unloggedCryptic) === false)
+					$newCryptic = false;
+			}
+		}
+		
+		if ($newCryptic) {
+			$cryptic = $this->cryptPass(uniqid(), 'Cryptic');
+			$this->user->set($crypticKey, $cryptic);
+			$this->user->save();
+		}
+		
 		$this->logFromCryptic($cryptic, $cookieStayConnected);
 	}
 	
@@ -246,6 +267,12 @@ class security_default extends security_abstract {
 		if ($this->isLogged()) {
 			$this->session->del('cryptic');
 			$this->logged = false;
+			
+			$crypticKey = $this->cfg->getInArray('fields', 'cryptic');
+			$cryptic = $this->cryptPass(uniqid(), 'Cryptic');
+			$this->user->set($crypticKey, $this->cfg->unloggedCryptic.$cryptic);
+			$this->user->save();
+			
 			// Clear the cookie
 			$cook = factory::get('http_cookie', $this->cfg->cookie);
 			$cook->del();

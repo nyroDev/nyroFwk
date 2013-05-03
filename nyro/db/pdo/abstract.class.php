@@ -152,7 +152,7 @@ abstract class db_pdo_abstract extends db_abstract {
 	        $stmt = $this->query($sql, array_values($prm['values']));
 	        return $this->lastInsertId();
 		} else
-			throw new nException('db_abstract - insert: The table or the values is missing.');
+			throw new nException('db_pdo_abstract - insert: The table or the values is missing.');
     }
 
 	/**
@@ -188,7 +188,7 @@ abstract class db_pdo_abstract extends db_abstract {
 	        $stmt = $this->query($sql, array_values($prm['values']));
 	        return $this->lastInsertId();
 		} else
-			throw new nException('db_abstract - replace: The table or the values is missing.');
+			throw new nException('db_pdo_abstract - replace: The table or the values is missing.');
     }
 
 	/**
@@ -207,7 +207,7 @@ abstract class db_pdo_abstract extends db_abstract {
 				'table'=>null,
 				'values'=>null,
 				'where'=>'',
-				'whereOp'=>'AND'
+				'whereOp'=>db_where::OPLINK_AND
 			))) {
 
 			$set = array();
@@ -237,7 +237,7 @@ abstract class db_pdo_abstract extends db_abstract {
 		if (config::initTab($prm, Array(
 					'table'=>null,
 					'where'=>'',
-					'whereOp'=>'AND',
+					'whereOp'=>db_where::OPLINK_AND,
 					'optim'=>true
 				))) {
 
@@ -263,7 +263,7 @@ abstract class db_pdo_abstract extends db_abstract {
 	 * @param bool $incWhere Indicates if the WHERE keywords should be included at the beginning
      * @return null|string the where string, starting with WHERE
      */
-    public function makeWhere($where, $whereOp = 'AND', $incWhere = true) {
+    public function makeWhere($where, $whereOp = db_where::OPLINK_AND, $incWhere = true) {
     	$query = null;
 		if (!empty($where)) {
 			if ($where instanceof db_where)
@@ -337,7 +337,7 @@ abstract class db_pdo_abstract extends db_abstract {
 					'bind'=>array(),
 					'bindData'=>false,
 					'where'=>'',
-					'whereOp'=>'AND',
+					'whereOp'=>db_where::OPLINK_AND,
 					'order'=>'',
 					'start'=>0,
 					'nb'=>'',
@@ -440,7 +440,7 @@ abstract class db_pdo_abstract extends db_abstract {
 
 			return $this->tableAlias($query, $tblAlias);
 		} else
-			throw new nException('db_abstract - selectQuery : The table is missing.');
+			throw new nException('db_pdo_abstract - selectQuery : The table is missing.');
 	}
 
 	/**

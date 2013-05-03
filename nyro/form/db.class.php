@@ -163,7 +163,7 @@ class form_db extends form {
 				'valid'=>array('required'=>$field['required'])
 			), $field['comment']);
 
-		if ($field['unique'] && ! array_key_exists('dbUnique', $prm['valid'])) {
+		if (isset($field['unique']) && $field['unique'] && ! array_key_exists('dbUnique', $prm['valid'])) {
 			$prm['valid']['dbUnique'] = array(
 				'table'=>$this->cfg->table,
 				'field'=>$field['name'],
@@ -262,7 +262,8 @@ class form_db extends form {
 							unset($prm['html']['tinyMce']);
 						} else {
 							$type = 'multiline';
-							$prm['maxlength'] = $field['length'];
+							if (isset($field['length']))
+								$prm['maxlength'] = $field['length'];
 						}
 						break;
 					case 'bool':
@@ -271,7 +272,7 @@ class form_db extends form {
 						$type = 'radio';
 						$prm['list'] = isset($field['precision']) ? $field['precision'] : $this->cfg->listBool;
 						$prm['inline'] = true;
-						if ($field['type'] != 'tinyint' || ($field['type'] == 'tinyint' && $field['length'] == 1)) {
+						if ($field['type'] != 'tinyint' || ($field['type'] == 'tinyint' && (!isset($field['length']) || $field['length'] == 1))) {
 							$prm['valid']['required'] = false;
 							break;
 						}
@@ -281,7 +282,8 @@ class form_db extends form {
 					case 'smallint':
 					case 'int':
 						$type = 'numeric';
-						$prm['maxlength'] = $field['length'];
+						if (isset($field['length']))
+							$prm['maxlength'] = $field['length'];
 						$prm['valid']['int'] = true;
 						break;
 					case 'decimal':
@@ -292,7 +294,8 @@ class form_db extends form {
 					case 'numeric':
 					case 'fixed':
 						$type = 'numeric';
-						$prm['maxlength'] = $field['precision']? $field['length']+1 : $field['length'];
+						if (isset($field['length']))
+							$prm['maxlength'] = $field['precision'] ? $field['length']+1 : $field['length'];
 						$prm['valid']['numeric'] = true;
 						break;
 					case 'file':
@@ -304,7 +307,8 @@ class form_db extends form {
 						break;
 					default:
 						$type = array_key_exists(0, $field['comment']) && !empty($field['comment'][0])? $field['comment'][0] : 'text';
-						$prm['maxlength'] = $field['length'];
+						if (isset($field['length']))
+							$prm['maxlength'] = $field['length'];
 				}
 
 				$ret = array_merge($prm, array('type'=>$type));

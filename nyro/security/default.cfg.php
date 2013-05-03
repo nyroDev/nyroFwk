@@ -4,13 +4,14 @@ $cfg = array(
 	'table'=>'user',
 	'where'=>array(),
 	'fields'=>array(
-		'id'=>'id',
 		'login'=>'email',
 		'pass'=>'pass',
 		'cryptic'=>'cryptic',
+		'lastConnected'=>'lastConnected',
 	),
 	'formOptions'=>array(),
 	'sessionNameSpace'=>'security_default',
+	'timeLastConnected'=>20,
 	'stayConnected'=>true,
 	'labelStayConnected'=>'Stay connected',
 	'errorMsg'=>'The login/username couple doesn\'t match.',
@@ -20,6 +21,7 @@ $cfg = array(
 	),
 	'cryptPassword'=>'md5',
 	'cryptCryptic'=>'md5',
+	'unloggedCryptic'=>'unlogged_',
 
 	'default'=>false,
 	'spec'=>array(

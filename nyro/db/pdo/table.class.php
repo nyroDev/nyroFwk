@@ -27,7 +27,7 @@ class db_pdo_table extends db_table {
 	protected function _initIdent() {
 		if (empty($this->cfg->primary)) {
 			$primary = array();
-			foreach($this->fields as $n=>&$f)
+			foreach($this->fields as $n=>$f)
 				if ($f['primary']) {
 					$primary[$f['primaryPos']] = $n;
 					if ($f['identity']) {
@@ -320,7 +320,6 @@ class db_pdo_table extends db_table {
 		if (array_key_exists('first', $prm) && $prm['first']) {
 			if (!empty($ret))
 				return  $this->getDb()->getRow($this, array(
-					'db'=>$this->getDb(),
 					'data'=>$ret[0],
 				));
 			else
@@ -367,7 +366,7 @@ class db_pdo_table extends db_table {
 	public function selectQuery(array $prm, &$tmpTables) {
 		config::initTab($prm, array(
 			'where'=>'',
-			'whereOp'=>'AND',
+			'whereOp'=>db_where::OPLINK_AND,
 			'order'=>'',
 			'autoJoin'=>$this->cfg->autoJoin,
 		));
