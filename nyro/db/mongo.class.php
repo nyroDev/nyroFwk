@@ -85,7 +85,11 @@ class db_mongo extends db_abstract {
 	 * @param db_mongo_row $row
 	 */
 	public function save(db_mongo_row $row) {
-		return $this->getMongoCollection($row->getTable()->getName())->save($row->getValues(db_row::VALUESMODE_FLAT));
+		$values = $row->getValues(db_row::VALUESMODE_FLAT);
+		$ident = $row->getTable()->getIdent();
+		if ($row->isNew() && isset($values[$ident]))
+			unset($values[$ident]);
+		return $this->getMongoCollection($row->getTable()->getName())->save($values);
 	}
 	
 	public function insert(array $prm) {
@@ -133,7 +137,7 @@ class db_mongo extends db_abstract {
 			$cursor = $collection->find($query);
 			
 			if ($prm['order'])
-				$cursor->sort($prm['order']);
+				$cursor->sort(is_array($prm['order']) ? $prm['order'] : array($prm['order']));
 			if ($prm['start'])
 				$cursor->skip($prm['start']);
 			if ($prm['nb'])

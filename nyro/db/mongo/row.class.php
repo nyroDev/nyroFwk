@@ -9,6 +9,7 @@ class db_mongo_row extends db_row {
 	public function save() {
 		$ret = $this->getDb()->save($this);
 		if ($ret) {
+			$this->setNew(false);
 			$this->saveRelated();
 			$this->getTable()->clearCache();
 		}

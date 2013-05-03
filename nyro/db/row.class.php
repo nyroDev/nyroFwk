@@ -450,7 +450,8 @@ abstract class db_row extends object implements ArrayAccess {
 		switch ($mode) {
 			case db_row::VALUESMODE_FLAT:
 			case db_row::VALUESMODE_FLAT_NORELATED:
-				$data = array_merge($this->cfg->data, $this->getChanges());
+				$data = $this->cfg->data ? $this->cfg->data : array();
+				$data = array_merge($data, $this->getChanges());
 				$tmp = $this->getTable()->getCols();
 
 				if ($mode == db_row::VALUESMODE_FLAT) {

@@ -22,6 +22,11 @@ $cfg = array(
 	'allowAdd'=>true,
 	'iconType'=>null,
 	
+	'actions'=>array(
+		'show'=>request::uriDef(array('action'=>'show', 'param'=>'[id]')),
+		'edit'=>request::uriDef(array('action'=>'edit', 'param'=>'[id]')),
+		'delete'=>request::uriDef(array('action'=>'delete', 'param'=>'[id]')),
+	),
 	'multipleDelete'=>NYROENV == 'admin',
 	'multipleAction'=>request::uriDef(array('action'=>'multiple'), array('module')),
 	'multiple'=>array(),

@@ -172,11 +172,7 @@ class module_scaffold_controller extends module_abstract {
 			'iconType'=>$iconType,
 			'cache'=>$this->cfg->cache,
 			'fields'=>$this->cfg->list,
-			'actions'=>array(
-				'show'=>request::uriDef(array('action'=>'show', 'param'=>'[id]')),
-				'edit'=>request::uriDef(array('action'=>'edit', 'param'=>'[id]')),
-				'delete'=>request::uriDef(array('action'=>'delete', 'param'=>'[id]')),
-			),
+			'actions'=>$this->cfg->actions,
 			'actionsAlt'=>array(
 				'show'=>tr::__('scaffold_show'),
 				'edit'=>tr::__('scaffold_goEdit'),

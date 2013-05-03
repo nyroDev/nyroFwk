@@ -54,6 +54,10 @@ class db_mongo_table extends db_table {
 
 	public function getSortBy($sortBy, $query) {
 		
+		return array(
+			'sortBy'=>$sortBy,
+			'query'=>$query
+		);
 	}
 
 	public function geti18nField($field = null, $keyVal = null) {

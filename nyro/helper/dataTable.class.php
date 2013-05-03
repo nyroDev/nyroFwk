@@ -78,7 +78,8 @@ class helper_dataTable extends object {
 		if ($this->cfg->check('sortBy')) {
 			$tmp = $this->table->getSortBy($this->cfg->sortBy, $this->cfg->query);
 			$this->sortBy = $tmp['sortBy'];
-			$this->cfg->query = $tmp['query'];
+			if (is_array($tmp['query']))
+				$this->cfg->query = $tmp['query'];
 		}
 	}
 
