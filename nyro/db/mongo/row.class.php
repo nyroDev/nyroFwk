@@ -19,7 +19,7 @@ class db_mongo_row extends db_row {
 		
 	}
 
-	public function getI18n($key, $mode = 'flat', $lang = null) {
+	public function getI18n($key, $mode = db_row::VALUESMODE_FLAT, $lang = null) {
 		
 	}
 

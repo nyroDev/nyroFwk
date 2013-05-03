@@ -36,7 +36,7 @@
 				if ($hasMultiple)
 					echo '<td class="checkCell"><input type="checkbox" name="'.$multipleIdent.'[]" value="'.$l->get($multipleIdent).'" /></td>';
 				foreach($headers as $h) {
-					$val = $l->get($h['name'], 'flatReal');
+					$val = $l->get($h['name'], db_row::VALUESMODE_FLATREAL);
 					switch($h['type']) {
 						case 'date':
 							$val = $val ? utils::formatDate($val) : $val;

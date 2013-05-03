@@ -303,7 +303,7 @@ class module_scaffold_controller extends module_abstract {
 			$tmp = $this->row;
 			$this->row = $this->table->getRow();
 			$this->row->setValues($tmp->getValues());
-			$this->row->setValues($tmp->getValues('flat'));
+			$this->row->setValues($tmp->getValues(db_row::VALUESMODE_FLAT));
 			$action = 'add';
 		}	
 		

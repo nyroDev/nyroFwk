@@ -85,7 +85,7 @@ class db_mongo extends db_abstract {
 	 * @param db_mongo_row $row
 	 */
 	public function save(db_mongo_row $row) {
-		return $this->getMongoCollection($row->getTable()->getName())->save($row->getValues('flat'));
+		return $this->getMongoCollection($row->getTable()->getName())->save($row->getValues(db_row::VALUESMODE_FLAT));
 	}
 	
 	public function insert(array $prm) {

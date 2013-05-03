@@ -74,7 +74,7 @@ abstract class db_rowset extends object implements Iterator, Countable, ArrayAcc
 	 *
 	 * @return array
 	 */
-	public function getFields($mode = 'flat') {
+	public function getFields($mode = db_row::VALUESMODE_FLAT) {
 		if (!$this->fields[$mode])
 			$this->fields[$mode] = array_keys($this->get(0)->getValues($mode));
 		return $this->fields[$mode];

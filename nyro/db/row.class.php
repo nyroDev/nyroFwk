@@ -1,6 +1,12 @@
 <?php
 abstract class db_row extends object implements ArrayAccess {
 
+	const VALUESMODE_DATA = 'data';
+	const VALUESMODE_FLAT = 'flat';
+	const VALUESMODE_FLAT_NORELATED = 'flatNoRelated';
+	const VALUESMODE_FLATREAL = 'flatReal';
+	const VALUESMODE_FLATREAL_NORELATED = 'flatRealNoRelated';
+	
 	/**
 	 * Changes done
 	 *
@@ -48,7 +54,7 @@ abstract class db_row extends object implements ArrayAccess {
 		} else if (!empty($this->cfg->findId)) {
 			$tmp = $this->getTable()->find($this->cfg->findId);
 			if ($tmp) {
-				$this->cfg->data = $tmp->getValues('data');
+				$this->cfg->data = $tmp->getValues(db_row::VALUESMODE_DATA);
 				$this->setNew(false);
 			}
 			unset($tmp);
@@ -189,7 +195,7 @@ abstract class db_row extends object implements ArrayAccess {
 		if ($relatedUpdated)
 			$this->cfg->setInArray('data', 'related', $related);
 
-		$form->setValues($this->getValues('flat'));
+		$form->setValues($this->getValues(db_row::VALUESMODE_FLAT));
 
 		$i18nFields = $this->getTable()->getI18nFields();
 		$i18nFieldsT = array();
@@ -244,7 +250,7 @@ abstract class db_row extends object implements ArrayAccess {
 	 * @return mixed The last inserted id
 	 */
 	public function insert() {
-		$values = array_intersect_key(array_merge($this->getValues('flat'), $this->getChangesTable()), $this->getTable()->getField());
+		$values = array_intersect_key(array_merge($this->getValues(db_row::VALUESMODE_FLAT), $this->getChangesTable()), $this->getTable()->getField());
 		unset($values[$this->getTable()->getIdent()]);
 		$id = $this->getTable()->insert($values);
 		$this->set($this->getTable()->getIdent(), $id);
@@ -358,12 +364,12 @@ abstract class db_row extends object implements ArrayAccess {
 	 * @param string $mode Mode to retrieve the value, only used for related (flat or flatReal)
 	 * @return mixed The value
 	 */
-	public function get($key, $mode = 'flat') {
+	public function get($key, $mode = db_row::VALUESMODE_FLAT) {
 		if (db::isI18nName($key))
 			return $this->getI18n(db::unI18nName($key), $mode);
 
 		if ($this->keyExists($key)) {
-			if ($mode == 'flat' && $this->hasChange($key))
+			if ($mode == db_row::VALUESMODE_FLAT && $this->hasChange($key))
 				$val = $this->changes[$key];
 			else
 				$val = $this->cfg->getInArray('data', $key);
@@ -376,7 +382,7 @@ abstract class db_row extends object implements ArrayAccess {
 			if (isset($values[$key]))
 				return $values[$key];
 			
-			if (!$this->getTable()->getCfg()->autoJoin && ($mode == 'flat' || $mode == 'flatReal')) {
+			if (!$this->getTable()->getCfg()->autoJoin && ($mode == db_row::VALUESMODE_FLAT || $mode == db_row::VALUESMODE_FLATREAL)) {
 				$tmp = $this->getRelated($key);
 				if (count($tmp)) {
 					$v = $this->getTable()->getRelated($key);
@@ -389,7 +395,7 @@ abstract class db_row extends object implements ArrayAccess {
 					$hasFields = isset($v['fields']) && count($v['fields']);
 					
 					foreach($tmp as $vv) {
-						if ($mode == 'flat') {
+						if ($mode == db_row::VALUESMODE_FLAT) {
 							if ($hasFields) {
 								$curVal = array(
 									db::getCfg('relatedValue')=>$vv->get($v['fk2']['link']['ident'])
@@ -425,7 +431,7 @@ abstract class db_row extends object implements ArrayAccess {
 	 * @param string $mode Mode to retrieve the value, only used for related (flat or flatReal)
 	 * @return mixed The value
 	 */
-	abstract public function getI18n($key, $mode = 'flat', $lang = null);
+	abstract public function getI18n($key, $mode = db_row::VALUESMODE_FLAT, $lang = null);
 
 	/**
 	 * Get the i18n values, indexed by lang
@@ -440,14 +446,14 @@ abstract class db_row extends object implements ArrayAccess {
 	 * @param string $mode Return mode (data, flat, flatNoRelated, flatReal, flatRealNoRelated)
 	 * @return array
 	 */
-	public function getValues($mode = 'data') {
+	public function getValues($mode = db_row::VALUESMODE_DATA) {
 		switch ($mode) {
-			case 'flat':
-			case 'flatNoRelated':
+			case db_row::VALUESMODE_FLAT:
+			case db_row::VALUESMODE_FLAT_NORELATED:
 				$data = array_merge($this->cfg->data, $this->getChanges());
 				$tmp = $this->getTable()->getCols();
 
-				if ($mode == 'flat') {
+				if ($mode == db_row::VALUESMODE_FLAT) {
 					$linked = $this->getTable()->getLinked();
 					if (is_array($linked)) {
 						foreach($linked as $k=>$v) {
@@ -479,12 +485,12 @@ abstract class db_row extends object implements ArrayAccess {
 				}
 				return array_intersect_key($data, array_flip($tmp));
 				break;
-			case 'flatReal':
-			case 'flatRealNoRelated':
+			case db_row::VALUESMODE_FLATREAL:
+			case db_row::VALUESMODE_FLATREAL_NORELATED:
 				$data = array_merge($this->cfg->data, $this->getChanges());
 				$tmp = $this->getTable()->getCols();
 
-				if ($mode == 'flatReal' && array_key_exists('related', $data)) {
+				if ($mode == db_row::VALUESMODE_FLATREAL && array_key_exists('related', $data)) {
 					foreach($this->getTable()->getRelated() as $k=>$v) {
 						$tmp[] = $k;
 						$data[$k] = array();
@@ -506,7 +512,7 @@ abstract class db_row extends object implements ArrayAccess {
 
 				return array_intersect_key($data, array_flip($tmp));
 				break;
-			case 'data':
+			case db_row::VALUESMODE_DATA:
 			default:
 				return $this->cfg->data;
 				break;
@@ -521,7 +527,7 @@ abstract class db_row extends object implements ArrayAccess {
 	 * @return mixed|null The value found or null
 	 * @see getValues
 	 */
-	public function getInValues($name = null, $mode = 'flatReal') {
+	public function getInValues($name = null, $mode = db_row::VALUESMODE_FLATREAL) {
 		$tmp = $this->getValues($mode);
 		if(array_key_exists($name, $tmp))
 			return $tmp[$name];
@@ -639,10 +645,10 @@ abstract class db_row extends object implements ArrayAccess {
 		if ($this->getTable()->isLinked($field)) {
 			if (!array_key_exists($field, $this->linked)) {
 				$data = array();
-				if ($val = $this->get($field, 'flatReal')) {
+				if ($val = $this->get($field, db_row::VALUESMODE_FLATREAL)) {
 					$tmp = $this->getTable()->getLinked($field);
 					$data[$tmp['ident']] = $val;
-				} else if ($val = $this->get($field, 'flat')) {
+				} else if ($val = $this->get($field, db_row::VALUESMODE_FLAT)) {
 					$tmp = $this->getTable()->getLinked($field);
 					$data[$tmp['ident']] = $val;
 				}

@@ -150,7 +150,7 @@ class helper_dataTable extends object {
 
 		if (count($data)) {
 			if (empty($this->cfg->fields)) {
-				$headersT = $data->getFields('flatReal');
+				$headersT = $data->getFields(db_row::VALUESMODE_FLATREAL);
 				if ($keyRelated = array_search('related', $headersT))
 					unset($headersT[$keyRelated]);
 				foreach($this->table->getI18nFields() as $f)
@@ -202,14 +202,14 @@ class helper_dataTable extends object {
 				$i = 0;
 				foreach($data as $d) {
 					$tmp = $this->getActions($d);
-					$tmpVals = $d->getValues('flatNoRelated');
+					$tmpVals = $d->getValues(db_row::VALUESMODE_FLAT_NORELATED);
 					$vals = array();
 					foreach($headersT as $k=>$v) {
 						$v = substr($v, 1, -1);
 						$vals[$k] = array_key_exists($v, $tmpVals) ? $tmpVals[$v] : null;
 					}
 
-					$curData = $d->getValues('data');
+					$curData = $d->getValues(db_row::VALUESMODE_DATA);
 					unset($curData['related']);
 					unset($curData['linked']);
 					if (is_null($dataK)) {

@@ -65,7 +65,7 @@ class db_pdo_row extends db_row {
 	 * @param string $mode Mode to retrieve the value, only used for related (flat or flatReal)
 	 * @return mixed The value
 	 */
-	public function getI18n($key, $mode = 'flat', $lang = null) {
+	public function getI18n($key, $mode = db_row::VALUESMODE_FLAT, $lang = null) {
 		return $this->getI18nRow($lang)->get($key, $mode);
 	}
 
@@ -218,7 +218,7 @@ class db_pdo_row extends db_row {
 	 */
 	public function whereClause() {
 		$primary = $this->getTable()->getPrimary();
-		$values = $this->getValues('flat');
+		$values = $this->getValues(db_row::VALUESMODE_FLAT);
 		$where = array();
 		foreach($primary as $p) {
 			$where[] = $this->getTable()->getRawName().'.'.$p.='="'.$values[$p].'"';
