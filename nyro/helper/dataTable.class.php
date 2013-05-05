@@ -211,8 +211,11 @@ class helper_dataTable extends object {
 					}
 
 					$curData = $d->getValues(db_row::VALUESMODE_DATA);
-					unset($curData['related']);
-					unset($curData['linked']);
+					foreach(array('linked', 'related', 'i18n') as $tt) {
+						$tt = db::getCfg($tt);
+						if (isset($curData[$tt]))
+							unset($curData[$tt]);
+					}
 					if (is_null($dataK)) {
 						$dataK = array_keys($curData);
 						array_walk($dataK, create_function('&$h', '$h = "[".$h."]";'));

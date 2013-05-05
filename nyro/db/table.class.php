@@ -71,47 +71,45 @@ abstract class db_table extends object {
 		$this->_initLinkedTables();
 		$this->_initRelatedTables();
 		$this->_initLabels();
+		$this->_initi18n();
 	}
 
 	/**
-	 * Indicate if the thable has a i18n table
+	 * Get the table name
 	 *
-	 * @return bool
-	 */
-	abstract public function hasI18n();
-	
-	/**
-	 * Get the i18n fields information
-	 *
-	 * @param string|null $field Field name. If null, the whole field array will be returned
-	 * @param string|null $keyVal Value to retrieve directly
-	 * @return array|null
-	 */
-	abstract public function geti18nField($field = null, $keyVal = null);
-	
-	/**
-	 * Get the i18nFields
-	 *
-	 * @return array
-	 */
-	abstract public function getI18nFields();
-	
-	/**
-	 * Get linked information about a i18n field
-	 * 
-	 * @param string $field Field name
-	 * @return array|null
-	 */
-	abstract public function getI18nLinked($field);
-	
-	/**
-	 * Get a where clause for a i18n field
-	 *
-	 * @param string $field
-	 * @param mixed $val
 	 * @return string
 	 */
-	abstract public function getI18nWhereClause($field, $val);
+	public function getName() {
+		return $this->cfg->name;
+	}
+
+	/**
+	 * Get the raw table name
+	 *
+	 * @return string
+	 */
+	public function getRawName() {
+		return $this->rawName;
+	}
+
+	/**
+	 * Return the db object
+	 *
+	 * @return db_abstract
+	 */
+	public function getDb() {
+		return $this->cfg->db;
+	}
+
+	/**
+	 * Get a where object
+	 *
+	 * @param array $prm The configuration for the where object
+	 * @return db_where
+	 */
+	public function getWhere(array $prm = array()) {
+		return $this->getDb()->getWhere($prm);
+	}
 
 	/**
 	 * Get the configured fields for this table
@@ -149,6 +147,77 @@ abstract class db_table extends object {
 	 * Initialize the primary and ident information, if needed
 	 */
 	abstract protected function _initIdent();
+
+	/**
+	 * Get the fields information
+	 *
+	 * @param string|null $field Field name. If null, the whole field array will be returned
+	 * @param string|null $keyVal Value to retrieve directly
+	 * @return array|null
+	 */
+	public function getField($field = null, $keyVal = null) {
+		if (is_null($field))
+			return $this->fields;
+		
+		if (db::isI18nName($field))
+			$this->getI18nField($field, $keyVal);
+
+		$ret = array_key_exists($field, $this->fields) ? $this->fields[$field] : null;
+		if (!is_null($keyVal) && is_array($ret) && array_key_exists($keyVal, $ret))
+			return $ret[$keyVal];
+		return $ret ? $ret : $this->cfg->getInArray('label', $field);
+	}
+	
+	/**
+	 * Get a field name to be used in query (like order)
+	 *
+	 * @param string $field
+	 * @return string
+	 */
+	public function getFieldQuery($field) {
+		return $field;
+	}
+
+	/**
+	 * Get the fields which are file
+	 *
+	 * @return array|null;
+	 */
+	public function getFieldFile() {
+		$ret = null;
+		foreach($this->fields as $f) {
+			if ($f['type'] == 'file')
+				$ret[] = $f['name'];
+		}
+		return $ret;
+	}
+
+	/**
+	 * Get the columns
+	 *
+	 * @return array
+	 */
+	public function getCols() {
+		return $this->cols;
+	}
+
+	/**
+	 * Get the ident column name
+	 *
+	 * @return string
+	 */
+	public function getIdent() {
+		return $this->cfg->ident;
+	}
+
+	/**
+	 * Get the primary columns
+	 *
+	 * @return array
+	 */
+	public function getPrimary() {
+		return $this->cfg->primary;
+	}
 
 	/**
 	 * Initialize the linked tables, if needed
@@ -209,25 +278,6 @@ abstract class db_table extends object {
 		
 		if ($this->cfg->check('linked') && is_array($this->cfg->linked) && !empty($this->cfg->linked))
 			factory::mergeCfg($this->linkedTables, $this->cfg->linked);
-	}
-
-	/**
-	 * Return the db object
-	 *
-	 * @return db_abstract
-	 */
-	public function getDb() {
-		return $this->cfg->db;
-	}
-
-	/**
-	 * Get a where object
-	 *
-	 * @param array $prm The configuration for the where object
-	 * @return db_where
-	 */
-	public function getWhere(array $prm = array()) {
-		return $this->getDb()->getWhere($prm);
 	}
 
 	/**
@@ -517,101 +567,57 @@ abstract class db_table extends object {
 	}
 
 	/**
+	 * Init i18n features
+	 */
+	abstract protected function _initI18n();
+	
+	/**
+	 * Indicate if the thable has a i18n table
+	 *
+	 * @return bool
+	 */
+	abstract public function hasI18n();
+	
+	/**
+	 * Get the i18n fields information
+	 *
+	 * @param string|null $field Field name. If null, the whole field array will be returned
+	 * @param string|null $keyVal Value to retrieve directly
+	 * @return array|null
+	 */
+	abstract public function geti18nField($field = null, $keyVal = null);
+	
+	/**
+	 * Get the i18nFields
+	 *
+	 * @return array
+	 */
+	abstract public function getI18nFields();
+	
+	/**
+	 * Get linked information about a i18n field
+	 * 
+	 * @param string $field Field name
+	 * @return array|null
+	 */
+	abstract public function getI18nLinked($field);
+	
+	/**
+	 * Get a where clause for a i18n field
+	 *
+	 * @param string $field
+	 * @param mixed $val
+	 * @return string
+	 */
+	abstract public function getI18nWhereClause($field, $val);
+	
+	/**
 	 * Get the label for the i18n fields
 	 *
 	 * @param null|string $field Fieldname or null to retrieve an all of them as an array
 	 * @return array|string
 	 */
 	abstract public function getI18nLabel($field = null);
-
-	/**
-	 * Get the fields information
-	 *
-	 * @param string|null $field Field name. If null, the whole field array will be returned
-	 * @param string|null $keyVal Value to retrieve directly
-	 * @return array|null
-	 */
-	public function getField($field = null, $keyVal = null) {
-		if (is_null($field))
-			return $this->fields;
-		
-		if (db::isI18nName($field))
-			$this->getI18nField($field, $keyVal);
-
-		$ret = array_key_exists($field, $this->fields) ? $this->fields[$field] : null;
-		if (!is_null($keyVal) && is_array($ret) && array_key_exists($keyVal, $ret))
-			return $ret[$keyVal];
-		return $ret ? $ret : $this->cfg->getInArray('label', $field);
-	}
-	
-	/**
-	 * Get a field name to be used in query (like order)
-	 *
-	 * @param string $field
-	 * @return string
-	 */
-	public function getFieldQuery($field) {
-		return $field;
-	}
-
-	/**
-	 * Get the fields which are file
-	 *
-	 * @return array|null;
-	 */
-	public function getFieldFile() {
-		$ret = null;
-		foreach($this->fields as $f) {
-			if ($f['type'] == 'file')
-				$ret[] = $f['name'];
-		}
-		return $ret;
-	}
-
-	/**
-	 * Get the columns
-	 *
-	 * @return array
-	 */
-	public function getCols() {
-		return $this->cols;
-	}
-
-	/**
-	 * Get the table name
-	 *
-	 * @return string
-	 */
-	public function getName() {
-		return $this->cfg->name;
-	}
-
-	/**
-	 * Get the raw table name
-	 *
-	 * @return string
-	 */
-	public function getRawName() {
-		return $this->rawName;
-	}
-
-	/**
-	 * Get the ident column name
-	 *
-	 * @return string
-	 */
-	public function getIdent() {
-		return $this->cfg->ident;
-	}
-
-	/**
-	 * Get the primary columns
-	 *
-	 * @return array
-	 */
-	public function getPrimary() {
-		return $this->cfg->primary;
-	}
 
 	/**
 	 * Insert into the table

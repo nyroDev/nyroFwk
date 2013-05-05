@@ -17,12 +17,29 @@ class db_mongo_table extends db_table {
 		
 	}
 
+	protected $hasI18n;
+	protected $i18nFields;
+	protected function _initI18n() {
+		$this->hasI18n = false;
+		$this->i18nFields = array();
+		$i18n = $this->cfg->getInArray('configuration', 'i18n');
+		if ($i18n) {
+			$this->hasI18n = true;
+			$default = $this->cfg->getInArray('configuration', 'defaultField');
+			foreach ($i18n as $name=>&$field) {
+				$field['name'] = $name;
+				config::initTab($field, $default);
+			}
+			$this->i18nFields = $i18n;
+		}
+	}
+	
 	public function getI18nFields() {
-		return array();
+		return $this->i18nFields;
 	}
 
 	public function getI18nLabel($field = null) {
-		
+		return $field;
 	}
 
 	public function getI18nLinked($field) {
@@ -65,7 +82,7 @@ class db_mongo_table extends db_table {
 	}
 
 	public function hasI18n() {
-		
+		return $this->hasI18n;
 	}
 
 	public function select(array $prm = array()) {
@@ -81,7 +98,7 @@ class db_mongo_table extends db_table {
 		}
 
 		if (isset($prm['first']) && $prm['first']) {
-			if (!empty($ret))
+			if ($ret->count() > 0)
 				return  $this->getDb()->getRow($this, array(
 					'data'=>$ret->getNext(),
 				));

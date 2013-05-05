@@ -10,24 +10,6 @@
 class db_pdo_where extends db_where {
 
 	/**
-	 * Add a new clause
-	 *
-	 * @param string|array $prm String for a raw clause or an array with the keys:
-	 *  - field string The field on which the clause is tested (required)
-	 *  - op string The operator for testing (default: =)
-	 *  - val string The value to test against (required)
-	 */
-	public function add($prm) {
-		if (is_array($prm) && !config::initTab($prm, array(
-				'field'=>null,
-				'op'=>db_where::OP_EQUAL,
-				'val'=>null
-			)))
-			return;
-		$this->clauses[] = $prm;
-	}
-
-	/**
 	 * Get the clauses as an array
 	 *
 	 * @return array With keys:

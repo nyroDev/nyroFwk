@@ -60,10 +60,6 @@ class db_mongo extends db_abstract {
 		
 	}
 
-	public function delete(array $prm) {
-		
-	}
-
 	public function fields($table) {
 		
 	}
@@ -85,15 +81,23 @@ class db_mongo extends db_abstract {
 	 * @param db_mongo_row $row
 	 */
 	public function save(db_mongo_row $row) {
-		$values = $row->getValues(db_row::VALUESMODE_FLAT);
+		$values = $row->getValues(db_row::VALUESMODE_FLAT, db_row::VALUESFILTER_NORMDB);
 		$ident = $row->getTable()->getIdent();
-		if ($row->isNew() && isset($values[$ident]))
+		$isNew = false;
+		if ($row->isNew() && isset($values[$ident])) {
 			unset($values[$ident]);
-		return $this->getMongoCollection($row->getTable()->getName())->save($values);
+			$isNew = true;
+		}
+		$ret = $this->getMongoCollection($row->getTable()->getName())->save($values);
+		if ($isNew) {
+			$ident = $row->getTable()->getIdent();
+			$row->getCfg()->setInArray('data', $ident, $values[$ident]);
+		}
+		return $ret;
 	}
 	
 	public function insert(array $prm) {
-		throw new nException('db_abstract - insert : @todo');
+		return $this->getMongoCollection($prm['table'])->insert($prm['values']);
 	}
 
 	public function replace(array $prm) {
@@ -119,6 +123,10 @@ class db_mongo extends db_abstract {
 	        return $stmt->rowCount();
 		} else
 			throw new nException('db_abstract - update : The table or the values is missing.');
+	}
+
+	public function delete(array $prm) {
+		return $this->getMongoCollection($prm['table'])->remove($this->makeWhere($prm['where']));
 	}
 
 	public function select($prm) {

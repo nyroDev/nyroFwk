@@ -29,23 +29,30 @@ abstract class form_mulValue extends form_abstract {
 				$group = array();
 
 			$db = $dbList['db'];
-			$values = $db->select(array_merge($dbList, array('result'=>MYSQL_NUM)));
+			$values = $db->getTable($dbList['table'])->select($dbList);
 
 			$tmp = null;
+			$fields = array_map(create_function('$v', 'return str_replace("'.$dbList['table'].'.", "", $v);'), explode(',', $dbList['fields']));
+			$i18nFields = explode(',', $dbList['i18nFields']);
 			foreach($values as $v) {
-				$key = array_shift($v);
+				$tmpVals = array();
+				foreach($fields as $f)
+					$tmpVals[] = $v->get($f);
+				foreach($i18nFields as $f)
+					$tmpVals[] = $v->getI18n($f);
+				$key = ''.array_shift($tmpVals);
 				if ($dbList['nbFieldGr'] > 0) {
-					$arr = utils::cutArray($v, $dbList['nbFieldGr']);
+					$arr = utils::cutArray($tmpVals, $dbList['nbFieldGr']);
 					$tmp2 = implode($dbList['sepGr'], $arr[0]);
 					if ($tmp != $tmp2) {
 						$group[$key] = $tmp2;
 						$tmp = $tmp2;
 					}
-					$v = $arr[1];
+					$tmpVals = $arr[1];
 				}
-				if (empty($v))
-					$v = array($key);
-				$list[$key] = implode($dbList['sep'], $v);
+				if (empty($tmpVals))
+					$tmpVals = array($key);
+				$list[$key] = implode($dbList['sep'], $tmpVals);
 			}
 			$this->cfg->group = utils::htmlOut($group);
 			$this->cfg->list = utils::htmlOut($list);

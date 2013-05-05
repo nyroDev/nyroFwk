@@ -7,6 +7,11 @@ abstract class db_row extends object implements ArrayAccess {
 	const VALUESMODE_FLATREAL = 'flatReal';
 	const VALUESMODE_FLATREAL_NORELATED = 'flatRealNoRelated';
 	
+	const VALUESFILTER_COLS = 'cols';
+	const VALUESFILTER_NONE = 'none';
+	const VALUESFILTER_NORMDB = 'normDb';
+	
+	
 	/**
 	 * Changes done
 	 *
@@ -250,7 +255,7 @@ abstract class db_row extends object implements ArrayAccess {
 	 * @return mixed The last inserted id
 	 */
 	public function insert() {
-		$values = array_intersect_key(array_merge($this->getValues(db_row::VALUESMODE_FLAT), $this->getChangesTable()), $this->getTable()->getField());
+		$values = array_intersect_key(array_merge($this->getValues(db_row::VALUESMODE_FLAT, db_row::VALUESFILTER_NORMDB), $this->getChangesTable()), $this->getTable()->getField());
 		unset($values[$this->getTable()->getIdent()]);
 		$id = $this->getTable()->insert($values);
 		$this->set($this->getTable()->getIdent(), $id);
@@ -361,7 +366,7 @@ abstract class db_row extends object implements ArrayAccess {
 	 * Get a value
 	 *
 	 * @param string $key Fieldname
-	 * @param string $mode Mode to retrieve the value, only used for related (flat or flatReal)
+	 * @param string $mode Mode to retrieve the value (flat or flatReal)
 	 * @return mixed The value
 	 */
 	public function get($key, $mode = db_row::VALUESMODE_FLAT) {
@@ -373,6 +378,12 @@ abstract class db_row extends object implements ArrayAccess {
 				$val = $this->changes[$key];
 			else
 				$val = $this->cfg->getInArray('data', $key);
+			
+			if (!$this->getTable()->getCfg()->autoJoin && $this->getTable()->isLinked($key) && $mode == db_row::VALUESMODE_FLATREAL) {
+				$linkedObj = $this->getLinked($key, true);
+				return $linkedObj->get(substr($key, strlen($linkedObj->getTable()->getName())+1));
+			}
+			
 			return $this->getTable()->getField($key, 'htmlOut') ? utils::htmlOut($val) : $val;
 		} else if ($val = $this->cfg->getInArray('data', $key)) {
 			return $val;
@@ -444,14 +455,14 @@ abstract class db_row extends object implements ArrayAccess {
 	 * Get the values in an array
 	 *
 	 * @param string $mode Return mode (data, flat, flatNoRelated, flatReal, flatRealNoRelated)
+	 * @param string $filterResults Filters results to apply (not used for data mode)
 	 * @return array
 	 */
-	public function getValues($mode = db_row::VALUESMODE_DATA) {
+	public function getValues($mode = db_row::VALUESMODE_DATA, $filterResults = db_row::VALUESFILTER_COLS) {
 		switch ($mode) {
 			case db_row::VALUESMODE_FLAT:
 			case db_row::VALUESMODE_FLAT_NORELATED:
-				$data = $this->cfg->data ? $this->cfg->data : array();
-				$data = array_merge($data, $this->getChanges());
+				$data = array_merge($this->cfg->data ? $this->cfg->data : array(), $this->getChanges());
 				$tmp = $this->getTable()->getCols();
 
 				if ($mode == db_row::VALUESMODE_FLAT) {
@@ -463,28 +474,35 @@ abstract class db_row extends object implements ArrayAccess {
 								$data[$k] = $data[$k.'_'.$v['ident']];
 						}
 					}
-					if (array_key_exists('related', $data)) {
+					if (array_key_exists('related', $data) && is_array($data['related'])) {
 						foreach($this->getTable()->getRelated() as $k=>$v) {
 							$tmp[] = $k;
 							$data[$k] = array();
 							$hasFields = isset($v['fields']) && count($v['fields']);
-							foreach($data['related'][$v['fk2']['link']['table']] as $vv) {
-								if ($hasFields) {
-									$curVal = array(
-										db::getCfg('relatedValue')=>$vv[$v['fk2']['link']['ident']]
-									);
-									foreach($v['fields'] as $kF=>$vF) {
-										$curVal[$kF] = $vv[$kF];
+							if (isset($data['related'][$v['fk2']['link']['table']]) && (is_array($data['related'][$v['fk2']['link']['table']]) || $data['related'][$v['fk2']['link']['table']] instanceof db_rowset)) {
+								foreach($data['related'][$v['fk2']['link']['table']] as $vv) {
+									if ($hasFields) {
+										$curVal = array(
+											db::getCfg('relatedValue')=>$vv[$v['fk2']['link']['ident']]
+										);
+										foreach($v['fields'] as $kF=>$vF) {
+											$curVal[$kF] = $vv[$kF];
+										}
+										$data[$k][] = $curVal;
+									} else {
+										$data[$k][] = $vv[$v['fk2']['link']['ident']];
 									}
-									$data[$k][] = $curVal;
-								} else {
-									$data[$k][] = $vv[$v['fk2']['link']['ident']];
 								}
 							}
 						}
 					}
 				}
-				return array_intersect_key($data, array_flip($tmp));
+				
+				if ($filterResults == db_row::VALUESFILTER_COLS)
+					return array_intersect_key($data, array_flip($tmp));
+				else if ($filterResults == db_row::VALUESFILTER_NORMDB)
+					return $this->normalizeValues($data);
+				return $data;
 				break;
 			case db_row::VALUESMODE_FLATREAL:
 			case db_row::VALUESMODE_FLATREAL_NORELATED:
@@ -510,14 +528,28 @@ abstract class db_row extends object implements ArrayAccess {
 						$data[$k] = utils::htmlOut($data[$k]);
 					}
 				}
-
-				return array_intersect_key($data, array_flip($tmp));
+				
+				if ($filterResults == db_row::VALUESFILTER_COLS)
+					return array_intersect_key($data, array_flip($tmp));
+				else if ($filterResults == db_row::VALUESFILTER_NORMDB)
+					return $this->normalizeValues($data);
+				return $data;
 				break;
 			case db_row::VALUESMODE_DATA:
 			default:
 				return $this->cfg->data;
 				break;
 		}
+	}
+	
+	/**
+	 * Normalize data to be used in database
+	 *
+	 * @param array $data
+	 * @return array
+	 */
+	public function normalizeValues(array $data) {
+		return $data;
 	}
 
 	/**
@@ -646,10 +678,10 @@ abstract class db_row extends object implements ArrayAccess {
 		if ($this->getTable()->isLinked($field)) {
 			if (!array_key_exists($field, $this->linked)) {
 				$data = array();
-				if ($val = $this->get($field, db_row::VALUESMODE_FLATREAL)) {
+				if ($val = $this->get($field, db_row::VALUESMODE_FLAT)) {
 					$tmp = $this->getTable()->getLinked($field);
 					$data[$tmp['ident']] = $val;
-				} else if ($val = $this->get($field, db_row::VALUESMODE_FLAT)) {
+				} else if ($val = $this->get($field, db_row::VALUESMODE_FLATREAL)) {
 					$tmp = $this->getTable()->getLinked($field);
 					$data[$tmp['ident']] = $val;
 				}

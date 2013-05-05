@@ -76,7 +76,15 @@ abstract class db_where extends object implements Countable {
 	 *  - op string The operator for testing (default: =)
 	 *  - val string The value to test against (required)
 	 */
-	abstract public function add($prm);
+	public function add($prm) {
+		if (is_array($prm) && !config::initTab($prm, array(
+				'field'=>null,
+				'op'=>db_where::OP_EQUAL,
+				'val'=>null
+			)))
+			return;
+		$this->clauses[] = $prm;
+	}
 
 	/**
 	 * Get the clauses as an array

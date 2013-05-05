@@ -16,11 +16,6 @@ class db_pdo_table extends db_table {
 	 */
 	protected $i18nTable;
 
-	protected function afterInit() {
-		parent::afterInit();
-		$this->_initi18n();
-	}
-
 	/**
 	 * Initialize the primary and ident information, if needed
 	 */
@@ -299,6 +294,9 @@ class db_pdo_table extends db_table {
 	 */
 	public function select(array $prm = array()) {
 		$prm = $this->selectQuery($prm, $tmpTables);
+
+		if (isset($prm['i18nFields']))
+			unset($prm['i18nFields']);
 
 		$ret = array();
 		$cache = $this->getDb()->getCache();
