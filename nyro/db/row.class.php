@@ -367,9 +367,10 @@ abstract class db_row extends object implements ArrayAccess {
 	 *
 	 * @param string $key Fieldname
 	 * @param string $mode Mode to retrieve the value (flat or flatReal)
+	 * @param boolean $skipLinked Indicates if getLinked is allowed or not
 	 * @return mixed The value
 	 */
-	public function get($key, $mode = db_row::VALUESMODE_FLAT) {
+	public function get($key, $mode = db_row::VALUESMODE_FLAT, $skipLinked = false) {
 		if (db::isI18nName($key))
 			return $this->getI18n(db::unI18nName($key), $mode);
 
@@ -379,9 +380,10 @@ abstract class db_row extends object implements ArrayAccess {
 			else
 				$val = $this->cfg->getInArray('data', $key);
 			
-			if (!$this->getTable()->getCfg()->autoJoin && $this->getTable()->isLinked($key) && $mode == db_row::VALUESMODE_FLATREAL) {
+			if (!$skipLinked && !$this->getTable()->getCfg()->autoJoin && $this->getTable()->isLinked($key) && $mode == db_row::VALUESMODE_FLATREAL) {
 				$linkedObj = $this->getLinked($key, true);
-				return $linkedObj->get(substr($key, strlen($linkedObj->getTable()->getName())+1));
+				if ($linkedObj)
+					return $linkedObj->get(substr($key, strlen($linkedObj->getTable()->getName())+1));
 			}
 			
 			return $this->getTable()->getField($key, 'htmlOut') ? utils::htmlOut($val) : $val;
@@ -678,10 +680,10 @@ abstract class db_row extends object implements ArrayAccess {
 		if ($this->getTable()->isLinked($field)) {
 			if (!array_key_exists($field, $this->linked)) {
 				$data = array();
-				if ($val = $this->get($field, db_row::VALUESMODE_FLAT)) {
+				if ($val = $this->get($field, db_row::VALUESMODE_FLATREAL, true)) {
 					$tmp = $this->getTable()->getLinked($field);
 					$data[$tmp['ident']] = $val;
-				} else if ($val = $this->get($field, db_row::VALUESMODE_FLATREAL)) {
+				} else if ($val = $this->get($field, db_row::VALUESMODE_FLAT, true)) {
 					$tmp = $this->getTable()->getLinked($field);
 					$data[$tmp['ident']] = $val;
 				}
