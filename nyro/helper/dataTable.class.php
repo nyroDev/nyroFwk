@@ -184,7 +184,7 @@ class helper_dataTable extends object {
 						array($prmReplaceSortBy, $prmReplaceSortDir),
 						array(
 							$fieldQuery,
-							$this->cfg->sortBy == $fieldQuery && $this->cfg->sortDir == 'asc'? 'desc' : 'asc'
+							$this->cfg->sortBy == $fieldQuery && $this->cfg->sortDir == db_table::ORDER_ASC ? db_table::ORDER_DESC : db_table::ORDER_ASC
 						),
 						$tmpSortLink),
 					'type'=>$typeField

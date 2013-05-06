@@ -13,7 +13,7 @@ $cfg = array(
 	'nbPageMax'=>false,
 	'page'=>1,
 	'sortBy'=>null,
-	'sortDir'=>'asc',
+	'sortDir'=>db_table::ORDER_ASC,
 
 	'pageLinkReplace'=>'[page]',
 	'pageLinkTpl'=>null,

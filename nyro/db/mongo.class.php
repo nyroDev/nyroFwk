@@ -144,8 +144,20 @@ class db_mongo extends db_abstract {
 			db::log('db_mongo SELECT : '.$prm['table'], $query);
 			$cursor = $collection->find($query);
 			
-			if ($prm['order'])
-				$cursor->sort(is_array($prm['order']) ? $prm['order'] : array($prm['order']));
+			if ($prm['order']) {
+				if (!is_array($prm['order'])) {
+					$tmp = array_map('trim', explode(', ', $prm['order']));
+					$orders = array();
+					foreach($tmp as $t) {
+						$tt = array_map('trim', explode(' ', $t));
+						$ord = array_pop($tt) == db_table::ORDER_ASC ? 1 : -1;
+						$orders[implode(' ', $tt)] = $ord;
+					}
+				} else {
+					$orders = $prm['order'];
+				}
+				$cursor->sort($orders);
+			}
 			if ($prm['start'])
 				$cursor->skip($prm['start']);
 			if ($prm['nb'])

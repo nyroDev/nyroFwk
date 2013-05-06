@@ -11,7 +11,7 @@
 						if ($h['name'] == $sortBy || $tblName.'.'.$h['name'] == $sortBy) {
 							echo '<th class="'.$h['name'].'Cell '.$h['name'].'Head">
 								<a href="'.$h['url'].'">'.$h['label'].'</a>
-								'.($sortDir == 'asc' ? $sortIndicatorAsc : $sortIndicatorDesc).'
+								'.($sortDir == db_table::ORDER_ASC ? $sortIndicatorAsc : $sortIndicatorDesc).'
 								</th>';
 						} else
 							echo '<th class="'.$h['name'].'Cell '.$h['name'].'Head"><a href="'.$h['url'].'">'.$h['label'].'</a></th>';

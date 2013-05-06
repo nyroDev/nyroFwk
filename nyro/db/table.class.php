@@ -9,6 +9,9 @@
  */
 abstract class db_table extends object {
 
+	const ORDER_ASC = 'asc';
+	const ORDER_DESC = 'desc';
+	
 	/**
 	 * Raw table name
 	 *

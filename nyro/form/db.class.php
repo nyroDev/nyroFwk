@@ -52,7 +52,7 @@ class form_db extends form {
 				}
 			}
 			if (count($tmp))
-				$prm['dbList']['order'] = implode(' ASC, ', $tmp).' ASC';
+				$prm['dbList']['order'] = implode(' '.db_table::ORDER_ASC.', ', $tmp).' '.db_table::ORDER_ASC;
 		}
 		if (array_key_exists('formType', $related) && $related['formType'])
 			$type = $related['formType'];
@@ -140,7 +140,7 @@ class form_db extends form {
 				}
 			}
 			if (count($tmp))
-				$prm['dbList']['order'] = implode(' ASC, ', $tmp).' ASC';
+				$prm['dbList']['order'] = implode(' '.db_table::ORDER_ASC.', ', $tmp).' '.db_table::ORDER_ASC;
 		}
 		if (array_key_exists('formTypeFilter', $related) && $related['formTypeFilter'])
 			$type = $related['formTypeFilter'];
@@ -207,7 +207,7 @@ class form_db extends form {
 							$tmp[] = $field['link']['table'].'.'.$t;
 					}
 					$fields.= ','.implode(',', $tmp);
-					$order = implode(' ASC, ', $tmp).' ASC';
+					$order = implode(' '.db_table::ORDER_ASC.', ', $tmp).' '.db_table::ORDER_ASC;
 				}
 				$prm['dbList'] = array(
 					'db'=>$this->cfg->table->getDb(),
