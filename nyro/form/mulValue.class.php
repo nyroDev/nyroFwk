@@ -32,8 +32,8 @@ abstract class form_mulValue extends form_abstract {
 			$values = $db->getTable($dbList['table'])->select($dbList);
 
 			$tmp = null;
-			$fields = array_map(create_function('$v', 'return str_replace("'.$dbList['table'].'.", "", $v);'), explode(',', $dbList['fields']));
-			$i18nFields = explode(',', $dbList['i18nFields']);
+			$fields = array_map(create_function('$v', 'return str_replace("'.$dbList['table'].'.", "", $v);'), array_filter(explode(',', $dbList['fields'])));
+			$i18nFields = array_filter(explode(',', $dbList['i18nFields']));
 			foreach($values as $v) {
 				$tmpVals = array();
 				foreach($fields as $f)

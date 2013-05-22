@@ -43,8 +43,8 @@ class response_http_html extends response_http {
 	 */
 	public function initIncFiles($addDefaults = true) {
 		$this->incFiles = array(
-			'js'=>array('nyro'=>array(), 'web'=>array(), 'nyroLast'=>array()),
-			'css'=>array('nyro'=>array(), 'web'=>array(), 'nyroLast'=>array())
+			'js'=>array('nyro'=>array(), 'web'=>array(), 'external'=>array(), 'nyroLast'=>array()),
+			'css'=>array('nyro'=>array(), 'web'=>array(), 'external'=>array(), 'nyroLast'=>array())
 		);
 		if ($addDefaults && !empty($this->cfg->incFiles) && is_array($this->cfg->incFiles)) {
 			foreach($this->cfg->incFiles as $ic)
@@ -227,7 +227,7 @@ class response_http_html extends response_http {
 	 * @param array $prm Same parameter as addCss or addJs, with adding:
 	 *  - string type File type (js or css) (required)
 	 * @return bool True if addedor already added, False if not found
-	 * @throws nExecption if type or file not  provided
+	 * @throws nExeception if type or file not  provided
 	 * @see addJs, addCss
 	 */
 	public function add(array $prm) {
@@ -263,32 +263,37 @@ class response_http_html extends response_http {
 			if (!array_key_exists($locDir, $this->incFiles[$prm['type']]))
 				$locDir = 'nyro';
 
-			$fileExt = $prm['file'].'.'.$prm['type'];
+			if ($locDir != 'external') {
+				$fileExt = $prm['file'].'.'.$prm['type'];
 
-			if ($prm['verifExists'])
-				$fileExists = $locDir == 'web'
-					?file::webExists($prmType['dirWeb'].DS.$fileExt)
-					:file::nyroExists(array(
-								'name'=>'module_'.nyro::getCfg()->compressModule.'_'.$prm['type'].'_'.$prm['file'],
-								'type'=>'tpl',
-								'tplExt'=>$prm['type']
-							));
-			else
-				$fileExists = true;
+				if ($prm['verifExists'])
+					$fileExists = $locDir == 'web'
+						?file::webExists($prmType['dirWeb'].DS.$fileExt)
+						:file::nyroExists(array(
+									'name'=>'module_'.nyro::getCfg()->compressModule.'_'.$prm['type'].'_'.$prm['file'],
+									'type'=>'tpl',
+									'tplExt'=>$prm['type']
+								));
+				else
+					$fileExists = true;
 
-			if ($fileExists) {
-				if (!isset($this->incFiles[$prm['type']][$locDir][$prm['media']]))
-					$this->incFiles[$prm['type']][$locDir][$prm['media']] = array();
-				$this->incFiles[$prm['type']][$locDir][$prm['media']][$prm['file']] = $prm;
-				if ($prm['type'] == 'css') {
-					$c = file::read($fileExists);
-					preg_match_all('`@import (url\()?"(.+).css"\)?;`', $c, $matches);
-					if (!empty($matches[2])) {
-						$prefix = substr($prm['file'], 0, strpos($prm['file'], '_')+1);
-						foreach($matches[2	] as $m)
-							$this->add(array_merge($prm, array('file'=>$prefix.$m)));
+				if ($fileExists) {
+					if (!isset($this->incFiles[$prm['type']][$locDir][$prm['media']]))
+						$this->incFiles[$prm['type']][$locDir][$prm['media']] = array();
+					$this->incFiles[$prm['type']][$locDir][$prm['media']][$prm['file']] = $prm;
+					if ($prm['type'] == 'css') {
+						$c = file::read($fileExists);
+						preg_match_all('`@import (url\()?"(.+).css"\)?;`', $c, $matches);
+						if (!empty($matches[2])) {
+							$prefix = substr($prm['file'], 0, strpos($prm['file'], '_')+1);
+							foreach($matches[2	] as $m)
+								$this->add(array_merge($prm, array('file'=>$prefix.$m)));
+						}
 					}
+					$ret = true;
 				}
+			} else {
+				$this->incFiles[$prm['type']][$locDir][$prm['media']][$prm['file']] = $prm;
 				$ret = true;
 			}
 
@@ -532,11 +537,21 @@ class response_http_html extends response_http {
 					foreach($tmp as $ie=>$t) {
 						if ($ie)
 							$ret.= '<!--[if '.$ie.']>'.$ln;
-						$ret.= $this->getIncludeTagFile($type,
-										$t,
-										$dir,
-										$media
-										).$ln;
+						if ($dir == 'external') {
+							foreach($t as $file) {
+								$ret.= $this->getIncludeTagFile($type,
+												$file,
+												$dir,
+												$media
+												).$ln;
+							}
+						} else {
+							$ret.= $this->getIncludeTagFile($type,
+											$t,
+											$dir,
+											$media
+											).$ln;
+						}
 						if ($ie)
 							$ret.= '<![endif]-->'.$ln;
 					}
@@ -571,6 +586,8 @@ class response_http_html extends response_http {
 	 */
 	public function getUrlFile($type, $files, $dir = 'nyro') {
 		$prm = $this->cfg->get($type);
+		if ($dir == 'external')
+			return is_array($files) ? implode('', $files) : $files;
 		$url = $dir == 'web'
 					? request::get('path').$prm['dirWeb']
 					: request::getPathControllerUri().$prm['dirUriNyro'];

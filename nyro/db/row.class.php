@@ -308,7 +308,7 @@ abstract class db_row extends object implements ArrayAccess {
 						$curValues = $values;
 						if ($hasFields) {
 							foreach($t as $k=>$v) {
-								if ($k == $this->getDb()->getKeyConfig('relatedValue'))
+								if ($k == db::getCfg('relatedValue'))
 									$curValues[$r['fk2']['name']] = $v;
 								else
 									$curValues[$k] = $v;
