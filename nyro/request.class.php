@@ -687,7 +687,7 @@ final class request {
 	 * @return bool
 	 */
 	public static function isAjax() {
-		return array_key_exists('HTTP_X_REQUESTED_WITH', $_SERVER);
+		return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';;
 	}
 
 	/**
