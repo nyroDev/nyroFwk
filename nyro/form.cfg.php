@@ -21,6 +21,7 @@ $cfg = array(
 	'requiredMoreLabel'=>'',
 	
 	'i18nDefaultLang'=>request::get('lang'),
+	'i18nAvlLang'=>request::avlLang(true),
 
 	'captcha'=>array(
 		'name'=>'nyroTcha',

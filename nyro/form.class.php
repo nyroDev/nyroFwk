@@ -224,7 +224,7 @@ class form extends object {
 			if ($this->cfg->forceOnlyOneLang || $this->cfg->noForceLang)
 				$requiredFields = array();
 			$avlLangs = array();
-			$tmp = request::avlLang(true);
+			$tmp = $this->cfg->i18nAvlLang;
 			$i18nDefaultLang = $this->cfg->i18nDefaultLang;
 			if (isset($tmp[$i18nDefaultLang])) {
 				$avlLangs[$i18nDefaultLang] = $tmp[$i18nDefaultLang];
