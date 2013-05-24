@@ -19,6 +19,8 @@ $cfg = array(
 	'sepLabel'=>': ',
 	'emptyLabel'=>'&nbsp;',
 	'requiredMoreLabel'=>'',
+	
+	'i18nDefaultLang'=>request::get('lang'),
 
 	'captcha'=>array(
 		'name'=>'nyroTcha',

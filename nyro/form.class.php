@@ -223,7 +223,16 @@ class form extends object {
 			$nb = 0;
 			if ($this->cfg->forceOnlyOneLang || $this->cfg->noForceLang)
 				$requiredFields = array();
-			foreach(request::avlLang(true) as $lg=>$lang) {
+			$avlLangs = array();
+			$tmp = request::avlLang(true);
+			$i18nDefaultLang = $this->cfg->i18nDefaultLang;
+			if (isset($tmp[$i18nDefaultLang])) {
+				$avlLangs[$i18nDefaultLang] = $tmp[$i18nDefaultLang];
+				unset($tmp[$i18nDefaultLang]);
+			}
+			foreach($tmp as $k=>$v)
+				$avlLangs[$k] = $v;
+			foreach($avlLangs as $lg=>$lang) {
 				$this->addSection($lang);
 				$groupedFieldsAdded = false;
 				foreach($this->i18nElements as $e) {
