@@ -9,8 +9,10 @@ $cfg = array(
 	'deleteCurrent'=>true,
 	'helperPrm'=>array(
 		'view'=>array(
-			'h'=>200,
-			'w'=>0,
+			'w'=>300,
+			'h'=>150,
+			'useMaxResize'=>true,
+			'resizeSmaller'=>false,
 			'fileSaveAdd'=>'admin',
 		),
 	),

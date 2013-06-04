@@ -156,7 +156,7 @@ class form_file extends form_abstract {
 			$start = '<'.$this->cfg->htmlWrap.'>';
 			if ($this->cfg->value->getCurrent()) {
 				$end.= '<input type="hidden" name="'.$this->getNameAct('NyroKeep').'" value="'.$this->cfg->value->getCurrent().'" />';
-				$end.= '<span>';
+				$end.= '<span class="filePreview">';
 				if ($this->cfg->showDelete) {
 					$end.= '<a href="#" class="deleteFile" id="'.$this->id.'NyroDel">'.$this->cfg->deleteLabel.'</a>';
 					response::getInstance()->blockJquery('
