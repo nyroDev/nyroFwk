@@ -4,24 +4,22 @@ $cfg = array(
 		'active'=>true,
 		'config'=>'default',
 		'url'=>request::uri('nyroBrowser'),
-		'width'=>770,
-		'height'=>480,
-		'title'=>'Browser',
-	),
-	'tinyBrowser'=>array(
-		'active'=>false,
-		'url'=>str_replace('tinybrowser', 'tinybrowser/tinybrowser.php', request::uri('js/tiny_mce/plugins/tinybrowser')),
-		'subdir'=>null,
-		'width'=>770,
-		'height'=>480,
+		'width'=>800,
+		'height'=>550,
 		'title'=>'Browser',
 	),
 	'tinyMce'=>array(
-		'script_url'=>request::uri('js/tiny_mce/tiny_mce_gzip.php'.(DEV ? null : '?diskcache=true')),
+		'script_url'=>request::uri('js/tinyMce/tiny_mce_gzip.php'.(DEV ? null : '?diskcache=true')),
 		'height'=>340,
-		'theme'=>'advanced',
+		
 		'language'=>request::get('lang'),
+		
+		'theme'=>'modern',
+		'plugins'=>'advlist,autolink,link,image,lists,charmap,print,preview,hr,anchor,pagebreak,searchreplace,wordcount,visualblocks,visualchars,code,fullscreen,insertdatetime,media,nonbreaking,save,table,contextmenu,directionality,template,paste,textcolor',
+		'toolbar'=>'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | preview media fullpage',
+		'relative_urls'=>false,
 
+		/*
 		'plugins'=>'safari,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template',
 
 		'theme_advanced_buttons1'=>'save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect',
@@ -62,5 +60,6 @@ $cfg = array(
 		'media_external_list_url'=>'',
 
 		'relative_urls'=>false,
+		 */
 	),
 );

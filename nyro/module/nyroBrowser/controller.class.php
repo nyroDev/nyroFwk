@@ -73,7 +73,8 @@ class module_nyroBrowser_controller extends module_abstract {
 					$name,
 					file::humanSize($f),
 					utils::formatDate(filemtime($f)),
-					$this->uri.'delete='.urlencode(str_replace(FILESROOT, '', $f)).'&'
+					$this->uri.'delete='.urlencode(str_replace(FILESROOT, '', $f)).'&',
+					@getimagesize($f)
 				);
 			}
 		}

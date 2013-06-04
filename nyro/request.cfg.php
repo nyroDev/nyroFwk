@@ -57,7 +57,7 @@ $cfg = array(
 		'/500'=>'/pages/error/500',
 
 		'/js/(.+)\.js'=>'/compress/js/\1.js',
-		'/js/tiny_mce/(.+)'=>'/nyroUtils/tinyMce/\1',
+		'/js/tinyMce/(.+)'=>'/nyroUtils/tinyMce/\1',
 		'/css/(.+)\.(.+)'=>'/compress/cssExt/\1.\2',
 		'/css/(.+)\.css'=>'/compress/css/\1.css',
 	),

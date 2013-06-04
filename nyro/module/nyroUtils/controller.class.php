@@ -37,7 +37,7 @@ class module_nyroUtils_controller extends module_abstract {
 	}
 
 	protected function execTinyMce($prm=null) {
-		$search = 'js/tiny_mce/';
+		$search = 'js/tinyMce/';
 		$request = request::get('request');
 		$pos = strpos($request, $search);
 		if ($pos === false)
@@ -52,8 +52,10 @@ class module_nyroUtils_controller extends module_abstract {
 			array_walk($_GET, create_function('&$v', '$v = urldecode($v);'));
 			$path = str_replace($tmp, '', $file);
 			ini_set('include_path', $path);
-			define('TINYMCEPATH', substr($path, 0, -1));
-			define('TINYMCECACHEPATH', substr(TMPROOT, 0, -1));
+			define('TINYMCEPATH', $path);
+			define('TINYMCECACHEPATH', TMPROOT.'cache/tinyMce');
+			if (!file::exists(TINYMCECACHEPATH))
+				file::createDir(TINYMCECACHEPATH);
 			if (ob_get_length())
 				ob_clean();
 			include($file);

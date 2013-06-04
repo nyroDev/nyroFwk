@@ -21,7 +21,7 @@ $cfg = array(
 			array('type'=>'js', 'file'=>'jquery'),
 			array('type'=>'js', 'file'=>'nyroBrowser'),
 			array('type'=>'js', 'file'=>'actionsConfirmDelete'),
-			array('type'=>'js', 'file'=>'tiny_mce/tiny_mce_popup', 'dir'=>'web', 'verifExists'=>false),
+			array('type'=>'js', 'file'=>'tinyMce/tiny_mce_popup', 'dir'=>'web', 'verifExists'=>false),
 		),
 		'imgHelper'=>factory::getHelper('image', array(
 			'fit'=>true,

@@ -23,39 +23,19 @@ class form_richtext extends form_multiline {
 
 		$options = $this->tinyMce;
 
-		if (is_array($this->cfg->tinyBrowser) && $this->cfg->getInArray('tinyBrowser', 'active')) {
-			$tinyBrowser = $this->cfg->tinyBrowser;
-			$options['file_browser_callback'] = 'function(field_name, url, type, win) {
-				tinyMCE.activeEditor.windowManager.open({
-					file : "'.$tinyBrowser['url'].'?'.session::getInstance()->getSessIdForce().'='.urlencode(session_id()).'&type=" + type'.($tinyBrowser['subdir'] ? '+"&subdir='.$tinyBrowser['subdir'].'"' : '').',
-					title : "'.$tinyBrowser['title'].'",
-					width : '.$tinyBrowser['width'].',
-					height : '.$tinyBrowser['height'].',
-					resizable : "yes",
-					scrollbars : "yes",
-					inline : "yes",  // This parameter only has an effect if you use the inlinepopups plugin!
-					close_previous : "no"
-				}, {
-					window : win,
-					input : field_name
-				});
-				return false;
-			}';
-		} else if (is_array($this->cfg->nyroBrowser) && $this->cfg->getInArray('nyroBrowser', 'active')) {
+		if (is_array($this->cfg->nyroBrowser) && $this->cfg->getInArray('nyroBrowser', 'active')) {
 			$nyroBrowser = $this->cfg->nyroBrowser;
-			$options['file_browser_callback'] = 'function(field_name, url, type, win) {
-				tinyMCE.activeEditor.windowManager.open({
-					file : "'.$nyroBrowser['url'].'?'.session::getInstance()->getSessIdForce().'='.urlencode(session_id()).'&type="+type+"&config='.$nyroBrowser['config'].'&",
-					title : "'.$nyroBrowser['title'].'",
-					width : '.$nyroBrowser['width'].',
-					height : '.$nyroBrowser['height'].',
-					resizable : "yes",
-					scrollbars : "yes",
-					inline : "yes",  // This parameter only has an effect if you use the inlinepopups plugin!
-					close_previous : "no"
-				}, {
-					window : win,
-					input : field_name
+			$options['file_browser_callback'] = 'function(field_name, url, type, win, file) {
+				parent.nyroBrowserField = field_name;
+				parent.nyroBrowserFile = file;
+				parent.nyroBrowserWin = tinyMCE.activeEditor.windowManager.open({
+					url: "'.$nyroBrowser['url'].'?'.session::getInstance()->getSessIdForce().'='.urlencode(session_id()).'&type="+type+"&config='.$nyroBrowser['config'].'&",
+					title: "'.$nyroBrowser['title'].'",
+					width: '.$nyroBrowser['width'].',
+					height: '.$nyroBrowser['height'].',
+					resizable: true,
+					maximizable: true,
+					scrollbars: true
 				});
 				return false;
 			}';
@@ -68,7 +48,9 @@ class form_richtext extends form_multiline {
 		unset($options['content_css']);
 
 		$resp = response::getInstance()->getProxy();
+		//$resp->addJs('tinymce');
 		$resp->addJs('jquery.tinymce');
+		$resp->addJs('jquery.tinymce.nyroBrowser');
 		$resp->blockjQuery('$("#'.$this->id.'").tinymce('.utils::jsEncode($options).');');
 
 		return utils::htmlTag($this->htmlTagName,

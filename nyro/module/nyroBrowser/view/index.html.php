@@ -13,7 +13,10 @@
 		<ul>
 			<?php foreach($files as $f): ?>
 			<li>
-				<a href="<?php echo $f[1] ?>" title="<?php echo $f[3].', '.$f[4] ?>">
+				<a href="<?php echo $f[1] ?>" title="<?php echo $f[3].', '.$f[4] ?>" <?php
+				if (isset($f[6]) && is_array($f[6]))
+					echo 'data-width="'.$f[6][0].'" data-height="'.$f[6][1].'"'
+				?>>
 					<?php echo $imgHelper->view($f[0]) ?><br />
 					<?php echo $f[2] ?>
 				</a>
