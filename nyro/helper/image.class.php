@@ -357,10 +357,47 @@ class helper_image extends helper_file {
 			return false;
 		$this->info = getimagesize($file);
 
+		$infoWIndex = 0;
+		$infoHIndex = 1;
 		$img = null;
 		switch ($this->info[2]) {
 			case IMAGETYPE_JPEG:
 				$img = imagecreatefromjpeg($file);
+				if ($this->cfg->processOrientation && function_exists('exif_read_data')) {
+					$exif = exif_read_data($file);
+					if (isset($exif['Orientation']) && $exif['Orientation'] != 1) {
+						$switchInfo = false;
+						echo $exif['Orientation'].'<br />';
+						switch($exif['Orientation']) {
+							case 2:
+							case 4:
+								$this->imageFlip($img);
+								break;
+							case 3:
+								$img = imagerotate($img, 180, -1);
+								break;
+							case 5:
+							case 7:
+								$this->imageFlip($img);
+								$img = imagerotate($img, -90, -1);
+								$switchInfo = true;
+								break;
+							case 6:
+								$img = imagerotate($img, -90, -1);
+								$switchInfo = true;
+								break;
+							case 8:
+								$img = imagerotate($img, 90, -1);
+								$switchInfo = true;
+								break;
+						}
+
+						if ($switchInfo) {
+							$infoWIndex = 1;
+							$infoHIndex = 0;
+						}
+					}
+				}
 				break;
 			case IMAGETYPE_GIF:
 				$img = imagecreatefromgif($file);
@@ -376,7 +413,7 @@ class helper_image extends helper_file {
 				return false;
 		}
 
-		return array(&$img, $this->info[0], $this->info[1]);
+		return array(&$img, $this->info[$infoWIndex], $this->info[$infoHIndex]);
 	}
 
 	/**
