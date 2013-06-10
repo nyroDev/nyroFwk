@@ -84,7 +84,7 @@
 		"text/css,css," +
 		"text/csv,csv," +
 		"text/rtf,rtf," +
-		"video/mpeg,mpeg mpg mpe," +
+		"video/mpeg,mpeg mpg mpe m2v," +
 		"video/quicktime,qt mov," +
 		"video/mp4,mp4," +
 		"video/x-m4v,m4v," +
@@ -92,6 +92,8 @@
 		"video/x-ms-wmv,wmv," +
 		"video/avi,avi," +
 		"video/webm,webm," +
+		"video/3gpp,3gp," +
+		"video/3gpp2,3g2," +
 		"video/vnd.rn-realvideo,rv," +
 		"application/vnd.oasis.opendocument.formula-template,otf," +
 		"application/octet-stream,exe"
@@ -268,6 +270,7 @@
 			
 			return {
 				windows: navigator.platform.indexOf('Win') !== -1,
+				android: /Android/.test(userAgent),
 				ie: !webkit && !opera && (/MSIE/gi).test(userAgent) && (/Explorer/gi).test(nav.appName),
 				webkit: webkit,
 				gecko: !webkit && /Gecko/.test(userAgent),
@@ -492,7 +495,7 @@
 			}
 
 			// Use getBoundingClientRect on IE 6 and IE 7 but not on IE 8 in standards mode
-			if (node && node.getBoundingClientRect && ((navigator.userAgent.indexOf('MSIE') > 0) && (doc.documentMode < 8))) {
+			if (node && node.getBoundingClientRect && plupload.ua.ie && (!doc.documentMode || doc.documentMode < 8)) {
 				nodeRect = getIEPos(node);
 				rootRect = getIEPos(root);
 
@@ -1890,25 +1893,27 @@
 		try {
 			canvas.decode(image_blob);
 			
-			if (!resize['width']) {
-				resize['width'] = canvas.width;
+			if (!resize.width) {
+				resize.width = canvas.width;
 			}
 			
-			if (!resize['height']) {
-				resize['height'] = canvas.height;	
+			if (!resize.height) {
+				resize.height = canvas.height;	
 			}
 			
-			scale = Math.min(width / canvas.width, height / canvas.height);
+			scale = Math.min(resize.width / canvas.width, resize.height / canvas.height);
 
-			if (scale < 1 || (scale === 1 && mime === 'image/jpeg')) {
+			if (scale < 1) {
 				canvas.resize(Math.round(canvas.width * scale), Math.round(canvas.height * scale));
-				
-				if (resize['quality']) {
-					return canvas.encode(mime, {quality : resize.quality / 100});
-				}
-
-				return canvas.encode(mime);
+			} else if (!resize.quality || mime !== 'image/jpeg') {
+				return image_blob;
 			}
+			
+			if (resize.quality) {
+				return canvas.encode(mime, {quality : resize.quality / 100});
+			}
+
+			return canvas.encode(mime);
 		} catch (e) {
 			// Ignore for example when a user uploads a file that can't be decoded
 		}
@@ -2587,7 +2592,7 @@
 							chunk_size : settings.chunk_size,
 							image_width : resize.width,
 							image_height : resize.height,
-							image_quality : resize.quality || 90,
+							image_quality : resize.quality,
 							multipart : !!settings.multipart,
 							multipart_params : settings.multipart_params || {},
 							file_data_name : settings.file_data_name,
@@ -2663,7 +2668,7 @@
 					
 					silverlightContainer = document.getElementById(up.id + '_silverlight_container');
 					if (silverlightContainer) {
-						container.removeChild(silverlightContainer);
+						silverlightContainer.parentNode.removeChild(silverlightContainer);
 					}
 				});
 
@@ -2819,13 +2824,10 @@
 				'</object>';
 					
 				if (plupload.ua.ie) {
-					$(flashContainer).append(html);
-					/*
 					el = document.createElement('div');
 					flashContainer.appendChild(el);
 					el.outerHTML = html;
 					el = null; // just in case
-					*/
 				} else {
 					flashContainer.innerHTML = html;
 				}
@@ -2864,7 +2866,7 @@
 				
 				flashContainer = document.getElementById(up.id + '_flash_container');
 				if (flashContainer) {
-					container.removeChild(flashContainer);
+					flashContainer.parentNode.removeChild(flashContainer);
 				}
 			});
 
@@ -3487,6 +3489,98 @@
 	var html5files = {}, // queue of original File objects
 		fakeSafariDragDrop;
 
+	/**
+	 * Detect subsampling in loaded image.
+	 * In iOS, larger images than 2M pixels may be subsampled in rendering.
+	 */
+	function detectSubsampling(img) {
+		var iw = img.naturalWidth, ih = img.naturalHeight;
+		if (iw * ih > 1024 * 1024) { // subsampling may happen over megapixel image
+			var canvas = document.createElement('canvas');
+			canvas.width = canvas.height = 1;
+			var ctx = canvas.getContext('2d');
+			ctx.drawImage(img, -iw + 1, 0);
+			// subsampled image becomes half smaller in rendering size.
+			// check alpha channel value to confirm image is covering edge pixel or not.
+			// if alpha value is 0 image is not covering, hence subsampled.
+			return ctx.getImageData(0, 0, 1, 1).data[3] === 0;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Detecting vertical squash in loaded image.
+	 * Fixes a bug which squash image vertically while drawing into canvas for some images.
+	 */
+	function detectVerticalSquash(img, iw, ih) {
+		var canvas = document.createElement('canvas');
+		canvas.width = 1;
+		canvas.height = ih;
+		var ctx = canvas.getContext('2d');
+		ctx.drawImage(img, 0, 0);
+		var data = ctx.getImageData(0, 0, 1, ih).data;
+		// search image edge pixel position in case it is squashed vertically.
+		var sy = 0;
+		var ey = ih;
+		var py = ih;
+		while (py > sy) {
+			var alpha = data[(py - 1) * 4 + 3];
+			if (alpha === 0) {
+				ey = py;
+			} else {
+				sy = py;
+			}
+
+			py = (ey + sy) >> 1;
+		}
+
+		var ratio = (py / ih);
+		return (ratio === 0) ? 1 : ratio;
+	}
+
+	/**
+	* Rendering image element (with resizing) into the canvas element
+	*/
+	function renderImageToCanvas(img, canvas, options) {
+		var iw = img.naturalWidth, ih = img.naturalHeight;
+		var width = options.width, height = options.height;
+		var ctx = canvas.getContext('2d');
+		ctx.save();
+		var subsampled = detectSubsampling(img);
+		if (subsampled) {
+			iw /= 2;
+			ih /= 2;
+		}
+
+		var d = 1024; // size of tiling canvas
+		var tmpCanvas = document.createElement('canvas');
+		tmpCanvas.width = tmpCanvas.height = d;
+		var tmpCtx = tmpCanvas.getContext('2d');
+		var vertSquashRatio = detectVerticalSquash(img, iw, ih);
+		var sy = 0;
+		while (sy < ih) {
+			var sh = sy + d > ih ? ih - sy : d;
+			var sx = 0;
+			while (sx < iw) {
+				var sw = sx + d > iw ? iw - sx : d;
+				tmpCtx.clearRect(0, 0, d, d);
+				tmpCtx.drawImage(img, -sx, -sy);
+				var dx = (sx * width / iw) << 0;
+				var dw = Math.ceil(sw * width / iw);
+				var dy = (sy * height / ih / vertSquashRatio) << 0;
+				var dh = Math.ceil(sh * height / ih / vertSquashRatio);
+				ctx.drawImage(tmpCanvas, 0, 0, sw, sh, dx, dy, dw, dh);
+				sx += d;
+			}
+
+			sy += d;
+		}
+
+		ctx.restore();
+		tmpCanvas = tmpCtx = null;
+	}
+
 	function readFileAsDataURL(file, callback) {
 		var reader;
 
@@ -3526,7 +3620,6 @@
 			canvas = document.createElement("canvas");
 			canvas.style.display = 'none';
 			document.body.appendChild(canvas);
-			context = canvas.getContext('2d');
 
 			// Load image
 			img = new Image();
@@ -3547,69 +3640,75 @@
 				
 				scale = Math.min(resize.width / img.width, resize.height / img.height);
 
-				if (scale < 1 || (scale === 1 && mime === 'image/jpeg')) {
+				if (scale < 1) {
 					width = Math.round(img.width * scale);
 					height = Math.round(img.height * scale);
-
-					// Scale image and canvas
-					canvas.width = width;
-					canvas.height = height;
-					context.drawImage(img, 0, 0, width, height);
-					
-					// Preserve JPEG headers
-					if (mime === 'image/jpeg') {
-						jpegHeaders = new JPEG_Headers(atob(data.substring(data.indexOf('base64,') + 7)));
-						if (jpegHeaders['headers'] && jpegHeaders['headers'].length) {
-							exifParser = new ExifParser();			
-											
-							if (exifParser.init(jpegHeaders.get('exif')[0])) {
-								// Set new width and height
-								exifParser.setExif('PixelXDimension', width);
-								exifParser.setExif('PixelYDimension', height);
-																							
-								// Update EXIF header
-								jpegHeaders.set('exif', exifParser.getBinary());
-								
-								// trigger Exif events only if someone listens to them
-								if (up.hasEventListener('ExifData')) {
-									up.trigger('ExifData', file, exifParser.EXIF());
-								}
-								
-								if (up.hasEventListener('GpsData')) {
-									up.trigger('GpsData', file, exifParser.GPS());
-								}
-							}
-						}
-						
-						if (resize['quality']) {							
-							// Try quality property first
-							try {
-								data = canvas.toDataURL(mime, resize['quality'] / 100);	
-							} catch (e) {
-								data = canvas.toDataURL(mime);	
-							}
-						}
-					} else {
-						data = canvas.toDataURL(mime);
-					}
-
-					// Remove data prefix information and grab the base64 encoded data and decode it
-					data = data.substring(data.indexOf('base64,') + 7);
-					data = atob(data);
-
-					// Restore JPEG headers if applicable
-					if (jpegHeaders && jpegHeaders['headers'] && jpegHeaders['headers'].length) {
-						data = jpegHeaders.restore(data);
-						jpegHeaders.purge(); // free memory
-					}
-
-					// Remove canvas and execute callback with decoded image data
-					canvas.parentNode.removeChild(canvas);
-					callback({success : true, data : data});
+				} else if (resize['quality'] && mime === 'image/jpeg') {
+					// do not upsize, but drop the quality for jpegs
+					width = img.width;
+					height = img.height;
 				} else {
 					// Image does not need to be resized
 					callback({success : false});
+					return;
 				}
+
+				// Scale image and canvas
+				canvas.width = width;
+				canvas.height = height;
+				renderImageToCanvas(img, canvas, { width: width, height: height });
+				
+				// Preserve JPEG headers
+				if (mime === 'image/jpeg') {
+					jpegHeaders = new JPEG_Headers(atob(data.substring(data.indexOf('base64,') + 7)));
+					if (jpegHeaders['headers'] && jpegHeaders['headers'].length) {
+						exifParser = new ExifParser();			
+										
+						if (exifParser.init(jpegHeaders.get('exif')[0])) {
+							// Set new width and height
+							exifParser.setExif('PixelXDimension', width);
+							exifParser.setExif('PixelYDimension', height);
+																						
+							// Update EXIF header
+							jpegHeaders.set('exif', exifParser.getBinary());
+							
+							// trigger Exif events only if someone listens to them
+							if (up.hasEventListener('ExifData')) {
+								up.trigger('ExifData', file, exifParser.EXIF());
+							}
+							
+							if (up.hasEventListener('GpsData')) {
+								up.trigger('GpsData', file, exifParser.GPS());
+							}
+						}
+					}					
+				} 
+
+				if (resize['quality'] && mime === 'image/jpeg') {							
+					// Try quality property first
+					try {
+						data = canvas.toDataURL(mime, resize['quality'] / 100);	// used to throw an exception in Firefox
+					} catch (ex) {
+						data = canvas.toDataURL(mime);	
+					}
+				} else {
+					data = canvas.toDataURL(mime);
+				}
+
+
+				// Remove data prefix information and grab the base64 encoded data and decode it
+				data = data.substring(data.indexOf('base64,') + 7);
+				data = atob(data);
+
+				// Restore JPEG headers if applicable
+				if (jpegHeaders && jpegHeaders['headers'] && jpegHeaders['headers'].length) {
+					data = jpegHeaders.restore(data);
+					jpegHeaders.purge(); // free memory
+				}
+
+				// Remove canvas and execute callback with decoded image data
+				canvas.parentNode.removeChild(canvas);
+				callback({success : true, data : data});
 			};
 
 			img.src = data;
@@ -3664,7 +3763,8 @@
 				multipart: dataAccessSupport || !!window.FileReader || !!window.FormData,
 				canSendBinary: canSendBinary,
 				// gecko 2/5/6 can't send blob with FormData: https://bugzilla.mozilla.org/show_bug.cgi?id=649150 
-				cantSendBlobInFormData: !!(plupload.ua.gecko && window.FormData && window.FileReader && !FileReader.prototype.readAsArrayBuffer),
+				// Android browsers (default one and Dolphin) seem to have the same issue, see: #613
+				cantSendBlobInFormData: !!(plupload.ua.gecko && window.FormData && window.FileReader && !FileReader.prototype.readAsArrayBuffer) || plupload.ua.android,
 				progress: hasProgress,
 				chunks: sliceSupport,
 				// Safari on Windows has problems when selecting multiple files
@@ -3693,7 +3793,7 @@
 										
 					// Safari on Windows will add first file from dragged set multiple times
 					// @see: https://bugs.webkit.org/show_bug.cgi?id=37957
-					if (fileNames[file.name]) {
+					if (fileNames[file.name] && plupload.ua.safari && plupload.ua.windows) {
 						continue;
 					}
 					fileNames[file.name] = true;
@@ -3866,6 +3966,11 @@
 									plupload.removeEvent(dropInputElm, 'change', uploader.id);
 									dropInputElm.parentNode.removeChild(dropInputElm);									
 								}, uploader.id);
+
+								// avoid event propagation as Safari cancels the whole capability of dropping files if you are doing a preventDefault of this event on the document body
+								plupload.addEvent(dropInputElm, 'dragover', function(e) {
+									e.stopPropagation();
+								}, uploader.id);
 								
 								dropElm.appendChild(dropInputElm);
 							}
@@ -3989,14 +4094,24 @@
 				}	
 
 				function sendBinaryBlob(blob) {
-					var chunk = 0, loaded = 0,
-						fr = ("FileReader" in window) ? new FileReader : null;
+					var chunk = 0, loaded = 0;
 						
 
 					function uploadNextChunk() {
-						var chunkBlob, br, chunks, args, chunkSize, curChunkSize, mimeType, url = up.settings.url;													
+						var chunkBlob, br, chunks, args, chunkSize, curChunkSize, mimeType, url = up.settings.url;	
 
-						
+						function sendAsBinaryString(bin) {
+							if (xhr.sendAsBinary) { // Gecko
+								xhr.sendAsBinary(bin);
+							} else if (up.features.canSendBinary) { // WebKit with typed arrays support
+								var ui8a = new Uint8Array(bin.length);
+								for (var i = 0; i < bin.length; i++) {
+									ui8a[i] = (bin.charCodeAt(i) & 0xff);
+								}
+								xhr.send(ui8a.buffer);
+							}
+						}												
+	
 						function prepareAndSend(bin) {
 							var multipartDeltaSize = 0,
 								boundary = '----pluploadboundary' + plupload.guid(), formData, dashdash = '--', crlf = '\r\n', multipartBlob = '';
@@ -4130,17 +4245,8 @@
 		
 									multipartDeltaSize = multipartBlob.length - bin.length;
 									bin = multipartBlob;
-								
 							
-									if (xhr.sendAsBinary) { // Gecko
-										xhr.sendAsBinary(bin);
-									} else if (features.canSendBinary) { // WebKit with typed arrays support
-										var ui8a = new Uint8Array(bin.length);
-										for (var i = 0; i < bin.length; i++) {
-											ui8a[i] = (bin.charCodeAt(i) & 0xff);
-										}
-										xhr.send(ui8a.buffer);
-									}
+									sendAsBinaryString(bin);
 									return; // will return from here only if shouldn't send binary
 								} 							
 							}
@@ -4156,8 +4262,12 @@
 							plupload.each(up.settings.headers, function(value, name) {
 								xhr.setRequestHeader(name, value);
 							});
-												
-							xhr.send(bin); 
+							
+							if (typeof(bin) === 'string') {	
+								sendAsBinaryString(bin);
+							} else {				
+								xhr.send(bin); 
+							}
 						} // prepareAndSend
 
 
@@ -4192,16 +4302,19 @@
 							chunkBlob = blob;
 						}
 						
-						// workaround Gecko 2,5,6 FormData+Blob bug: https://bugzilla.mozilla.org/show_bug.cgi?id=649150
-						if (up.settings.multipart && features.multipart && typeof(chunkBlob) !== 'string' && fr && features.cantSendBlobInFormData && features.chunks && up.settings.chunk_size) { // Gecko 2,5,6
-							fr.onload = function() {
-								prepareAndSend(fr.result);
-							}
-							fr.readAsBinaryString(chunkBlob);
+						// workaround for Android and Gecko 2,5,6 FormData+Blob bug: https://bugzilla.mozilla.org/show_bug.cgi?id=649150
+						if (up.settings.multipart && features.multipart && typeof(chunkBlob) !== 'string' && window.FileReader && features.cantSendBlobInFormData && features.chunks && up.settings.chunk_size) { // Gecko 2,5,6
+							(function() {
+								var fr = new FileReader(); // we need to recreate FileReader object in Android, otherwise it hangs
+								fr.onload = function() {
+									prepareAndSend(fr.result);
+									fr = null; // maybe give a hand to GC (Gecko had problems with this)
+								}
+								fr.readAsBinaryString(chunkBlob);
+							}());
 						} else {
 							prepareAndSend(chunkBlob);
-						}
-							
+						}	
 					}
 
 					// Start uploading chunks
@@ -5097,7 +5210,7 @@
 						}
 
 						// Get result
-						result = el.body.innerHTML;
+						result = el.documentElement.innerText || el.documentElement.textContent;
 						
 						// Assume no error
 						if (result) {
@@ -5301,7 +5414,7 @@
 					plupload.each(fileIds, function(id, i) {
 						form = getById('form_' + id);
 						if (form) {
-							container.removeChild(form);
+							form.parentNode.removeChild(form);
 						}
 					});
 					
