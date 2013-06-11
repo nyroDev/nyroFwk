@@ -27,7 +27,7 @@ $cfg = array(
 		'scriptData'=>array(session::getInstance()->getSessIdForce()=>session_id()),
 	),
 	'plupload'=>array(
-		'showCancelAll'=>false,
+		'showCancelAll'=>true,
 		'addFormVars'=>false,
 		'runtimes'=>'html5,gears,flash,silverlight,html4',
 		'hideDelay'=>750,
