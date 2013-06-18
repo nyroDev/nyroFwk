@@ -355,11 +355,12 @@ class form extends object {
 			return null;
 		}
 		$inst = null;
-		$name = null;
-		if ($type instanceof form_abstract && !$this->has($name = $type->getName())) {
+		$name = $this->getPrefixedName($type instanceof form_abstract ? $type->getName() : $prm['name']);
+		$prm['name'] = $name;
+		if ($type instanceof form_abstract && !$this->has($name)) {
 			$inst = $type;
 			$inst->renew();
-		} else if (is_string($type) && array_key_exists('name', $prm) && !$this->has($name = $prm['name'])) {
+		} else if (is_string($type) && !$this->has($name)) {
 			$inst = $this->getNew($type, $prm);
 		}
 		if ($inst) {
@@ -373,6 +374,14 @@ class form extends object {
 		} else
 			return null;
 	}
+	
+	public function getPrefixedName($name) {
+		$prefix = $this->cfg->prefixName;
+		if ($prefix && strpos($name, $prefix) !== 0) {
+			$name = $prefix.$name;
+		}
+		return $name;
+	}
 
 	/**
 	 * Check if the form has a element
@@ -381,7 +390,7 @@ class form extends object {
 	 * @return bool
 	 */
 	public function has($name) {
-		return array_key_exists($name, $this->elementsSection);
+		return array_key_exists($this->getPrefixedName($name), $this->elementsSection);
 	}
 
 	/**
@@ -391,6 +400,7 @@ class form extends object {
 	 * @return form_abstract|null
 	 */
 	public function get($name) {
+		$name = $this->getPrefixedName($name);
 		if ($this->has($name))
 			return $this->elements[$this->elementsSection[$name]][$name];
 		return null;
@@ -402,6 +412,7 @@ class form extends object {
 	 * @param string $name
 	 */
 	public function del($name) {
+		$name = $this->getPrefixedName($name);
 		if ($this->has($name)) {
 			unset($this->elements[$this->elementsSection[$name]][$name]);
 			unset($this->elementsSection[$name]);
@@ -523,6 +534,19 @@ class form extends object {
 			} else
 				$tmp[$matches[0]] = $v;
 		}
+		
+		$prefix = $this->cfg->prefixName;
+		if ($prefix) {
+			$tmp2 = array();
+			$prefixLn = strlen($prefix);
+			foreach($tmp as $k=>$tt) {
+				if (strpos($k, $prefix) === 0) {
+					$tmp2[substr($k, $prefixLn)] = $tt;
+				}
+			}
+			$tmp = $tmp2;
+		}
+		
 		return $tmp;
 	}
 
@@ -541,7 +565,19 @@ class form extends object {
 	 * @return array
 	 */
 	public function getNames() {
-		return array_keys($this->elementsSection);
+		$tmp = array_keys($this->elementsSection);
+		$prefix = $this->cfg->prefixName;
+		if ($prefix) {
+			$tmp2 = array();
+			$prefixLn = strlen($prefix);
+			foreach($tmp as $t) {
+				if (strpos($t, $prefix) === 0) {
+					$tmp2[] = substr($t, $prefixLn);
+				}
+			}
+			$tmp = $tmp2;
+		}
+		return $tmp;
 	}
 
 	/**
@@ -693,6 +729,7 @@ class form extends object {
 	 * @return bool True if the field was found and moved
 	 */
 	public function moveToSection($name, $section = null) {
+		$name = $this->getPrefixedName($name);
 		$f = $this->get($name);
 		if ($f) {
 			$curSection = $this->elementsSection[$name];

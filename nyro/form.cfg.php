@@ -12,6 +12,8 @@ $cfg = array(
 	'submitPlus'=>null,
 
 	'notValue'=>array(),
+	
+	'prefixName'=>null,
 
 	'forceOnlyOneLang'=>false,
 	'noForceLang'=>false,

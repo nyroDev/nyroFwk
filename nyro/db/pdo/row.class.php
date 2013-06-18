@@ -131,8 +131,10 @@ class db_pdo_row extends db_row {
 			if (count($values))
 				$this->getI18nRow($lg)->setValues($values, $force);
 		} else {
-			foreach($values as $lg=>$val)
-				$this->setI18n($val, $force, $lg);
+			foreach($values as $lg=>$val) {
+				if (is_array($val))
+					$this->setI18n($val, $force, $lg);
+			}
 		}
 	}
 

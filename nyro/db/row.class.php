@@ -578,8 +578,9 @@ abstract class db_row extends object implements ArrayAccess {
 	 * @throws nException If the key doesn't exist
 	 */
 	public function set($key, $value, $force = false) {
-		if ($key == db::getCfg('i18n'))
-			return $this->setI18n($value, $force);
+		if ($key == db::getCfg('i18n')) {
+			return is_array($value) ? $this->setI18n($value, $force) : null;
+		}
 
 		$field = $this->getTable()->getField($key);
 		$fct = null;
