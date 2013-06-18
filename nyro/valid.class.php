@@ -203,6 +203,34 @@ class valid extends object {
 	}
 
 	/**
+	 * Check if the value is longer than the given parameter
+	 *
+	 * @param mixed $val The value to test against
+	 * @param int $prm The min length of the string
+	 * @return bool True if valid
+	 */
+	public function isMinLength($val, $prm = null) {
+		$ret = strlen($val) >= $prm[0];
+		if (!$ret)
+			$this->errors[] = sprintf($this->getMessage('minLength'), $this->cfg->label, $prm[0]);
+		return $ret;
+	}
+
+	/**
+	 * Check if the value is shorter than the given parameter
+	 *
+	 * @param mixed $val The value to test against
+	 * @param int $prm The min length of the string
+	 * @return bool True if valid
+	 */
+	public function isMaxLength($val, $prm = null) {
+		$ret = strlen($val) <= $prm[0];
+		if (!$ret)
+			$this->errors[] = sprintf($this->getMessage('maxLength'), $this->cfg->label, $prm[0]);
+		return $ret;
+	}
+
+	/**
 	 * Check if all parametred fields of a form are all eiher empty or all present
 	 *
 	 * @param mixed $val The value to test against (not used)

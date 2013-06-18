@@ -288,7 +288,7 @@ final class file {
 	 * @param string $chmod
 	 * @return bool True if directory exists
 	 */
-	public static function createDir($path, $chmod=0777) {
+	public static function createDir($path, $chmod = 0777) {
 		umask(0002);
 		return is_dir($path) || mkdir($path, $chmod, true);
 	}
