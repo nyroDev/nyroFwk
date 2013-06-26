@@ -14,7 +14,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 	function mapColors() {
 		var i, colors = [], colorMap;
 
-		colorMap = [
+		colorMap = editor.settings.textcolor_map || [
 			"000000", "Black",
 			"993300", "Burnt orange",
 			"333300", "Dark olive",
@@ -68,30 +68,37 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 	}
 
 	function renderColorPicker() {
-		var ctrl = this, colors, html, size, x, y;
+		var ctrl = this, colors, color, html, last, rows, cols, x, y, i;
 
 		colors = mapColors();
 
-		html = '<table class="mce-grid mce-colorbutton-grid" role="presentation" cellspacing="0"><tbody>';
-		size = Math.ceil(Math.sqrt(colors.length));
+		html = '<table class="mce-grid mce-grid-border mce-colorbutton-grid" role="presentation" cellspacing="0"><tbody>';
+		last = colors.length - 1;
+		rows = editor.settings.textcolor_rows || 5;
+		cols = editor.settings.textcolor_cols || 8;
 
-		for (y = 0; y < 5; y++) {
+		for (y = 0; y < rows; y++) {
 			html += '<tr>';
 
-			for (x = 0; x < 8; x++) {
-				var color = colors[y * 8 + x];
+			for (x = 0; x < cols; x++) {
+				i = y * cols + x;
 
-				html += (
-					'<td>' +
-						'<div id="' + ctrl._id + '-' + (y * 8 + x) + '"' +
-							' data-mce-color="' + color.color + '"' +
-							' role="option"' +
-							' tabIndex="-1"' +
-							' style="' + (color ? 'background-color: #' + color.color : '') + '"' +
-							' title="' + color.text + '">' +
-						'</div>' +
-					'</td>'
-				);
+				if (i > last) {
+					html += '<td></td>';
+				} else {
+					color = colors[i];
+					html += (
+						'<td>' +
+							'<div id="' + ctrl._id + '-' + i + '"' +
+								' data-mce-color="' + color.color + '"' +
+								' role="option"' +
+								' tabIndex="-1"' +
+								' style="' + (color ? 'background-color: #' + color.color : '') + '"' +
+								' title="' + color.text + '">' +
+							'</div>' +
+						'</td>'
+					);
+				}
 			}
 
 			html += '</tr>';
@@ -109,8 +116,15 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 			buttonCtrl.hidePanel();
 			value = '#' + value;
 			buttonCtrl.color(value);
-			buttonCtrl.hidePanel();
 			editor.execCommand(buttonCtrl.settings.selectcmd, false, value);
+		}
+	}
+
+	function onButtonClick() {
+		var self = this;
+
+		if (self._color) {
+			editor.execCommand(self.settings.selectcmd, false, self._color);
 		}
 	}
 
@@ -122,7 +136,8 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		panel: {
 			html: renderColorPicker,
 			onclick: onPanelClick
-		}
+		},
+		onclick: onButtonClick
 	});
 
 	editor.addButton('backcolor', {
@@ -133,6 +148,7 @@ tinymce.PluginManager.add('textcolor', function(editor) {
 		panel: {
 			html: renderColorPicker,
 			onclick: onPanelClick
-		}
+		},
+		onclick: onButtonClick
 	});
 });

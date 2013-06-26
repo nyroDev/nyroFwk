@@ -49,6 +49,11 @@
 					node.id = id = tinymce.DOM.uniqueId();
 				}
 
+				// Only init the editor once
+				if (tinymce.get(id)) {
+					return;
+				}
+
 				// Create editor instance and render it
 				ed = new tinymce.Editor(id, settings, tinymce.EditorManager);
 				editors.push(ed);
@@ -213,7 +218,8 @@
 			var self = this, ed;
 
 			// Handle set value
-			if (value !== undef) {
+			/*jshint eqnull:true */
+			if (value != null) {
 				removeEditors.call(self);
 
 				// Saves the contents before get/set value of textarea/div

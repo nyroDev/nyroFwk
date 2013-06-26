@@ -16,7 +16,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 	// Default menus
 	var defaultMenus = {
 		file: {title: 'File', items: 'newdocument'},
-		edit: {title: 'Edit', items: 'undo redo | cut copy paste | selectall'},
+		edit: {title: 'Edit', items: 'undo redo | cut copy paste pastetext | selectall'},
 		insert: {title: 'Insert', items: '|'},
 		view: {title: 'View', items: 'visualaid |'},
 		format: {title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat'},
@@ -292,17 +292,55 @@ tinymce.ThemeManager.add('modern', function(editor) {
 	}
 
 	/**
+	 * Resizes the editor to the specified width, height.
+	 */
+	function resizeTo(width, height) {
+		var containerElm, iframeElm, containerSize, iframeSize;
+
+		function getSize(elm) {
+			return {
+				width: elm.clientWidth,
+				height: elm.clientHeight
+			};
+		}
+
+		containerElm = editor.getContainer();
+		iframeElm = editor.getContentAreaContainer().firstChild;
+		containerSize = getSize(containerElm);
+		iframeSize = getSize(iframeElm);
+
+		width = Math.max(settings.min_width || 100, width);
+		height = Math.max(settings.min_height || 100, height);
+		width = Math.min(settings.max_width || 0xFFFF, width);
+		height = Math.min(settings.max_height || 0xFFFF, height);
+
+		DOM.css(containerElm, 'width', width + (containerSize.width - iframeSize.width));
+		DOM.css(iframeElm, 'width', width);
+		DOM.css(iframeElm, 'height', height);
+
+		editor.fire('ResizeEditor');
+	}
+
+	function resizeBy(dw, dh) {
+		var elm = editor.getContentAreaContainer();
+		self.resizeTo(elm.clientWidth + dw, elm.clientHeight + dh);
+	}
+
+	/**
 	 * Renders the inline editor UI.
 	 *
 	 * @return {Object} Name/value object with theme data.
 	 */
 	function renderInlineUI() {
-		var panel;
+		var panel, inlineToolbarContainer;
+
+		if (settings.fixed_toolbar_container) {
+			inlineToolbarContainer = DOM.select(settings.fixed_toolbar_container)[0];
+		}
 
 		function reposition() {
-			if (panel && panel.visible()) {
-				var pos = DOM.getPos(editor.getBody());
-				panel.moveTo(pos.x, pos.y - panel.layoutRect().h);
+			if (panel && panel.moveRel && panel.visible() && !panel._fixed) {
+				panel.moveRel(editor.getBody(), ['tl-bl', 'bl-tl']);
 			}
 		}
 
@@ -318,10 +356,6 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			if (panel) {
 				panel.hide();
 				DOM.removeClass(editor.getBody(), 'mce-edit-focus');
-
-				if (document.activeElement && document.activeElement.className.indexOf('mce-content-body') == -1) {
-					DOM.setStyle(document.body, 'padding-top', 0);
-				}
 			}
 		}
 
@@ -334,17 +368,19 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				return;
 			}
 
+			// Render a plain panel inside the inlineToolbarContainer if it's defined
 			panel = self.panel = Factory.create({
-				type: 'floatpanel',
+				type: inlineToolbarContainer ? 'panel' : 'floatpanel',
 				classes: 'tinymce tinymce-inline',
 				layout: 'flex',
 				direction: 'column',
 				autohide: false,
 				autofix: true,
+				fixed: !!inlineToolbarContainer,
 				border: 1,
 				items: [
 					settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
-					{type: 'panel', name: 'toolbar', layout: 'stack', items: createToolbars()}
+					settings.toolbar === false ? null : {type: 'panel', name: 'toolbar', layout: 'stack', items: createToolbars()}
 				]
 			});
 
@@ -355,7 +391,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 				]});
 			}*/
 
-			panel.renderTo(document.body).reflow();
+			panel.renderTo(inlineToolbarContainer || document.body).reflow();
 
 			addAccessibilityKeys(panel);
 			show();
@@ -372,8 +408,10 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
 		// Remove the panel when the editor is removed
 		editor.on('remove', function() {
-			panel.remove();
-			panel = null;
+			if (panel) {
+				panel.remove();
+				panel = null;
+			}
 		});
 
 		return {};
@@ -386,7 +424,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 	 * @return {Object} Name/value object with theme data.
 	 */
 	function renderIframeUI(args) {
-		var panel;
+		var panel, resizeHandleCtrl, startSize;
 
 		// Basic UI layout
 		panel = self.panel = Factory.create({
@@ -397,16 +435,36 @@ tinymce.ThemeManager.add('modern', function(editor) {
 			border: 1,
 			items: [
 				settings.menubar === false ? null : {type: 'menubar', border: '0 0 1 0', items: createMenuButtons()},
-				{type: 'panel', layout: 'stack', items: createToolbars()},
+				settings.toolbar === false ? null : {type: 'panel', layout: 'stack', items: createToolbars()},
 				{type: 'panel', name: 'iframe', layout: 'stack', classes: 'edit-area', html: '', border: '1 0 0 0'}
 			]
 		});
+
+		if (settings.resize !== false) {
+			resizeHandleCtrl = {
+				type: 'resizehandle',
+				direction: settings.resize,
+
+				onResizeStart: function() {
+					var elm = editor.getContentAreaContainer().firstChild;
+
+					startSize = {
+						width: elm.clientWidth,
+						height: elm.clientHeight
+					};
+				},
+
+				onResize: function(e) {
+					resizeTo(startSize.width + e.deltaX, startSize.height + e.deltaY);
+				}
+			};
+		}
 
 		// Add statusbar if needed
 		if (settings.statusbar !== false) {
 			panel.add({type: 'panel', name: 'statusbar', classes: 'statusbar', layout: 'flow', border: '1 0 0 0', items: [
 				{type: 'elementpath'},
-				settings.resize !== false ? ({type: 'resizehandle', editor: editor}) : null
+				resizeHandleCtrl
 			]});
 		}
 
@@ -444,14 +502,14 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		if (skin) {
 			// Load special skin for IE7
 			// TODO: Remove this when we drop IE7 support
-			if (tinymce.Env.ie && tinymce.Env.ie <= 7) {
+			if (tinymce.Env.documentMode <= 7) {
 				tinymce.DOM.loadCSS(tinymce.baseURL + '/skins/' + skin + '/skin.ie7.min.css');
 			} else {
 				tinymce.DOM.loadCSS(tinymce.baseURL + '/skins/' + skin + '/skin.min.css');
 			}
 
-			// Load content_css
-			editor.contentCSS.push(tinymce.baseURL + '/skins/' + skin + '/content.min.css');
+			// Load content.min.css or content.inline.min.css
+			editor.contentCSS.push(tinymce.baseURL + '/skins/' + skin + '/content' + (editor.inline ? '.inline' : '') + '.min.css');
 		}
 
 		// Handle editor setProgressState change
@@ -473,4 +531,7 @@ tinymce.ThemeManager.add('modern', function(editor) {
 		// Render iframe UI
 		return renderIframeUI(args);
 	};
+
+	self.resizeTo = resizeTo;
+	self.resizeBy = resizeBy;
 });

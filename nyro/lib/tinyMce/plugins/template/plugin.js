@@ -23,6 +23,7 @@ tinymce.PluginManager.add('template', function(editor) {
 
 		tinymce.each(editor.settings.templates, function(template) {
 			values.push({
+				selected: !values.length,
 				text: template.title,
 				value: {
 					url: template.url,
@@ -56,7 +57,7 @@ tinymce.PluginManager.add('template', function(editor) {
 
 			body: [
 				{type: 'listbox', name: 'template', flex: 0, label: 'Templates', values: values, onselect: onSelectTemplate},
-				{type: 'label', name: 'description', label: 'Description', text: ''},
+				{type: 'label', name: 'description', label: 'Description', text: '\u00a0'},
 				{type: 'iframe', minWidth: 600, minHeight: 400, border: 1}
 			],
 
@@ -64,6 +65,8 @@ tinymce.PluginManager.add('template', function(editor) {
 				insertTemplate(false, templateHtml);
 			}
 		});
+
+		win.find('listbox')[0].fire('select');
 	}
 
 	function getDateTime(fmt, date) {
@@ -172,7 +175,7 @@ tinymce.PluginManager.add('template', function(editor) {
 		onclick: showDialog
 	});
 
-	editor.addMenuItem('image', {
+	editor.addMenuItem('template', {
 		text: 'Insert template',
 		onclick: showDialog,
 		context: 'insert'

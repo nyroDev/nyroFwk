@@ -11,14 +11,58 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('image', function(editor) {
-	function showDialog() {
+	function getImageSize(url, callback) {
+		var img = new Image();
+
+		function done(width, height) {
+			img.parentNode.removeChild(img);
+			callback({width: width, height: height});
+		}
+
+		img.onload = function() {
+			done(img.clientWidth, img.clientHeight);
+		};
+
+		img.onerror = function() {
+			done();
+		};
+
+		img.src = url;
+
+		var style = img.style;
+		style.visibility = 'hidden';
+		style.position = 'fixed';
+		style.bottom = style.left = 0;
+		style.width = style.height = 'auto';
+
+		document.body.appendChild(img);
+	}
+
+	function createImageList(callback) {
+		return function() {
+			var imageList = editor.settings.image_list;
+
+			if (typeof(imageList) == "string") {
+				tinymce.util.XHR.send({
+					url: imageList,
+					success: function(text) {
+						callback(tinymce.util.JSON.parse(text));
+					}
+				});
+			} else {
+				callback(imageList);
+			}
+		};
+	}
+
+	function showDialog(imageList) {
 		var win, data, dom = editor.dom, imgElm = editor.selection.getNode();
 		var width, height, imageListCtrl;
 
 		function buildImageList() {
 			var linkImageItems = [{text: 'None', value: ''}];
 
-			tinymce.each(editor.settings.image_list, function(link) {
+			tinymce.each(imageList, function(link) {
 				linkImageItems.push({
 					text: link.text || link.title,
 					value: link.value || link.url,
@@ -54,11 +98,24 @@ tinymce.PluginManager.add('image', function(editor) {
 
 		function onSubmitForm() {
 			function waitLoad(imgElm) {
-				imgElm.onload = imgElm.onerror = function() {
+				function selectImage() {
 					imgElm.onload = imgElm.onerror = null;
 					editor.selection.select(imgElm);
 					editor.nodeChanged();
+				}
+
+				imgElm.onload = function() {
+					if (!data.width && !data.height) {
+						dom.setAttribs(imgElm, {
+							width: imgElm.clientWidth,
+							height: imgElm.clientHeight
+						});
+					}
+
+					selectImage();
 				};
+
+				imgElm.onerror = selectImage;
 			}
 
 			var data = win.toJSON();
@@ -103,6 +160,18 @@ tinymce.PluginManager.add('image', function(editor) {
 			return value;
 		}
 
+		function updateSize() {
+			getImageSize(this.value(), function(data) {
+				if (data.width && data.height) {
+					width = data.width;
+					height = data.height;
+
+					win.find('#width').value(width);
+					win.find('#height').value(height);
+				}
+			});
+		}
+
 		width = dom.getAttrib(imgElm, 'width');
 		height = dom.getAttrib(imgElm, 'height');
 
@@ -117,7 +186,7 @@ tinymce.PluginManager.add('image', function(editor) {
 			imgElm = null;
 		}
 
-		if (editor.settings.image_list) {
+		if (imageList) {
 			imageListCtrl = {
 				name: 'target',
 				type: 'listbox',
@@ -137,7 +206,7 @@ tinymce.PluginManager.add('image', function(editor) {
 
 		// General settings shared between simple and advanced dialogs
 		var generalFormItems = [
-			{name: 'src', type: 'filepicker', filetype: 'image', label: 'Source', autofocus: true},
+			{name: 'src', type: 'filepicker', filetype: 'image', label: 'Source', autofocus: true, onchange: updateSize},
 			imageListCtrl,
 			{name: 'alt', type: 'textbox', label: 'Image description'},
 			{
@@ -187,7 +256,7 @@ tinymce.PluginManager.add('image', function(editor) {
 
 			// Advanced dialog shows general+advanced tabs
 			win = editor.windowManager.open({
-				title: 'Edit image',
+				title: 'Insert/edit image',
 				data: data,
 				bodyType: 'tabpanel',
 				body: [
@@ -244,14 +313,14 @@ tinymce.PluginManager.add('image', function(editor) {
 	editor.addButton('image', {
 		icon: 'image',
 		tooltip: 'Insert/edit image',
-		onclick: showDialog,
+		onclick: createImageList(showDialog),
 		stateSelector: 'img:not([data-mce-object])'
 	});
 
 	editor.addMenuItem('image', {
 		icon: 'image',
 		text: 'Insert image',
-		onclick: showDialog,
+		onclick: createImageList(showDialog),
 		context: 'insert',
 		prependToContext: true
 	});

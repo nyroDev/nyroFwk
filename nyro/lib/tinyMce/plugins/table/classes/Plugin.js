@@ -40,10 +40,17 @@ define("tinymce/tableplugin/Plugin", [
 			return size;
 		}
 
+		function unApplyAlign(elm) {
+			each('left center right'.split(' '), function(name) {
+				editor.formatter.remove('align' + name, {}, elm);
+			});
+		}
+
 		function tableDialog() {
-			var dom = editor.dom, tableElm, data;
+			var dom = editor.dom, tableElm, data, createNewTable;
 
 			tableElm = editor.dom.getParent(editor.selection.getStart(), 'table');
+			createNewTable = false;
 
 			data = {
 				width: removePxSuffix(dom.getStyle(tableElm, 'width') || dom.getAttrib(tableElm, 'width')),
@@ -72,8 +79,8 @@ define("tinymce/tableplugin/Plugin", [
 						maxWidth: 50
 					},
 					items: [
-						{label: 'Cols', name: 'cols', disabled: true},
-						{label: 'Rows', name: 'rows', disabled: true},
+						createNewTable ? {label: 'Cols', name: 'cols', disabled: true} : null,
+						createNewTable ? {label: 'Rows', name: 'rows', disabled: true} : null,
 						{label: 'Width', name: 'width'},
 						{label: 'Height', name: 'height'},
 						{label: 'Cell spacing', name: 'cellspacing'},
@@ -129,13 +136,9 @@ define("tinymce/tableplugin/Plugin", [
 							tableElm.insertBefore(captionElm, tableElm.firstChild);
 						}
 
-						// Apply/remove alignment
+						unApplyAlign(tableElm);
 						if (data.align) {
 							editor.formatter.apply('align' + data.align, {}, tableElm);
-						} else {
-							each('left center right'.split(' '), function(name) {
-								editor.formatter.remove('align' + name, {}, tableElm);
-							});
 						}
 
 						editor.focus();
@@ -264,12 +267,9 @@ define("tinymce/tableplugin/Plugin", [
 							}
 
 							// Apply/remove alignment
+							unApplyAlign(cellElm);
 							if (data.align) {
 								editor.formatter.apply('align' + data.align, {}, cellElm);
-							} else {
-								each('left center right'.split(' '), function(name) {
-									editor.formatter.remove('align' + name, {}, cellElm);
-								});
 							}
 						});
 
@@ -352,6 +352,8 @@ define("tinymce/tableplugin/Plugin", [
 					var data = this.toJSON(), tableElm, oldParentElm, parentElm;
 
 					editor.undoManager.transact(function() {
+						var toType = data.type;
+
 						each(rows, function(rowElm) {
 							editor.dom.setAttrib(rowElm, 'scope', data.scope);
 
@@ -359,13 +361,13 @@ define("tinymce/tableplugin/Plugin", [
 								height: addSizeSuffix(data.height)
 							});
 
-							if (data.type != rowElm.parentNode.nodeName.toLowerCase()) {
+							if (toType != rowElm.parentNode.nodeName.toLowerCase()) {
 								tableElm = dom.getParent(rowElm, 'table');
 
 								oldParentElm = rowElm.parentNode;
-								parentElm = dom.select(tableElm, data.type)[0];
+								parentElm = dom.select(toType, tableElm)[0];
 								if (!parentElm) {
-									parentElm = dom.create(data.type);
+									parentElm = dom.create(toType);
 									if (tableElm.firstChild) {
 										tableElm.insertBefore(parentElm, tableElm.firstChild);
 									} else {
@@ -373,7 +375,7 @@ define("tinymce/tableplugin/Plugin", [
 									}
 								}
 
-								parentElm.insertBefore(rowElm, parentElm.firstChild);
+								parentElm.appendChild(rowElm);
 
 								if (!oldParentElm.hasChildNodes()) {
 									dom.remove(oldParentElm);
@@ -381,12 +383,9 @@ define("tinymce/tableplugin/Plugin", [
 							}
 
 							// Apply/remove alignment
+							unApplyAlign(rowElm);
 							if (data.align) {
 								editor.formatter.apply('align' + data.align, {}, rowElm);
-							} else {
-								each('left center right'.split(' '), function(name) {
-									editor.formatter.remove('align' + name, {}, rowElm);
-								});
 							}
 						});
 
@@ -677,7 +676,7 @@ define("tinymce/tableplugin/Plugin", [
 			}
 		}, function(func, name) {
 			editor.addCommand(name, function() {
-				var grid = new TableGrid(editor.selection);
+				var grid = new TableGrid(editor);
 
 				if (grid) {
 					func(grid);
