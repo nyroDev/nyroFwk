@@ -114,6 +114,8 @@ class db_pdo_row extends db_row {
 				$ret[$lang] = array();
 				foreach($r->getValues() as $k=>$v)
 					$ret[$lang][$k] = $v;
+				foreach($r->getChanges() as $k=>$v)
+					$ret[$lang][$k] = $v;
 			}
 		}
 		return $ret;
