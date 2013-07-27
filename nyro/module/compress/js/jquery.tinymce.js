@@ -6,6 +6,7 @@
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
+ * From: https://github.com/tinymce/tinymce/blob/master/js/tinymce/classes/jquery.tinymce.js
  */
 
 /*global tinymce:true, jQuery */
@@ -94,7 +95,7 @@
 			base = url.substring(0, url.lastIndexOf("/"));
 
 			// Check if it's a dev/src version they want to load then
-			// make sure that all plugins, themes etc are loaded in source mode aswell
+			// make sure that all plugins, themes etc are loaded in source mode as well
 			if (url.indexOf('.min') != -1) {
 				suffix = ".min";
 			}
