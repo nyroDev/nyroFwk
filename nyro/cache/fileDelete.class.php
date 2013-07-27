@@ -5,9 +5,9 @@
  * @package nyroFwk
  */
 /**
- * Cache disabled
+ * Cache disabled, but delete file if existing when requested
  */
-class cache_none extends cache_abstract {
+class cache_fileDelete extends cache_file {
 
 	public function get(&$value, array $prm) {
 		return false;
@@ -23,14 +23,6 @@ class cache_none extends cache_abstract {
 
 	public function end() {
 		return true;
-	}
-
-	public function delete(array $prm = array()) {
-		return 1;
-	}
-
-	public function exists(array $prm) {
-		return false;
 	}
 
 }
