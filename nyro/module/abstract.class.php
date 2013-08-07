@@ -70,18 +70,22 @@ abstract class module_abstract extends object {
 		$tags = $this->cfg->cacheTags;
 		$search = array('/', '<', '>');
 		$replace = array('', '', '');
-		if (is_array($this->prmExec['paramA']))
+		if (is_array($this->prmExec['paramA'])) {
 			foreach($this->prmExec['paramA'] as $k=>$v) {
 				if (is_object($v)) {
 					if (is_callable(array($v, '__toString')))
 						$tags[] = $k.'='.$v;
 					else
 						$tags[] = $k.'='.get_class($v);
-				} elseif (!is_numeric($k))
+				} else if (is_array($v)) {
+					$tags[] = $k.'='.str_replace($search, $replace, http_build_query($v));
+				} else if (!is_numeric($k)) {
 					$tags[] = $k.'='.str_replace($search, $replace, $v);
-				else
+				} else {
 					$tags[] = str_replace($search, $replace, $v);
+				}
 			}
+		}
 
 		$paramTpl = array();
 		foreach($param as $k=>$v) {
@@ -90,8 +94,11 @@ abstract class module_abstract extends object {
 					$paramTpl[] = $k.'='.$v;
 				else
 					$paramTpl[] = $k.'='.get_class($v);
-			} else
+			} else if (is_array($v)) {
+				$paramTpl[] = $k.':'.http_build_query($v);
+			} else {
 				$paramTpl[] = $k.':'.$v;
+			}
 		}
 
 		$conf = array(
