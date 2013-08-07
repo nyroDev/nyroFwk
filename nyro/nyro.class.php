@@ -56,6 +56,7 @@ final class nyro {
 
 			$resp = response::getInstance();
 			self::$cfg->overload(__CLASS__.'Response');
+			self::$cfg->overload(__CLASS__.'Security');
 			
 			if (self::$cfg->globalCache && !request::isPost() && count($_GET) == 0 && $resp->canGlobalCache()) {
 				$prm = is_array(self::$cfg->globalCache) ? self::$cfg->globalCache : array();
