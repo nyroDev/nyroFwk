@@ -15,9 +15,11 @@ $cfg = array(
 		'language'=>request::get('lang'),
 		
 		'theme'=>'modern',
-		'plugins'=>'advlist,autolink,link,image,lists,charmap,print,preview,hr,anchor,pagebreak,searchreplace,wordcount,visualblocks,visualchars,code,fullscreen,insertdatetime,media,nonbreaking,save,table,contextmenu,directionality,template,paste,textcolor',
-		'toolbar'=>'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media fullpage',
+		'plugins'=>'lists,advlist,anchor,autolink,link,image,charmap,preview,hr,searchreplace,visualblocks,visualchars,code,fullscreen,insertdatetime,media,nonbreaking,table,paste,contextmenu,tabfocus,wordcount',
+		'toolbar'=>'undo redo | styleselect | bold italic | removeformat | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media fullpage',
 		'relative_urls'=>false,
+		
+		'menubar'=>'insert edit view table tools',
 
 	),
 );
