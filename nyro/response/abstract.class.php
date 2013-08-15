@@ -79,6 +79,47 @@ abstract class response_abstract extends object {
 	}
 	
 	/**
+	 * Set a variable to the config
+	 *
+	 * @param string $name Variable name
+	 * @param mixed $val Value
+	 */
+	public function cfgSet($name, $val) {
+		$this->cfg->set($name, $val);
+	}
+	
+	/**
+	 * Set an array of variable to the config
+	 *
+	 * @param array $vars Variables to set
+	 */
+	public function cfgSetA(array $vars) {
+		$this->cfg->setA($vars);
+	}
+	
+	/**
+	 * Set a variable to the config in an array
+	 *
+	 * @param string $name Variable name
+	 * @param string $key Key on the array
+	 * @param mixed $val Value
+	 */
+	public function cfgSetInArray($name, $key, $val) {
+		$this->cfg->setInArray($name, $key, $val);
+	}
+	
+	
+	/**
+	 * Set variables to the config in an array
+	 *
+	 * @param string $name Variable name
+	 * @param array $values the Values
+	 */
+	public function cfgSetInArrayA($name, array $values) {
+		$this->cfg->setInArrayA($name, $values);
+	}
+	
+	/**
 	 * Set vars saved from a globalCache response.
 	 * This function should also apply the vars
 	 *

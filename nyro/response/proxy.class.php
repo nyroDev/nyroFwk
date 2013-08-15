@@ -80,6 +80,10 @@ class response_proxy extends object {
 		$this->response->setAttr($name, $value);
 		parent::setAttr($name, $value);
 	}
+	
+	public function getCfg() {
+		return $this->response->getCfg();
+	}
 
 	/**
 	 * Save the call if not a get method and make the call

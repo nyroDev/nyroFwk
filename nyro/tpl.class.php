@@ -178,7 +178,7 @@ class tpl extends object {
 	}
 
 	/**
-	 * Render an other tpl. To be used inside the tpl
+	 * Render an other tpl. To be used inside a tpl
 	 *
 	 * @param array $prm Possibile keys:
 	 *  - string module Module to used (default: module used for the current tpl)
@@ -197,6 +197,36 @@ class tpl extends object {
 		$module = factory::getModule($prm['module'], array('render'=>true));
 		$module->exec($prm);
 		return $module->publish($prm);
+	}
+	
+	/**
+	 * Render an other tpl, without loading it's module. To be used inside a tpl
+	 *
+	 * @param array $prm Possibile keys:
+	 *  - string module Module to used (default: module used for the current tpl)
+	 *  - string action Action to call
+	 *  - array paramA parameters to send to send the template
+	 */
+	public function quickRender($prm) {
+		if (!is_array($prm)){
+			$tmp = explode('/', $prm);
+			$prm = array();
+			$prm['module'] = isset($tmp[0]) ? $tmp[0] : null;
+			$prm['action'] = isset($tmp[1]) ? $tmp[1] : null;
+			$prm['paramA'] = isset($tmp[2]) ? request::parseParam($tmp[2]) : array();
+		}
+		$prm = array_merge(array('module'=>$this->cfg->module, 'action'=>$this->cfg->action, 'paramA'=>array()), $prm);
+		$contents = null;
+		$filePath = 'module_'.$prm['module'].'_view_'.$prm['action'];
+		$file = file::nyroExists(array('name'=>$filePath, 'type'=>'tpl'));
+		if ($file) {
+			ob_start();
+			extract($prm['paramA'], EXTR_REFS OR EXTR_OVERWRITE);
+			include($file);
+			$contents = ob_get_contents();
+			ob_end_clean();
+		}
+		return $contents;
 	}
 
 	/**
