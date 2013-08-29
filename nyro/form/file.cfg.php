@@ -15,17 +15,6 @@ $cfg = array(
 	'showPreview'=>true,
 	'showDelete'=>true,
 
-	'uploadify'=>array(
-		'uploader'=>request::uri(array('lang'=>null, 'module'=>'css', 'action'=>'uploadify', 'param'=>'uploader.swf', 'out'=>false)),
-		'multi'=>true,
-		'auto'=>true,
-		'fileDesc'=>'Images',
-		'buttonText'=>'Browse...',
-		'fileExt'=>'*.jpg;*.gif;*.png',
-		'wmode'=>'transparent',
-		'cancelImg'=>request::uri(array('lang'=>null, 'module'=>'css', 'action'=>'uploadify', 'param'=>'cancel.png', 'out'=>false)),
-		'scriptData'=>array(session::getInstance()->getSessIdForce()=>session_id()),
-	),
 	'plupload'=>array(
 		'showCancelAll'=>true,
 		'addFormVars'=>false,

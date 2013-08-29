@@ -1,6 +1,6 @@
 jQuery(function($) {
-	$('#checkAll').change(function() {
+	$('#checkAll').on('change', function() {
 		var me = $(this);
-		me.closest('form').find('input[type=checkbox]').attr('checked', me.is(':checked'));
+		me.closest('form').find('input[type=checkbox]').prop('checked', me.is(':checked'));
 	});
 });

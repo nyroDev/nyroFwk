@@ -63,6 +63,5 @@ if (($lang = request::get('lang')) != 'en') {
 if (DEV) {
 	$cfg['incFiles'] = array(
 		array('type'=>'js', 'file'=>'jquery'),
-	//	array('type'=>'js', 'file'=>'jquery.lint', 'dir'=>'nyroLast'),
 	);
 }

@@ -124,10 +124,6 @@ fieldset img {
 	border-bottom-color: #aaa;
 	background-color: #FDFDFD;
 }
-fieldset .uploadifyQueueItem img {
-	padding: 0;
-	border: none;
-}
 fieldset p a.deleteFile {
     background: url(form/delete.png) no-repeat;
     padding: 0;

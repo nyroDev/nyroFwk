@@ -11,34 +11,40 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('code', function(editor) {
-	function showSourceEditor() {
+	function showDialog() {
 		editor.windowManager.open({
 			title: "Source code",
 			body: {
 				type: 'textbox',
 				name: 'code',
 				multiline: true,
-				minWidth: 600,
-				minHeight: 500,
+				minWidth: editor.getParam("code_dialog_width", 600),
+				minHeight: editor.getParam("code_dialog_height", 500),
 				value: editor.getContent({source_view: true}),
 				spellcheck: false
 			},
 			onSubmit: function(e) {
-				editor.setContent(e.data.code);
+				editor.undoManager.transact(function() {
+					editor.setContent(e.data.code);
+				});
+	
+				editor.nodeChanged();
 			}
 		});
 	}
 
+	editor.addCommand("mceCodeEditor", showDialog);
+
 	editor.addButton('code', {
 		icon: 'code',
 		tooltip: 'Source code',
-		onclick: showSourceEditor
+		onclick: showDialog
 	});
 
 	editor.addMenuItem('code', {
 		icon: 'code',
 		text: 'Source code',
 		context: 'tools',
-		onclick: showSourceEditor
+		onclick: showDialog
 	});
 });

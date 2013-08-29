@@ -11,19 +11,18 @@ jQuery(function($, undefined) {
 					curLn,
 					working = false,
 					terms = [],
-					index;
-
-				function split(val) {
-					return val.split(/,\s*/);
-				}
-				function extractLast(term) {
-					return split(term).pop();
-				}
+					index,
+					split = function(val) {
+						return val.split(/,\s*/);
+					},
+					extractLast = function(term) {
+						return split(term).pop();
+					};
 
 				inputs.each(function() {
 					var me = $(this),
 						val = me.val(),
-						label = $('label[for="'+me.attr('id')+'"]').text();
+						label = list.find('label[for="'+me.attr('id')+'"]').text();
 					if (me.is(':checked')) {
 						terms.push(label);
 						curVals.push({
@@ -41,18 +40,18 @@ jQuery(function($, undefined) {
 				input.val(terms.join(', '));
 
 				input
-					.bind('formAutoComplete', function(e, submit) {
+					.on('formAutoComplete', function(e, submit) {
 						if (!working) {
 							working = true;
 							terms = split(this.value);
 							$.merge(vals, curVals);
 							curVals = [];
-							inputs.attr('checked', false);
+							inputs.prop('checked', false);
 							vals = $.map(vals, function(elt) {
 								index = $.inArray(elt.label, terms);
 								if (index > -1) {
 									curVals.push(elt);
-									inputs.filter('[value="'+elt.value+'"]').attr('checked', 'checked');
+									inputs.filter('[value="'+elt.value+'"]').prop('checked', 'checked');
 									terms.splice(index, 1);
 									return null;
 								}
@@ -68,10 +67,10 @@ jQuery(function($, undefined) {
 							working = false;
 						}
 					})
-					.bind('keydown', function() {
+					.on('keydown', function() {
 						curLn = this.value.length;
 					})
-					.bind('keyup', function() {
+					.on('keyup', function() {
 						if (this.value.length < curLn)
 							input.trigger('formAutoComplete');
 					})

@@ -3890,12 +3890,20 @@
 					});
 				}
 				
-				inputFile.onchange = function() {
+				inputFile.onchange = function onChange() {
 					// Add the selected files from file input
 					addSelectedFiles(this.files);
 					
 					// Clearing the value enables the user to select the same file again if they want to
-					this.value = '';
+					if (!plupload.ua.ie) {
+						this.value = '';
+					} else {
+						// in IE input[type="file"] is read-only so the only way to reset it is to re-insert it
+						var inputFile = this.cloneNode(true);
+						this.parentNode.replaceChild(inputFile, this);
+						inputFile.onchange = onChange;
+						inputFile = null;
+					}	
 				};
 				
 				/* Since we have to place input[type=file] on top of the browse_button for some browsers (FF, Opera),
@@ -4098,7 +4106,7 @@
 						
 
 					function uploadNextChunk() {
-						var chunkBlob, br, chunks, args, chunkSize, curChunkSize, mimeType, url = up.settings.url;	
+						var chunkBlob, br, chunks = 1, args, chunkSize, curChunkSize, mimeType, url = up.settings.url;	
 
 						function sendAsBinaryString(bin) {
 							if (xhr.sendAsBinary) { // Gecko
@@ -4143,7 +4151,8 @@
 											code : plupload.HTTP_ERROR,
 											message : plupload.translate('HTTP Error.'),
 											file : file,
-											status : httpStatus
+											status : httpStatus,
+											response : xhr.responseText
 										});
 									} else {
 										// Handle chunk response
@@ -4293,13 +4302,16 @@
 								// Slice the chunk
 								chunkBlob = w3cBlobSlice(blob, chunk * chunkSize, chunk * chunkSize + curChunkSize);
 							}
-
-							// Setup query string arguments
-							args.chunk = chunk;
-							args.chunks = chunks;
 						} else {
 							curChunkSize = file.size;
 							chunkBlob = blob;
+						}
+
+						// If chunking is enabled add corresponding args, no matter if file is bigger than chunk or smaller
+						if (settings.chunk_size && features.chunks) {
+							// Setup query string arguments
+							args.chunk = chunk;
+							args.chunks = chunks;
 						}
 						
 						// workaround for Android and Gecko 2,5,6 FormData+Blob bug: https://bugzilla.mozilla.org/show_bug.cgi?id=649150

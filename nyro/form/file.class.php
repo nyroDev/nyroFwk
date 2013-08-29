@@ -96,32 +96,6 @@ class form_file extends form_abstract {
 	public function hasFile() {
 		return true;
 	}
-
-	/**
-	 * Make the field uploadify.
-	 * You will probably have to set the script options at least.
-	 *
-	 * @param array $opt Uploadify options
-	 * @param boolean $hideSubmit Indicate if the submit button should be hide by JavaScript
-	 */
-	public function uploadify(array $opt = array(), $hideSubmit = true) {
-		$resp = response::getInstance();
-		$resp->addJs('jquery');
-		$resp->addJs('swfobject');
-		$resp->addJs('uploadify');
-		$resp->addCss('uploadify');
-
-		$uploadifyOpt = array_merge(array(
-			'fileDataName'=>$this->name
-		), $this->cfg->uploadify, $opt);
-
-		if (request::isLocal())
-			$uploadifyOpt['scriptAccess'] = 'always';
-
-		$resp->blockjQuery('$("#'.$this->id.'").uploadify('.utils::jsEncode($uploadifyOpt).');');
-		if ($hideSubmit)
-			$resp->blockjQuery('$("#'.$this->id.'").closest("form").find("fieldset.submit").hide();');
-	}
 	
 
 	/**

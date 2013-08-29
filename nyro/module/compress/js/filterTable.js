@@ -6,7 +6,7 @@ $(function() {
 		var buttonList = $('#buttonList'),
 			link = $('<a href="#" class="filterTableToggle" />')
 				.text('show/hide filter')
-				.click(function(e) {
+				.on('click', function(e) {
 					e.preventDefault();
 					filterTable.slideToggle();
 				});
