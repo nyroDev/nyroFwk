@@ -489,4 +489,18 @@ class utils {
 		return false;
 	}
 
+
+	protected static $phpLimitsIncreased = false;
+	
+	/**
+	 * Increase php limits (timeout and memory_limit
+	 */
+	public static function incresePhpLimits() {
+		if (!self::$phpLimitsIncreased) {
+			self::$phpLimitsIncreased = true;
+			@set_time_limit(0);
+			@ini_set('memory_limit', '-1');
+		}
+	}
+	
 }
