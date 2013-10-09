@@ -36,17 +36,46 @@ tinymce.PluginManager.add('template', function(editor) {
 		function onSelectTemplate(e) {
 			var value = e.control.value();
 
+			function insertIframeHtml(html) {
+				if (html.indexOf('<html>') == -1) {
+					var contentCssLinks = '';
+
+					tinymce.each(editor.contentCSS, function(url) {
+						contentCssLinks += '<link type="text/css" rel="stylesheet" href="' + editor.documentBaseURI.toAbsolute(url) + '">';
+					});
+
+					html = (
+						'<!DOCTYPE html>' +
+						'<html>' +
+							'<head>' +
+								contentCssLinks +
+							'</head>' +
+							'<body>' +
+								html +
+							'</body>' +
+						'</html>'
+					);
+				}
+
+				html = replaceTemplateValues(html, 'template_preview_replace_values');
+
+				var doc = win.find('iframe')[0].getEl().contentWindow.document;
+				doc.open();
+				doc.write(html);
+				doc.close();
+			}
+
 			if (value.url) {
 				tinymce.util.XHR.send({
 					url: value.url,
 					success: function(html) {
 						templateHtml = html;
-						win.find('iframe')[0].html(html);
+						insertIframeHtml(templateHtml);
 					}
 				});
 			} else {
 				templateHtml = value.content;
-				win.find('iframe')[0].html(value.content);
+				insertIframeHtml(templateHtml);
 			}
 
 			win.find('#description')[0].text(e.control.value().description);
@@ -125,15 +154,20 @@ tinymce.PluginManager.add('template', function(editor) {
 		});
 	}
 
-	function insertTemplate(ui, html) {
-		var el, n, dom = editor.dom, sel = editor.selection.getContent();
-
-		each(editor.getParam('template_replace_values'), function(v, k) {
+	function replaceTemplateValues(html, templateValuesOptionName) {
+		each(editor.getParam(templateValuesOptionName), function(v, k) {
 			if (typeof(v) != 'function') {
 				html = html.replace(new RegExp('\\{\\$' + k + '\\}', 'g'), v);
 			}
 		});
 
+		return html;
+	}
+
+	function insertTemplate(ui, html) {
+		var el, n, dom = editor.dom, sel = editor.selection.getContent();
+
+		html = replaceTemplateValues(html, 'template_replace_values');
 		el = dom.create('div', null, html);
 
 		// Find template element within div
