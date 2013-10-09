@@ -27978,7 +27978,8 @@ define("tinymce/ui/FilePicker", [
 						self.getEl('inp').id,
 						self.getEl('inp').value,
 						settings.filetype,
-						window
+						window,
+						self
 					);
 				};
 			}
