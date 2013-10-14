@@ -678,7 +678,7 @@ final class request {
 	 * @return bool
 	 */
 	public static function isLocal() {
-		return self::get('serverName') == 'localhost';
+		return self::get('serverName') == 'localhost' || isset($_SERVER['WINDIR']);
 	}
 
 	/**

@@ -376,21 +376,22 @@ abstract class db_pdo_abstract extends db_abstract {
 				}
 			}
 
-			$query = 'SELECT '.$f.' FROM '.$tableName;
+			$query = 'SELECT '.$f.' FROM ';
 			
 			if ($prm['moreTables']) {
 				if (is_array($prm['moreTables'])) {
 					foreach($prm['moreTables'] as $k=>$v) {
 						if (is_numeric($k)) {
-							$query.= ', '.$this->quoteIdentifier($v);
+							$query.= $this->quoteIdentifier($v).', ';
 						} else {
-							$query.= ', '.$this->quoteIdentifier($v).' '.$this->quoteIdentifier($k);
+							$query.= $this->quoteIdentifier($v).' '.$this->quoteIdentifier($k).', ';
 						}
 					}
 				} else {
-					$query.= ', '.$prm['moreTables'];
+					$query.= $prm['moreTables'].', ';
 				}
 			}
+			$query.= $tableName;
 
 			$tblAlias = array();
 			if (is_array($prm['join'])) {
