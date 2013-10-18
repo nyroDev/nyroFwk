@@ -495,7 +495,7 @@ class utils {
 	/**
 	 * Increase php limits (timeout and memory_limit
 	 */
-	public static function incresePhpLimits() {
+	public static function increasePhpLimits() {
 		if (!self::$phpLimitsIncreased) {
 			self::$phpLimitsIncreased = true;
 			@set_time_limit(0);

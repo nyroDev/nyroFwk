@@ -332,7 +332,7 @@ class response_http extends response_abstract {
 			if (strpos($type, 'audio') === 0 || strpos($type, 'video') === 0) {
 				$this->mediaDownload($file);
 			} else {
-				utils::incresePhpLimits();
+				utils::increasePhpLimits();
 				$this->cfg->compress = false;
 				$this->neverExpire();
 				$this->addHeader('Last-Modified', gmdate('D, j M Y H:i:s', filemtime($file)).' GMT', true);
@@ -354,7 +354,7 @@ class response_http extends response_abstract {
 	 * @param bool $delete Indicate if the file should be deleted after download
 	 */
 	protected function mediaDownload($file, $forceDownload = false, $fileName = null, $delete = false) {
-		utils::incresePhpLimits();
+		utils::increasePhpLimits();
 		$fileName = $fileName ? $fileName : basename($file);
 		if(strstr($_SERVER['HTTP_USER_AGENT'], 'MSIE'))
 			$fileName = preg_replace('/\./', '%2e', $fileName, substr_count($fileName, '.') - 1);
