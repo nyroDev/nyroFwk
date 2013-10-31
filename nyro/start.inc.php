@@ -120,19 +120,21 @@ if (!defined('URLLOWER'))
 /**
  * Load first classes to increase performance
  */
-require(NYROROOT.'file.class.'.EXTPHP);
-require(NYROROOT.'factory.class.'.EXTPHP);
-require(NYROROOT.'config.class.'.EXTPHP);
-require(NYROROOT.'autoload.'.EXTPHP);
-//*
-require(NYROROOT.'nyro.class.'.EXTPHP);
-require(NYROROOT.'cache.class.'.EXTPHP);
-require(NYROROOT.'nException.class.'.EXTPHP);
-require(NYROROOT.'nReflection.class.'.EXTPHP);
-require(NYROROOT.'object.class.'.EXTPHP);
-require(NYROROOT.'cache'.DS.'abstract.class.'.EXTPHP);
-require(NYROROOT.'cache'.DS.'file.class.'.EXTPHP);
-require(NYROROOT.'request.class.'.EXTPHP);
-require(NYROROOT.'debug.class.'.EXTPHP);
-require(NYROROOT.'errorHandler.'.EXTPHP);
-//*/
+if (!defined('NYROBOOTSTRAP')) {
+	require(NYROROOT.'file.class.'.EXTPHP);
+	require(NYROROOT.'factory.class.'.EXTPHP);
+	require(NYROROOT.'config.class.'.EXTPHP);
+	require(NYROROOT.'autoload.'.EXTPHP);
+	require(NYROROOT.'nyro.class.'.EXTPHP);
+	require(NYROROOT.'cache.class.'.EXTPHP);
+	require(NYROROOT.'nException.class.'.EXTPHP);
+	require(NYROROOT.'nReflection.class.'.EXTPHP);
+	require(NYROROOT.'object.class.'.EXTPHP);
+	require(NYROROOT.'cache'.DS.'abstract.class.'.EXTPHP);
+	require(NYROROOT.'cache'.DS.'file.class.'.EXTPHP);
+	require(NYROROOT.'request.class.'.EXTPHP);
+	require(NYROROOT.'debug.class.'.EXTPHP);
+	require(NYROROOT.'errorHandler.'.EXTPHP);
+} else {
+	require(NYROBOOTSTRAP);
+}
