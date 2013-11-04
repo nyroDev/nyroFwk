@@ -41,11 +41,12 @@ final class registry {
 	 *
 	 * @param string $name Name to registred
 	 * @param mixed $value Value to registred
+	 * @param boolean $allowReset True to allo reset of registry value
 	 * @return bool true if sucessful
 	 * @throws nException If the $name alreadey exists
 	 */
-	public static function set($name, $val) {
-		if (array_key_exists($name, self::$vars))
+	public static function set($name, $val, $allowReset = false) {
+		if (!$allowReset && array_key_exists($name, self::$vars))
 			throw new nException('Registry: property '.$name.' already exists.');
 
 		self::$vars[$name] = $val;
