@@ -16,7 +16,7 @@ $cfg = array(
 			'global'=>'[content]',
 			'line'=>'<li class="[classLine]"><label for="[id]">[label]</label>[field][des]</li>',
 
-			'lineError'=>'<li class="lineError [classLine]"><label for="[id]" class="label">[label]</label>[field][errors][des]</li>',
+			'lineError'=>'<li class="lineError [classLine]"><label for="[id]">[label]</label>[field][errors][des]</li>',
 			'lineErrorWrap'=>'<ol class="lineErrors">[errors]</ol>',
 			'lineErrorLine'=>'<li>[error]</li>',
 
