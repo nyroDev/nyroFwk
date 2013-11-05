@@ -17,6 +17,11 @@ $cfg = array(
 		'Content-Language'=>request::get('lang'),
 		'Connection'=>'Keep-Alive'
 	),
+	
+	'sendFileHeader'=>'X-Accel-Redirect',
+	'sendFile'=>array(
+		// 'sourceDir'=>'destDir'
+	),
 
 	'contentTypeCfg'=>array(
 		'text'=>'text/plain',

@@ -340,6 +340,19 @@ class response_http extends response_abstract {
 				$this->addHeader('Cache-Control', 'public', false);
 				$this->addHeader('Pragma', null, false);
 				$this->addHeader('Content-length', file::size($file), true);
+				
+				$sendFile = $this->cfg->sendFile;
+				if (count($sendFile)) {
+					foreach($sendFile as $src=>$dst) {
+						if (strpos($file, $src) === 0) {
+							$file = str_replace($src, $dst, $file);
+							$this->addHeader($this->cfg->sendFileHeader, $file, true);
+							$this->sendHeaders();
+							exit(0);
+						}
+					}
+				}
+				
 				$this->sendText(file::read($file));
 			}
 		}
