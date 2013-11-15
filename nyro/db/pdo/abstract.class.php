@@ -21,6 +21,13 @@ abstract class db_pdo_abstract extends db_abstract {
 	 * @var object|resource|null
 	 */
 	protected $connection;
+	
+	/**
+	 * Number of transaction requested
+	 *
+	 * @var int
+	 */
+	protected $transactionCounter = 0;
 
 	/**
 	 * Returns the connection object, ressource.
@@ -76,9 +83,11 @@ abstract class db_pdo_abstract extends db_abstract {
 	 * @return bool True
 	 */
 	public function beginTransaction() {
-		$this->_connect();
-        $this->connection->beginTransaction();
-		return true;
+		if(!$this->transactionCounter++) {
+			$this->_connect();
+			return $this->connection->beginTransaction();
+		}
+		return $this->transactionCounter >= 0;
 	}
 
 	/**
@@ -87,9 +96,11 @@ abstract class db_pdo_abstract extends db_abstract {
 	 * @return bool True
 	 */
 	public function commit() {
-		$this->_connect();
-        $this->connection->commit();
-		return true;
+		if(!--$this->transactionCounter) {
+			$this->_connect();
+			return $this->connection->commit();
+		}
+		return $this->transactionCounter >= 0; 
 	}
 
 	/**
@@ -98,9 +109,13 @@ abstract class db_pdo_abstract extends db_abstract {
 	 * @return bool True
 	 */
 	public function rollBack() {
-		$this->_connect();
-        $this->connection->rollBack();
-		return true;
+		if($this->transactionCounter >= 0) {
+            $this->transactionCounter = 0;
+			$this->_connect();
+			$this->connection->rollBack();
+        }
+		$this->transactionCounter = 0;
+        return false;
 	}
 
 	/**
