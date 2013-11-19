@@ -25,10 +25,11 @@ abstract class db_abstract extends object {
 	 * @param string $type Element type (table, rowset or row)
 	 * @param db_table|string $table
 	 * @param array $prm Array parameter for the factory
+	 * @param boolean $fromCache Get table from cache or not
 	 * @return db_table|db_rowset|db_row
 	 */
-	public function get($type, $table, array $prm = array()) {
-		if ($type == 'table' && isset($this->tables[$table]))
+	public function get($type, $table, array $prm = array(), $fromCache = true) {
+		if ($fromCache && $type == 'table' && isset($this->tables[$table]))
 			return $this->tables[$table];
 
 		if ($table instanceof db_table) {
@@ -51,7 +52,10 @@ abstract class db_abstract extends object {
 			$className = $this->cfg->get($type.'Class');
 
 		if ($type == 'table') {
-			$this->tables[$table] = factory::get($className, $prm);
+			$tbl = factory::get($className, $prm);
+			if (!$fromCache)
+				return $tbl;
+			$this->tables[$table] = $tbl;
 			return $this->tables[$table];
 		}
 
@@ -63,10 +67,11 @@ abstract class db_abstract extends object {
 	 *
 	 * @param string $tableName The table name
 	 * @param array $prm The configuration for the where object
+	 * @param boolean $fromCache Get table from cache or not
 	 * @return db_table
 	 */
-	public function getTable($tableName, array $prm = array()) {
-		return $this->get('table', $tableName, $prm);
+	public function getTable($tableName, array $prm = array(), $fromCache = true) {
+		return $this->get('table', $tableName, $prm, $fromCache);
 	}
 	
 	/**
