@@ -128,7 +128,20 @@ abstract class db_pdo_abstract extends db_abstract {
 		$this->_connect();
 		$stmt = $this->prepare($sql);
 		db::log($sql, $bind);
-		$stmt->execute($bind);
+		$nbTry = 0;
+		$executed = false;
+		$lastException = null;
+		while (!$executed && $nbTry < 3) {
+			try {
+				$nbTry++;
+				$stmt->execute($bind);
+				$executed = true;
+			} catch (Exception $e) {
+				$lastException = $e;
+			}
+		}
+		if (!$executed)
+			throw $lastException;
 		return $stmt;
 	}
 
