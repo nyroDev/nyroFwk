@@ -282,6 +282,8 @@ class response_http extends response_abstract {
 	 */
 	public function sendText($text) {
 		//$this->addHeader('Content-Length', strlen($text), true);
+		if (!DEV && utils::isContained(request::get(), $this->cfg->saveSendText))
+			file::write(WEBROOT.request::get('request'), $text);
 		$this->sendHeaders();
 		$this->beforeOut();
 		echo $text;

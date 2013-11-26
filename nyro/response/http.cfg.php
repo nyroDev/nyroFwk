@@ -22,6 +22,7 @@ $cfg = array(
 	'sendFile'=>array(
 		// 'sourceDir'=>'destDir'
 	),
+	'saveSendText'=>array(),
 
 	'contentTypeCfg'=>array(
 		'text'=>'text/plain',

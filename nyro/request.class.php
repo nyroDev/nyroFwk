@@ -528,11 +528,25 @@ final class request {
 				array_unshift($tmp, $prm['lang']);
 			else if ($forceLang)
 				array_unshift($tmp, $forceLang);
-		} else if (self::getRequested('lang'))
-			array_unshift($tmp, self::getRequested('lang'));
-		else if (self::$cfg->lang != self::get('lang'))
-			array_unshift($tmp, self::get('lang'));
-		else if ($forceLang && count($tmp))
+		} else if (self::getRequested('lang')) {
+			$addLang = true;
+			$tmpUrl = implode($sep, $tmp);
+			foreach(self::$cfg->noForceLang as $noForce) {
+				if (strpos($tmpUrl, $noForce) === 0)
+					$addLang = false;
+			}
+			if ($addLang)
+				array_unshift($tmp, self::getRequested('lang'));
+		} else if (self::$cfg->lang != self::get('lang')) {
+			$addLang = true;
+			$tmpUrl = implode($sep, $tmp);
+			foreach(self::$cfg->noForceLang as $noForce) {
+				if (strpos($tmpUrl, $noForce) === 0)
+					$addLang = false;
+			}
+			if ($addLang)
+				array_unshift($tmp, self::get('lang'));
+		} else if ($forceLang && count($tmp))
 			array_unshift($tmp, $forceLang);
 		if ($forceLang && count($tmp) == 1 && $tmp[0] == $forceLang)
 			$tmp = array();
