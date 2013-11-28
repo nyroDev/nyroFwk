@@ -321,6 +321,27 @@ class helper_image extends helper_file {
 		} else
 			return false;
 	}
+	
+	/**
+	 * Rotate an image if there is exif data indicating it need it
+	 *
+	 * @param string $file The image path
+	 * @return boolean True if image was rotate
+	 */
+	public function rotateIfExifData($file) {
+		$ret = false;
+		if (function_exists('exif_read_data')) {
+			$exif = exif_read_data($file);
+			if (is_array($exif) && isset($exif['Orientation']) && $exif['Orientation'] != 1) {
+				$tmp = $this->setImg($file);
+				if ($tmp) {
+					$this->cfg->forceExt = file::getExt($file);
+					$ret = $this->save($file);
+				}
+			}
+		}
+		return $ret;
+	}
 
 	/**
 	 * Save the image
@@ -365,33 +386,8 @@ class helper_image extends helper_file {
 				$img = imagecreatefromjpeg($file);
 				if ($this->cfg->processOrientation && function_exists('exif_read_data')) {
 					$exif = exif_read_data($file);
-					if (isset($exif['Orientation']) && $exif['Orientation'] != 1) {
-						$switchInfo = false;
-						echo $exif['Orientation'].'<br />';
-						switch($exif['Orientation']) {
-							case 2:
-							case 4:
-								$this->imageFlip($img);
-								break;
-							case 3:
-								$img = imagerotate($img, 180, -1);
-								break;
-							case 5:
-							case 7:
-								$this->imageFlip($img);
-								$img = imagerotate($img, -90, -1);
-								$switchInfo = true;
-								break;
-							case 6:
-								$img = imagerotate($img, -90, -1);
-								$switchInfo = true;
-								break;
-							case 8:
-								$img = imagerotate($img, 90, -1);
-								$switchInfo = true;
-								break;
-						}
-
+					if (is_array($exif) && isset($exif['Orientation']) && $exif['Orientation'] != 1) {
+						$switchInfo = $this->rotateOnExifData($img, $exif['Orientation']);
 						if ($switchInfo) {
 							$infoWIndex = 1;
 							$infoHIndex = 0;
@@ -414,6 +410,65 @@ class helper_image extends helper_file {
 		}
 
 		return array(&$img, $this->info[$infoWIndex], $this->info[$infoHIndex]);
+	}
+	
+	/**
+	 * Rotate the image based on provided exif data
+	 *
+	 * @param imageresource $img Resource image
+	 * @param int $exifOrientation Exif orientation info
+	 * @return boolean True if the dimension have been switched
+	 */
+	protected function rotateOnExifData(&$img, $exifOrientation) {
+		$switchInfo = false;
+		switch($exifOrientation) {
+			case 2:
+			case 4:
+				$this->imageFlip($img);
+				break;
+			case 3:
+				$img = imagerotate($img, 180, -1);
+				break;
+			case 5:
+			case 7:
+				$this->imageFlip($img);
+				$img = imagerotate($img, -90, -1);
+				$switchInfo = true;
+				break;
+			case 6:
+				$img = imagerotate($img, -90, -1);
+				$switchInfo = true;
+				break;
+			case 8:
+				$img = imagerotate($img, 90, -1);
+				$switchInfo = true;
+				break;
+		}
+		return $switchInfo;
+	}
+	
+	/**
+	 * Flip the image
+	 *
+	 * @param imageresource $img Resource image
+	 * @return boolean Tru if success
+	 */
+	protected function imageFlip(&$img) {
+		$width  = imagesx($img);
+		$height = imagesy($img);
+		$tmp = imagecreatetruecolor(1, $height);
+		
+		$x2 = $x + $width - 1;
+		for ($i = (int)floor(($width - 1) / 2); $i >= 0; $i--)	{
+			// Backup right stripe.
+			imagecopy($tmp, $img, 0, 0, $x2 - $i, $y, 1, $height);
+			// Copy left stripe to the right.
+			imagecopy($img, $img, $x2 - $i, $y, $x + $i, $y, 1, $height);
+			// Copy backuped right stripe to the left.
+			imagecopy($img, $tmp, $x + $i,  $y, 0, 0, 1, $height);
+		}
+		imagedestroy($tmp);
+		return true;
 	}
 
 	/**
