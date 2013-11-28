@@ -137,6 +137,9 @@ final class request {
 		$controller = basename($_SERVER['SCRIPT_FILENAME']);
 
 		$serverName = array_key_exists('HTTP_HOST', $_SERVER) ? $_SERVER['HTTP_HOST'] : (array_key_exists('SERVER_NAME', $_SERVER) ? $_SERVER['SERVER_NAME'] : self::$cfg->defaultServerName);
+		$posPort = strpos($serverName, ':');
+		if ($posPort !== false)
+			$serverName = substr($serverName, 0, $posPort);
 		$stdPort = $secure ? '443' : '80';
 		$port = (array_key_exists('SERVER_PORT', $_SERVER) && $_SERVER['SERVER_PORT'] != $stdPort && $_SERVER['SERVER_PORT'])? ':'.$_SERVER['SERVER_PORT'] : '';
 		$domain = $protocol.'://'.$serverName.$port;
@@ -551,7 +554,7 @@ final class request {
 		if ($forceLang && count($tmp) == 1 && $tmp[0] == $forceLang)
 			$tmp = array();
 
-		$prefix = array_key_exists('absolute', $prm) && $prm['absolute']? request::get('domain') : null;
+		$prefix = array_key_exists('absolute', $prm) && $prm['absolute'] ? request::get('domain') : null;
 		$prefix.= self::get('path');
 		if (array_key_exists('controller', $prm)) {
 			if ($prm['controller'])
