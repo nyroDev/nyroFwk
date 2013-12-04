@@ -103,7 +103,7 @@ final class factory {
 	 * @param bool $searchParent Indicate if the parent and implements class configuration should be searched
 	 * @return array Cfg Array parameter
 	 */
-	public static function loadCfg($className, $searchParent=true) {
+	public static function loadCfg($className, $searchParent = true) {
 		if (!array_key_exists($className, self::$loadedCfg)) {
 			self::$loadedCfg[$className] = array();
 
@@ -137,6 +137,11 @@ final class factory {
 			self::removeKeepUnique(self::$loadedCfg[$className]);
 		}
 		return self::$loadedCfg[$className];
+	}
+	
+	public static function overwriteCfg($className, array $cfg, $searchParent = true) {
+		self::loadCfg($className, $searchParent);
+		self::mergeCfg(self::$loadedCfg[$className], $cfg);
 	}
 
 	/**

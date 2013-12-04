@@ -11,10 +11,17 @@
 	overflow: auto;
 }
 
-.mce-label-disabled .mce-text {
+.mce-label.mce-disabled {
 	color: @text-disabled;
 }
 
 .mce-label.mce-multiline {
 	white-space: pre-wrap;
+}
+
+// RTL
+
+.mce-rtl .mce-label {
+	text-align: right;
+	direction: rtl;
 }

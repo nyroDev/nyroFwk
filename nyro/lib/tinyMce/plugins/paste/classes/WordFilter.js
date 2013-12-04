@@ -19,31 +19,22 @@ define("tinymce/pasteplugin/WordFilter", [
 	"tinymce/html/DomParser",
 	"tinymce/html/Schema",
 	"tinymce/html/Serializer",
-	"tinymce/html/Node"
-], function(Tools, DomParser, Schema, Serializer, Node) {
+	"tinymce/html/Node",
+	"tinymce/pasteplugin/Utils"
+], function(Tools, DomParser, Schema, Serializer, Node, Utils) {
 	function isWordContent(content) {
 		return (/class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i).test(content);
 	}
 
 	function WordFilter(editor) {
-		var each = Tools.each, settings = editor.settings;
+		var settings = editor.settings;
 
-		editor.on('PastePreProcess', function(e) {
+		editor.on('BeforePastePreProcess', function(e) {
 			var content = e.content, retainStyleProperties, validStyles;
 
 			retainStyleProperties = settings.paste_retain_style_properties;
 			if (retainStyleProperties) {
 				validStyles = Tools.makeMap(retainStyleProperties);
-			}
-
-			function process(items) {
-				each(items, function(v) {
-					if (v.constructor == RegExp) {
-						content = content.replace(v, '');
-					} else {
-						content = content.replace(v[0], v[1]);
-					}
-				});
 			}
 
 			/**
@@ -201,7 +192,7 @@ define("tinymce/pasteplugin/WordFilter", [
 				e.wordContent = true; // Mark it for other processors
 
 				// Remove basic Word junk
-				process([
+				content = Utils.filter(content, [
 					// Word comments like conditional comments etc
 					/<!--[\s\S]+?-->/gi,
 
@@ -228,7 +219,7 @@ define("tinymce/pasteplugin/WordFilter", [
 				var validElements = settings.paste_word_valid_elements;
 				if (!validElements) {
 					validElements = '@[style],-strong/b,-em/i,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,' +
-						'-table,-tr,-td[colspan|rowspan],-th,-thead,-tfoot,-tbody,-a[!href],sub,sup,strike,br';
+						'-table,-tr,-td[colspan|rowspan],-th,-thead,-tfoot,-tbody,-a[href|name],sub,sup,strike,br';
 				}
 
 				// Setup strict schema
@@ -239,7 +230,6 @@ define("tinymce/pasteplugin/WordFilter", [
 				// Parse HTML into DOM structure
 				var domParser = new DomParser({}, schema);
 
-				// Filte element style attributes
 				domParser.addAttributeFilter('style', function(nodes) {
 					var i = nodes.length, node;
 
@@ -254,6 +244,31 @@ define("tinymce/pasteplugin/WordFilter", [
 					}
 				});
 
+				domParser.addNodeFilter('a', function(nodes) {
+					var i = nodes.length, node, href, name;
+
+					while (i--) {
+						node = nodes[i];
+						href = node.attr('href');
+						name = node.attr('name');
+
+						if (href && href.indexOf('file://') === 0) {
+							href = href.split('#')[1];
+							if (href) {
+								href = '#' + href;
+							}
+						}
+
+						if (!href && !name) {
+							node.unwrap();
+						} else {
+							node.attr({
+								href: href,
+								name: name
+							});
+						}
+					}
+				});
 				// Parse into DOM structure
 				var rootNode = domParser.parse(content);
 

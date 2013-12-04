@@ -1,5 +1,8 @@
 <?php
 $cfg = array(
+	'html'=>array(
+		'class'=>'text multiline richtext',
+	),
 	'nyroBrowser'=>array(
 		'active'=>true,
 		'config'=>'default',
