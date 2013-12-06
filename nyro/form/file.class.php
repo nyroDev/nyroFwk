@@ -42,9 +42,19 @@ class form_file extends form_abstract {
 		return str_replace('[NAME]', $name, $this->nameAct);
 	}
 	
+	public function __set($name, $val) {
+		$ret = parent::__set($name, $val);
+		if ($name == 'name')
+			$this->nameAct = null;
+		return $ret;
+	}
+	
 	protected function beforeInit() {
+		$this->setValueObject(true);
+	}
+	
+	public function setValueObject($first = false) {
 		$required = array_key_exists('required', $this->cfg->valid) && $this->cfg->getInArray('valid', 'required');
-		
 		$htVars = http_vars::getInstance();
 		
 		$this->keep = $htVars->getVar($this->getNameAct('NyroKeep'));
@@ -53,7 +63,7 @@ class form_file extends form_abstract {
 		
 		$prm = array_merge($this->cfg->fileUploadedPrm, array(
 			'name'=>$this->cfg->name,
-			'current'=>$this->cfg->value,
+			'current'=>$first || !is_object($this->cfg->value) ? $this->cfg->value : ($this->cfg->value ? $this->cfg->value->getCurrent() : null),
 			'helper'=>$this->cfg->helper,
 			'helperPrm'=>$this->cfg->helperPrm,
 			'required'=>$required
@@ -66,7 +76,7 @@ class form_file extends form_abstract {
 
 		$this->cfg->value = factory::get('form_fileUploaded', $prm);
 
-		if ($this->cfg->autoDeleteOnGet && !$this->cfg->value->isSaved(true) && $htVars->getVar($this->getNameAct('NyroDel'))) {
+		if ($first && $this->cfg->autoDeleteOnGet && !$this->cfg->value->isSaved(true) && $htVars->getVar($this->getNameAct('NyroDel'))) {
 			$this->cfg->value->delete();
 			$this->deleted = true;
 		}
