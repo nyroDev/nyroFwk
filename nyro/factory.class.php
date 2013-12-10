@@ -58,6 +58,13 @@ final class factory {
 	 */
 	private static $constants;
 
+	/**
+	 * Indicates if the load should throw Exception if not found
+	 *
+	 * @var boolean
+	 */
+	public static $throwOnLoad = true;
+
 
 	/**
 	 * No instanciation for this class
@@ -265,7 +272,10 @@ final class factory {
 						}
 					}
 				} else if (!lib::load($className)) {
-					throw new nException('Factory - load: Unable to find the file for '.$className.'.');
+					if (self::$throwOnLoad)
+						throw new nException('Factory - load: Unable to find the file for '.$className.'.');
+					else
+						return false;
 				}
 			} else {
 				require(self::$loadFiles[$className][0]);
