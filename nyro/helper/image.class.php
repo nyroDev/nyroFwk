@@ -58,6 +58,19 @@ class helper_image extends helper_file {
 	}
 
 	/**
+	 * Get the source uri to show an image
+	 *
+	 * @param string $file Filename
+	 * @param array $prm @see helper_mage config
+	 * @return string The HTML image tag
+	 */
+	public function viewUri($file, array $prm = array()) {
+		$this->view($file, $prm);
+		$fileWeb = str_replace($this->cfg->filesRoot, '', $this->cfg->fileSave);
+		return $this->cfg->webUri ? request::webUri($fileWeb) : request::uploadedUri($fileWeb);
+	}
+
+	/**
 	 * Get the HTML source to show an image
 	 *
 	 * @param string $file Filename
