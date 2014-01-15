@@ -527,10 +527,12 @@ final class request {
 
 		$forceLang = self::$cfg->forceLang ? (self::$cfg->forceLang === true ? self::$cfg->lang : self::$cfg->forceLang) : null;
 		if (array_key_exists('lang', $prm)) {
-			if (self::isLang($prm['lang']))
-				array_unshift($tmp, $prm['lang']);
-			else if ($forceLang)
-				array_unshift($tmp, $forceLang);
+			if ($prm['lang']) {
+				if (self::isLang($prm['lang']))
+					array_unshift($tmp, $prm['lang']);
+				else if ($forceLang)
+					array_unshift($tmp, $forceLang);
+			}
 		} else if (self::getRequested('lang')) {
 			$addLang = true;
 			$tmpUrl = implode($sep, $tmp);
