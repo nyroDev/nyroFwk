@@ -202,10 +202,7 @@ class security_default extends security_abstract {
 		if (is_array($prm)
 			&& array_key_exists($loginField, $prm)
 			&& array_key_exists($passField, $prm)) {
-				$this->user = $this->table->find(array_merge(
-					$this->cfg->where,
-					$this->getWhereLogin($prm[$loginField], $prm[$passField])
-				));
+				$this->user = $this->getUserFromLogin($prm[$loginField], $prm[$passField]);
 				
 				if ($this->user) {
 					$this->saveLogin(array_key_exists('stayConnected', $prm) && $prm['stayConnected']);
@@ -225,6 +222,20 @@ class security_default extends security_abstract {
 				}
 		}
 		return $this->logged;
+	}
+	
+	/**
+	 * Search the login/password couple against the database and return it if found
+	 *
+	 * @param string $login
+	 * @param string $pass
+	 * @return null|db_row
+	 */
+	protected function getUserFromLogin($login, $pass) {
+		return $this->table->find(array_merge(
+			$this->cfg->where,
+			$this->getWhereLogin($login, $pass)
+		));
 	}
 
 	/**

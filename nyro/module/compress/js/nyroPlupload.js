@@ -55,7 +55,7 @@ $(function() {
 					});
 				}
 				uploader.bind('UploadProgress', function(up, file) {
-					if (curFiles[file.id]) {
+					if (curFiles[file.id] && !isNaN(file.percent)) {
 						curFiles[file.id]
 							.children('strong').text(file.percent+' %').end()
 							.find('.pluploadProgressBar').css('width', file.percent+'%');
