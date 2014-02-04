@@ -379,7 +379,7 @@ class helper_dataTable extends object {
 			return $this->to(request::get('out'));
 		} catch (Exception $e) {
 			if (DEV) {
-				print_r($e); exit;
+				var_dump($e); exit;
 				debug::trace($e, 2);
 			} else
 			   throw $e;
