@@ -146,6 +146,8 @@ final class nyro {
 	 * @return string The debug to be shown
 	 */
 	private static function handleError(Exception $err) {
+		if (self::$cfg->catchAll && is_callable(self::$cfg->catchAll))
+			call_user_func_array(self::$cfg->catchAll, array($err));
 		return debug::trace($err, DEV ? 2 : 0);
 	}
 
