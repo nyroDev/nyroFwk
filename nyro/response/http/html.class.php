@@ -590,7 +590,7 @@ class response_http_html extends response_http {
 			return is_array($files) ? implode('', $files) : $files;
 		$url = $dir == 'web'
 					? request::get('path').$prm['dirWeb']
-					: request::getPathControllerUri().$prm['dirUriNyro'];
+					: ($prm['controllerInUri'] ? request::getPathControllerUri() : request::get('path')).$prm['dirUriNyro'];
 		if (request::isAbsolutizeAllUris())
 			$url = request::get('domain').$url;
 		$url.= '/'.(is_array($files)? implode(request::getCfg('sepParam'), $files) : $files);

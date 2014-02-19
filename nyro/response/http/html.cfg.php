@@ -21,6 +21,7 @@ $cfg = array(
 		'ext'=>'js',
 		'dirWeb'=>'js',
 		'dirUriNyro'=>'js',
+		'controllerInUri'=>true,
 		'include'=>'<script type="text/javascript" src="%s"></script>',
 		'block'=>'<script type="text/javascript">
 //<![CDATA[
@@ -48,6 +49,7 @@ $cfg = array(
 		'ext'=>'css',
 		'dirWeb'=>'css',
 		'dirUriNyro'=>'css',
+		'controllerInUri'=>true,
 		'include'=>'<link rel="stylesheet" href="%s" type="text/css" media="%s" />',
 		'block'=>'<style type="text/css">%s</style>',
 		'depend'=>array(),
