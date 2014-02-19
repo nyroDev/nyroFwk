@@ -588,13 +588,17 @@ class response_http_html extends response_http {
 		$prm = $this->cfg->get($type);
 		if ($dir == 'external')
 			return is_array($files) ? implode('', $files) : $files;
-		$url = $dir == 'web'
-					? request::get('path').$prm['dirWeb']
-					: ($prm['controllerInUri'] ? request::getPathControllerUri() : request::get('path')).$prm['dirUriNyro'];
+		
+		
+		$url = ($dir == 'web' ? $prm['dirWeb'] : $prm['dirUriNyro']).'/'.(is_array($files)? implode(request::getCfg('sepParam'), $files) : $files);
+		$url.= '.'.$prm['ext'];
+		
+		$addController = false;
+		if ($dir != 'web')
+			$addController = $prm['checkIfWebExists'] && file::exists(WEBROOT.$url) ? false : true;
+		$url = ($addController ? request::getPathControllerUri() : request::get('path')).$url;
 		if (request::isAbsolutizeAllUris())
 			$url = request::get('domain').$url;
-		$url.= '/'.(is_array($files)? implode(request::getCfg('sepParam'), $files) : $files);
-		$url.= '.'.$prm['ext'];
 		return $url;
 	}
 
