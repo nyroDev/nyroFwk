@@ -105,5 +105,7 @@ $cfg = array(
 		'svg'	=>	'image/svg+xml',
 		'ttf'	=>	'application/x-font-ttf',
 		'woff'	=>	'application/x-font-woff',
+		
+		'ico'   =>  'image/x-icon'
 	),
 );
