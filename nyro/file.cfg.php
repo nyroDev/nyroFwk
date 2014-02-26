@@ -106,6 +106,6 @@ $cfg = array(
 		'ttf'	=>	'application/x-font-ttf',
 		'woff'	=>	'application/x-font-woff',
 		
-		'ico'   =>  'image/x-icon'
+		'ico'   =>  'image/vnd.microsoft.icon'
 	),
 );
