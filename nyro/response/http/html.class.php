@@ -266,16 +266,16 @@ class response_http_html extends response_http {
 			if ($locDir != 'external') {
 				$fileExt = $prm['file'].'.'.$prm['type'];
 
-				if ($prm['verifExists'])
-					$fileExists = $locDir == 'web'
-						?file::webExists($prmType['dirWeb'].DS.$fileExt)
-						:file::nyroExists(array(
-									'name'=>'module_'.nyro::getCfg()->compressModule.'_'.$prm['type'].'_'.$prm['file'],
-									'type'=>'tpl',
-									'tplExt'=>$prm['type']
-								));
-				else
-					$fileExists = true;
+			if ($prm['verifExists'])
+				$fileExists = $locDir == 'web'
+					? file::webExists($prmType['dirWeb'].DS.$fileExt)
+					: file::nyroExists(array(
+								'name'=>'module_'.nyro::getCfg()->compressModule.'_'.$prm['type'].'_'.$prm['file'],
+								'type'=>'tpl',
+								'tplExt'=>$prm['type']
+							));
+			else
+				$fileExists = true;
 
 				if ($fileExists) {
 					if (!isset($this->incFiles[$prm['type']][$locDir][$prm['media']]))
@@ -507,9 +507,8 @@ class response_http_html extends response_http {
 			if ($k != 'title' || $this->cfg->useTitleInMeta)
 				$ret.= '<meta name="'.$k.'" content="'.utils::htmlOut($v).'" />'.$ln;
 		}
-		foreach($this->cfg->metaProperty as $k=>$v) {
+		foreach($this->cfg->metaProperty as $k=>$v)
 			$ret.= '<meta property="'.$k.'" content="'.utils::htmlOut($v).'" />'.$ln;
-		}
 		foreach($this->cfg->link as $k=>$v)
 			$ret.= utils::htmlTag('link', array_merge(array('rel'=>$k), utils::htmlOut($v))).$ln;
 		return $ret;

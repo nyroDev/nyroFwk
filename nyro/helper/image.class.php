@@ -104,7 +104,7 @@ class helper_image extends helper_file {
 	 */
 	public function delete($file, array $prm=null) {
 		file::delete($this->addFilesRootIfNeeded($file));
-		file::multipleDelete($this->addFilesRootIfNeeded($this->makePath($file, '*')));
+		file::multipleDelete($this->addFilesRootIfNeeded($this->makePath($file, '*')), '@'.str_replace('\\', '\\\\', $this->addFilesRootIfNeeded($this->makePath($file, '([^_]*)'))).'$@i');
 	}
 
 	/**
