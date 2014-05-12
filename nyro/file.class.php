@@ -380,11 +380,12 @@ final class file {
 	 * Delete files with a pattern
 	 *
 	 * @param string $pattern The pattern to delete files (glob used)
+	 * @param string $matchPattern A more specific pattern to be applied with preg_match
 	 * @return int Number of files deleted
 	 */
-	public static function multipleDelete($pattern) {
+	public static function multipleDelete($pattern, $matchPattern = null) {
 		$nb = 0;
-		foreach(self::search($pattern) as $f)
+		foreach(self::search($pattern, $matchPattern) as $f)
 			if (self::delete($f))
 				$nb++;
 		return $nb;
@@ -447,10 +448,20 @@ final class file {
 	 * Search files regarding a pattern
 	 *
 	 * @param string $pattern
+	 * @param string $matchPattern A more specific pattern to be applied with preg_match
 	 * @return array
 	 */
-	public static function search($pattern) {
-		return glob($pattern);
+	public static function search($pattern, $matchPattern = null) {
+		$ret = glob($pattern);
+		if (!is_null($matchPattern)) {
+			$tmp = array();
+			foreach($ret as $r) {
+				if (preg_match($matchPattern, $r))
+					$tmp[] = $r;
+			}
+			$ret = $tmp;
+		}
+		return $ret;
 	}
 
 }
