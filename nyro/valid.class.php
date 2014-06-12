@@ -260,7 +260,7 @@ class valid extends object {
 	 */
 	public function isCallback($val, $prm=null) {
 		$tmp = call_user_func($prm, $val);
-		if ($tmp !== true) {
+		if ($tmp !== true && !is_null($tmp)) {
 			$tmp = is_string($tmp) ? $tmp : 'callback';
 			$msg = $this->getMessage($tmp);
 			$this->errors[] = sprintf($msg ? $msg : $tmp, $this->cfg->label);
