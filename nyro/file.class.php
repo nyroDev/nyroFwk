@@ -398,7 +398,10 @@ final class file {
 	 * @return null|string The extension
 	 */
 	public static function getExt($file) {
-		return pathinfo($file, PATHINFO_EXTENSION);
+		$ext = pathinfo($file, PATHINFO_EXTENSION);
+		if (!$ext)
+			$ext = substr($file, strrpos($file, '.') + 1);
+		return $ext;
 	}
 
 	/**
