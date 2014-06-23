@@ -186,17 +186,22 @@ class tpl extends object {
 	 *  - other parameters must be used for the call to the module_abstract::exec method or module_abstract::publish
 	 */
 	public function render($prm) {
-		if (!is_array($prm)){
-			$tmp = explode('/', $prm);
-			$prm = array();
-			$prm['module'] = isset($tmp[0]) ? $tmp[0] : null;
-			$prm['action'] = isset($tmp[1]) ? $tmp[1] : null;
-			$prm['param'] = isset($tmp[2]) ? $tmp[2] : null;
+		try {
+			if (!is_array($prm)){
+				$tmp = explode('/', $prm);
+				$prm = array();
+				$prm['module'] = isset($tmp[0]) ? $tmp[0] : null;
+				$prm['action'] = isset($tmp[1]) ? $tmp[1] : null;
+				$prm['param'] = isset($tmp[2]) ? $tmp[2] : null;
+			}
+			$prm = array_merge(array('module'=>$this->cfg->module), $prm);
+			$module = factory::getModule($prm['module'], array('render'=>true));
+			$module->exec($prm);
+			return $module->publish($prm);
+		} catch (Exception $e) {
+			if (DEV)
+				debuf::trace($e, 2);
 		}
-		$prm = array_merge(array('module'=>$this->cfg->module), $prm);
-		$module = factory::getModule($prm['module'], array('render'=>true));
-		$module->exec($prm);
-		return $module->publish($prm);
 	}
 	
 	/**
