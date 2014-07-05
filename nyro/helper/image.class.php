@@ -389,24 +389,6 @@ class helper_image extends helper_file {
 	protected function createImage($file) {
 		if (!file::exists($file) || ! is_file($file))
 			return false;
-		
-		$origFile = null;
-		if ($this->cfg->forceDpi && class_exists('Imagick')) {
-			try {
-				$im = new \Imagick();
-				$im->readimage($file);
-				$curResolution = $im->getImageResolution();
-				if ($curResolution['x'] != $this->cfg->forceDpi || $curResolution['y'] != $this->cfg->forceDpi) {
-					// Need to be resampled
-					$im->setImageResolution($this->cfg->forceDpi, $this->cfg->forceDpi);
-					$im->resampleImage($this->cfg->forceDpi, $this->cfg->forceDpi, \Imagick::FILTER_UNDEFINED, 0);
-					$origFile = $file;
-					$file = TMPROOT.uniqid().'.'.file::getExt($file);
-					$im->writeimage($file);
-				}
-			} catch (\Exception $e) {}
-		}
-		
 		$this->info = getimagesize($file);
 
 		$infoWIndex = 0;
@@ -439,9 +421,6 @@ class helper_image extends helper_file {
 			default:
 				return false;
 		}
-		
-		if (!is_null($origFile))
-			file::delete($file);
 
 		return array(&$img, $this->info[$infoWIndex], $this->info[$infoHIndex]);
 	}

@@ -25,7 +25,6 @@ $cfg = array(
 	'processOrientation'=>true,
 	'filesRoot'=>FILESROOT,
 	'webUri'=>false,
-	'forceDpi'=>false,
 	'mime'=>array(
 		'image/gif',
 		'image/jpeg',
