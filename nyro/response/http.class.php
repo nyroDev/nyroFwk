@@ -150,7 +150,9 @@ class response_http extends response_abstract {
 	 * Make the response to expire in 32 days
 	 */
 	public function neverExpire() {
-		$this->addHeader('Expires', gmdate('D, j M Y H:i:s', strtotime('+32 days')).' GMT');
+		$nbDays = 32;
+		$this->addHeader('Expires', gmdate('D, j M Y H:i:s', strtotime('+'.$nbDays.' days')).' GMT');
+		$this->addHeader('Cache-Controler', 'public, max-age='.($nbDays * 24 * 60 * 60));
 	}
 
 	/**
