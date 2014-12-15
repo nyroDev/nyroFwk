@@ -1,6 +1,8 @@
 <?php
 $cfg = array(
-	'headers'=>array(),
+	'headers'=>array(
+		'Content-Language'=>request::get('lang')
+	),
 	'incFiles'=>array(),
 	'titleInDes'=>'. ',
 	'useTitleInMeta'=>true,
@@ -9,7 +11,6 @@ $cfg = array(
 		'robots'=>'index, follow',
 		'description'=>'nyro project',
 		'keywords'=>'nyro, project',
-		'language'=>request::get('lang'),
 	),
 	'metaProperty'=>array(),
 	'link'=>array(),
