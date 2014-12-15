@@ -152,7 +152,7 @@ class response_http extends response_abstract {
 	public function neverExpire() {
 		$nbDays = 32;
 		$this->addHeader('Expires', gmdate('D, j M Y H:i:s', strtotime('+'.$nbDays.' days')).' GMT');
-		$this->addHeader('Cache-Controler', 'public, max-age='.($nbDays * 24 * 60 * 60));
+		$this->addHeader('Cache-Control', 'public, max-age='.($nbDays * 24 * 60 * 60));
 	}
 
 	/**
