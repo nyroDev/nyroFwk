@@ -440,20 +440,20 @@ class helper_image extends helper_file {
 				$this->imageFlip($img);
 				break;
 			case 3:
-				$img = imagerotate($img, 180, -1);
+				$img = imagerotate($img, 180, 0);
 				break;
 			case 5:
 			case 7:
 				$this->imageFlip($img);
-				$img = imagerotate($img, -90, -1);
+				$img = imagerotate($img, -90, 0);
 				$switchInfo = true;
 				break;
 			case 6:
-				$img = imagerotate($img, -90, -1);
+				$img = imagerotate($img, -90, 0);
 				$switchInfo = true;
 				break;
 			case 8:
-				$img = imagerotate($img, 90, -1);
+				$img = imagerotate($img, 90, 0);
 				$switchInfo = true;
 				break;
 		}
