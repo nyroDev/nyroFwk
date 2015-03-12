@@ -200,7 +200,7 @@ class tpl extends object {
 			return $module->publish($prm);
 		} catch (Exception $e) {
 			if (DEV)
-				debuf::trace($e, 2);
+				debug::trace($e, 2);
 		}
 	}
 	
