@@ -96,6 +96,12 @@ $cfg = array(
 		'webm'	=>	'video/webm',
 		'mp4'	=>	'video/mp4',
 		
+		'eot'	=>	'application/vnd.ms-fontobject',
+		'otf'	=>	'application/x-font-otf',
+		'svg'	=>	'image/svg+xml',
+		'ttf'	=>	'application/x-font-ttf',
+		'woff'	=>	'application/x-font-woff',
+		
 		'docx'	=>	'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 		'xlsx'	=>	'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 		'pptx'	=>	'application/vnd.openxmlformats-officedocument.presentationml.presentation',

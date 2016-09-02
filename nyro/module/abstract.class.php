@@ -121,7 +121,7 @@ abstract class module_abstract extends object {
 	}
 
 	public function callbackTpl(array $prm) {
-		$this->$prm['fctName']($prm['fctNameParam']);
+        $this->{$prm['fctName']}($prm['fctNameParam']);
 		$this->afterExec($prm['prm']);
 		return $this->getViewAction();
 	}

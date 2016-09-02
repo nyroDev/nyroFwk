@@ -30,7 +30,7 @@ abstract class form_mulValue extends form_abstract {
 
 			$db = db::getInstance();
 
-			$values = $db->select(array_merge($dbList, array('result'=>MYSQL_NUM)));
+			$values = $db->select(array_merge($dbList, array('result'=>PDO::FETCH_ASSOC)));
 
 			$tmp = null;
 			foreach($values as $v) {
@@ -48,6 +48,7 @@ abstract class form_mulValue extends form_abstract {
 					$v = array($key);
 				$list[$key] = implode($dbList['sep'], $v);
 			}
+            
 			$this->cfg->group = utils::htmlOut($group);
 			$this->cfg->list = utils::htmlOut($list);
 		} else if ($this->cfg->needOut)

@@ -462,7 +462,7 @@ abstract class db_abstract extends object {
 	public function count(array $prm) {
 		$subQuery = $this->selectQuery(array_merge($prm, array('bindData'=>true)));
 		$stmt = $this->query('SELECT COUNT(*) AS count FROM ('.$subQuery.') AS subquerycount');
-		$tmp = $stmt->fetch(MYSQL_ASSOC);
+		$tmp = $stmt->fetch(PDO::FETCH_ASSOC);
 		$count = $tmp['count'];
 		$stmt->fetchAll();
 		$stmt->closeCursor();
