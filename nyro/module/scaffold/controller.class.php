@@ -154,7 +154,7 @@ class module_scaffold_controller extends module_abstract {
 			if ($this->filterTable->hasValues())
 				$this->filterTable->getForm()->getCfg()->formPlus = str_replace('class="', 'class="filterTableActive ', $this->filterTable->getForm()->getCfg()->formPlus);
 			$this->hook('listFilter');
-			$query = array('where'=>$this->filterTable->getWhere());
+			$query = array('where'=>$this->updateFilterWhere($this->filterTable->getWhere()));
 		}
 
 		$conf = array(
@@ -199,6 +199,10 @@ class module_scaffold_controller extends module_abstract {
 			'addPage'=>request::uriDef(array('action'=>'add', 'param'=>''))
 		));
 	}
+    
+    protected function updateFilterWhere(db_where $where) {
+        return $where;
+    }
 	
 	protected function execScaffoldMultiple() {
 		$action = http_vars::getInstance()->post('action');

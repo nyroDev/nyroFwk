@@ -99,8 +99,13 @@ class helper_filterTable extends object {
 				$this->form->addFromRelated($r);
 			}
 		}
-		$defValues = $this->form->getValues();
 
+        $this->fillValues();
+	}
+    
+    public function fillValues() {
+		$defValues = $this->form->getValues();
+        
 		if (request::isPost() || request::getPrm($this->cfg->clearPrm)) {
 			if (request::isPost())
 				$this->form->refill();
@@ -116,7 +121,7 @@ class helper_filterTable extends object {
 			if ($v != $defValues[$k])
 				$this->hasValues = true;
 		}
-	}
+    }
 
 	/**
 	 * Get the filter form
