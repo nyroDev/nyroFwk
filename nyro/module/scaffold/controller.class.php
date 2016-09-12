@@ -200,7 +200,7 @@ class module_scaffold_controller extends module_abstract {
 		));
 	}
     
-    protected function updateFilterWhere(db_where $where) {
+    protected function updateFilterWhere(db_where $where = null) {
         return $where;
     }
 	
