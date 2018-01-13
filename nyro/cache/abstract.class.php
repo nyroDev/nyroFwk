@@ -7,7 +7,7 @@
 /**
  * Interface for cache classes
  */
-abstract class cache_abstract extends object {
+abstract class cache_abstract extends nObject {
 
 	/**
 	 * Set the default config

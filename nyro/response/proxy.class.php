@@ -7,7 +7,7 @@
 /**
  * To replace the response inside a tpl, to save all call in case of cache
  */
-class response_proxy extends object {
+class response_proxy extends nObject {
 
 	/**
 	 * Call saved

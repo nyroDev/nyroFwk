@@ -7,7 +7,7 @@
 /**
  * abstract class for form element
  */
-abstract class form_abstract extends object {
+abstract class form_abstract extends nObject {
 
 	/**
 	 * Validation object

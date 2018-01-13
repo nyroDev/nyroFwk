@@ -9,7 +9,7 @@
  *
  * @author Nyro
  */
-class helper_bitLy extends object {
+class helper_bitLy extends nObject {
 
 	/**
 	 * Get Default parameter set in configuration file

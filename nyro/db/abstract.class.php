@@ -7,7 +7,7 @@
 /**
  * Abstract class db classes
  */
-abstract class db_abstract extends object {
+abstract class db_abstract extends nObject {
 
 	/**
 	 * Database connection

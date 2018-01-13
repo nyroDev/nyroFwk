@@ -7,7 +7,7 @@
 /**
  * Class using for validate a data
  */
-class valid extends object {
+class valid extends nObject {
 
 	/**
 	 * Errors for the last validation

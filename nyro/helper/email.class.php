@@ -7,7 +7,7 @@
 /**
  * Helper to send email
  */
-class helper_email extends object {
+class helper_email extends nObject {
 
 	/**
 	 * Attached files

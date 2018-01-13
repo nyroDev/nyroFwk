@@ -7,7 +7,7 @@
 /**
  * Security class to check user rights
  */
-abstract class security_abstract extends object {
+abstract class security_abstract extends nObject {
 
 	protected function afterInit() {
 		foreach($this->cfg->defaultRoles as $role)

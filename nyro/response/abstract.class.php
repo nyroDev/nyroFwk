@@ -7,7 +7,7 @@
 /**
  * Abstract response class
  */
-abstract class response_abstract extends object {
+abstract class response_abstract extends nObject {
 
 	/**
 	 * The response content

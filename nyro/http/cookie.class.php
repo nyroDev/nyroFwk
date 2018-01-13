@@ -7,7 +7,7 @@
 /**
  * To manipulate cookie
  */
-class http_cookie extends object {
+class http_cookie extends nObject {
 
 	/**
 	 * Indicate if the cookie is saved or not

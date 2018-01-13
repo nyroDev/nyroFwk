@@ -7,7 +7,7 @@
 /**
  * Interface for db classes
  */
-class db_row extends object implements ArrayAccess {
+class db_row extends nObject implements ArrayAccess {
 
 	/**
 	 * Changes done

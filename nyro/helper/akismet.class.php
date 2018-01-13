@@ -9,7 +9,7 @@
  *
  * @author Nyro
  */
-class helper_akismet extends object {
+class helper_akismet extends nObject {
 
 	/**
 	 * Check if the current configured comment is Spam

@@ -7,7 +7,7 @@
 /**
  * Where clause  to be used in queries
  */
-class db_where extends object implements Countable {
+class db_where extends nObject implements Countable {
 
 	/**
 	 * The wher clauses

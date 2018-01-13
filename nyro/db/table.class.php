@@ -7,7 +7,7 @@
 /**
  * SQL Table interface
  */
-class db_table extends object {
+class db_table extends nObject {
 
 	/**
 	 * Raw table name

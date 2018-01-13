@@ -14,7 +14,7 @@ class nReflection extends ReflectionClass {
 	 *
 	 * @param object|string $elt
 	 */
-	public function __construct($elt='object') {
+	public function __construct($elt='nObject') {
 		if (is_object($elt))
 			$this->rebuild(get_class($elt));
 		else if ($elt)

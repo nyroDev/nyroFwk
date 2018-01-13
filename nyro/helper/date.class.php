@@ -7,7 +7,7 @@
 /**
  * Helper to deal with date
  */
-class helper_date extends object {
+class helper_date extends nObject {
 
 	/**
 	 * Date timestamp

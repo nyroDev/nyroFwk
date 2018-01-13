@@ -7,7 +7,7 @@
 /**
  * Final class for form
  */
-class form extends object {
+class form extends nObject {
 
 	/**
 	 * Form elements

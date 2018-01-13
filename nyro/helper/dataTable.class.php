@@ -7,7 +7,7 @@
 /**
  * Helper to show db data with pagination
  */
-class helper_dataTable extends object {
+class helper_dataTable extends nObject {
 
 	/**
 	 * Table object

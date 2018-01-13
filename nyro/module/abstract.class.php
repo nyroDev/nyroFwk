@@ -7,7 +7,7 @@
 /**
  * Abstract class for module classes
  */
-abstract class module_abstract extends object {
+abstract class module_abstract extends nObject {
 
 	/**
 	 * Save the last execute parameter call

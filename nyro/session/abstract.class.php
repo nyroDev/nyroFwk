@@ -7,7 +7,7 @@
 /**
  * Use this interface to implements a session
  */
-abstract class session_abstract extends object {
+abstract class session_abstract extends nObject {
 
 	/**
 	 * Get the current name space

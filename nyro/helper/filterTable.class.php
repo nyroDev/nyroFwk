@@ -7,7 +7,7 @@
 /**
  * Helper to create a db filter form
  */
-class helper_filterTable extends object {
+class helper_filterTable extends nObject {
 
 	/**
 	 * Filter Form

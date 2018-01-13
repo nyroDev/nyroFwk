@@ -7,7 +7,7 @@
 /**
  * Every class extends of this class
  */
-abstract class object {
+abstract class nObject {
 
 	/**
 	 * Class configuration

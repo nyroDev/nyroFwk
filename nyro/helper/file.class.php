@@ -7,7 +7,7 @@
 /**
  * File upload helper
  */
-class helper_file extends object {
+class helper_file extends nObject {
 
 	/**
 	 * Check if the image is valid (to be used by form_fileUploaded)

@@ -7,7 +7,7 @@
 /**
  * Used by form_file to save the uploaded file
  */
-class form_fileUploaded extends object {
+class form_fileUploaded extends nObject {
 
 	/**
 	 * The files uploaded info, retrieved from $_FILES

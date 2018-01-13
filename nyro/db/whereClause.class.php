@@ -7,7 +7,7 @@
 /**
  * SQL Where clause
  */
-class db_whereClause extends object {
+class db_whereClause extends nObject {
 
 	/**
 	 * Using to set the whole configuration parameter

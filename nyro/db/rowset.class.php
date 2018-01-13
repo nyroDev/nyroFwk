@@ -7,7 +7,7 @@
 /**
  * rowset object for fetching select results
  */
-class db_rowset extends object implements Iterator, Countable, ArrayAccess {
+class db_rowset extends nObject implements Iterator, Countable, ArrayAccess {
 
 	/**
 	* Iterator pointer

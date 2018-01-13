@@ -7,7 +7,7 @@
 /**
  * Template
  */
-class tpl extends object {
+class tpl extends nObject {
 
 	/**
 	 * Variables for the template
