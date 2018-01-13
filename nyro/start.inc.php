@@ -125,7 +125,7 @@ require(NYROROOT.'nyro.class.'.EXTPHP);
 require(NYROROOT.'cache.class.'.EXTPHP);
 require(NYROROOT.'nException.class.'.EXTPHP);
 require(NYROROOT.'nReflection.class.'.EXTPHP);
-require(NYROROOT.'object.class.'.EXTPHP);
+require(NYROROOT.'nObject.class.'.EXTPHP);
 require(NYROROOT.'cache'.DS.'abstract.class.'.EXTPHP);
 require(NYROROOT.'cache'.DS.'file.class.'.EXTPHP);
 require(NYROROOT.'request.class.'.EXTPHP);
