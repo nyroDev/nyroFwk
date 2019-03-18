@@ -342,6 +342,21 @@ function returnMIMEType($filename)
         }
     }
 
+function sql_regcase($str){
+
+    $res = "";
+
+    $chars = str_split($str);
+    foreach($chars as $char){
+        if(preg_match("/[A-Za-z]/", $char))
+            $res .= "[".mb_strtoupper($char, 'UTF-8').mb_strtolower($char, 'UTF-8')."]";
+        else
+            $res .= $char;
+    }
+
+    return $res;
+}
+
 //************************Return Array of Directory Structure***************************
 function dirtree(&$alldirs,$types='*.*',$root='',$tree='',$branch='',$level=0) {
 
