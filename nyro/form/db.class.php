@@ -112,6 +112,10 @@ class form_db extends form {
 		}
 		$prm['valid']['required'] = false;
 		$prm['valid']['dbUnique'] = false;
+
+		if (isset($prm['formTypeFilter'])) {
+            $prm['type'] = $prm['formTypeFilter'];
+		}
 		return $this->add($prm['type'], $prm);
 	}
 
