@@ -35,7 +35,7 @@ class db_rowset extends nObject implements Iterator, Countable, ArrayAccess {
 	 *
 	 * @var array
 	 */
-	protected $fields;
+	protected $fields = [];
 
 	protected function afterInit() {
 		$this->_count = count($this->cfg->data);
@@ -75,7 +75,7 @@ class db_rowset extends nObject implements Iterator, Countable, ArrayAccess {
 	 * @return array
 	 */
 	public function getFields($mode='flat') {
-		if (!$this->fields[$mode])
+		if (!isset($this->fields[$mode]))
 			$this->fields[$mode] = array_keys($this->get(0)->getValues($mode));
 		return $this->fields[$mode];
 	}

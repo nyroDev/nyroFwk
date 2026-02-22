@@ -101,7 +101,7 @@ class module_scaffold_controller extends module_abstract {
 		$this->cfg->tplPrm = array(
 			'layout'=>$this->cfg->layout,
 			'module'=>'scaffold',
-			'action'=>$this->cfg->name.ucfirst($this->cfg->viewAction),
+			'action'=>$this->cfg->name.ucfirst($this->cfg->viewAction ?? ''),
 			'defaultModule'=>'scaffold',
 			'default'=>$this->cfg->viewAction,
 			'cache'=>$this->cfg->cache

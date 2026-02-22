@@ -267,6 +267,9 @@ final class factory {
 						}
 					}
 				} else if (!lib::load($className)) {
+					if ($className === 'ZipStream\Option\Archive') {
+						return false;
+					}
 					if (self::$throwOnLoad)
 						throw new nException('Factory - load: Unable to find the file for '.$className.'.');
 					else

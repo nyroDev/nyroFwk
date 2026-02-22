@@ -10,7 +10,7 @@
 class form_numeric extends form_abstract {
 
 	public function setValue($value, $refill=false) {
-		return parent::setValue(str_replace(',', '.', $value));
+		return parent::setValue(str_replace(',', '.', $value ?? ''));
 	}
 
 	public function toHtml() {
