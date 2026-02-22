@@ -187,7 +187,7 @@ class cache_file extends cache_abstract {
 				'request'=>array('uri'=>false,'meth'=>array())
 			))) {
 			$file = $this->file($prm);
-			$file{strlen($file)-1} = '*';
+			$file = substr($file, 0, -1).'*';
 			if (!empty($prm['tags'])) {
 				for($i = 0; $i<count($prm['tags']); $i++) {
 					$file = str_replace(','.$prm['tags'][$i].',', '*,'.$prm['tags'][$i].',', $file);

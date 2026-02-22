@@ -11,7 +11,7 @@ class form_range_numeric extends form_range_abstract {
 
 	public function setValue($value, $refill=false, $key=null) {
 		if (is_array($value)) {
-			$value = array_map(create_function('$v', 'return str_replace(",", ".", $v);'), $value);
+			$value = array_map(function($v) { return str_replace(',', '.', $v); }, $value);
 		} else {
 			$value = str_replace(',', '.', $value);
 		}

@@ -107,7 +107,7 @@ class db_pdo_mysql extends db_pdo_abstract
                 if (preg_match('/^(set|enum)\((.+)\)/', $row[$fType], $matches)) {
                     $row[$fType] = $matches[1];
                     $tmp = explode(',', $matches[2]);
-                    array_walk($tmp, create_function('&$t', '$t = substr(substr($t, 0, strlen($t)-1), 1);'));
+                    array_walk($tmp, function(&$t) { $t = substr(substr($t, 0, strlen($t)-1), 1); });
                     $precision = array();
                     foreach ($tmp as $v) {
                         $precision[$v] = $v;
@@ -146,8 +146,8 @@ class db_pdo_mysql extends db_pdo_abstract
                     $primaryPos = null;
                     $identity = false;
                 }
-                if ('CURRENT_TIMESTAMP' == strtoupper($row[$fDefault]) || 'CURRENT_TIMESTAMP()' == strtoupper($row[$fDefault])) {
-                    $cf = create_function('', 'return time();');
+                if ('CURRENT_TIMESTAMP' == strtoupper($row[$fDefault] ?? '') || 'CURRENT_TIMESTAMP()' == strtoupper($row[$fDefault] ?? '')) {
+                    $cf = function() { return time(); };
                     $row[$fDefault] = $cf();
                     $auto = true;
                 }

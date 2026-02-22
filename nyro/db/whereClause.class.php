@@ -71,7 +71,7 @@ class db_whereClause extends nObject {
 		if (!empty($this->cfg->in)) {
 			if (is_array($this->cfg->in)) {
 				$in = $this->cfg->in;
-				array_walk($in, create_function('&$v', '$v = \'"\'.$v.\'"\';'));
+				array_walk($in, function(&$v) { $v = '"' . $v . '"'; });
 				$tmp[] = '('.$this->cfg->name.' IN ('.implode(',', $in).'))';
 			} else
 				$tmp[] = '('.$this->cfg->name.' IN ('.$this->cfg->in.'))';

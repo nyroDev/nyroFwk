@@ -16,7 +16,7 @@ class form_multiline extends form_text {
 			array_merge($this->html, array(
 				'name'=>$this->name,
 				'id'=>$this->id,
-			)), $this->cfg->value);
+			)), $this->cfg->value ?? '');
 	}
 
 	public function toXul() {

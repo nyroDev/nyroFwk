@@ -126,7 +126,7 @@ class db_rowset extends nObject implements Iterator, Countable, ArrayAccess {
 	* Rewind the Iterator to the first element.
 	* Required by interface Iterator.
 	*/
-	public function rewind() {
+	public function rewind(): void {
 		$this->_pointer = 0;
 	}
 
@@ -136,7 +136,7 @@ class db_rowset extends nObject implements Iterator, Countable, ArrayAccess {
 	*
 	* @return db_row current element from the collection
 	*/
-	public function current() {
+	public function current(): mixed {
 		return $this->get($this->_pointer);
 	}
 
@@ -146,7 +146,7 @@ class db_rowset extends nObject implements Iterator, Countable, ArrayAccess {
 	*
 	* @return int
 	*/
-	public function key() {
+	public function key(): int {
 		return $this->_pointer;
 	}
 
@@ -154,7 +154,7 @@ class db_rowset extends nObject implements Iterator, Countable, ArrayAccess {
 	* Move forward to next element.
 	* Required by interface Iterator.
 	*/
-	public function next() {
+	public function next(): void {
 		$this->_pointer++;
 	}
 
@@ -165,7 +165,7 @@ class db_rowset extends nObject implements Iterator, Countable, ArrayAccess {
 	*
 	* @return bool False if there's nothing more to iterate over
 	*/
-	public function valid() {
+	public function valid(): bool {
 		return $this->_pointer < $this->_count;
 	}
 
@@ -175,7 +175,7 @@ class db_rowset extends nObject implements Iterator, Countable, ArrayAccess {
 	*
 	* @return int
 	*/
-	public function count() {
+	public function count(): int {
 		return $this->_count;
 	}
 
@@ -186,7 +186,7 @@ class db_rowset extends nObject implements Iterator, Countable, ArrayAccess {
 	 * @param int $offset
 	 * @return bool
 	 */
-	public function offsetExists($offset) {
+	public function offsetExists($offset): bool {
 		$this->get($offset);
 		return array_key_exists($offset, $this->_rows);
 	}
@@ -198,7 +198,7 @@ class db_rowset extends nObject implements Iterator, Countable, ArrayAccess {
 	 * @param int $offset
 	 * @return db_row
 	 */
-	public function offsetGet($offset) {
+	public function offsetGet($offset): mixed {
 		return $this->get($offset);
 	}
 
@@ -210,8 +210,8 @@ class db_rowset extends nObject implements Iterator, Countable, ArrayAccess {
 	 * @param db_row $value
 	 * @return db_row
 	 */
-	public function offsetSet($offset, $value) {
-		return $this->_rows[$offset] = $value;
+	public function offsetSet($offset, $value): void {
+		$this->_rows[$offset] = $value;
 	}
 
 	/**
@@ -220,7 +220,7 @@ class db_rowset extends nObject implements Iterator, Countable, ArrayAccess {
 	 *
 	 * @param int $offset
 	 */
-	public function offsetUnset($offset) {
+	public function offsetUnset($offset): void {
 		unset($this->_rows[$offset]);
 	}
 	

@@ -283,7 +283,7 @@ class helper_dataTable extends nObject {
 				$actions = array();
 				if (!$this->cfg->addIdentField)
 					array_unshift($headersT, $this->table->getIdent());
-				array_walk($headersT, create_function('&$h', '$h = "[".$h."]";'));
+				array_walk($headersT, function(&$h) { $h = "[".$h."]"; });
 				$dataK = null;
 				$i = 0;
 				foreach($data as $d) {
@@ -300,7 +300,7 @@ class helper_dataTable extends nObject {
 					unset($curData['linked']);
 					if (is_null($dataK)) {
 						$dataK = array_keys($curData);
-						array_walk($dataK, create_function('&$h', '$h = "[".$h."]";'));
+						array_walk($dataK, function(&$h) { $h = "[".$h."]"; });
 					}
 					foreach($tmp as &$t)
 						$t = str_replace($dataK, $curData, $t);

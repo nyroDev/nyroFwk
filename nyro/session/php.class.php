@@ -107,7 +107,9 @@ class session_php extends session_abstract {
 
 		if (is_string($nameSpace)) {
 			$this->setNameSpace($nameSpace);
-			$tmp = array_filter($tmp, create_function('$v', 'return (strpos($v, "'.$this->prefixNameSpace('').'") === 0);'));
+			$tmp = array_filter($tmp, function($v) {
+				return (strpos($v, $this->prefixNameSpace('')) === 0);
+			});
 		}
 
 		foreach($tmp as $v)

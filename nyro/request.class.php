@@ -305,7 +305,7 @@ final class request {
 	 */
 	public static function parseParam($param) {
 		$ret = array();
-		$tmp = explode(self::$cfg->sepParam, $param);
+		$tmp = $param ? explode(self::$cfg->sepParam, $param) : [];
 		foreach($tmp as $t) {
 			if (strpos($t, self::$cfg->sepParamSub)) {
 				list($key, $val) = explode(self::$cfg->sepParamSub, $t);
@@ -395,8 +395,10 @@ final class request {
 			return self::get('domain').self::get('path');
 		else if ($get == null)
 			return self::$uriInfo;
-		else
+		else if (is_array(self::$uriInfo))
 			return self::$uriInfo[$get];
+		else
+			return null;
 	}
 
 	/**

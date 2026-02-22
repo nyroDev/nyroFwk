@@ -110,8 +110,8 @@ class utils {
 				foreach($tmp as $k=>$t)
 					$val[self::htmlOut($k)] = self::htmlOut($t);
 			} else
-				array_walk_recursive($val, create_function('&$v', '$v = utils::htmlOut($v);'));
-		} else {
+				array_walk_recursive($val, function(&$v) { $v = utils::htmlOut($v); });
+		} else if ($val) {
 			$tmp = self::htmlChars();
 			$val = str_replace(array_keys($tmp), $tmp, $val);
 		}
@@ -135,7 +135,7 @@ class utils {
 				foreach($tmp as $k=>$t)
 					$val[self::htmlDeOut($k)] = self::htmlDeOut($t);
 			} else
-				array_walk_recursive($val, create_function('&$v', '$v = utils::htmlDeOut($v);'));
+				array_walk_recursive($val, function(&$v) { $v = utils::htmlDeOut($v); });
 		} else {
 			$tmp = self::htmlChars();
 			$val = str_replace($tmp, array_keys($tmp), $val);
@@ -159,7 +159,7 @@ class utils {
 		if (is_null(self::$htmlChars)) {
 			$tmp = array();
 			foreach(get_html_translation_table(HTML_ENTITIES) as $k=>$v) {
-				$tmp[utf8_encode($k)]= utf8_encode($v);
+				$tmp[mb_convert_encoding($k, 'UTF-8', 'ISO-8859-1')]= mb_convert_encoding($v, 'UTF-8', 'ISO-8859-1');
 			}
 			unset($tmp['&']); // Unset here to place it at the very top of the array
 			self::$htmlChars = array_merge(array(
@@ -199,7 +199,7 @@ class utils {
 	public static function htmlIn($val) {
 		return $val;
 		if (is_array($val))
-			array_walk_recursive($val, create_function('&$v', '$v = utf8_decode($v);'));
+			array_walk_recursive($val, function(&$v) { $v = mb_convert_encoding($v, 'ISO-8859-1', 'UTF-8'); });
 		else
 			$val = $val;
 		return $val;
@@ -390,7 +390,7 @@ class utils {
 		if (!is_null($ignore)) {
 			$len = strlen($ignore);
 			for($i = 0; $i < $len; $i++) {
-				$pos = strpos($from, $ignore{$i});
+				$pos = strpos($from, $ignore[$i]);
 				if ($pos !== false) {
 					$from = substr($from, 0, $pos).substr($from, $pos+1);
 					$to = substr($to, 0, $pos).substr($to, $pos+1);
@@ -400,7 +400,7 @@ class utils {
 		$ret = trim(str_replace(
 			array(' ', '-----', '----', '---', '--'),
 			URLSEPARATOR,
-			strtr(utf8_decode($text), utf8_decode($from), utf8_decode($to))), URLSEPARATOR);
+			strtr(mb_convert_encoding($text, 'ISO-8859-1', 'UTF-8'), mb_convert_encoding($from, 'ISO-8859-1', 'UTF-8'), mb_convert_encoding($to, 'ISO-8859-1', 'UTF-8'))), URLSEPARATOR);
 		
 		return URLLOWER ? mb_strtolower($ret) : $ret;
 	}
@@ -464,7 +464,7 @@ class utils {
 		$n = strlen($source)-1;
 		$r = '';
 		for($i = 0; $i < $len; $i++)
-			$r.= $source{rand(0, $n)};
+			$r.= $source[rand(0, $n)];
 		return $r;
 	}
 

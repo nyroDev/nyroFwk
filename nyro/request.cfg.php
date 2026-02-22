@@ -15,7 +15,7 @@ $cfg = array(
 	'noOut'=>false,
 	'forceNoOut'=>true,
 	'defaultOut'=>false,
-	'noController'=>'index.php',
+	'noController'=>'_index.php',
 	
 	'allowScaffold'=>false,
 

@@ -491,7 +491,7 @@ class form extends nObject {
 		$ret = array_diff_key($ret, $this->cfg->notValue);
 
 		if ($onlyFilled)
-			$ret = array_filter($ret, create_function('$v', 'return $v ? true : false;'));
+			$ret = array_filter($ret, function($v) { return $v ? true : false; });
 
 		$tmp = array();
 		foreach($ret as $k=>$v) {

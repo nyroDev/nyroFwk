@@ -106,7 +106,7 @@ final class file {
 		}
 		return in_array($file, self::$searchFiles);
 		*/
-		return file_exists($file);
+		return $file ? file_exists($file) : false;
 	}
 
 	/**
@@ -189,7 +189,7 @@ final class file {
 				$ret = array();
 
 			/*
-			array_walk($dir, create_function('&$v', '$v = substr($v, strlen(ROOT));'));
+			array_walk($dir, function(&$v) { $v = substr($v, strlen(ROOT)); });
 			$regex = str_replace('\\', '\\\\', '`('.implode('|', $dir).')('.implode('|', $name).')`');
 			foreach(new RegexFindFile(ROOT, $regex) as $file) {
 				if ($prm['list'])
@@ -423,7 +423,7 @@ final class file {
 			$finfo = new finfo(FILEINFO_MIME);
 			if ($finfo) {
 				$ret = $finfo->file($filename);
-				$finfo->close();
+				//$finfo->close();
 			} else
 				$ret = mime_content_type($file);
 		}

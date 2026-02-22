@@ -582,7 +582,7 @@ abstract class db_abstract extends nObject {
 		$regex = '/^'.implode('(.*)', $tmp).'$/';
 
 		return array_merge(array_filter($this->getTables(),
-			create_function('$val', 'return preg_match("'.$regex.'", $val);')));
+			function($val) use ($regex) { return preg_match($regex, $val); }));
 	}
 
 	/**

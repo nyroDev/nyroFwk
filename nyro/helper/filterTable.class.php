@@ -185,7 +185,7 @@ class helper_filterTable extends nObject {
 					$f = $this->table->getField($name);
 					if (is_array($f) && (!array_key_exists('text', $f) || $f['text'])) {
 						$tmp = explode(' ', $val);
-						array_walk($tmp, create_function('&$v', '$v = trim($v);'));
+						array_walk($tmp, function(&$v) { $v = trim($v); });
 						$tmp = array_filter($tmp);
 						foreach($tmp as $t) {
 							$where->add(array(
@@ -204,7 +204,7 @@ class helper_filterTable extends nObject {
 
 						if (!array_key_exists('text', $f) || $f['text']) {
 							$tmp = explode(' ', $val);
-							array_walk($tmp, create_function('&$v', '$v = trim($v);'));
+							array_walk($tmp, function(&$v) { $v = trim($v); });
 							$tmp = array_filter($tmp);
 							foreach($tmp as $t) {
 								$tmpWhere->add(array(

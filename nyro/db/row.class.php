@@ -421,7 +421,7 @@ class db_row extends nObject implements ArrayAccess {
 					$ret = array();
 					$fields = explode(',', $v['fk2']['link']['fields']);
 					$i18nFields = explode(',', $v['fk2']['link']['i18nFields']);
-					array_walk($i18nFields, create_function('&$v', '$v = "'.db::getCfg('i18n').'".$v;'));
+					array_walk($i18nFields, function(&$v) { $v = db::getCfg('i18n').$v; });
 					$fields = array_filter(array_merge($fields, $i18nFields));
 					
 					$hasFields = isset($v['fields']) && count($v['fields']);
@@ -554,8 +554,8 @@ class db_row extends nObject implements ArrayAccess {
 						$data[$k] = array();
 						$fields = explode(',', $v['fk2']['link']['fields']);
 						$i18nFields = explode(',', $v['fk2']['link']['i18nFields']);
-						array_walk($fields, create_function('&$v', '$v = "'.$v['fk2']['link']['table'].'_".$v;'));
-						array_walk($i18nFields, create_function('&$v', '$v = "'.$v['fk2']['link']['table'].'_'.db::getCfg('i18n').'".$v;'));
+						array_walk($fields, function(&$v) { $v = $v['fk2']['link']['table'].'_'.$v; });
+						array_walk($i18nFields, function(&$v) { $v = $v['fk2']['link']['table'].'_'.db::getCfg('i18n').$v; });
 						$fields = array_merge($fields, $i18nFields);
 						foreach($data['related'][$v['fk2']['link']['table']] as $vv) {
 							$tmp2 = array();
@@ -944,7 +944,7 @@ class db_row extends nObject implements ArrayAccess {
 	 * @param string $offset
 	 * @return bool
 	 */
-	public function offsetExists($offset) {
+	public function offsetExists($offset): bool {
 		return !is_null($this->getTable()->getField($offset));
 	}
 
@@ -955,7 +955,7 @@ class db_row extends nObject implements ArrayAccess {
 	 * @param string $offset
 	 * @return mixed
 	 */
-	public function offsetGet($offset) {
+	public function offsetGet($offset): mixed {
 		return $this->get($offset);
 	}
 
@@ -966,7 +966,7 @@ class db_row extends nObject implements ArrayAccess {
 	 * @param string $offset
 	 * @param db_row $value
 	 */
-	public function offsetSet($offset, $value) {
+	public function offsetSet($offset, $value): void {
 		$this->set($offset, $value);
 	}
 	
@@ -976,7 +976,7 @@ class db_row extends nObject implements ArrayAccess {
 	 *
 	 * @param string $offset
 	 */
-	public function offsetUnset($offset) {
+	public function offsetUnset($offset): void {
 		$this->set($offset, null);
 	}
 

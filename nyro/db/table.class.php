@@ -895,8 +895,10 @@ class db_table extends nObject {
 		), $prm);
 
 		if (is_array($prm['fields'])) {
-			array_walk($prm['fields'],
-				create_function('&$v', '$v = strpos($v, ".") === false? "'.$this->rawName.'.".$v: $v;'));
+			$rawName = $this->rawName;
+			array_walk($prm['fields'], function(&$v) {
+				$v = strpos($v, '.') === false ? $this->rawName.'.'.$v : $v;
+			});
 			$prm['fields'] = implode(',', $prm['fields']);
 		}
 
@@ -916,7 +918,7 @@ class db_table extends nObject {
 				array_unshift($fields, $p['ident']);
 				$fields = array_flip(array_flip(array_filter($fields)));
 				$fieldsT = $fields;
-				array_walk($fieldsT, create_function('&$v', '$v = "'.$alias.'_".$v;'));
+				array_walk($fieldsT, function(&$v) use ($alias) { $v = $alias.'_'.$v; });
 				$tmpTables[$f] = $fieldsT;
 				$tmpTables[$f]['sep'] = $p['sep'];
 				$tmpTables[$f]['ident'] = $alias.'_'.$p['ident'];
@@ -962,9 +964,10 @@ class db_table extends nObject {
 					$fields = explode(',', $p['i18nFields']);
 					$fields = array_flip(array_flip(array_filter($fields)));
 					$fieldsI18n = $fields;
-					array_walk($fieldsI18n, create_function('&$v', '$v = "'.$alias.'_'.db::getCfg('i18n').'".$v;'));
-					array_walk($fields, create_function('&$v', '$v = "'.$i18nAlias.'.".$v." AS '
-									.$alias.'_'.db::getCfg('i18n').'".$v;'));
+					array_walk($fieldsI18n, function(&$v) use ($alias) { $v = $alias.'_'.db::getCfg('i18n').$v; });
+					array_walk($fields, function(&$v) use ($i18nAlias, $alias) {
+						$v = $i18nAlias.'.'.$v.' AS '.$alias.'_'.db::getCfg('i18n').$v;
+					});
 					$tmpTables[$f] = array_merge($tmpTables[$f], $fieldsI18n);
 					if (!empty($fields))
 						$prm['fields'].= ','.implode(',', $fields);
@@ -983,8 +986,8 @@ class db_table extends nObject {
 				// related Table fields
 				$fields = array_keys($p['fields']);
 				$fieldsTableLink = $fields;
-				array_walk($fieldsTableLink, create_function('&$v', '$v = "'.$f.'_".$v;'));
-				array_walk($fields, create_function('&$v', '$v = "'.$f.'.".$v." AS '.$f.'_".$v;'));
+				array_walk($fieldsTableLink, function(&$v) use ($f) { $v = $f.'_'.$v; });
+				array_walk($fields, function(&$v) use ($f) { $v = $f.'.'.$v.' AS '.$f.'_'.$v; });
 				if (!empty($fields))
 					$prm['fields'].= ','.implode(',', $fields);
 
@@ -999,8 +1002,8 @@ class db_table extends nObject {
 				array_unshift($fields, $p['fk2']['link']['ident']);
 				$fields = array_flip(array_flip(array_filter($fields)));
 				$fieldsT = $fields;
-				array_walk($fieldsT, create_function('&$v', '$v = "'.$p['table'].'_".$v;'));
-				array_walk($fields, create_function('&$v', '$v = "'.$p['table'].'.".$v." AS '.$p['table'].'_".$v;'));
+				array_walk($fieldsT, function(&$v) use ($p) { $v = $p['table'].'_'.$v; });
+				array_walk($fields, function(&$v) use ($p) { $v = $p['table'].'.'.$v.' AS '.$p['table'].'_'.$v; });
 				if (!empty($fields))
 					$prm['fields'].= ','.implode(',', $fields);
 
@@ -1019,9 +1022,10 @@ class db_table extends nObject {
 					$fields = explode(',', $p['fk2']['link']['i18nFields']);
 					$fields = array_flip(array_flip(array_filter($fields)));
 					$fieldsI18n = $fields;
-					array_walk($fieldsI18n, create_function('&$v', '$v = "'.$i18nTableName.'_".$v;'));
-					array_walk($fields, create_function('&$v', '$v = "'.$i18nTableName.'.".$v." AS '
-									.$p['table'].'_'.db::getCfg('i18n').'".$v;'));
+					array_walk($fieldsI18n, function(&$v) use ($i18nTableName) { $v = $i18nTableName.'_'.$v; });
+					array_walk($fields, function(&$v) use ($i18nTableName, $p) {
+						$v = $i18nTableName.'.'.$v.' AS '.$p['table'].'_'.db::getCfg('i18n').$v;
+					});
 					if (!empty($fields))
 						$prm['fields'].= ','.implode(',', $fields);
 				}
@@ -1052,8 +1056,8 @@ class db_table extends nObject {
 					$fields[] = $f['name'];
 				}
 				$fieldsTableLink = $fields;
-				array_walk($fieldsTableLink, create_function('&$v', '$v = "'.$i18nName.'_".$v;'));
-				array_walk($fields, create_function('&$v', '$v = "'.$i18nName.'.".$v." AS '.$i18nName.'_".$v;'));
+				array_walk($fieldsTableLink, function(&$v) use ($i18nName) { $v = $i18nName.'_'.$v; });
+				array_walk($fields, function(&$v) use ($i18nName) { $v = $i18nName.'.'.$v.' AS '.$i18nName.'_'.$v; });
 
 				if (!empty($fields))
 					$prm['fields'].= ','.implode(',', $fields);
@@ -1164,31 +1168,31 @@ class db_table extends nObject {
 			}
 
 			$linkedKey = db::getCfg('linked');
-			array_walk($data, create_function('&$v, $i, &$tl', '
-				$v["'.$linkedKey.'"] = array();
+			array_walk($data, function(&$v, $i, $tl) use ($linkedKey) {
+				$v[$linkedKey] = array();
 				foreach($tl as $k=>$t) {
-					$v["'.$linkedKey.'"][$k] = array();
+					$v[$linkedKey][$k] = array();
 					$label = array();
 					$length = strlen($k)+1;
 					foreach($t as $kk=>$f) {
-						if ($kk != "sep" && $kk != "ident") {
+						if ($kk != 'sep' && $kk != 'ident') {
 							if (!empty($v[$f]))
 								$label[] = $v[$f];
-							$v["'.$linkedKey.'"][$k][substr($f, $length)] = $v[$f];
-							if ($f != $t["ident"])
+							$v[$linkedKey][$k][substr($f, $length)] = $v[$f];
+							if ($f != $t['ident'])
 								unset($v[$f]);
 						}
 					}
-					if (array_key_exists($t["ident"], $v) && $v[$t["ident"]]) {
-						$ident = substr($t["ident"], $length);
-						$v["'.$linkedKey.'"][$k][$ident] = $v[$t["ident"]];
-						$v[$k] = $v["'.$linkedKey.'"][$k]["label"] = implode($t["sep"], $label);
+					if (array_key_exists($t['ident'], $v) && $v[$t['ident']]) {
+						$ident = substr($t['ident'], $length);
+						$v[$linkedKey][$k][$ident] = $v[$t['ident']];
+						$v[$k] = $v[$linkedKey][$k]['label'] = implode($t['sep'], $label);
 					} else {
 						$v[$k] = null;
-						$v["'.$linkedKey.'"][$k] = array();
+						$v[$linkedKey][$k] = array();
 					}
 				}
-			'), $linked);
+			}, $linked);
 		}
 	}
 
