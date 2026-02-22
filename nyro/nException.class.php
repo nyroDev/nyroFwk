@@ -9,7 +9,4 @@
  */
 class nException extends Exception {
 
-	public int $line;
-	public string $file;
-
 }

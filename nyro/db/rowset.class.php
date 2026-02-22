@@ -136,7 +136,7 @@ class db_rowset extends nObject implements Iterator, Countable, ArrayAccess {
 	*
 	* @return db_row current element from the collection
 	*/
-	public function current(): mixed {
+	public function current(): db_row|null {
 		return $this->get($this->_pointer);
 	}
 
@@ -196,9 +196,9 @@ class db_rowset extends nObject implements Iterator, Countable, ArrayAccess {
 	 * Required by interface ArrayAccess
 	 *
 	 * @param int $offset
-	 * @return db_row
+	 * @return db_row|null
 	 */
-	public function offsetGet($offset): mixed {
+	public function offsetGet($offset): db_row|null {
 		return $this->get($offset);
 	}
 
