@@ -10,7 +10,7 @@
 class form_richtext extends form_multiline {
 
 	public function getValue() {
-		return $this->cfg->value;
+		return $this->cfg->value ?? '';
 	}
 
 	public function setValue($value, $refill=false) {
