@@ -69,7 +69,7 @@ class response_http extends response_abstract {
 	 * @param bool $compress
 	 */
 	public function setCompress($compress) {
-		$this->cfg->compress = (boolean) $compress;
+		$this->cfg->compress = (bool) $compress;
 	}
 
 	/**

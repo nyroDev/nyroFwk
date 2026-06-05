@@ -35,7 +35,7 @@ class security_public extends security_abstract {
 		return true;
 	}
 
-	public function check(array $url = null, $redirect=true) {
+	public function check(?array $url = null, $redirect=true) {
 		if (is_null($url))
 			$url = request::get();
 

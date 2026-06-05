@@ -70,7 +70,7 @@ abstract class security_abstract extends nObject {
 	 * @param bool $redirect Indicate if the user should be directly redirected and exit the program
 	 * @return bool True if authorized access
 	 */
-	abstract public function check(array $url = null, $redirect=true);
+	abstract public function check(?array $url = null, $redirect=true);
 
 	/**
 	 * Get the login Form Object

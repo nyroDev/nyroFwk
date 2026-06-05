@@ -46,14 +46,14 @@ class http_cookie extends nObject {
 	/**
 	 * get or set the doNotSave attribute
 	 *
-	 * @param nul|bool $doNotSave null to get or booleand to set
+	 * @param null|bool $doNotSave null to get or boolean to set
 	 * @return void|bool
 	 */
 	public function doNotSave($doNotSave=null) {
 		if (is_null($doNotSave))
 			return $this->doNotSave;
 		else
-			$this->doNotSave = (boolean) $doNotSave;
+			$this->doNotSave = (bool) $doNotSave;
 	}
 
 	/**
