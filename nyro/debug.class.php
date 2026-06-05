@@ -85,7 +85,7 @@ final class debug {
 	 * @param array $elts
 	 * @return string
 	 */
-	public static function debugger(array $elts=null) {
+	public static function debugger(?array $elts=null) {
 		if (is_null($elts)) {
 			debug::timer('nyro');
 			debug::timer('nyroRender');

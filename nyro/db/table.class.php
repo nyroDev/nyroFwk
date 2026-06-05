@@ -372,7 +372,7 @@ class db_table extends nObject {
 	 * @return bool
 	 */
 	public function isRelated($name) {
-		return array_key_exists($this->getRelatedTableName($name), $this->relatedTables);
+		return $this->getRelatedTableName($name) && array_key_exists($this->getRelatedTableName($name), $this->relatedTables);
 	}
 
 	/**
@@ -422,6 +422,9 @@ class db_table extends nObject {
 	 * @return string
 	 */
 	public function getRelatedTableName($name, $add = true) {
+		if (!$name) {
+			return $name;
+		}
 		$shouldStart = $this->getName().'_';
 		$pos = strpos($name, $shouldStart);
 		if ($pos !== 0 && $add)
@@ -1305,7 +1308,7 @@ class db_table extends nObject {
 			'db'=>$this->getDb(),
 			'data'=>$data
 		));
-		if (array_key_exists($this->getIdent(), $data) && $data[$this->getIdent()])
+		if ($this->getIdent() && array_key_exists($this->getIdent(), $data) && $data[$this->getIdent()])
 			$prm['findId'] = $data[$this->getIdent()];
 		return db::get('row', $this, $prm);
 	}

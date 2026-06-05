@@ -148,7 +148,7 @@ class config {
 	 * @return mixed|null The value requested if exists or null
 	 */
 	public function getInArray($name, $key) {
-		if ($this->check($name) && is_array($this->vars[$name]) && array_key_exists($key, $this->vars[$name]))
+		if ($key !== null && $this->check($name) && is_array($this->vars[$name]) && array_key_exists($key, $this->vars[$name]))
 			return $this->vars[$name][$key];
 		return null;
 	}

@@ -252,7 +252,7 @@ class helper_date extends nObject {
 	 * @param helper_date|null $d Date to compare to or null to use the current time
 	 * @return string The timeago string
 	 */
-	public function timeago(helper_date $d = null) {
+	public function timeago(?helper_date $d = null) {
 		$timestamp = $this->get() - (is_null($d)? time() : $d->get());
 		$timestampAbs = abs($timestamp);
 

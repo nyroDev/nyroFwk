@@ -133,7 +133,7 @@ final class db {
 	 * @return bool
 	 */
 	public static function isI18nName($field) {
-		return substr($field, 0, strlen(self::getCfg('i18n'))) == self::getCfg('i18n');
+		return $field && substr($field, 0, strlen(self::getCfg('i18n'))) == self::getCfg('i18n');
 	}
 
 	/**

@@ -77,7 +77,7 @@ class db_row extends nObject implements ArrayAccess {
 	 */
 	public function loadData(array $data) {
 		$this->cfg->data = $data;
-		if (array_key_exists($this->getTable()->getIdent(), $data) && $data[$this->getTable()->getIdent()])
+		if ($this->getTable()->getIdent() && array_key_exists($this->getTable()->getIdent(), $data) && $data[$this->getTable()->getIdent()])
 			$this->setNew(false);
 		else {
 			$primary = $this->getTable()->getPrimary();
@@ -91,12 +91,12 @@ class db_row extends nObject implements ArrayAccess {
 		}
 
 		$linkedKey = db::getCfg('linked');
-		if (array_key_exists($linkedKey, $data)) {
+		if ($linkedKey && array_key_exists($linkedKey, $data)) {
 			$this->setLinked($data[$linkedKey]);
 		}
 
 		$relatedKey = db::getCfg('related');
-		if (array_key_exists($relatedKey, $data)) {
+		if ($relatedKey && array_key_exists($relatedKey, $data)) {
 			$this->setRelated($data[$relatedKey]);
 		}
 	}
