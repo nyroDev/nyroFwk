@@ -70,8 +70,8 @@ final class debug {
 
 		if ($stop) {
 		    $e = new nException($msg, $code);
-		    $e->line = $line;
-		    $e->file = $file;
+		    //$e->line = $line;
+		    //$e->file = $file;
 			throw $e;
 			return true;
 		} else {
