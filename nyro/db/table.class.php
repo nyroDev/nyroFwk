@@ -1178,7 +1178,7 @@ class db_table extends nObject {
 					$label = array();
 					$length = strlen($k)+1;
 					foreach($t as $kk=>$f) {
-						if ($kk != 'sep' && $kk != 'ident') {
+						if ($kk != 'sep' && $kk != 'ident' && $f != $t['ident']) {
 							if (!empty($v[$f]))
 								$label[] = $v[$f];
 							$v[$linkedKey][$k][substr($f, $length)] = $v[$f];
